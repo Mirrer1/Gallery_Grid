@@ -1,7 +1,7 @@
 import React from 'react';
-import { MailOutlined } from '@ant-design/icons';
 
-import BestPost from 'components/Landing/BestPost';
+import Introduce from 'components/Landing/Introduce';
+import { ContactIcon, HeaderWrapper } from 'styles/Landing/header';
 
 const Landing = () => {
   const bestProduct = [
@@ -12,19 +12,21 @@ const Landing = () => {
 
   return (
     <>
-      <header>
+      <HeaderWrapper>
         <img src="/logo.jpg" alt="Logo Image" />
 
         <nav>
           <button type="button">Home</button>
           <button type="button">Login</button>
-          <button type="button">SignUp</button>
+          <button type="button">Signup</button>
         </nav>
 
-        <MailOutlined />
-      </header>
+        <button>
+          <ContactIcon />
+        </button>
+      </HeaderWrapper>
 
-      <BestPost />
+      <Introduce />
     </>
   );
 };
