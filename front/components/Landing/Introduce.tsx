@@ -1,5 +1,6 @@
 import React from 'react';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
+
 import { IntroImage, IntroText, IntroWrapper, ContentBreak, HeaderBreak } from 'styles/Landing/introduce';
 
 const Introduce = () => {
