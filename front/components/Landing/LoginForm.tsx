@@ -3,8 +3,7 @@ import React from 'react';
 const LoginForm = () => {
   return (
     <section>
-      <div>로그인폼</div>
-      <div>로그인폼</div>
+      <h1>Welcome back!</h1>
     </section>
   );
 };
