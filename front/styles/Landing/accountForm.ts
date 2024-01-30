@@ -75,10 +75,10 @@ export const AccountForm = styled.form`
   width: 75%;
 `;
 
-export const AccountInput = styled.div<{ $lastinput: string }>`
+export const AccountInput = styled.div<{ $largemargin: string }>`
   width: 100%;
   position: relative;
-  margin-bottom: ${props => (props.$lastinput === 'true' ? '0.2em' : '1.8em')};
+  margin-bottom: ${props => (props.$largemargin === 'true' ? '1.8em' : '0.2em')};
 
   & > input {
     width: 100%;
@@ -136,11 +136,11 @@ export const AccountInput = styled.div<{ $lastinput: string }>`
   }
 `;
 
-export const PasswordAlert = styled.p`
+export const AccountAlert = styled.p<{ $login: string }>`
   font-size: 0.6rem;
   opacity: 50%;
   padding-left: 5px;
-  margin-bottom: 1em;
+  margin-bottom: ${props => (props.$login === 'true' ? '1em' : '3em')};
 `;
 
 export const AuthOptionsWrapper = styled.div`

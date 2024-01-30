@@ -94,7 +94,7 @@ const MenuContents = ({ selectMenu, onClickMenu }: MenuContentsProps) => {
       ) : selectMenu === 'login' ? (
         <LoginForm onClickMenu={onClickMenu} />
       ) : selectMenu === 'signup' ? (
-        <SignUpForm />
+        <SignUpForm onClickMenu={onClickMenu} />
       ) : null}
     </ContentsWrapper>
   );

@@ -14,6 +14,7 @@ export const BestPostWrapper = styled.section`
   }
 
   & > div:first-child > img {
+    cursor: pointer;
     width: 100%;
     height: 500px;
     margin-right: 1em;

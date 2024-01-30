@@ -1,8 +1,9 @@
 import React, { useCallback } from 'react';
-import { toast } from 'react-toastify';
 import { GoogleOutlined } from '@ant-design/icons';
+import Router from 'next/router';
 
-import useInput from 'hooks/useInput';
+import useInput from 'utils/useInput';
+import { useValidate } from 'utils/useValidate';
 import { BaseMenuProps } from 'types/MenuProps';
 import {
   AccountBtn,
@@ -13,7 +14,7 @@ import {
   AccountInput,
   AccountWrapper,
   AuthOptionsWrapper,
-  PasswordAlert
+  AccountAlert
 } from 'styles/Landing/accountForm';
 
 const LoginForm = ({ onClickMenu }: BaseMenuProps) => {
@@ -32,17 +33,15 @@ const LoginForm = ({ onClickMenu }: BaseMenuProps) => {
       const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
       const passwordRegex = /^[A-Za-z\d]{8,16}$/;
 
-      if (!emailRegex.test(email)) {
-        toast.warning('이메일 형식이 올바르지 않습니다.');
-        return;
-      }
-
-      if (!passwordRegex.test(password)) {
-        toast.warning('비밀번호 형식이 올바르지 않습니다.');
+      if (
+        !useValidate(email, emailRegex, '이메일 형식이 올바르지 않습니다.') ||
+        !useValidate(password, passwordRegex, '비밀번호 형식이 올바르지 않습니다.')
+      ) {
         return;
       }
 
       console.log({ email, password, rememberMe });
+      Router.push('/home');
     },
     [email, password, rememberMe]
   );
@@ -57,19 +56,18 @@ const LoginForm = ({ onClickMenu }: BaseMenuProps) => {
       <AccountDivider>OR LOGIN WITH EAMIL</AccountDivider>
 
       <AccountForm onSubmit={onSubmitForm}>
-        <AccountInput $lastinput="false">
+        <AccountInput $largemargin="true">
           <input type="text" value={email} onChange={onChangeEmail} required />
           <label>Email address</label>
           <span></span>
         </AccountInput>
 
-        <AccountInput $lastinput="true">
+        <AccountInput $largemargin="false">
           <input type="password" value={password} onChange={onChangePassword} required />
           <label>Password</label>
           <span></span>
         </AccountInput>
-
-        <PasswordAlert>8~16자 영문 대 소문자, 숫자를 사용하세요.</PasswordAlert>
+        <AccountAlert $login="true">8~16자 영문 대 소문자, 숫자를 사용하세요.</AccountAlert>
 
         <AuthOptionsWrapper>
           <div>
