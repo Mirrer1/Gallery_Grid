@@ -63,7 +63,8 @@ const MenuContents = ({ selectMenu, onClickMenu }: MenuContentsProps) => {
             예술가들의 커뮤니티에서 영감을 얻고, <ContentBreak />
             당신의 작품을 세상과 공유하세요.
             <br />
-            새로운 미술 세계를 경험하고, 무한한 가능성을 탐험해보세요.
+            새로운 미술 세계를 경험하고, <ContentBreak />
+            무한한 가능성을 탐험해보세요.
           </p>
         ) : selectMenu === 'login' ? (
           <p>

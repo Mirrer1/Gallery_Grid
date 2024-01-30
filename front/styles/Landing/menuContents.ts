@@ -8,11 +8,10 @@ export const ContentsWrapper = styled.main`
   padding: 2em 6em;
 
   ${media.tablet} {
-    padding: 2em 4em;
+    padding: 2em;
   }
 
   ${media.mobile} {
-    padding: 2em;
     ${({ theme }) => theme.flexColumnSet('center', 'center')};
   }
 `;

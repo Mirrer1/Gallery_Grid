@@ -5,14 +5,16 @@ import { HoverStyle } from 'styles/Common/hover';
 
 export const BestPostWrapper = styled.section`
   ${HoverStyle('& > div > button')}
+  flex-grow: 1;
 
   & > div:first-child {
     ${({ theme }) => theme.flexSet('center', 'end')};
     margin-bottom: 1em;
+    width: 100%;
   }
 
   & > div:first-child > img {
-    width: 600px;
+    width: 100%;
     height: 500px;
     margin-right: 1em;
   }
@@ -28,14 +30,13 @@ export const BestPostWrapper = styled.section`
   }
 
   & > div > button > span {
-    font-size: 0.6rem;
+    font-size: 0.7rem;
     font-weight: 700;
     margin-right: 0.5em;
   }
 
   ${media.tablet} {
     & > div:first-child > img {
-      width: 450px;
       height: 350px;
       margin-right: 0.7em;
     }
@@ -46,12 +47,13 @@ export const BestPostWrapper = styled.section`
   }
 
   ${media.mobile} {
+    width: 100%;
+
     & > div:first-child {
       ${({ theme }) => theme.flexColumnSet('center', 'end')};
     }
 
     & > div:first-child > img {
-      width: 350px;
       height: 400px;
       margin-right: 0;
       margin-bottom: 0.3em;
