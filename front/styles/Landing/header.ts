@@ -10,6 +10,7 @@ export const HeaderWrapper = styled.header`
 
   & > img {
     width: 10%;
+    cursor: pointer;
   }
 
   & > nav > button:last-child {

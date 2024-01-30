@@ -10,10 +10,14 @@ const Landing = () => {
     setSelectMenu(menu);
   }, []);
 
+  const onClickLogo = useCallback(() => {
+    setSelectMenu('home');
+  }, []);
+
   return (
     <>
       <HeaderWrapper>
-        <img src="/logo.jpg" alt="Logo Image" />
+        <img src="/logo.jpg" alt="Logo Image" onClick={onClickLogo} />
 
         <nav>
           <MenuButton type="button" onClick={() => onClickMenu('home')} selected={selectMenu === 'home'}>
