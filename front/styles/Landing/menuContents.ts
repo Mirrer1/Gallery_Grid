@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { HoverStyle } from 'styles/Common/hover';
 
 import media from 'styles/media';
 
@@ -7,11 +8,12 @@ export const ContentsWrapper = styled.main`
   padding: 2em 6em;
 
   ${media.tablet} {
-    padding: 2em;
+    padding: 2em 4em;
   }
 
   ${media.mobile} {
-    ${({ theme }) => theme.flexColumnSet('center', 'start')};
+    padding: 2em;
+    ${({ theme }) => theme.flexColumnSet('center', 'center')};
   }
 `;
 
@@ -46,18 +48,10 @@ export const ContentsText = styled.section<{ selected: string }>`
     margin-bottom: 3em;
   }
 
+  ${HoverStyle('& > button')};
   & > button {
     font-size: 0.9rem;
     font-weight: 700;
-    transition: opacity 200ms ease-in-out;
-  }
-
-  & > button:hover {
-    opacity: 40%;
-  }
-
-  & > button:active {
-    opacity: 100%;
   }
 
   ${media.tablet} {
@@ -80,8 +74,10 @@ export const ContentsText = styled.section<{ selected: string }>`
 
   ${media.mobile} {
     margin-right: 0;
+    text-align: center;
 
     & > div {
+      ${({ theme }) => theme.flexSet()};
       margin-bottom: 3em;
     }
 

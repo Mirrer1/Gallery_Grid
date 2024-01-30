@@ -28,7 +28,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           pauseOnFocusLoss
           draggable
           pauseOnHover
-          limit={1}
+          limit={3}
         />
       </ThemeProvider>
     </>

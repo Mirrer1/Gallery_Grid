@@ -60,7 +60,11 @@ const GlobalStyles = createGlobalStyle`
     border-spacing: 0;
   }
 
-  .Toastify__toast--success {
+  .Toastify__toast {
+    font-size: 14px;
+  }
+
+  .Toastify__toast--success {    
     background-color: white;
     color: black;
     position: relative;
@@ -79,7 +83,7 @@ const GlobalStyles = createGlobalStyle`
     border-radius: 0;
   }
 
-  .Toastify__toast--warning {
+  .Toastify__toast--warning {    
     background-color: white;
     color: black;
     position: relative;

@@ -1,15 +1,11 @@
 import React, { useCallback } from 'react';
+import { toast } from 'react-toastify';
 
 import BestPost from './BestPost';
 import LoginForm from './LoginForm';
 import SignUpForm from './SignUpForm';
+import { MenuContentsProps } from 'types/MenuProps';
 import { ContentsText, ContentsWrapper, ContentBreak, HeaderBreak } from 'styles/Landing/menuContents';
-import { toast } from 'react-toastify';
-
-type MenuContentsProps = {
-  selectMenu: string;
-  onClickMenu: (menu: string) => void;
-};
 
 const MenuContents = ({ selectMenu, onClickMenu }: MenuContentsProps) => {
   const onClickMore = useCallback(() => {
@@ -95,7 +91,7 @@ const MenuContents = ({ selectMenu, onClickMenu }: MenuContentsProps) => {
       {selectMenu === 'home' ? (
         <BestPost />
       ) : selectMenu === 'login' ? (
-        <LoginForm />
+        <LoginForm onClickMenu={onClickMenu} />
       ) : selectMenu === 'signup' ? (
         <SignUpForm />
       ) : null}

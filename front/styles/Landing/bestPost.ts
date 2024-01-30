@@ -1,7 +1,11 @@
 import styled from 'styled-components';
+
 import media from 'styles/media';
+import { HoverStyle } from 'styles/Common/hover';
 
 export const BestPostWrapper = styled.section`
+  ${HoverStyle('& > div > button')}
+
   & > div:first-child {
     ${({ theme }) => theme.flexSet('center', 'end')};
     margin-bottom: 1em;
@@ -21,18 +25,6 @@ export const BestPostWrapper = styled.section`
 
   & > div:nth-child(2) {
     ${({ theme }) => theme.flexSet('space-between')};
-  }
-
-  & > div > button {
-    transition: opacity 200ms ease-in-out;
-  }
-
-  & > div > button:hover {
-    opacity: 40%;
-  }
-
-  & > div > button:active {
-    opacity: 100%;
   }
 
   & > div > button > span {
