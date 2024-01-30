@@ -1,24 +1,34 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 
-import Introduce from 'components/Landing/Introduce';
-import { ContactIcon, HeaderWrapper } from 'styles/Landing/header';
+import MenuContents from 'components/Landing/MenuContents';
+import { ContactIcon, HeaderWrapper, MenuButton } from 'styles/Landing/header';
 
 const Landing = () => {
-  const bestProduct = [
-    { title: 'Product1', img: 'https://i.ibb.co/n70QqMG/drawing-series-by.jpg' },
-    { title: 'Product2', img: 'https://i.ibb.co/BCsx9nZ/image.jpg' },
-    { title: 'Product3', img: 'https://i.ibb.co/8bqzbyV/1.jpg' }
-  ];
+  const [selectMenu, setSelectMenu] = useState('home');
+
+  const onClickMenu = useCallback((menu: string) => {
+    setSelectMenu(menu);
+  }, []);
+
+  const onClickLogo = useCallback(() => {
+    setSelectMenu('home');
+  }, []);
 
   return (
     <>
       <HeaderWrapper>
-        <img src="/logo.jpg" alt="Logo Image" />
+        <img src="/logo.jpg" alt="Logo Image" onClick={onClickLogo} />
 
         <nav>
-          <button type="button">Home</button>
-          <button type="button">Login</button>
-          <button type="button">Signup</button>
+          <MenuButton type="button" onClick={() => onClickMenu('home')} selected={selectMenu === 'home'}>
+            Home
+          </MenuButton>
+          <MenuButton type="button" onClick={() => onClickMenu('login')} selected={selectMenu === 'login'}>
+            Login
+          </MenuButton>
+          <MenuButton type="button" onClick={() => onClickMenu('signup')} selected={selectMenu === 'signup'}>
+            Signup
+          </MenuButton>
         </nav>
 
         <button>
@@ -26,7 +36,7 @@ const Landing = () => {
         </button>
       </HeaderWrapper>
 
-      <Introduce />
+      <MenuContents selectMenu={selectMenu} onClickMenu={onClickMenu} />
     </>
   );
 };
