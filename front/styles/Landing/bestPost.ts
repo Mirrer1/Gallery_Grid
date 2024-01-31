@@ -1,9 +1,10 @@
 import styled from 'styled-components';
+import { motion } from 'framer-motion';
 
 import media from 'styles/media';
 import { HoverStyle } from 'styles/Common/hover';
 
-export const BestPostWrapper = styled.section`
+export const BestPostWrapper = styled(motion.section)`
   ${HoverStyle('& > div > button')}
   flex-grow: 1;
 
@@ -15,7 +16,7 @@ export const BestPostWrapper = styled.section`
 
   & > div:first-child > img {
     cursor: pointer;
-    width: 100%;
+    width: 90%;
     height: 500px;
     margin-right: 1em;
   }
@@ -55,6 +56,7 @@ export const BestPostWrapper = styled.section`
     }
 
     & > div:first-child > img {
+      width: 100%;
       height: 400px;
       margin-right: 0;
       margin-bottom: 0.3em;

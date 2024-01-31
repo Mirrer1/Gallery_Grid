@@ -5,6 +5,7 @@ import Router from 'next/router';
 import useInput from 'utils/useInput';
 import { useValidate } from 'utils/useValidate';
 import { BaseMenuProps } from 'types/MenuProps';
+import { slideInFromBottom } from 'styles/Common/animation';
 import {
   AccountBtn,
   AccountDivider,
@@ -47,7 +48,7 @@ const LoginForm = ({ onClickMenu }: BaseMenuProps) => {
   );
 
   return (
-    <AccountWrapper>
+    <AccountWrapper {...slideInFromBottom}>
       <AccountGoogle>
         <GoogleOutlined />
         <button type="button">Continue with Google</button>

@@ -1,6 +1,6 @@
 import { toast } from 'react-toastify';
 
-export const useValidate = (value: any, regex: any, errorMessage: any) => {
+export const useValidate = (value: string, regex: RegExp, errorMessage: string) => {
   if (!regex.test(value)) {
     toast.warning(errorMessage);
     return false;

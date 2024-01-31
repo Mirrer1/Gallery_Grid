@@ -1,6 +1,7 @@
 import React from 'react';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 
+import { slideInFromBottom } from 'styles/Common/animation';
 import { BestPostWrapper } from 'styles/Landing/bestPost';
 
 const BestPost = () => {
@@ -11,7 +12,7 @@ const BestPost = () => {
   ];
 
   return (
-    <BestPostWrapper>
+    <BestPostWrapper {...slideInFromBottom}>
       <div>
         <img src="https://i.ibb.co/n70QqMG/drawing-series-by.jpg" alt="product image" />
         <p>@Made by Mirrer</p>

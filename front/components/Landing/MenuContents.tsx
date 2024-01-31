@@ -5,6 +5,7 @@ import BestPost from './BestPost';
 import LoginForm from './LoginForm';
 import SignUpForm from './SignUpForm';
 import { MenuContentsProps } from 'types/MenuProps';
+import { slideInFromLeft } from 'styles/Common/animation';
 import { ContentsText, ContentsWrapper, ContentBreak, HeaderBreak } from 'styles/Landing/menuContents';
 
 const MenuContents = ({ selectMenu, onClickMenu }: MenuContentsProps) => {
@@ -15,7 +16,7 @@ const MenuContents = ({ selectMenu, onClickMenu }: MenuContentsProps) => {
 
   return (
     <ContentsWrapper>
-      <ContentsText selected={selectMenu}>
+      <ContentsText key={selectMenu} {...slideInFromLeft} selected={selectMenu}>
         {selectMenu === 'home' ? (
           <div>
             <p>Work</p>
