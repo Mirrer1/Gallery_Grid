@@ -17,3 +17,9 @@ export const slideInFromBottom = {
     ease: 'easeInOut'
   }
 };
+
+export const CarouselAnimation = {
+  initial: { x: 100, opacity: 0 },
+  animate: { x: 0, opacity: 1 },
+  transition: { type: 'tween', ease: 'easeInOut', duration: 0.5 }
+};
