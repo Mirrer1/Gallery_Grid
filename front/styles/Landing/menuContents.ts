@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { HoverStyle } from 'styles/Common/hover';
 
 import media from 'styles/media';
+import { motion } from 'framer-motion';
 
 export const ContentsWrapper = styled.main`
   ${({ theme }) => theme.flexSet('space-between', 'start')};
@@ -16,7 +17,7 @@ export const ContentsWrapper = styled.main`
   }
 `;
 
-export const ContentsText = styled.section<{ selected: string }>`
+export const ContentsText = styled(motion.section)<{ selected: string }>`
   margin-right: 2em;
 
   & > div {

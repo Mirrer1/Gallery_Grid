@@ -1,10 +1,11 @@
 import styled from 'styled-components';
+import { motion } from 'framer-motion';
 
 import media from 'styles/media';
 import { HoverStyle } from 'styles/Common/hover';
 import { ShadowStyle } from 'styles/Common/shadow';
 
-export const AccountWrapper = styled.section`
+export const AccountWrapper = styled(motion.section)`
   ${({ theme }) => theme.flexColumnSet()};
   flex-grow: 1;
   padding-top: 4em;
