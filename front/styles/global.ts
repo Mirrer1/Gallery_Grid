@@ -66,7 +66,7 @@ const GlobalStyles = createGlobalStyle`
 
   .Toastify__toast--success {    
     background-color: white;
-    color: black;
+    color: #222222;
     position: relative;
     padding-left: 15px;
     border-radius: 0;
@@ -85,7 +85,7 @@ const GlobalStyles = createGlobalStyle`
 
   .Toastify__toast--warning {    
     background-color: white;
-    color: black;
+    color: #222222;
     position: relative;
     padding-left: 15px;
     border-radius: 0;
@@ -104,7 +104,7 @@ const GlobalStyles = createGlobalStyle`
 
   .Toastify__toast--error {
     background-color: white;
-    color: black;
+    color: #222222;
     position: relative;
     padding-left: 15px;
     border-radius: 0;

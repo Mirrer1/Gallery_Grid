@@ -3,6 +3,7 @@ export interface Theme {
     primary: string;
     bg: string;
     lightBg: string;
+    font: string;
   };
   calcRem: (pxSize: number) => string;
   flexSet: (just?: string, align?: string) => string;

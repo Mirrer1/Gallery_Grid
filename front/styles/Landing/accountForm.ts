@@ -84,7 +84,7 @@ export const AccountInput = styled.div<{ $largemargin: string }>`
   & > input {
     width: 100%;
     font-size: 0.8rem;
-    color: #222222;
+    color: ${({ theme }) => theme.colors.font};
     border: none;
     border-bottom: solid #aaaaaa 1px;
     padding-bottom: 8px;

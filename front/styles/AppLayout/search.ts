@@ -18,7 +18,7 @@ export const SearchWrapper = styled.div`
     -webkit-appearance: none;
     transition: all 0.6s ease;
     cursor: pointer;
-    color: #000000;
+    color: ${({ theme }) => theme.colors.font};
 
     &:not(:placeholder-shown),
     &:focus {

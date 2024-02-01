@@ -4,7 +4,8 @@ const theme: Theme = {
   colors: {
     primary: '#6BA2E6',
     bg: '#E4E5EC',
-    lightBg: '#EEEFF3'
+    lightBg: '#EEEFF3',
+    font: '#222222'
   },
   calcRem: pxSize => {
     return `${pxSize / 16}rem`;
