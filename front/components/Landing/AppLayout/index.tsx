@@ -5,15 +5,16 @@ import {
   LogoutOutlined,
   MessageOutlined,
   PictureOutlined,
-  SearchOutlined,
   SettingOutlined
 } from '@ant-design/icons';
+
+import Search from './Search';
 
 const AppLayout = ({ children }: { children: ReactNode }) => {
   return (
     <>
       <aside>
-        <SearchOutlined />
+        <Search />
 
         <div>
           <img
