@@ -9,6 +9,7 @@ import {
 } from '@ant-design/icons';
 
 import Search from './Search';
+import Link from 'next/link';
 
 const AppLayout = ({ children }: { children: ReactNode }) => {
   return (
@@ -26,36 +27,36 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
         </div>
 
         <div>
-          <button type="button">
+          <Link href="/home">
             <FieldTimeOutlined />
             <p>Timeline</p>
-          </button>
+          </Link>
 
-          <button type="button">
+          <Link href="/activity">
             <AreaChartOutlined />
             <p>Activity</p>
-          </button>
+          </Link>
 
-          <button type="button">
+          <Link href="/message">
             <MessageOutlined />
             <p>Message</p>
-          </button>
+          </Link>
 
-          <button type="button">
+          <Link href="/gallery">
             <PictureOutlined />
             <p>Gallery</p>
-          </button>
+          </Link>
         </div>
 
         <div>
-          <button type="button">
+          <Link href="/settings">
             <SettingOutlined />
             <p>Settings</p>
-          </button>
+          </Link>
 
           <button type="button">
             <LogoutOutlined />
-            <p>Settings</p>
+            <p>Logout</p>
           </button>
         </div>
       </aside>
