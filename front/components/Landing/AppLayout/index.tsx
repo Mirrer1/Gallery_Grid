@@ -1,4 +1,5 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useCallback } from 'react';
+import { useRouter } from 'next/router';
 import {
   AreaChartOutlined,
   FieldTimeOutlined,
@@ -9,60 +10,74 @@ import {
 } from '@ant-design/icons';
 
 import Search from './Search';
-import Link from 'next/link';
+import { LayoutWrapper, NavbarItem, NavbarItems, NavbarLogout, NavbarMessage, NavbarProfile } from 'styles/AppLayout';
 
 const AppLayout = ({ children }: { children: ReactNode }) => {
+  const router = useRouter();
+
+  const onClickMessage = useCallback(() => {
+    router.push('/message');
+  }, []);
+
   return (
-    <>
+    <LayoutWrapper>
       <aside>
         <Search />
 
-        <div>
+        <NavbarProfile>
           <img
             src="https://t3.ftcdn.net/jpg/05/16/27/58/360_F_516275801_f3Fsp17x6HQK0xQgDQEELoTuERO4SsWV.jpg"
             alt="user profile image"
           />
           <h1>Tanya Shah</h1>
           <p>IntroText blah blah.</p>
-        </div>
+        </NavbarProfile>
 
-        <div>
-          <Link href="/home">
+        <NavbarItems $firstmargin="true">
+          <NavbarItem href="/home" $selected={router.pathname === '/home'}>
             <FieldTimeOutlined />
             <p>Timeline</p>
-          </Link>
+          </NavbarItem>
 
-          <Link href="/activity">
+          <NavbarItem href="/activity" $selected={router.pathname === '/activity'}>
             <AreaChartOutlined />
             <p>Activity</p>
-          </Link>
+          </NavbarItem>
 
-          <Link href="/message">
-            <MessageOutlined />
-            <p>Message</p>
-          </Link>
+          <NavbarMessage $selected={router.pathname === '/message'}>
+            <NavbarItem href="/message" $selected={router.pathname === '/message'}>
+              <MessageOutlined />
+              <p>Message</p>
+            </NavbarItem>
 
-          <Link href="/gallery">
+            <div>
+              <button type="button" onClick={onClickMessage}>
+                5
+              </button>
+            </div>
+          </NavbarMessage>
+
+          <NavbarItem href="/gallery" $selected={router.pathname === '/gallery'}>
             <PictureOutlined />
             <p>Gallery</p>
-          </Link>
-        </div>
+          </NavbarItem>
+        </NavbarItems>
 
-        <div>
-          <Link href="/settings">
+        <NavbarItems $firstmargin="false">
+          <NavbarItem href="/settings" $selected={router.pathname === '/settings'}>
             <SettingOutlined />
             <p>Settings</p>
-          </Link>
+          </NavbarItem>
 
-          <button type="button">
+          <NavbarLogout type="button">
             <LogoutOutlined />
             <p>Logout</p>
-          </button>
-        </div>
+          </NavbarLogout>
+        </NavbarItems>
       </aside>
 
       <main>{children}</main>
-    </>
+    </LayoutWrapper>
   );
 };
 

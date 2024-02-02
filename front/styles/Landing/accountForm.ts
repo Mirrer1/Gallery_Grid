@@ -51,12 +51,16 @@ export const AccountGoogle = styled.div`
       font-size: 0.9rem;
     }
   }
+
+  ${media.mobile} {
+    width: 85%;
+  }
 `;
 
 export const AccountDivider = styled.div`
   width: 78%;
   font-size: 0.6rem;
-  font-weight: 700;
+  font-weight: 500;
   display: flex;
   align-items: center;
   color: rgba(0, 0, 0, 0.2);
@@ -135,6 +139,21 @@ export const AccountInput = styled.div<{ $largemargin: string }>`
   & > input:valid ~ span {
     width: 100%;
   }
+
+  ${media.mobile} {
+    & > input {
+      font-size: 0.7rem;
+    }
+
+    & > label {
+      font-size: 0.8rem;
+    }
+
+    & > input:focus ~ label,
+    & > input:valid ~ label {
+      font-size: 0.7rem;
+    }
+  }
 `;
 
 export const AccountAlert = styled.p<{ $login: string }>`
@@ -142,6 +161,10 @@ export const AccountAlert = styled.p<{ $login: string }>`
   opacity: 50%;
   padding-left: 5px;
   margin-bottom: ${props => (props.$login === 'true' ? '1em' : '3em')};
+
+  ${media.mobile} {
+    font-size: 0.5rem;
+  }
 `;
 
 export const AuthOptionsWrapper = styled.div`
@@ -158,13 +181,13 @@ export const AuthOptionsWrapper = styled.div`
   & > div > label {
     cursor: pointer;
     font-size: 0.7rem;
-    font-weight: 700;
+    font-weight: 500;
   }
 
   & > button {
     color: #1890ff;
     font-size: 0.7rem;
-    font-weight: 700;
+    font-weight: 500;
   }
 
   & > button:hover {
@@ -175,11 +198,12 @@ export const AuthOptionsWrapper = styled.div`
     margin-bottom: 1.5em;
 
     & > div > label {
-      font-size: 0.6rem;
+      font-size: 0.5rem;
     }
 
     & > button {
-      font-size: 0.6rem;
+      padding-top: 0.9em;
+      font-size: 0.5rem;
     }
   }
 `;
@@ -192,7 +216,7 @@ export const AccountBtn = styled.div`
     ${HoverStyle('&')}
     ${ShadowStyle}
     font-size: 0.7rem;
-    font-weight: 700;
+    font-weight: 500;
     padding: 0.5em 2em 0.7em 2em;
     border: 1px solid rgba(217, 217, 217, 1);
   }
@@ -217,11 +241,13 @@ export const AccountFooter = styled.footer`
   & > p > span {
     ${HoverStyle('&')}
     color: #1890ff;
-    font-weight: 700;
+    font-weight: 600;
     cursor: pointer;
   }
 
-  /* ${media.tablet} {
-    width: 90%;
-  } */
+  ${media.mobile} {
+    & > p {
+      font-size: 0.6rem;
+    }
+  }
 `;

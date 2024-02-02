@@ -14,16 +14,17 @@ export const ContentsWrapper = styled.main`
 
   ${media.mobile} {
     ${({ theme }) => theme.flexColumnSet('center', 'center')};
+    padding: 1em;
   }
 `;
 
-export const ContentsText = styled(motion.section)<{ selected: string }>`
+export const ContentsText = styled(motion.section)<{ $selected: string }>`
   margin-right: 2em;
 
   & > div {
     ${({ theme }) => theme.flexSet('start')};
     font-size: 0.7rem;
-    font-weight: 700;
+    font-weight: 500;
     margin-bottom: 5em;
   }
 
@@ -51,7 +52,7 @@ export const ContentsText = styled(motion.section)<{ selected: string }>`
   ${HoverStyle('& > button')};
   & > button {
     font-size: 0.9rem;
-    font-weight: 700;
+    font-weight: 500;
   }
 
   ${media.tablet} {
@@ -83,7 +84,7 @@ export const ContentsText = styled(motion.section)<{ selected: string }>`
 
     & > p {
       font-size: 0.55rem;
-      margin-bottom: ${props => (props.selected === 'home' ? '1em' : '4em')};
+      margin-bottom: ${props => (props.$selected === 'home' ? '1em' : '4em')};
     }
 
     & > button {

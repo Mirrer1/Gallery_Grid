@@ -30,25 +30,26 @@ export const HeaderWrapper = styled.header`
   }
 `;
 
-export const MenuButton = styled.button<{ selected: boolean }>`
+export const MenuButton = styled.button<{ $selected: boolean }>`
   ${ReverseHoverStyle('&')}
   font-size: 0.8rem;
-  font-weight: 700;
+  font-weight: 500;
   margin-right: 5em;
-  opacity: ${props => (props.selected ? '100%' : '40%')};
-  text-decoration: ${props => (props.selected ? 'underline' : 'none')};
-  text-decoration-thickness: ${props => (props.selected ? '2px' : '0')};
-  text-underline-offset: ${props => (props.selected ? '10px' : '0')};
+  opacity: ${props => (props.$selected ? '100%' : '40%')};
+  text-decoration: ${props => (props.$selected ? 'underline' : 'none')};
+  text-decoration-thickness: ${props => (props.$selected ? '2px' : '0')};
+  text-underline-offset: ${props => (props.$selected ? '10px' : '0')};
 
   ${media.tablet} {
     margin-right: 4em;
   }
 
   ${media.mobile} {
-    font-size: 0.7rem;
-    margin-right: 3em;
-    padding-bottom: 0.5em;
-    text-decoration-thickness: ${props => (props.selected ? '1.2px' : '0')};
+    font-size: 0.6rem;
+    margin-right: 2.5em;
+    padding-bottom: 1em;
+    text-decoration-thickness: ${props => (props.$selected ? '1.2px' : '0')};
+    text-underline-offset: ${props => (props.$selected ? '5px' : '0')};
   }
 `;
 

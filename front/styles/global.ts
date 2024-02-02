@@ -32,8 +32,8 @@ const GlobalStyles = createGlobalStyle`
   html,
   body,
   #__next {
-    height: 100%;
-    font-family: 'DM Sans', sans-serif;
+    height: 100%;    
+    font-family: 'Noto Sans KR', sans-serif;
   }
 
   img,

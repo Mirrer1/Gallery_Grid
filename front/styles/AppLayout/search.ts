@@ -2,12 +2,13 @@ import styled from 'styled-components';
 
 export const SearchWrapper = styled.div`
   display: table;
+  margin-bottom: 3em;
 
   & > input {
     background: none;
     border: none;
     outline: none;
-    width: 120px;
+    width: 110px;
     min-width: 0;
     padding: 0;
     z-index: 1;

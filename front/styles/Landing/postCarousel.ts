@@ -64,7 +64,7 @@ export const CarouselBtn = styled.div`
 
   & > button > span {
     font-size: 0.7rem;
-    font-weight: 700;
+    font-weight: 500;
     margin-right: 0.5em;
   }
 `;
