@@ -3,8 +3,9 @@ import { Theme } from './theme.d';
 const theme: Theme = {
   colors: {
     primary: '#6BA2E6',
-    bg: '#E4E5EC',
-    lightBg: '#EEEFF3',
+    bg: '#EEEFF3',
+    darkBg: '#E4E5EC',
+    lightBg: '#F7F7F9',
     font: '#222222'
   },
   calcRem: pxSize => {

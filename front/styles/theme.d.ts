@@ -2,6 +2,7 @@ export interface Theme {
   colors: {
     primary: string;
     bg: string;
+    darkBg: string;
     lightBg: string;
     font: string;
   };
