@@ -34,7 +34,7 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
         </NavbarProfile>
 
         <NavbarItems $firstmargin="true">
-          <NavbarItem href="/home" $selected={router.pathname === '/home'}>
+          <NavbarItem href="/timeline" $selected={router.pathname === '/timeline'}>
             <FieldTimeOutlined />
             <p>Timeline</p>
           </NavbarItem>

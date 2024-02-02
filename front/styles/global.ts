@@ -60,6 +60,10 @@ const GlobalStyles = createGlobalStyle`
     border-spacing: 0;
   }
 
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
   .Toastify__toast {
     font-size: 14px;
   }

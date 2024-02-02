@@ -4,7 +4,7 @@ import Router from 'next/router';
 
 import useInput from 'utils/useInput';
 import { useValidate } from 'utils/useValidate';
-import { BaseMenuProps } from 'types/MenuProps';
+import { IMenu } from 'types/Menu';
 import { slideInFromBottom } from 'styles/Common/animation';
 import {
   AccountBtn,
@@ -18,7 +18,7 @@ import {
   AccountAlert
 } from 'styles/Landing/accountForm';
 
-const LoginForm = ({ onClickMenu }: BaseMenuProps) => {
+const LoginForm = ({ onClickMenu }: IMenu) => {
   const [email, onChangeEmail] = useInput('');
   const [password, onChangePassword] = useInput('');
   const [rememberMe, onChangeRememberMe] = useInput(false);
@@ -42,7 +42,7 @@ const LoginForm = ({ onClickMenu }: BaseMenuProps) => {
       // }
 
       console.log({ email, password, rememberMe });
-      Router.push('/home');
+      Router.push('/timeline');
     },
     [email, password, rememberMe]
   );

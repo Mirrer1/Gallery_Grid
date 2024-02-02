@@ -5,14 +5,20 @@ import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
 
 export const LayoutWrapper = styled.div`
   ${({ theme }) => theme.flexSet('start')};
+  height: 100%;
 
   & > aside {
+    ${({ theme }) => theme.flexColumnSet('start', 'start')};
     width: 250px;
+    height: 100%;
     padding: 1.2em 1.8em;
   }
 
   & > main {
     flex-grow: 1;
+    height: 100%;
+    width: 100%;
+    background-color: ${({ theme }) => theme.colors.bg};
   }
 `;
 
@@ -40,6 +46,7 @@ export const NavbarProfile = styled.div`
 `;
 
 export const NavbarItems = styled.div<{ $firstmargin: string }>`
+  width: 100%;
   margin-bottom: ${props => props.$firstmargin === 'true' && '6em'};
 `;
 
