@@ -4,6 +4,8 @@ import Head from 'next/head';
 import AppLayout from 'components/AppLayout';
 import PostingForm from 'components/Timeline/PostingForm';
 import PostList from 'components/Timeline/PostList';
+import PopularUser from 'components/Timeline/PopularUser';
+import { TimelineWrapper } from 'styles/Timeline';
 
 const Timeline = () => {
   return (
@@ -13,17 +15,17 @@ const Timeline = () => {
       </Head>
 
       <AppLayout>
-        <section style={{ display: 'flex', justifyContent: 'start' }}>
-          <div style={{ flex: '7' }}>
+        <TimelineWrapper>
+          <article>
             <PostingForm />
             <PostList />
-          </div>
+          </article>
 
-          <div style={{ flex: '3' }}>
-            <div>인기작성자</div>
+          <article>
+            <PopularUser />
             <div>팔로워목록</div>
-          </div>
-        </section>
+          </article>
+        </TimelineWrapper>
       </AppLayout>
     </>
   );

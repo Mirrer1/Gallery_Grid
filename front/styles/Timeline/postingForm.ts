@@ -3,11 +3,13 @@ import styled from 'styled-components';
 import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
 
 export const PostingWrapper = styled.form`
-  ${({ theme }) => theme.flexColumnSet('start', 'start')}
-  padding: 1em;
+  background-color: ${({ theme }) => theme.colors.darkBg};
+  height: 25%;
+  border-radius: 5px 5px 0 0;
 
   & > textarea {
     width: 100%;
+    height: 70%;
     font-size: 0.8rem;
     background-color: ${({ theme }) => theme.colors.darkBg};
     padding: 1.5em 1em;
@@ -20,8 +22,8 @@ export const PostingWrapper = styled.form`
   & > div {
     ${({ theme }) => theme.flexSet('space-between')};
     width: 100%;
+    height: 30%;
     background-color: ${({ theme }) => theme.colors.darkBg};
-    border-radius: 0 0 5px 5px;
     padding: 0.7em 1em;
   }
 

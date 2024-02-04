@@ -13,7 +13,7 @@ export const LayoutWrapper = styled.div`
 
   & > aside {
     ${({ theme }) => theme.flexColumnSet('start', 'start')};
-    width: 250px;
+    width: 20%;
     height: 100%;
     background-color: white;
     padding: 1.2em 1.8em;
@@ -21,7 +21,7 @@ export const LayoutWrapper = styled.div`
   }
 
   & > main {
-    flex-grow: 1;
+    width: 80%;
     height: 100%;
     background-color: ${({ theme }) => theme.colors.bg};
     border-radius: 0 5px 5px 0;
