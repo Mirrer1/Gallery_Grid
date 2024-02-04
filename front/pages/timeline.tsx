@@ -3,6 +3,7 @@ import Head from 'next/head';
 
 import AppLayout from 'components/AppLayout';
 import PostingForm from 'components/Timeline/PostingForm';
+import PostList from 'components/Timeline/PostList';
 
 const Timeline = () => {
   return (
@@ -12,13 +13,13 @@ const Timeline = () => {
       </Head>
 
       <AppLayout>
-        <section>
-          <div>
+        <section style={{ display: 'flex', justifyContent: 'start' }}>
+          <div style={{ flex: '7' }}>
             <PostingForm />
-            <div>게시글 목록</div>
+            <PostList />
           </div>
 
-          <div>
+          <div style={{ flex: '3' }}>
             <div>인기작성자</div>
             <div>팔로워목록</div>
           </div>

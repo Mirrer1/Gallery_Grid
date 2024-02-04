@@ -1,24 +1,30 @@
 import styled from 'styled-components';
 import Link from 'next/link';
 
-import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
+import { ReverseHoverStyle } from 'styles/Common/hover';
 
 export const LayoutWrapper = styled.div`
   ${({ theme }) => theme.flexSet('start')};
+  background-color: ${({ theme }) => theme.colors.darkBg};
+  width: 100%;
   height: 100%;
+  flex-grow: 1;
+  padding: 2em 4em;
 
   & > aside {
     ${({ theme }) => theme.flexColumnSet('start', 'start')};
     width: 250px;
     height: 100%;
+    background-color: white;
     padding: 1.2em 1.8em;
+    border-radius: 5px 0 0 5px;
   }
 
   & > main {
     flex-grow: 1;
     height: 100%;
-    width: 100%;
     background-color: ${({ theme }) => theme.colors.bg};
+    border-radius: 0 5px 5px 0;
   }
 `;
 

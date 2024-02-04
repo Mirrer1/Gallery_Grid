@@ -7,7 +7,7 @@ export const PostingWrapper = styled.form`
   padding: 1em;
 
   & > textarea {
-    width: 35%;
+    width: 100%;
     font-size: 0.8rem;
     background-color: ${({ theme }) => theme.colors.darkBg};
     padding: 1.5em 1em;
@@ -19,7 +19,7 @@ export const PostingWrapper = styled.form`
 
   & > div {
     ${({ theme }) => theme.flexSet('space-between')};
-    width: 35%;
+    width: 100%;
     background-color: ${({ theme }) => theme.colors.darkBg};
     border-radius: 0 0 5px 5px;
     padding: 0.7em 1em;
