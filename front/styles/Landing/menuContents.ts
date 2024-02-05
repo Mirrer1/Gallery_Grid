@@ -6,10 +6,10 @@ import { motion } from 'framer-motion';
 
 export const ContentsWrapper = styled.main`
   ${({ theme }) => theme.flexSet('space-between', 'start')};
-  padding: 2em 6em;
+  padding: 2em 3em 0 6em;
 
   ${media.tablet} {
-    padding: 2em;
+    padding: 6em 0 0 3em;
   }
 
   ${media.mobile} {
@@ -19,11 +19,12 @@ export const ContentsWrapper = styled.main`
 `;
 
 export const ContentsText = styled(motion.section)<{ $selected: string }>`
-  margin-right: 2em;
+  width: 35%;
+  margin: 2em 0 0 0;
 
   & > div {
     ${({ theme }) => theme.flexSet('start')};
-    font-size: 0.7rem;
+    font-size: 0.9rem;
     font-weight: 500;
     margin-bottom: 5em;
   }
@@ -36,14 +37,13 @@ export const ContentsText = styled(motion.section)<{ $selected: string }>`
   }
 
   & > h1 {
-    font-size: 3rem;
+    font-size: 3.2rem;
     font-weight: 700;
     line-height: 1.2em;
     margin-bottom: 0.8em;
   }
 
   & > p {
-    font-size: 0.8rem;
     opacity: 70%;
     line-height: 2em;
     margin-bottom: 3em;
@@ -51,31 +51,37 @@ export const ContentsText = styled(motion.section)<{ $selected: string }>`
 
   ${HoverStyle('& > button')};
   & > button {
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     font-weight: 500;
   }
 
   ${media.tablet} {
+    margin: 1.5em 0 0 0;
+
     & > div {
-      font-size: 0.6rem;
+      font-size: 0.8rem;
+      margin-bottom: 3em;
     }
 
     & > h1 {
-      font-size: 2rem;
+      font-size: 2.5rem;
+      margin-bottom: 0.6em;
     }
 
     & > p {
-      font-size: 0.6rem;
+      font-size: 0.8rem;
+      margin-bottom: 2em;
     }
 
     & > button {
-      font-size: 0.7rem;
+      font-size: 0.9rem;
     }
   }
 
   ${media.mobile} {
     margin-right: 0;
     text-align: center;
+    width: 100%;
 
     & > div {
       ${({ theme }) => theme.flexSet()};
@@ -83,13 +89,13 @@ export const ContentsText = styled(motion.section)<{ $selected: string }>`
     }
 
     & > p {
-      font-size: 0.55rem;
+      font-size: 0.7rem;
       margin-bottom: ${props => (props.$selected === 'home' ? '1em' : '4em')};
     }
 
     & > button {
-      font-size: 0.7rem;
-      margin-bottom: 4em;
+      font-size: 0.8rem;
+      margin-bottom: 2.5em;
     }
   }
 `;

@@ -28,17 +28,18 @@ export const AccountGoogle = styled.div`
   width: 75%;
   background-color: #1890ff;
   border-radius: 2px;
-  padding: 0.2em 0em;
+  padding: 0.4em 0em;
   margin-bottom: 1.5em;
 
   & > .anticon-google {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
     color: white;
     margin-right: 0.6em;
   }
 
   & > button {
     color: white;
+    font-size: 1.1rem;
   }
 
   ${media.tablet} {
@@ -54,17 +55,18 @@ export const AccountGoogle = styled.div`
 
   ${media.mobile} {
     width: 85%;
+    margin-bottom: 1em;
   }
 `;
 
 export const AccountDivider = styled.div`
-  width: 78%;
-  font-size: 0.6rem;
+  width: 77%;
+  font-size: 0.8rem;
   font-weight: 500;
   display: flex;
   align-items: center;
   color: rgba(0, 0, 0, 0.2);
-  margin-bottom: 2em;
+  margin-bottom: 2.2em;
 
   &:before,
   &:after {
@@ -74,10 +76,22 @@ export const AccountDivider = styled.div`
     background-color: rgba(0, 0, 0, 0.06);
     margin: 10px;
   }
+
+  ${media.tablet} {
+    font-size: 0.7rem;
+  }
+
+  ${media.mobile} {
+    width: 90%;
+  }
 `;
 
 export const AccountForm = styled.form`
   width: 75%;
+
+  ${media.mobile} {
+    width: 85%;
+  }
 `;
 
 export const AccountInput = styled.div<{ $largemargin: string }>`
@@ -87,7 +101,7 @@ export const AccountInput = styled.div<{ $largemargin: string }>`
 
   & > input {
     width: 100%;
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     color: ${({ theme }) => theme.colors.font};
     border: none;
     border-bottom: solid #aaaaaa 1px;
@@ -122,14 +136,13 @@ export const AccountInput = styled.div<{ $largemargin: string }>`
     position: absolute;
     color: #aaa;
     left: 5px;
-    font-size: 0.9rem;
     bottom: 8px;
     transition: all 0.2s;
   }
 
   & > input:focus ~ label,
   & > input:valid ~ label {
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     bottom: 35px;
     color: #666;
     font-weight: bold;
@@ -142,28 +155,32 @@ export const AccountInput = styled.div<{ $largemargin: string }>`
 
   ${media.mobile} {
     & > input {
-      font-size: 0.7rem;
+      font-size: 0.8rem;
     }
 
     & > label {
-      font-size: 0.8rem;
+      font-size: 0.9rem;
     }
 
     & > input:focus ~ label,
     & > input:valid ~ label {
-      font-size: 0.7rem;
+      font-size: 0.8rem;
     }
   }
 `;
 
 export const AccountAlert = styled.p<{ $login: string }>`
-  font-size: 0.6rem;
+  font-size: 0.7rem;
   opacity: 50%;
   padding-left: 5px;
   margin-bottom: ${props => (props.$login === 'true' ? '1em' : '3em')};
 
+  ${media.tablet} {
+    font-size: 0.6rem;
+  }
+
   ${media.mobile} {
-    font-size: 0.5rem;
+    font-size: 0.55rem;
   }
 `;
 
@@ -171,22 +188,26 @@ export const AuthOptionsWrapper = styled.div`
   ${({ theme }) => theme.flexSet('space-between')};
   margin-bottom: 1em;
 
+  & > div {
+    padding-bottom: 0.2em;
+  }
+
   & > div > input {
     cursor: pointer;
-    width: 10px;
-    height: 8px;
+    width: 11px;
+    height: 9px;
     margin-right: 0.3em;
   }
 
   & > div > label {
     cursor: pointer;
-    font-size: 0.7rem;
+    font-size: 0.8rem;
     font-weight: 500;
   }
 
   & > button {
     color: #1890ff;
-    font-size: 0.7rem;
+    font-size: 0.8rem;
     font-weight: 500;
   }
 
@@ -194,16 +215,34 @@ export const AuthOptionsWrapper = styled.div`
     text-decoration: underline;
   }
 
+  ${media.tablet} {
+    & > div > label {
+      font-size: 0.65rem;
+    }
+
+    & > button {
+      font-size: 0.65rem;
+    }
+  }
+
   ${media.mobile} {
     margin-bottom: 1.5em;
 
+    & > div {
+      padding-bottom: 0;
+    }
+
+    & > div > input {
+      margin-right: 0.15em;
+    }
+
     & > div > label {
-      font-size: 0.5rem;
+      font-size: 0.55rem;
     }
 
     & > button {
       padding-top: 0.9em;
-      font-size: 0.5rem;
+      font-size: 0.55rem;
     }
   }
 `;
@@ -215,10 +254,16 @@ export const AccountBtn = styled.div`
   & > button {
     ${HoverStyle('&')}
     ${ShadowStyle}
-    font-size: 0.7rem;
+    font-size: 0.8rem;
     font-weight: 500;
-    padding: 0.5em 2em 0.7em 2em;
+    padding: 0.5em 2em 0.6em 2em;
     border: 1px solid rgba(217, 217, 217, 1);
+  }
+
+  ${media.tablet} {
+    & > button {
+      font-size: 0.7rem;
+    }
   }
 `;
 
@@ -234,7 +279,7 @@ export const AccountFooter = styled.footer`
 
   & > p {
     text-align: center;
-    font-size: 0.7rem;
+    font-size: 0.8rem;
     color: rgba(0, 0, 0, 0.45);
   }
 
@@ -243,6 +288,12 @@ export const AccountFooter = styled.footer`
     color: #1890ff;
     font-weight: 600;
     cursor: pointer;
+  }
+
+  ${media.tablet} {
+    & > p {
+      font-size: 0.7rem;
+    }
   }
 
   ${media.mobile} {

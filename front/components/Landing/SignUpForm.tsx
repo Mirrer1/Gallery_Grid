@@ -87,7 +87,7 @@ const SignUpForm = ({ onClickMenu }: IMenu) => {
 
         <AccountInput $largemargin="true">
           <input type="password" value={passwordCheck} onChange={onChangePasswordCheck} required />
-          <label>Confirm Password</label>
+          <label>Confirm password</label>
           <span></span>
         </AccountInput>
 
