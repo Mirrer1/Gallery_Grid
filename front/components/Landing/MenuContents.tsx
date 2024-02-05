@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { toast } from 'react-toastify';
 
-import PostCarousel from './PostCarousel';
+import LandingCarousel from './LandingCarousel';
 import LoginForm from './LoginForm';
 import SignUpForm from './SignUpForm';
 import { IMenuContents } from 'types/Menu';
@@ -91,7 +91,7 @@ const MenuContents = ({ selectMenu, onClickMenu }: IMenuContents) => {
       </ContentsText>
 
       {selectMenu === 'home' ? (
-        <PostCarousel />
+        <LandingCarousel />
       ) : selectMenu === 'login' ? (
         <LoginForm onClickMenu={onClickMenu} />
       ) : selectMenu === 'signup' ? (

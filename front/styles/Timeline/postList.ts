@@ -81,11 +81,14 @@ export const PostContents = styled.div`
   }
 
   & > div > p {
+    display: -webkit-box;
+    -webkit-line-clamp: 9;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
     font-size: 0.8rem;
     opacity: 60%;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    white-space: pre-wrap;
     line-height: 1.5;
   }
 `;

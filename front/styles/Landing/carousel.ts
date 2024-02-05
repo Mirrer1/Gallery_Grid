@@ -18,7 +18,6 @@ export const CarouselImage = styled.div`
   width: 100%;
 
   & > img {
-    cursor: pointer;
     width: 90%;
     height: 500px;
     margin-right: 1em;

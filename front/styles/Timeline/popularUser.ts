@@ -17,22 +17,28 @@ export const PopularBtn = styled.div<{ $alignleft: string }>`
 
 export const PopularUserWrapper = styled.div`
   position: relative;
-  top: 10px;
   background-color: ${({ theme }) => theme.colors.lightBg};
   border-radius: 5px;
   margin-bottom: 1em;
-
-  &:hover ${PopularBtn} {
-    opacity: 100%;
-  }
+  overflow: hidden;
 
   & > div {
     position: relative;
-    bottom: 10px;
-    right: 10px;
+    display: flex;
+    flex-wrap: nowrap;
+    transition: transform 400ms ease-in-out;
   }
 
-  & > div > img {
+  & > div:hover ${PopularBtn} {
+    opacity: 100%;
+  }
+
+  & > div > div {
+    width: 100%;
+    position: relative;
+  }
+
+  & > div > div > img {
     width: 100%;
     height: 250px;
     border-radius: 5px 5px 0 0;
@@ -58,11 +64,14 @@ export const PopularUserContents = styled.div`
   }
 
   & > p {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
     font-size: 0.8rem;
     opacity: 60%;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    white-space: pre-wrap;
     line-height: 1.5;
     margin-bottom: 1em;
   }

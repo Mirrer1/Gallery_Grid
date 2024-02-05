@@ -3,9 +3,9 @@ import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { motion } from 'framer-motion';
 
 import { CarouselAnimation } from 'styles/Common/animation';
-import { CarouselBtn, CarouselImage, CarouselWrapper } from 'styles/Landing/postCarousel';
+import { CarouselBtn, CarouselImage, CarouselWrapper } from 'styles/Landing/carousel';
 
-const PostCarousel = () => {
+const LandingCarousel = () => {
   const bestProduct = [
     { user: 'user1', img: 'https://i.ibb.co/n70QqMG/drawing-series-by.jpg' },
     { user: 'user2', img: 'https://i.ibb.co/BCsx9nZ/image.jpg' },
@@ -51,4 +51,4 @@ const PostCarousel = () => {
   );
 };
 
-export default PostCarousel;
+export default LandingCarousel;
