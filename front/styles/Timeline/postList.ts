@@ -65,16 +65,46 @@ export const PostHeader = styled.div`
 
 export const PostContents = styled.div`
   width: 100%;
-
   ${({ theme }) => theme.flexSet('space-between', 'start')}
 
-  & >  img {
+  & > div:first-child {
+    position: relative;
+    cursor: pointer;
     width: 50%;
     height: 200px;
-    margin-right: 1em;
   }
 
-  & > div {
+  & > div:first-child > img {
+    width: 100%;
+    height: 100%;
+    margin-right: 1em;
+    border-radius: 5px;
+  }
+
+  & > div:first-child > div {
+    ${({ theme }) => theme.flexSet()};
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+  }
+
+  & > div:first-child > div > div {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    margin-right: 4px;
+    background-color: #b5b5b5;
+
+    &:first-child {
+      background-color: ${({ theme }) => theme.colors.primary};
+    }
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+
+  & > div:last-child {
     width: 45%;
     height: 200px;
     ${({ theme }) => theme.flexColumnSet('space-between', 'start')}

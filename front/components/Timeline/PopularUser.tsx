@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { CaretLeftOutlined, CaretRightOutlined, CommentOutlined, LikeOutlined } from '@ant-design/icons';
 
 import { PopularBtn, PopularOptions, PopularUserContents, PopularUserWrapper } from 'styles/Timeline/popularUser';
@@ -29,19 +29,35 @@ const PopularUser = () => {
   ];
 
   const [curr, setCurr] = useState(0);
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
 
-  const next = () => {
+  const next = useCallback(() => {
     const newCurr = curr === popularUsers.length - 1 ? 0 : curr + 1;
     setCurr(newCurr);
-  };
+  }, [curr]);
 
-  const prev = () => {
+  const prev = useCallback(() => {
     const newCurr = curr === 0 ? popularUsers.length - 1 : curr - 1;
     setCurr(newCurr);
+  }, [curr]);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStartX(e.touches[0].clientX);
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX !== null) {
+      const touchEndX = e.changedTouches[0].clientX;
+      const deltaX = touchEndX - touchStartX;
+
+      if (deltaX > 50) prev();
+      else if (deltaX < -50) next();
+    }
+    setTouchStartX(null);
   };
 
   return (
-    <PopularUserWrapper>
+    <PopularUserWrapper onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
       <div style={{ transform: `translateX(-${curr * 100}%)` }}>
         {popularUsers.map((user, i) => (
           <div key={i}>

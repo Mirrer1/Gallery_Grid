@@ -138,6 +138,53 @@ const GlobalStyles = createGlobalStyle`
     border-radius: 0;
   }
 
+  .swiper {
+    width: 100%;
+    padding-top: 50px;
+    padding-bottom: 50px;
+  }
+
+  .swiper-slide {
+    background-position: center;
+    background-size: cover;
+    width: 400px;
+    height: 400px;
+  }
+
+  .swiper-slide img {
+    display: block;
+    width: 100%;
+    height: 400px;
+    border-radius: 10px;
+    box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+
+  .swiper-pagination-bullet-active {
+    background: #6BA2E6;
+  }
+
+  .swiper-button-prev, .swiper-button-next {
+    color: black !important;
+    transition: opacity 200ms ease-in-out;
+
+    &:hover {
+      opacity: 40%;
+    }
+
+    &:active {
+      opacity: 100%;
+    }
+  }
+
+  .swiper-button-prev:after,
+  .swiper-button-next:after {
+    font-size: 1.1rem !important;
+    font-weight: 600 !important;
+  }
+
+  
   @media screen and (min-width: 1200px) {
     .body {
       max-width: 960px !important;
