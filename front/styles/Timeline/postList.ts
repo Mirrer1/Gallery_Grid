@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
+import { ShadowStyle } from 'styles/Common/shadow';
 
 export const PostContainer = styled.div`
   height: 75%;
@@ -11,7 +12,8 @@ export const PostCategory = styled.div`
   position: sticky;
   top: 0;
   ${({ theme }) => theme.flexSet('end')}
-  padding: 1em 1em 0 0;
+  padding: 0.5em 1em 0.5em 0;
+  z-index: 10;
   background-color: white;
 `;
 
@@ -60,6 +62,46 @@ export const PostHeader = styled.div`
 
   & > span {
     ${HoverStyle('&')}
+  }
+`;
+
+export const PostTooltip = styled.div`
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+`;
+
+export const PostTooltipBtn = styled.span<{ $visible: boolean }>`
+  visibility: ${props => (props.$visible ? 'visible' : 'hidden')};
+  opacity: ${props => (props.$visible ? '1' : '0')};
+  position: absolute;
+  top: -80%;
+  right: 140%;
+  width: 135px;
+  text-align: center;
+  border-radius: 6px;
+  padding: 7px 0;
+  margin-left: -60px;
+  transition: opacity 0.3s;
+  z-index: 10;
+  ${ShadowStyle}
+
+  & > button {
+    ${HoverStyle('&')}
+    font-size: 0.7rem;
+    font-weight: 500;
+    padding: 0.7em 1.5em;
+  }
+
+  & > button:first-child {
+    margin-right: 0.3em;
+    color: ${({ theme }) => theme.colors.primary};
+    border: 1px ${({ theme }) => theme.colors.primary} solid;
+  }
+
+  & > button:last-child {
+    color: ${({ theme }) => theme.colors.red};
+    border: 1px ${({ theme }) => theme.colors.red} solid;
   }
 `;
 

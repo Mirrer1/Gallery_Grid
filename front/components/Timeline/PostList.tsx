@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { CommentOutlined, EllipsisOutlined, LikeOutlined } from '@ant-design/icons';
 
 import PostImageCarousel from './PostImageCarousel';
@@ -9,16 +9,21 @@ import {
   PostOptions,
   PostCategory,
   CategoryItem,
-  PostContainer
+  PostContainer,
+  PostTooltip,
+  PostTooltipBtn
 } from 'styles/Timeline/postList';
 
 const PostList = () => {
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [category, setCategory] = useState('best');
   const [modalImages, setModalImages] = useState<string[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isTooltipVisible, setIsTooltipVisible] = useState<string | null>(null);
 
   const postList = [
     {
+      id: 'as1',
       user: 'Lorem ipsum dolor',
       profile: 'https://t3.ftcdn.net/jpg/05/16/27/58/360_F_516275801_f3Fsp17x6HQK0xQgDQEELoTuERO4SsWV.jpg',
       img: [
@@ -30,6 +35,7 @@ const PostList = () => {
       desc: '가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하'
     },
     {
+      id: 'as2',
       user: 'Lorem ipsum dolor',
       profile: 'https://t3.ftcdn.net/jpg/05/16/27/58/360_F_516275801_f3Fsp17x6HQK0xQgDQEELoTuERO4SsWV.jpg',
       img: [
@@ -41,6 +47,7 @@ const PostList = () => {
       desc: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum, quia. Iusto molestias perspiciatis incidunt a eveniet ullam porro facere ipsum, ipsam magni magnam exercitationem amet blanditiis eius repellendus aspernatur pariatur?'
     },
     {
+      id: 'as3',
       user: 'Lorem ipsum dolor',
       profile: 'https://t3.ftcdn.net/jpg/05/16/27/58/360_F_516275801_f3Fsp17x6HQK0xQgDQEELoTuERO4SsWV.jpg',
       img: [
@@ -52,6 +59,7 @@ const PostList = () => {
       desc: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum, quia. Iusto molestias perspiciatis incidunt a eveniet ullam porro facere ipsum, ipsam magni magnam exercitationem amet blanditiis eius repellendus aspernatur pariatur?'
     },
     {
+      id: 'as4',
       user: 'Lorem ipsum dolor',
       profile: 'https://t3.ftcdn.net/jpg/05/16/27/58/360_F_516275801_f3Fsp17x6HQK0xQgDQEELoTuERO4SsWV.jpg',
       img: [
@@ -63,6 +71,7 @@ const PostList = () => {
       desc: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum, quia. Iusto molestias perspiciatis incidunt a eveniet ullam porro facere ipsum, ipsam magni magnam exercitationem amet blanditiis eius repellendus aspernatur pariatur?'
     },
     {
+      id: 'as5',
       user: 'Lorem ipsum dolor',
       profile: 'https://t3.ftcdn.net/jpg/05/16/27/58/360_F_516275801_f3Fsp17x6HQK0xQgDQEELoTuERO4SsWV.jpg',
       img: [
@@ -77,6 +86,13 @@ const PostList = () => {
 
   const onClickCategory = useCallback((category: string) => {
     setCategory(category);
+
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
   }, []);
 
   const showCarousel = useCallback((images: string[]) => {
@@ -84,8 +100,30 @@ const PostList = () => {
     setIsModalVisible(true);
   }, []);
 
+  const handleTooltip = useCallback(
+    (postId: string) => {
+      setIsTooltipVisible(isTooltipVisible === postId ? null : postId);
+    },
+    [isTooltipVisible]
+  );
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      const tooltipElement = document.getElementById(`tooltip-${isTooltipVisible}`);
+      if (tooltipElement && !tooltipElement.contains(e.target as HTMLElement)) {
+        setIsTooltipVisible(null);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [isTooltipVisible]);
+
   return (
-    <PostContainer>
+    <PostContainer ref={scrollContainerRef}>
       <PostCategory>
         <CategoryItem onClick={() => onClickCategory('best')} $selected={category === 'best'}>
           Best
@@ -95,8 +133,8 @@ const PostList = () => {
         </CategoryItem>
       </PostCategory>
 
-      {postList.map((post, i) => (
-        <PostWrapper key={i}>
+      {postList.map(post => (
+        <PostWrapper key={post.id}>
           <PostHeader>
             <div>
               <img src={post.profile} alt="author profile image" />
@@ -107,7 +145,14 @@ const PostList = () => {
               </div>
             </div>
 
-            <EllipsisOutlined />
+            <PostTooltip id={`tooltip-${post.id}`}>
+              <EllipsisOutlined onClick={() => handleTooltip(post.id)} />
+
+              <PostTooltipBtn $visible={isTooltipVisible === post.id}>
+                <button type="button">수정</button>
+                <button type="button">삭제</button>
+              </PostTooltipBtn>
+            </PostTooltip>
           </PostHeader>
 
           <PostContents>
@@ -115,8 +160,8 @@ const PostList = () => {
               <img src={post.img[0]} alt="post image" onClick={() => showCarousel(post.img)} />
 
               <div>
-                {post.img.map((post, i) => (
-                  <div></div>
+                {post.img.map((_, i) => (
+                  <div key={i}></div>
                 ))}
               </div>
             </div>
