@@ -21,6 +21,7 @@ export const PopularUserWrapper = styled.div`
   border-radius: 5px;
   margin-bottom: 1em;
   overflow: hidden;
+  height: 60%;
 
   & > div {
     position: relative;
@@ -40,7 +41,7 @@ export const PopularUserWrapper = styled.div`
 
   & > div > div > img {
     width: 100%;
-    height: 250px;
+    height: 320px;
     border-radius: 5px 5px 0 0;
   }
 `;
