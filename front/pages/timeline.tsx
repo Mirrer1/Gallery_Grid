@@ -6,6 +6,7 @@ import PostingForm from 'components/Timeline/PostingForm';
 import PostList from 'components/Timeline/PostList';
 import PopularUser from 'components/Timeline/PopularUser';
 import { TimelineWrapper } from 'styles/Timeline';
+import PopularFollowingList from 'components/Timeline/PopularFollowingList';
 
 const Timeline = () => {
   return (
@@ -23,7 +24,7 @@ const Timeline = () => {
 
           <article>
             <PopularUser />
-            <div>팔로워목록</div>
+            <PopularFollowingList />
           </article>
         </TimelineWrapper>
       </AppLayout>
