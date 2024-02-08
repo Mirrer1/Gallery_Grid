@@ -31,6 +31,7 @@ export const PostingWrapper = styled.form`
     ${ReverseHoverStyle('&')}
     opacity: 40%;
     margin-right: 1.5em;
+    cursor: pointer;
   }
 
   & > div > div > button {

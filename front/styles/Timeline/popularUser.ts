@@ -64,6 +64,12 @@ export const PopularUserContents = styled.div`
     margin-bottom: 1em;
   }
 
+  & > h1:hover {
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 1.5px;
+  }
+
   & > p {
     display: -webkit-box;
     -webkit-line-clamp: 3;

@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { HoverStyle } from 'styles/Common/hover';
 
 export const PopularFollowingWrapper = styled.div`
   ${({ theme }) => theme.flexColumnSet('center', 'start')}
@@ -16,20 +17,25 @@ export const PopularFollowingHeader = styled.div`
   margin-bottom: 2em;
 
   & > p {
-    opacity: 0;
+    position: absolute;
+    font-size: 10px;
+    bottom: 150%;
+    right: -5%;
     width: 55px;
+    opacity: 0;
     background-color: black;
     color: #ffffff;
     text-align: center;
     border-radius: 6px;
     padding: 8px 0;
-    font-size: 10px;
-    position: absolute;
     z-index: 1;
-    bottom: 150%;
-    right: -5%;
     margin-left: -60px;
     transition: opacity 0.3s;
+  }
+
+  & > span {
+    ${HoverStyle('&')}
+    cursor: pointer;
   }
 
   & > p::after {
@@ -68,6 +74,12 @@ export const PopularFollowingInfo = styled.div<{ $islast: boolean }>`
     font-size: 0.9rem;
     font-weight: 500;
     margin-bottom: 0.3em;
+  }
+
+  & > div > h2:hover {
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 1.5px;
   }
 
   & > div > p {

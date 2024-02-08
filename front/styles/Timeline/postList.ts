@@ -21,6 +21,7 @@ export const CategoryItem = styled.p<{ $selected: boolean }>`
   ${ReverseHoverStyle('&')};
   font-weight: 500;
   font-size: 0.7rem;
+  cursor: pointer;
   opacity: ${props => (props.$selected ? '100%' : '40%')};
 
   &:first-child {
@@ -53,15 +54,17 @@ export const PostHeader = styled.div`
     font-size: 0.9rem;
     font-weight: 500;
     margin-bottom: 0.3em;
+    cursor: pointer;
+  }
+
+  & > div > div > h1:hover {
+    text-decoration: underline;
+    text-underline-offset: 1.5px;
   }
 
   & > div > div > p {
     font-size: 0.6rem;
     opacity: 40%;
-  }
-
-  & > span {
-    ${HoverStyle('&')}
   }
 `;
 
@@ -69,6 +72,10 @@ export const PostTooltip = styled.div`
   position: relative;
   display: inline-block;
   cursor: pointer;
+
+  & > span:first-child {
+    ${HoverStyle('&')}
+  }
 `;
 
 export const PostTooltipBtn = styled.span<{ $visible: boolean }>`
@@ -172,6 +179,7 @@ export const PostOptions = styled.div`
     opacity: 60%;
     font-size: 0.7rem;
     ${ReverseHoverStyle('&')}
+    cursor: pointer;
   }
 
   & > div:first-child {
