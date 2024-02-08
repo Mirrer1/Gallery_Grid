@@ -56,7 +56,7 @@ const SignUpForm = ({ onClickMenu }: IMenu) => {
   );
 
   return (
-    <AccountWrapper {...slideInFromBottom}>
+    <AccountWrapper {...slideInFromBottom()}>
       <AccountGoogle>
         <GoogleOutlined />
         <button type="button">Continue with Google</button>

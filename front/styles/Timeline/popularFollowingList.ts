@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+
 import { HoverStyle } from 'styles/Common/hover';
 
 export const PopularFollowingWrapper = styled.div`

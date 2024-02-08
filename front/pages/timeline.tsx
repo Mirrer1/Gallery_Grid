@@ -5,8 +5,10 @@ import AppLayout from 'components/AppLayout';
 import PostingForm from 'components/Timeline/PostingForm';
 import PostList from 'components/Timeline/PostList';
 import PopularUser from 'components/Timeline/PopularUser';
-import { TimelineWrapper } from 'styles/Timeline';
 import PopularFollowingList from 'components/Timeline/PopularFollowingList';
+
+import { slideInFromBottom } from 'styles/Common/animation';
+import { CommunitySection, PostsSection, TimelineWrapper } from 'styles/Timeline';
 
 const Timeline = () => {
   return (
@@ -17,15 +19,15 @@ const Timeline = () => {
 
       <AppLayout>
         <TimelineWrapper>
-          <article>
+          <PostsSection {...slideInFromBottom()}>
             <PostingForm />
             <PostList />
-          </article>
+          </PostsSection>
 
-          <article>
+          <CommunitySection {...slideInFromBottom(0.3)}>
             <PopularUser />
             <PopularFollowingList />
-          </article>
+          </CommunitySection>
         </TimelineWrapper>
       </AppLayout>
     </>
