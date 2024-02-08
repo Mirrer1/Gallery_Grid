@@ -133,8 +133,8 @@ const PostList = () => {
         </CategoryItem>
       </PostCategory>
 
-      {postList.map(post => (
-        <PostWrapper key={post.id}>
+      {postList.map((post, i) => (
+        <PostWrapper key={post.id} $firstpost={i === 0}>
           <PostHeader>
             <div>
               <img src={post.profile} alt="author profile image" />

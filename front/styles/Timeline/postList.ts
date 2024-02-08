@@ -4,7 +4,7 @@ import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
 import { ShadowStyle } from 'styles/Common/shadow';
 
 export const PostContainer = styled.div`
-  height: 75%;
+  height: 80%;
   overflow-y: scroll;
 `;
 
@@ -12,7 +12,7 @@ export const PostCategory = styled.div`
   position: sticky;
   top: 0;
   ${({ theme }) => theme.flexSet('end')}
-  padding: 0.5em 1em 0.5em 0;
+  padding: 0.7em 1em;
   z-index: 10;
   background-color: white;
 `;
@@ -28,9 +28,9 @@ export const CategoryItem = styled.p<{ $selected: boolean }>`
   }
 `;
 
-export const PostWrapper = styled.article`
+export const PostWrapper = styled.article<{ $firstpost: boolean }>`
   background-color: white;
-  padding: 1em;
+  padding: ${props => (props.$firstpost ? '0 1em 1em 1em' : '1em')};
 `;
 
 export const PostHeader = styled.div`

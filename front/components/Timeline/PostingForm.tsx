@@ -18,7 +18,7 @@ const PostingForm = () => {
 
   return (
     <PostingWrapper onSubmit={onSubmitForm}>
-      <textarea rows={8} placeholder="당신의 작품에 대한 이야기를 들려주세요." value={text} onChange={onChangeText} />
+      <textarea rows={6} placeholder="당신의 작품에 대한 이야기를 들려주세요." value={text} onChange={onChangeText} />
 
       <div>
         <div>

@@ -4,7 +4,7 @@ import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
 
 export const PostingWrapper = styled.form`
   background-color: ${({ theme }) => theme.colors.darkBg};
-  height: 25%;
+  height: 20%;
   border-radius: 5px 5px 0 0;
 
   & > textarea {
@@ -12,7 +12,7 @@ export const PostingWrapper = styled.form`
     height: 70%;
     font-size: 0.8rem;
     background-color: ${({ theme }) => theme.colors.darkBg};
-    padding: 1.5em 1em;
+    padding: 1.5em;
     border-radius: 5px 5px 0 0;
     border: none;
     outline: none;
