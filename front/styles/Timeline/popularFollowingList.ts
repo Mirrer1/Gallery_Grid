@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+import media from 'styles/media';
 import { HoverStyle } from 'styles/Common/hover';
 
 export const PopularFollowingWrapper = styled.div`
@@ -7,6 +8,13 @@ export const PopularFollowingWrapper = styled.div`
   height: 38%;
   background-color: white;
   padding: 2em 1.5em;
+
+  ${media.tablet} {
+    width: 49%;
+    height: 100%;
+    padding: 1.5em 1em;
+    border-radius: 5px;
+  }
 `;
 
 export const PopularFollowingHeader = styled.div`
@@ -93,5 +101,20 @@ export const PopularFollowingInfo = styled.div<{ $islast: boolean }>`
     font-size: 0.8rem;
     opacity: 60%;
     line-height: 1.5;
+  }
+
+  ${media.tablet} {
+    margin-bottom: ${props => (props.$islast ? '0' : '1.5em')};
+
+    & > img {
+      width: 20%;
+      height: 50px;
+      border-radius: 50%;
+      margin-right: 1em;
+    }
+
+    & > div {
+      width: 80%;
+    }
   }
 `;

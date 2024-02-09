@@ -8,7 +8,7 @@ const PopularUser = () => {
     {
       nickname: 'user1',
       profile: 'https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg',
-      desc: 'asdfasdg5345sfasfasd asdfasf adipisicing elit. Minus esse quis ex corporis eligendi ad et adipisciomnis dolores nemo repudiandae beatae expedita nesciunt autem est enim sunt quam praesentium libero, modimaiores consequatur? Repudiandae perspiciatis explicabo laboriosam cum ad.',
+      desc: 'asdfasdg53',
       likeCount: 24,
       commentCount: 10
     },
@@ -64,9 +64,11 @@ const PopularUser = () => {
             <img src={user.profile} alt={`${user.nickname}의 프로필 이미지`} />
 
             <PopularUserContents>
-              <div>Popular</div>
-              <h1>{user.nickname}</h1>
-              <p>{user.desc}</p>
+              <div>
+                <div>Popular</div>
+                <h1>{user.nickname}</h1>
+                <p>{user.desc}</p>
+              </div>
 
               <PopularOptions>
                 <div>

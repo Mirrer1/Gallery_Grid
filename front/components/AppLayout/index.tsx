@@ -76,6 +76,8 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
         </NavbarItems>
       </aside>
 
+      <div></div>
+
       <main>{children}</main>
     </LayoutWrapper>
   );

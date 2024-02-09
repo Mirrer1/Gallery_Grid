@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import Link from 'next/link';
 
+import media from 'styles/media';
 import { ReverseHoverStyle } from 'styles/Common/hover';
 
 export const LayoutWrapper = styled.div`
@@ -9,7 +10,7 @@ export const LayoutWrapper = styled.div`
   width: 100%;
   height: 100%;
   flex-grow: 1;
-  padding: 2em 4em;
+  padding: 2.5em 10em;
 
   & > aside {
     ${({ theme }) => theme.flexColumnSet('start', 'start')};
@@ -25,6 +26,29 @@ export const LayoutWrapper = styled.div`
     height: 100%;
     background-color: ${({ theme }) => theme.colors.bg};
     border-radius: 0 5px 5px 0;
+  }
+
+  ${media.tablet} {
+    padding: 0;
+    height: auto;
+
+    & > aside {
+      position: fixed;
+      top: 0%;
+      left: 0%;
+      width: 25%;
+      padding: 1.5em 1.8em;
+    }
+
+    & > div {
+      width: 25%;
+      visibility: hidden;
+    }
+
+    & > main {
+      width: 75%;
+      padding: 1em;
+    }
   }
 `;
 
@@ -49,6 +73,25 @@ export const NavbarProfile = styled.div`
     font-size: 0.7rem;
     opacity: 40%;
   }
+
+  ${media.tablet} {
+    padding: 0;
+
+    & > img {
+      width: 40px;
+      height: 40px;
+      margin-bottom: 1em;
+    }
+
+    & > h1 {
+      font-size: 1rem;
+      margin-bottom: 0.3em;
+    }
+
+    & > p {
+      font-size: 0.6rem;
+    }
+  }
 `;
 
 export const NavbarItems = styled.div<{ $firstmargin: string }>`
@@ -71,11 +114,9 @@ export const NavbarItem = styled(Link)<{ $selected: boolean }>`
     margin-right: 0.7em;
   }
 
-  & > div {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    background-color: ${({ theme }) => theme.colors.primary};
+  ${media.tablet} {
+    font-size: 0.8rem;
+    margin-bottom: 1.5em;
   }
 `;
 
@@ -98,9 +139,16 @@ export const NavbarMessage = styled.div<{ $selected: boolean }>`
     color: white;
     font-size: 0.8rem;
     border-radius: 50%;
-    padding-bottom: 1.6px;
     font-weight: 500;
     background-color: ${({ theme }) => theme.colors.primary};
+  }
+
+  ${media.tablet} {
+    & > div > button {
+      width: 20px;
+      height: 20px;
+      font-size: 0.6rem;
+    }
   }
 `;
 
@@ -113,5 +161,9 @@ export const NavbarLogout = styled.button`
 
   & > span {
     margin-right: 0.7em;
+  }
+
+  ${media.tablet} {
+    font-size: 0.8rem;
   }
 `;

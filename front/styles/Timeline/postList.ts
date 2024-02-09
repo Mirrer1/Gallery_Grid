@@ -1,11 +1,16 @@
 import styled from 'styled-components';
 
+import media from 'styles/media';
 import { ShadowStyle } from 'styles/Common/shadow';
 import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
 
 export const PostContainer = styled.div`
   height: 80%;
   overflow-y: scroll;
+
+  ${media.tablet} {
+    overflow-y: visible;
+  }
 `;
 
 export const PostCategory = styled.div`

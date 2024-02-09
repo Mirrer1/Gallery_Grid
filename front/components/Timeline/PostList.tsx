@@ -15,7 +15,7 @@ import {
 } from 'styles/Timeline/postList';
 
 const PostList = () => {
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const firstPostRef = useRef<HTMLDivElement>(null);
   const [category, setCategory] = useState('best');
   const [modalImages, setModalImages] = useState<string[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -81,16 +81,64 @@ const PostList = () => {
       ],
       createdAt: '25 mins ago',
       desc: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum, quia. Iusto molestias perspiciatis incidunt a eveniet ullam porro facere ipsum, ipsam magni magnam exercitationem amet blanditiis eius repellendus aspernatur pariatur?'
+    },
+    {
+      id: 'as6',
+      user: 'Lorem ipsum dolor',
+      profile: 'https://t3.ftcdn.net/jpg/05/16/27/58/360_F_516275801_f3Fsp17x6HQK0xQgDQEELoTuERO4SsWV.jpg',
+      img: [
+        'https://i.ibb.co/n70QqMG/drawing-series-by.jpg',
+        'https://i.ibb.co/BCsx9nZ/image.jpg',
+        'https://i.ibb.co/8bqzbyV/1.jpg'
+      ],
+      createdAt: '25 mins ago',
+      desc: '가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하'
+    },
+    {
+      id: 'as7',
+      user: 'Lorem ipsum dolor',
+      profile: 'https://t3.ftcdn.net/jpg/05/16/27/58/360_F_516275801_f3Fsp17x6HQK0xQgDQEELoTuERO4SsWV.jpg',
+      img: [
+        'https://i.ibb.co/n70QqMG/drawing-series-by.jpg',
+        'https://i.ibb.co/BCsx9nZ/image.jpg',
+        'https://i.ibb.co/8bqzbyV/1.jpg'
+      ],
+      createdAt: '25 mins ago',
+      desc: '가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하'
+    },
+    {
+      id: 'as8',
+      user: 'Lorem ipsum dolor',
+      profile: 'https://t3.ftcdn.net/jpg/05/16/27/58/360_F_516275801_f3Fsp17x6HQK0xQgDQEELoTuERO4SsWV.jpg',
+      img: [
+        'https://i.ibb.co/n70QqMG/drawing-series-by.jpg',
+        'https://i.ibb.co/BCsx9nZ/image.jpg',
+        'https://i.ibb.co/8bqzbyV/1.jpg'
+      ],
+      createdAt: '25 mins ago',
+      desc: '가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하'
+    },
+    {
+      id: 'as9',
+      user: 'Lorem ipsum dolor',
+      profile: 'https://t3.ftcdn.net/jpg/05/16/27/58/360_F_516275801_f3Fsp17x6HQK0xQgDQEELoTuERO4SsWV.jpg',
+      img: [
+        'https://i.ibb.co/n70QqMG/drawing-series-by.jpg',
+        'https://i.ibb.co/BCsx9nZ/image.jpg',
+        'https://i.ibb.co/8bqzbyV/1.jpg'
+      ],
+      createdAt: '25 mins ago',
+      desc: '가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하'
     }
   ];
 
   const onClickCategory = useCallback((category: string) => {
     setCategory(category);
 
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollTo({
-        top: 0,
-        behavior: 'smooth'
+    if (firstPostRef.current) {
+      firstPostRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center'
       });
     }
   }, []);
@@ -123,7 +171,7 @@ const PostList = () => {
   }, [isTooltipVisible]);
 
   return (
-    <PostContainer ref={scrollContainerRef}>
+    <PostContainer>
       <PostCategory>
         <CategoryItem onClick={() => onClickCategory('best')} $selected={category === 'best'}>
           Best
@@ -134,7 +182,7 @@ const PostList = () => {
       </PostCategory>
 
       {postList.map((post, i) => (
-        <PostWrapper key={post.id} $firstpost={i === 0}>
+        <PostWrapper key={post.id} $firstpost={i === 0} ref={i === 0 ? firstPostRef : null}>
           <PostHeader>
             <div>
               <img src={post.profile} alt="author profile image" />

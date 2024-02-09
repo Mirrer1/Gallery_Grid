@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+import media from 'styles/media';
 import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
 
 export const PostingWrapper = styled.form`
@@ -42,5 +43,8 @@ export const PostingWrapper = styled.form`
     font-weight: 500;
     padding: 0.7em 2em;
     border-radius: 5px;
+  }
+
+  ${media.tablet} {
   }
 `;

@@ -1,62 +1,42 @@
 import styled from 'styled-components';
 
+import media from 'styles/media';
+
 export const SearchWrapper = styled.div`
-  display: table;
+  ${({ theme }) => theme.flexSet('start')}
+  width: 100%;
   margin-bottom: 3em;
 
+  & > label > span {
+    font-size: 0.9rem;
+    opacity: 40%;
+  }
+
   & > input {
-    background: none;
+    flex-shrink: 1;
+    font-size: 0.9rem;
+    padding: 0.5em 0 0.5em 1.2em;
     border: none;
-    outline: none;
-    width: 110px;
-    min-width: 0;
-    padding: 0;
-    z-index: 1;
-    position: relative;
-    line-height: 18px;
-    margin: 5px 0;
-    font-size: 14px;
-    -webkit-appearance: none;
-    transition: all 0.6s ease;
-    cursor: pointer;
-    color: ${({ theme }) => theme.colors.font};
+    overflow-x: hidden;
 
-    &:not(:placeholder-shown),
     &:focus {
-      width: 160px;
-      padding: 0 4px;
-      cursor: text;
+      outline: none;
+    }
 
-      & + div > svg {
-        stroke-dasharray: 150 212.908;
-        stroke-dashoffset: 300;
-      }
+    &::placeholder {
+      opacity: 60%;
     }
   }
 
-  & > div {
-    position: relative;
-    height: 28px;
-    width: 100%;
-    margin: -28px 0 0 0;
-  }
+  ${media.tablet} {
+    & > label > span {
+      font-size: 0.8rem;
+    }
 
-  & > div > svg {
-    display: block;
-    position: absolute;
-    height: 28px;
-    width: 160px;
-    right: 0;
-    top: 0;
-    fill: none;
-    stroke: rgba(0, 0, 0, 0.25);
-    stroke-width: 2.5px;
-    stroke-dashoffset: 271.908;
-    stroke-dasharray: 59 212.908;
-    transition: all 0.6s ease;
-  }
-
-  & > svg {
-    display: none;
+    & > input {
+      font-size: 0.8rem;
+      padding: 0.5em 1em;
+      border: none;
+    }
   }
 `;
