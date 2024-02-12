@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import { CompassOutlined, PaperClipOutlined, SmileOutlined, TagOutlined } from '@ant-design/icons';
 
 import useInput from 'utils/useInput';
-import { PostingWrapper } from 'styles/Timeline/postingForm';
+import { PostingBtn, PostingWrapper } from 'styles/Timeline/postingForm';
 
 const PostingForm = () => {
   const [text, onChangeText] = useInput('');
@@ -29,7 +29,9 @@ const PostingForm = () => {
         </div>
 
         <div>
-          <button type="submit">Post</button>
+          <PostingBtn type="submit" $active={text.length !== 0}>
+            Post
+          </PostingBtn>
         </div>
       </div>
     </PostingWrapper>

@@ -5,7 +5,7 @@ import AppLayout from 'components/AppLayout';
 import PostingForm from 'components/Timeline/PostingForm';
 import PostList from 'components/Timeline/PostList';
 import PopularUser from 'components/Timeline/PopularUser';
-import PopularFollowingList from 'components/Timeline/PopularFollowingList';
+import SuggestedList from 'components/Timeline/SuggestedList';
 
 import { slideInFromBottom } from 'styles/Common/animation';
 import { CommunitySection, PostsSection, TimelineWrapper } from 'styles/Timeline';
@@ -26,7 +26,7 @@ const Timeline = () => {
 
           <CommunitySection {...slideInFromBottom(0.3)}>
             <PopularUser />
-            <PopularFollowingList />
+            <SuggestedList />
           </CommunitySection>
         </TimelineWrapper>
       </AppLayout>

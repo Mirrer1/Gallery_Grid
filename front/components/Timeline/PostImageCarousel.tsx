@@ -30,7 +30,9 @@ const PostImageCarousel = ({ images, setIsModalVisible }: ICarousel) => {
 
   return (
     <>
-      <CarouselOutsideArea onClick={hideCarousel}></CarouselOutsideArea>
+      <CarouselOutsideArea onClick={hideCarousel}>
+        <HideSwiperBtn onClick={hideCarousel} />
+      </CarouselOutsideArea>
 
       <ImageCarouselWrapper>
         <BackgroundImageContainer $background={images[activeIndex]} />
@@ -47,7 +49,9 @@ const PostImageCarousel = ({ images, setIsModalVisible }: ICarousel) => {
             modifier: 1,
             slideShadows: true
           }}
-          pagination={true}
+          pagination={{
+            clickable: true
+          }}
           navigation={true}
           modules={[EffectCoverflow, Pagination, Navigation]}
           onSlideChange={handleSlideChange}
@@ -59,8 +63,6 @@ const PostImageCarousel = ({ images, setIsModalVisible }: ICarousel) => {
             </SwiperSlide>
           ))}
         </Swiper>
-
-        <HideSwiperBtn onClick={hideCarousel} />
       </ImageCarouselWrapper>
     </>
   );

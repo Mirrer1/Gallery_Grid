@@ -1,4 +1,4 @@
-import React, { ReactNode, useCallback } from 'react';
+import React, { ReactNode, useCallback, useState } from 'react';
 import { useRouter } from 'next/router';
 import {
   AreaChartOutlined,
@@ -10,10 +10,21 @@ import {
 } from '@ant-design/icons';
 
 import Search from './Search';
+import MobileHeader from './MobileHeader';
+import MobileFooter from './MobileFooter';
 import { LayoutWrapper, NavbarItem, NavbarItems, NavbarLogout, NavbarMessage, NavbarProfile } from 'styles/AppLayout';
 
 const AppLayout = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
+  const [showInput, setShowInput] = useState(false);
+
+  const showSearch = useCallback(() => {
+    if (!showInput) setShowInput(true);
+  }, [showInput]);
+
+  const hideSearch = useCallback(() => {
+    if (showInput) setShowInput(false);
+  }, [showInput]);
 
   const onClickMessage = useCallback(() => {
     router.push('/message');
@@ -30,7 +41,10 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
             alt="user profile image"
           />
           <h1>Tanya Shah</h1>
-          <p>IntroText blah blah.</p>
+          <p>
+            IntroText blah blah. IntroText blah blah. IntroText blah blah. IntroText blah blah. IntroText blah blah.
+            IntroText blah blah. IntroText blah blah.
+          </p>
         </NavbarProfile>
 
         <NavbarItems $firstmargin="true">
@@ -78,7 +92,11 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
 
       <div></div>
 
-      <main>{children}</main>
+      <MobileHeader showInput={showInput} showSearch={showSearch} hideSearch={hideSearch} />
+
+      <main onClick={hideSearch}>{children}</main>
+
+      <MobileFooter />
     </LayoutWrapper>
   );
 };

@@ -1,14 +1,10 @@
 import React from 'react';
-import { MoreOutlined, PlusCircleFilled } from '@ant-design/icons';
+import { UserAddOutlined } from '@ant-design/icons';
 
-import {
-  PopularFollowingHeader,
-  PopularFollowingInfo,
-  PopularFollowingWrapper
-} from 'styles/Timeline/popularFollowingList';
+import { SuggestedHeader, SuggestedInfo, SuggestedWrapper } from 'styles/Timeline/suggestedList';
 
-const PopularFollowingList = () => {
-  const followingUsers = [
+const SuggestedList = () => {
+  const SuggestedUsers = [
     {
       nickname: 'user1',
       profile: 'https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg',
@@ -27,25 +23,27 @@ const PopularFollowingList = () => {
   ];
 
   return (
-    <PopularFollowingWrapper>
-      <PopularFollowingHeader>
-        <h1>Following people</h1>
-        <MoreOutlined />
-        <p>더보기</p>
-      </PopularFollowingHeader>
+    <SuggestedWrapper>
+      <SuggestedHeader>
+        <h1>Suggested people</h1>
+      </SuggestedHeader>
 
-      {followingUsers.map((user, i) => (
-        <PopularFollowingInfo key={i} $islast={i === followingUsers.length - 1}>
+      {SuggestedUsers.map((user, i) => (
+        <SuggestedInfo key={i} $islast={i === SuggestedUsers.length - 1}>
           <img src={user.profile} alt={`${user.nickname}의 프로필 이미지`} />
 
           <div>
-            <h2>{user.nickname}</h2>
+            <div>
+              <h2>{user.nickname}</h2>
+              <UserAddOutlined />
+            </div>
+
             <p>{user.desc}</p>
           </div>
-        </PopularFollowingInfo>
+        </SuggestedInfo>
       ))}
-    </PopularFollowingWrapper>
+    </SuggestedWrapper>
   );
 };
 
-export default PopularFollowingList;
+export default SuggestedList;

@@ -18,7 +18,7 @@ export const PostCategory = styled.div`
   top: 0;
   ${({ theme }) => theme.flexSet('end')}
   padding: 0.7em 1em;
-  z-index: 10;
+  z-index: 9;
   background-color: white;
 `;
 
@@ -36,7 +36,11 @@ export const CategoryItem = styled.p<{ $selected: boolean }>`
 
 export const PostWrapper = styled.article<{ $firstpost: boolean }>`
   background-color: white;
-  padding: ${props => (props.$firstpost ? '0 1em 1em 1em' : '1em')};
+  padding: ${props => (props.$firstpost ? '0 2.5em 2.5em 2.5em' : '2.5em')};
+
+  ${media.tablet} {
+    padding: ${props => (props.$firstpost ? '0 1.5em 1.5em 1.5em' : '1.5em')};
+  }
 `;
 
 export const PostHeader = styled.div`
@@ -73,6 +77,16 @@ export const PostHeader = styled.div`
   }
 `;
 
+export const PostFollowBtn = styled.button`
+  ${HoverStyle('&')}
+  font-size: 0.6rem;
+  background-color: ${({ theme }) => theme.colors.primary};
+  color: white;
+  font-weight: 500;
+  padding: 0.7em 1.5em;
+  border-radius: 5px;
+`;
+
 export const PostTooltip = styled.div`
   position: relative;
   display: inline-block;
@@ -89,20 +103,21 @@ export const PostTooltipBtn = styled.span<{ $visible: boolean }>`
   position: absolute;
   top: -80%;
   right: 140%;
-  width: 135px;
+  width: 145px;
   text-align: center;
   border-radius: 6px;
   padding: 7px 0;
   margin-left: -60px;
   transition: opacity 0.3s;
   z-index: 10;
+  background-color: #fff;
   ${ShadowStyle}
 
   & > button {
     ${HoverStyle('&')}
     font-size: 0.7rem;
     font-weight: 500;
-    padding: 0.7em 1.5em;
+    padding: 0.7em 1em;
   }
 
   & > button:first-child {
@@ -115,17 +130,21 @@ export const PostTooltipBtn = styled.span<{ $visible: boolean }>`
     color: ${({ theme }) => theme.colors.red};
     border: 1px ${({ theme }) => theme.colors.red} solid;
   }
+
+  & > button > span {
+    margin-right: 0.5em;
+  }
 `;
 
 export const PostContents = styled.div`
   width: 100%;
-  ${({ theme }) => theme.flexSet('space-between', 'start')}
+  ${({ theme }) => theme.flexColumnSet()};
 
   & > div:first-child {
     position: relative;
     cursor: pointer;
-    width: 50%;
-    height: 200px;
+    width: 100%;
+    height: 350px;
   }
 
   & > div:first-child > img {
@@ -159,21 +178,17 @@ export const PostContents = styled.div`
   }
 
   & > div:last-child {
-    width: 45%;
-    height: 200px;
+    width: 100%;
+    height: fit-content;
     ${({ theme }) => theme.flexColumnSet('space-between', 'start')}
+    padding: 1em 0;
   }
 
   & > div > p {
-    display: -webkit-box;
-    -webkit-line-clamp: 9;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: normal;
     font-size: 0.8rem;
     opacity: 60%;
     line-height: 1.5;
+    margin-bottom: 1em;
   }
 `;
 

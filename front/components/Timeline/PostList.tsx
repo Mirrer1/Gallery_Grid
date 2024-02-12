@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { CommentOutlined, EllipsisOutlined, LikeOutlined } from '@ant-design/icons';
+import { CommentOutlined, DeleteOutlined, EditOutlined, LikeOutlined, MoreOutlined } from '@ant-design/icons';
 
 import PostImageCarousel from './PostImageCarousel';
 import {
@@ -11,7 +11,8 @@ import {
   CategoryItem,
   PostContainer,
   PostTooltip,
-  PostTooltipBtn
+  PostTooltipBtn,
+  PostFollowBtn
 } from 'styles/Timeline/postList';
 
 const PostList = () => {
@@ -29,10 +30,16 @@ const PostList = () => {
       img: [
         'https://i.ibb.co/n70QqMG/drawing-series-by.jpg',
         'https://i.ibb.co/BCsx9nZ/image.jpg',
+        'https://i.ibb.co/8bqzbyV/1.jpg',
+        'https://i.ibb.co/n70QqMG/drawing-series-by.jpg',
+        'https://i.ibb.co/BCsx9nZ/image.jpg',
+        'https://i.ibb.co/8bqzbyV/1.jpg',
+        'https://i.ibb.co/n70QqMG/drawing-series-by.jpg',
+        'https://i.ibb.co/BCsx9nZ/image.jpg',
         'https://i.ibb.co/8bqzbyV/1.jpg'
       ],
       createdAt: '25 mins ago',
-      desc: '가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하'
+      desc: '가나다라마바나다사가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하'
     },
     {
       id: 'as2',
@@ -44,7 +51,7 @@ const PostList = () => {
         'https://i.pinimg.com/564x/af/ed/72/afed7289a2605bfa567229db5dfdbf5b.jpg'
       ],
       createdAt: '25 mins ago',
-      desc: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum, quia. Iusto molestias perspiciatis incidunt a eveniet ullam porro facere ipsum, ipsam magni magnam exercitationem amet blanditiis eius repellendus aspernatur pariatur?'
+      desc: 'Lorem ipsum do다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라lor sit amet consectetur adipisicing elit. Nostrum, quia. Iusto molestias perspiciatis incidunt a eveniet ullam porro facere ipsum, ipsam magni magnam exercitationem amet blanditiis eius repellendus aspernatur pariatur?'
     },
     {
       id: 'as3',
@@ -193,14 +200,24 @@ const PostList = () => {
               </div>
             </div>
 
-            <PostTooltip id={`tooltip-${post.id}`}>
-              <EllipsisOutlined onClick={() => handleTooltip(post.id)} />
+            <div>
+              <PostFollowBtn type="button">Follow</PostFollowBtn>
 
-              <PostTooltipBtn $visible={isTooltipVisible === post.id}>
-                <button type="button">수정</button>
-                <button type="button">삭제</button>
-              </PostTooltipBtn>
-            </PostTooltip>
+              <PostTooltip id={`tooltip-${post.id}`}>
+                <MoreOutlined onClick={() => handleTooltip(post.id)} />
+
+                <PostTooltipBtn $visible={isTooltipVisible === post.id}>
+                  <button type="button">
+                    <EditOutlined />
+                    수정
+                  </button>
+                  <button type="button">
+                    <DeleteOutlined />
+                    삭제
+                  </button>
+                </PostTooltipBtn>
+              </PostTooltip>
+            </div>
           </PostHeader>
 
           <PostContents>

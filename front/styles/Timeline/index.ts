@@ -31,11 +31,13 @@ export const CommunitySection = styled(motion.article)`
 
   ${media.tablet} {
     order: 1;
-    display: flex;
-    justify-content: space-between;
     width: 100%;
-    height: 400px;
+    height: 230px;
     padding: 0;
     margin-bottom: 0.7em;
+  }
+
+  ${media.mobile} {
+    height: 200px;
   }
 `;

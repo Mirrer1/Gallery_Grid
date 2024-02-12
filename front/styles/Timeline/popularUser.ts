@@ -14,6 +14,7 @@ export const PopularBtn = styled.div<{ $alignleft: string }>`
   background-color: white;
   border-radius: 50%;
   font-weight: 700;
+  cursor: pointer;
   transition: opacity 250ms ease-in-out;
 `;
 
@@ -50,20 +51,19 @@ export const PopularUserWrapper = styled.div`
   }
 
   ${media.tablet} {
-    width: 49%;
+    width: 100%;
     height: 100%;
     margin-bottom: 0;
     border-radius: 5px;
 
     & > div > div {
       display: flex;
-      flex-direction: column;
       height: 100%;
     }
 
     & > div > div > img {
-      width: 100%;
-      height: 60%;
+      width: 35%;
+      height: 100%;
     }
   }
 `;
@@ -108,11 +108,11 @@ export const PopularUserContents = styled.div`
   }
 
   ${media.tablet} {
-    width: 100%;
-    height: 40%;
+    width: 65%;
+    height: 100%;
 
     & > div > p {
-      -webkit-line-clamp: 2;
+      -webkit-line-clamp: 5;
     }
   }
 `;

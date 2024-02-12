@@ -38,8 +38,9 @@ export const CarouselOutsideArea = styled.div`
 
 export const HideSwiperBtn = styled(CloseOutlined)`
   position: absolute;
-  top: 7px;
-  right: 7px;
+  opacity: 85%;
+  top: 10px;
+  right: 10px;
   cursor: pointer;
   z-index: 12;
   ${HoverStyle('&')}

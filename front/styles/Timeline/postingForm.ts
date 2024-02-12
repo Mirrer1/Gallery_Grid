@@ -34,17 +34,15 @@ export const PostingWrapper = styled.form`
     margin-right: 1.5em;
     cursor: pointer;
   }
+`;
 
-  & > div > div > button {
-    ${HoverStyle('&')}
-    font-size: 0.8rem;
-    background-color: ${({ theme }) => theme.colors.primary};
-    color: white;
-    font-weight: 500;
-    padding: 0.7em 2em;
-    border-radius: 5px;
-  }
-
-  ${media.tablet} {
-  }
+export const PostingBtn = styled.button<{ $active: boolean }>`
+  ${props => (props.$active ? HoverStyle('&') : '')};
+  opacity: ${props => (props.$active ? '100%' : '40%')};
+  background-color: ${({ theme }) => theme.colors.primary};
+  font-size: 0.8rem;
+  color: white;
+  font-weight: 500;
+  padding: 0.7em 2em;
+  border-radius: 5px;
 `;

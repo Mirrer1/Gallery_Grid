@@ -10,7 +10,7 @@ export const LayoutWrapper = styled.div`
   width: 100%;
   height: 100%;
   flex-grow: 1;
-  padding: 2.5em 10em;
+  padding: 3em 12em;
 
   & > aside {
     ${({ theme }) => theme.flexColumnSet('start', 'start')};
@@ -47,7 +47,24 @@ export const LayoutWrapper = styled.div`
 
     & > main {
       width: 75%;
-      padding: 1em;
+      padding: 1em 1em 0 1em;
+    }
+  }
+
+  ${media.mobile} {
+    ${({ theme }) => theme.flexColumnSet('start')};
+
+    & > aside {
+      display: none;
+    }
+
+    & > div {
+      display: none;
+    }
+
+    & > main {
+      width: 100%;
+      padding: 0.5em 0.5em 60px 0.5em;
     }
   }
 `;
@@ -70,6 +87,12 @@ export const NavbarProfile = styled.div`
   }
 
   & > p {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
     font-size: 0.7rem;
     opacity: 40%;
   }
