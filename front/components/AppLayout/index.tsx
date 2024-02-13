@@ -33,49 +33,51 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
   return (
     <LayoutWrapper>
       <aside>
-        <Search />
+        <div>
+          <Search />
 
-        <NavbarProfile>
-          <img
-            src="https://t3.ftcdn.net/jpg/05/16/27/58/360_F_516275801_f3Fsp17x6HQK0xQgDQEELoTuERO4SsWV.jpg"
-            alt="user profile image"
-          />
-          <h1>Tanya Shah</h1>
-          <p>
-            IntroText blah blah. IntroText blah blah. IntroText blah blah. IntroText blah blah. IntroText blah blah.
-            IntroText blah blah. IntroText blah blah.
-          </p>
-        </NavbarProfile>
+          <NavbarProfile>
+            <img
+              src="https://t3.ftcdn.net/jpg/05/16/27/58/360_F_516275801_f3Fsp17x6HQK0xQgDQEELoTuERO4SsWV.jpg"
+              alt="user profile image"
+            />
+            <h1>Tanya Shah</h1>
+            <p>
+              IntroText blah blah. IntroText blah blah. IntroText blah blah. IntroText blah blah. IntroText blah blah.
+              IntroText blah blah. IntroText blah blah.
+            </p>
+          </NavbarProfile>
 
-        <NavbarItems $firstmargin="true">
-          <NavbarItem href="/timeline" $selected={router.pathname === '/timeline'}>
-            <FieldTimeOutlined />
-            <p>Timeline</p>
-          </NavbarItem>
-
-          <NavbarItem href="/activity" $selected={router.pathname === '/activity'}>
-            <AreaChartOutlined />
-            <p>Activity</p>
-          </NavbarItem>
-
-          <NavbarMessage $selected={router.pathname === '/message'}>
-            <NavbarItem href="/message" $selected={router.pathname === '/message'}>
-              <MessageOutlined />
-              <p>Message</p>
+          <NavbarItems $firstmargin="true">
+            <NavbarItem href="/timeline" $selected={router.pathname === '/timeline'}>
+              <FieldTimeOutlined />
+              <p>Timeline</p>
             </NavbarItem>
 
-            <div>
-              <button type="button" onClick={onClickMessage}>
-                5
-              </button>
-            </div>
-          </NavbarMessage>
+            <NavbarItem href="/activity" $selected={router.pathname === '/activity'}>
+              <AreaChartOutlined />
+              <p>Activity</p>
+            </NavbarItem>
 
-          <NavbarItem href="/gallery" $selected={router.pathname === '/gallery'}>
-            <PictureOutlined />
-            <p>Gallery</p>
-          </NavbarItem>
-        </NavbarItems>
+            <NavbarMessage $selected={router.pathname === '/message'}>
+              <NavbarItem href="/message" $selected={router.pathname === '/message'}>
+                <MessageOutlined />
+                <p>Message</p>
+              </NavbarItem>
+
+              <div>
+                <button type="button" onClick={onClickMessage}>
+                  5
+                </button>
+              </div>
+            </NavbarMessage>
+
+            <NavbarItem href="/gallery" $selected={router.pathname === '/gallery'}>
+              <PictureOutlined />
+              <p>Gallery</p>
+            </NavbarItem>
+          </NavbarItems>
+        </div>
 
         <NavbarItems $firstmargin="false">
           <NavbarItem href="/settings" $selected={router.pathname === '/settings'}>

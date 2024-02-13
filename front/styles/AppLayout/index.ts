@@ -13,12 +13,16 @@ export const LayoutWrapper = styled.div`
   padding: 3em 12em;
 
   & > aside {
-    ${({ theme }) => theme.flexColumnSet('start', 'start')};
+    ${({ theme }) => theme.flexColumnSet('space-between', 'start')};
     width: 20%;
     height: 100%;
     background-color: white;
-    padding: 1.2em 1.8em;
+    padding: 1.2em 1.8em 1.5em 1.8em;
     border-radius: 5px 0 0 5px;
+  }
+
+  & > aside > div {
+    width: 100%;
   }
 
   & > main {
@@ -37,7 +41,7 @@ export const LayoutWrapper = styled.div`
       top: 0%;
       left: 0%;
       width: 25%;
-      padding: 1.5em 1.8em;
+      padding: 1.5em 1.8em 2em 1.8em;
     }
 
     & > div {
@@ -101,18 +105,14 @@ export const NavbarProfile = styled.div`
     padding: 0;
 
     & > img {
-      width: 40px;
-      height: 40px;
+      width: 45px;
+      height: 45px;
       margin-bottom: 1em;
     }
 
     & > h1 {
-      font-size: 1rem;
+      font-size: 1.2rem;
       margin-bottom: 0.3em;
-    }
-
-    & > p {
-      font-size: 0.6rem;
     }
   }
 `;
@@ -135,11 +135,6 @@ export const NavbarItem = styled(Link)<{ $selected: boolean }>`
 
   & > span {
     margin-right: 0.7em;
-  }
-
-  ${media.tablet} {
-    font-size: 0.8rem;
-    margin-bottom: 1.5em;
   }
 `;
 
