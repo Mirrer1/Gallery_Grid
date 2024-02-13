@@ -3,19 +3,19 @@ import Head from 'next/head';
 
 import AppLayout from 'components/AppLayout';
 
-const Home = () => {
+const Gallery = () => {
   return (
     <>
       <Head>
-        <title>Gallery Grid | Home</title>
+        <title>Gallery Grid | Gallery</title>
       </Head>
 
       <AppLayout>
         <div>This is</div>
-        <div>Home Page!</div>
+        <div>Gallery Page!</div>
       </AppLayout>
     </>
   );
 };
 
-export default Home;
+export default Gallery;

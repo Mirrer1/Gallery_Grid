@@ -20,13 +20,13 @@ const Landing = () => {
         <img src="/logo.jpg" alt="Logo Image" onClick={onClickLogo} />
 
         <nav>
-          <MenuButton type="button" onClick={() => onClickMenu('home')} selected={selectMenu === 'home'}>
+          <MenuButton type="button" onClick={() => onClickMenu('home')} $selected={selectMenu === 'home'}>
             Home
           </MenuButton>
-          <MenuButton type="button" onClick={() => onClickMenu('login')} selected={selectMenu === 'login'}>
+          <MenuButton type="button" onClick={() => onClickMenu('login')} $selected={selectMenu === 'login'}>
             Login
           </MenuButton>
-          <MenuButton type="button" onClick={() => onClickMenu('signup')} selected={selectMenu === 'signup'}>
+          <MenuButton type="button" onClick={() => onClickMenu('signup')} $selected={selectMenu === 'signup'}>
             Signup
           </MenuButton>
         </nav>

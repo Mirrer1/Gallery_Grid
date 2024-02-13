@@ -8,18 +8,18 @@ export const slideInFromLeft = {
   }
 };
 
-export const slideInFromBottom = {
+export const slideInFromBottom = (delay = 0.1) => ({
   initial: { opacity: 0, y: 20 },
   animate: { opacity: 1, y: 0 },
   transition: {
-    delay: 0.1,
+    delay,
     duration: 0.5,
     ease: 'easeInOut'
   }
-};
+});
 
 export const CarouselAnimation = {
-  initial: { x: 100, opacity: 0 },
-  animate: { x: 0, opacity: 1 },
-  transition: { type: 'tween', ease: 'easeInOut', duration: 0.5 }
+  initial: { opacity: 0, x: -100 },
+  animate: { opacity: 1, x: 0 },
+  transition: { type: 'tween', delay: 0.1, duration: 0.5, ease: 'easeInOut' }
 };

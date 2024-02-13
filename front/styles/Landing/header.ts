@@ -6,10 +6,10 @@ import { ReverseHoverStyle } from 'styles/Common/hover';
 
 export const HeaderWrapper = styled.header`
   ${({ theme }) => theme.flexSet('space-between')};
-  padding: 2em;
+  padding: 2em 5em;
 
   & > img {
-    width: 10%;
+    width: 8%;
     cursor: pointer;
   }
 
@@ -21,7 +21,7 @@ export const HeaderWrapper = styled.header`
     padding: 1.5em;
 
     & > img {
-      width: 15%;
+      width: 12%;
     }
   }
 
@@ -30,15 +30,14 @@ export const HeaderWrapper = styled.header`
   }
 `;
 
-export const MenuButton = styled.button<{ selected: boolean }>`
+export const MenuButton = styled.button<{ $selected: boolean }>`
   ${ReverseHoverStyle('&')}
-  font-size: 0.8rem;
-  font-weight: 700;
+  font-weight: 600;
   margin-right: 5em;
-  opacity: ${props => (props.selected ? '100%' : '40%')};
-  text-decoration: ${props => (props.selected ? 'underline' : 'none')};
-  text-decoration-thickness: ${props => (props.selected ? '2px' : '0')};
-  text-underline-offset: ${props => (props.selected ? '10px' : '0')};
+  opacity: ${props => (props.$selected ? '100%' : '40%')};
+  text-decoration: ${props => (props.$selected ? 'underline' : 'none')};
+  text-decoration-thickness: ${props => (props.$selected ? '2px' : '0')};
+  text-underline-offset: ${props => (props.$selected ? '10px' : '0')};
 
   ${media.tablet} {
     margin-right: 4em;
@@ -46,20 +45,21 @@ export const MenuButton = styled.button<{ selected: boolean }>`
 
   ${media.mobile} {
     font-size: 0.7rem;
-    margin-right: 3em;
+    margin-right: 2.2em;
     padding-bottom: 0.5em;
-    text-decoration-thickness: ${props => (props.selected ? '1.2px' : '0')};
+    text-decoration-thickness: ${props => (props.$selected ? '1.2px' : '0')};
+    text-underline-offset: ${props => (props.$selected ? '5px' : '0')};
   }
 `;
 
 export const ContactIcon = styled(MailOutlined)`
   ${ReverseHoverStyle('&')}
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   font-weight: 700;
   opacity: 40%;
 
   ${media.tablet} {
-    font-size: 1rem;
+    font-size: 1.2rem;
   }
 
   ${media.mobile} {

@@ -1,14 +1,14 @@
 import React, { useCallback } from 'react';
 import { toast } from 'react-toastify';
 
-import PostCarousel from './PostCarousel';
+import LandingCarousel from './LandingCarousel';
 import LoginForm from './LoginForm';
 import SignUpForm from './SignUpForm';
-import { MenuContentsProps } from 'types/MenuProps';
+import { IMenuContents } from 'types/Menu';
 import { slideInFromLeft } from 'styles/Common/animation';
 import { ContentsText, ContentsWrapper, ContentBreak, HeaderBreak } from 'styles/Landing/menuContents';
 
-const MenuContents = ({ selectMenu, onClickMenu }: MenuContentsProps) => {
+const MenuContents = ({ selectMenu, onClickMenu }: IMenuContents) => {
   const onClickMore = useCallback(() => {
     toast.warning('로그인이 필요한 서비스입니다.');
     onClickMenu('login');
@@ -16,7 +16,7 @@ const MenuContents = ({ selectMenu, onClickMenu }: MenuContentsProps) => {
 
   return (
     <ContentsWrapper>
-      <ContentsText key={selectMenu} {...slideInFromLeft} selected={selectMenu}>
+      <ContentsText key={selectMenu} {...slideInFromLeft} $selected={selectMenu}>
         {selectMenu === 'home' ? (
           <div>
             <p>Work</p>
@@ -91,7 +91,7 @@ const MenuContents = ({ selectMenu, onClickMenu }: MenuContentsProps) => {
       </ContentsText>
 
       {selectMenu === 'home' ? (
-        <PostCarousel />
+        <LandingCarousel />
       ) : selectMenu === 'login' ? (
         <LoginForm onClickMenu={onClickMenu} />
       ) : selectMenu === 'signup' ? (

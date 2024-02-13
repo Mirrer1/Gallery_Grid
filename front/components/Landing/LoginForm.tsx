@@ -4,7 +4,7 @@ import Router from 'next/router';
 
 import useInput from 'utils/useInput';
 import { useValidate } from 'utils/useValidate';
-import { BaseMenuProps } from 'types/MenuProps';
+import { IMenu } from 'types/Menu';
 import { slideInFromBottom } from 'styles/Common/animation';
 import {
   AccountBtn,
@@ -18,7 +18,7 @@ import {
   AccountAlert
 } from 'styles/Landing/accountForm';
 
-const LoginForm = ({ onClickMenu }: BaseMenuProps) => {
+const LoginForm = ({ onClickMenu }: IMenu) => {
   const [email, onChangeEmail] = useInput('');
   const [password, onChangePassword] = useInput('');
   const [rememberMe, onChangeRememberMe] = useInput(false);
@@ -31,24 +31,24 @@ const LoginForm = ({ onClickMenu }: BaseMenuProps) => {
     (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
 
-      const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-      const passwordRegex = /^[A-Za-z\d]{8,16}$/;
+      // const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+      // const passwordRegex = /^[A-Za-z\d]{8,16}$/;
 
-      if (
-        !useValidate(email, emailRegex, '이메일 형식이 올바르지 않습니다.') ||
-        !useValidate(password, passwordRegex, '비밀번호 형식이 올바르지 않습니다.')
-      ) {
-        return;
-      }
+      // if (
+      //   !useValidate(email, emailRegex, '이메일 형식이 올바르지 않습니다.') ||
+      //   !useValidate(password, passwordRegex, '비밀번호 형식이 올바르지 않습니다.')
+      // ) {
+      //   return;
+      // }
 
       console.log({ email, password, rememberMe });
-      Router.push('/home');
+      Router.push('/timeline');
     },
     [email, password, rememberMe]
   );
 
   return (
-    <AccountWrapper {...slideInFromBottom}>
+    <AccountWrapper {...slideInFromBottom()}>
       <AccountGoogle>
         <GoogleOutlined />
         <button type="button">Continue with Google</button>

@@ -4,7 +4,7 @@ import { GoogleOutlined } from '@ant-design/icons';
 import Router from 'next/router';
 
 import useInput from 'utils/useInput';
-import { BaseMenuProps } from 'types/MenuProps';
+import { IMenu } from 'types/Menu';
 import { useValidate } from 'utils/useValidate';
 import { slideInFromBottom } from 'styles/Common/animation';
 import {
@@ -18,7 +18,7 @@ import {
   AccountAlert
 } from 'styles/Landing/accountForm';
 
-const SignUpForm = ({ onClickMenu }: BaseMenuProps) => {
+const SignUpForm = ({ onClickMenu }: IMenu) => {
   const [nickname, onChangeNickname] = useInput('');
   const [email, onChangeEmail] = useInput('');
   const [password, onChangePassword] = useInput('');
@@ -50,13 +50,13 @@ const SignUpForm = ({ onClickMenu }: BaseMenuProps) => {
       }
 
       console.log({ nickname, email, password });
-      Router.push('/home');
+      Router.push('/timeline');
     },
     [nickname, email, password, passwordCheck]
   );
 
   return (
-    <AccountWrapper {...slideInFromBottom}>
+    <AccountWrapper {...slideInFromBottom()}>
       <AccountGoogle>
         <GoogleOutlined />
         <button type="button">Continue with Google</button>
@@ -87,7 +87,7 @@ const SignUpForm = ({ onClickMenu }: BaseMenuProps) => {
 
         <AccountInput $largemargin="true">
           <input type="password" value={passwordCheck} onChange={onChangePasswordCheck} required />
-          <label>Confirm Password</label>
+          <label>Confirm password</label>
           <span></span>
         </AccountInput>
 
