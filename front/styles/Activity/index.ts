@@ -35,3 +35,7 @@ export const HeaderItem = styled.div`
     font-weight: 700;
   }
 `;
+
+export const FollowWrapper = styled.div`
+  ${({ theme }) => theme.flexSet('center', 'start')};
+`;

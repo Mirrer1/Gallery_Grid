@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 
 import media from 'styles/media';
 import { HoverStyle } from 'styles/Common/hover';
+import { ShadowStyle } from 'styles/Common/shadow';
 
 export const CarouselWrapper = styled(motion.section)`
   flex-grow: 1;
@@ -23,9 +24,7 @@ export const CarouselImage = styled.div`
     width: 80%;
     height: 600px;
     filter: blur(5px);
-    box-shadow:
-      0 20px 25px -5px rgba(0, 0, 0, 0.1),
-      0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    ${ShadowStyle}
   }
 
   & > img:nth-child(2) {
@@ -35,9 +34,7 @@ export const CarouselImage = styled.div`
     top: 50%;
     left: 35%;
     transform: translate(-50%, -50%);
-    box-shadow:
-      0 20px 25px -5px rgba(0, 0, 0, 0.1),
-      0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    ${ShadowStyle}
   }
 
   & > p {

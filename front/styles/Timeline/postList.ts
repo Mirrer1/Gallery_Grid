@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import media from 'styles/media';
-import { ShadowStyle } from 'styles/Common/shadow';
+import { DarkShadowStyle } from 'styles/Common/shadow';
 import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
 
 export const PostContainer = styled.div`
@@ -112,7 +112,7 @@ export const PostTooltipBtn = styled.span<{ $visible: boolean }>`
   transition: opacity 0.3s;
   z-index: 10;
   background-color: #fff;
-  ${ShadowStyle}
+  ${DarkShadowStyle}
 
   & > button {
     ${HoverStyle('&')}

@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 
 import media from 'styles/media';
 import { HoverStyle } from 'styles/Common/hover';
-import { ShadowStyle } from 'styles/Common/shadow';
+import { DarkShadowStyle } from 'styles/Common/shadow';
 
 export const AccountWrapper = styled(motion.section)`
   ${({ theme }) => theme.flexColumnSet()};
@@ -22,7 +22,7 @@ export const AccountWrapper = styled(motion.section)`
 
 export const AccountGoogle = styled.div`
   ${HoverStyle('&')}
-  ${ShadowStyle}
+  ${DarkShadowStyle}
   ${({ theme }) => theme.flexSet()};
   cursor: pointer;
   width: 75%;
@@ -253,7 +253,7 @@ export const AccountBtn = styled.div`
 
   & > button {
     ${HoverStyle('&')}
-    ${ShadowStyle}
+    ${DarkShadowStyle}
     font-size: 0.8rem;
     font-weight: 500;
     padding: 0.5em 2em 0.6em 2em;
