@@ -183,8 +183,13 @@ const PostList = () => {
         <CategoryItem onClick={() => onClickCategory('best')} $selected={category === 'best'}>
           Best
         </CategoryItem>
+
         <CategoryItem onClick={() => onClickCategory('recent')} $selected={category === 'recent'}>
           Recent
+        </CategoryItem>
+
+        <CategoryItem onClick={() => onClickCategory('recent')} $selected={category === 'recent'}>
+          Follow
         </CategoryItem>
       </PostCategory>
 

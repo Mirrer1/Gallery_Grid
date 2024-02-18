@@ -106,7 +106,7 @@ export const CarouselBtn = styled.div`
   }
 
   ${media.mobile} {
-    padding: 0;
+    padding: 0 1em;
 
     & > button > span {
       font-size: 0.7rem;

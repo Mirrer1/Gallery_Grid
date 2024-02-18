@@ -28,9 +28,10 @@ export const CategoryItem = styled.p<{ $selected: boolean }>`
   font-size: 0.7rem;
   cursor: pointer;
   opacity: ${props => (props.$selected ? '100%' : '40%')};
+  margin-right: 1em;
 
-  &:first-child {
-    margin-right: 1em;
+  &:last-child {
+    margin-right: 0;
   }
 `;
 
