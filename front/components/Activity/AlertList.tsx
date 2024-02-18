@@ -1,11 +1,28 @@
 import React from 'react';
 
+import CommentAlert from './CommentAlert';
+import LikeAlert from './LikeAlert';
+import FollowAlert from './FollowAlert';
+import { AlertWrapper } from 'styles/Activity/alert';
+
 const AlertList = () => {
   return (
-    <section>
-      {/* <div>알림 리스트</div>
-      <div>알림 리스트</div> */}
-    </section>
+    <AlertWrapper>
+      <div>Today</div>
+      <LikeAlert />
+      <CommentAlert />
+      <FollowAlert />
+
+      <div>Yesterday</div>
+      <LikeAlert />
+      <CommentAlert />
+      <FollowAlert />
+
+      <div>2024-1-14</div>
+      <LikeAlert />
+      <CommentAlert />
+      <FollowAlert />
+    </AlertWrapper>
   );
 };
 

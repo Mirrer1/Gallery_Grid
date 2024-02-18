@@ -198,7 +198,7 @@ export const PostOptions = styled.div`
 
   & > div {
     opacity: 60%;
-    font-size: 0.7rem;
+    font-size: 0.8rem;
     ${ReverseHoverStyle('&')}
     cursor: pointer;
   }

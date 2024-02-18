@@ -16,7 +16,7 @@ export const FollowTableInfo = styled.div`
   padding: 1em 1.5em;
 
   & > h1 {
-    font-size: 1.1rem;
+    font-size: 0.9rem;
     font-weight: 700;
     opacity: 80%;
   }

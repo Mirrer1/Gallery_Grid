@@ -25,13 +25,14 @@ export const ActivityHeader = styled.header`
 
 export const HeaderItem = styled.div`
   & > h1 {
+    font-size: 0.8rem;
     opacity: 60%;
     margin-bottom: 0.5em;
   }
 
   & > p {
     color: ${({ theme }) => theme.colors.primary};
-    font-size: 1.8rem;
+    font-size: 1.3rem;
     font-weight: 700;
   }
 `;
