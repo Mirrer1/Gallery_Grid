@@ -4,10 +4,13 @@ import { HoverStyle } from 'styles/Common/hover';
 import { ShadowStyle } from 'styles/Common/shadow';
 
 export const FollowTableWrapper = styled.section<{ $type: string }>`
+  flex-grow: 1;
   width: 47%;
   background-color: white;
-  ${ShadowStyle}
+  border-radius: 5px;
   margin-right: ${props => (props.$type === 'follower' ? '1em' : '0')};
+  margin-bottom: 1em;
+  ${ShadowStyle}
 `;
 
 export const FollowTableInfo = styled.div`
@@ -51,7 +54,7 @@ export const FollowTableHeader = styled.thead<{ $visible: boolean }>`
   & > tr > td {
     width: 20%;
     font-weight: 500;
-    font-size: 0.7rem;
+    font-size: 0.6rem;
     opacity: 40%;
     padding: 1.5em 1.2em 0.5em 1.2em;
   }

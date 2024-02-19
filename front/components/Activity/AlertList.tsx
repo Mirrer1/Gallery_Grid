@@ -1,27 +1,40 @@
 import React from 'react';
 
-import CommentAlert from './CommentAlert';
-import LikeAlert from './LikeAlert';
-import FollowAlert from './FollowAlert';
-import { AlertWrapper } from 'styles/Activity/alert';
+import AlertItem from './AlertItem';
+import { AlertDivider, AlertWrapper } from 'styles/Activity/alert';
 
 const AlertList = () => {
   return (
     <AlertWrapper>
-      <div>Today</div>
-      <LikeAlert />
-      <CommentAlert />
-      <FollowAlert />
+      <AlertDivider>Today</AlertDivider>
+      <AlertItem type="like" />
+      <AlertItem type="comment" />
+      <AlertItem type="follow" />
 
-      <div>Yesterday</div>
-      <LikeAlert />
-      <CommentAlert />
-      <FollowAlert />
+      <AlertDivider>Yesterday</AlertDivider>
+      <AlertItem type="like" />
+      <AlertItem type="comment" />
+      <AlertItem type="follow" />
 
-      <div>2024-1-14</div>
-      <LikeAlert />
-      <CommentAlert />
-      <FollowAlert />
+      <AlertDivider>2024-1-21</AlertDivider>
+      <AlertItem type="like" />
+      <AlertItem type="comment" />
+      <AlertItem type="follow" />
+
+      <AlertDivider>2024-1-15</AlertDivider>
+      <AlertItem type="like" />
+      <AlertItem type="comment" />
+      <AlertItem type="follow" />
+
+      <AlertDivider>2024-1-13</AlertDivider>
+      <AlertItem type="like" />
+      <AlertItem type="comment" />
+      <AlertItem type="follow" />
+
+      <AlertDivider>2024-1-4</AlertDivider>
+      <AlertItem type="like" />
+      <AlertItem type="comment" />
+      <AlertItem type="follow" />
     </AlertWrapper>
   );
 };

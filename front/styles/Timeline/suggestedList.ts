@@ -1,13 +1,14 @@
 import styled from 'styled-components';
 
 import media from 'styles/media';
-import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
+import { ReverseHoverStyle } from 'styles/Common/hover';
 
 export const SuggestedWrapper = styled.div`
   ${({ theme }) => theme.flexColumnSet('center', 'start')}
   height: 38%;
   background-color: white;
   padding: 2em 1.5em;
+  border-radius: 5px;
 
   ${media.tablet} {
     display: none;

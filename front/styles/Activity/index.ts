@@ -1,9 +1,13 @@
 import styled from 'styled-components';
 
-export const ActivityWrapper = styled.div``;
+export const ActivityWrapper = styled.div`
+  height: 100%;
+  padding: 0.5em 1em;
+`;
 
 export const ActivityHeader = styled.header`
-  padding: 1.5em 2em;
+  height: 11%;
+  padding: 1.5em 0.5em;
 
   & > div {
     ${({ theme }) => theme.flexSet('start')};
@@ -38,5 +42,6 @@ export const HeaderItem = styled.div`
 `;
 
 export const FollowWrapper = styled.div`
+  height: 8%;
   ${({ theme }) => theme.flexSet('center', 'start')};
 `;
