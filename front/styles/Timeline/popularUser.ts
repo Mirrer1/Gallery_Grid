@@ -16,6 +16,14 @@ export const PopularBtn = styled.div<{ $alignleft: string }>`
   font-weight: 700;
   cursor: pointer;
   transition: opacity 250ms ease-in-out;
+
+  ${media.tablet} {
+    ${props => (props.$alignleft === 'true' ? 'transform: translate(10%, -10%);' : 'transform: translate(-20%, -10%);')}
+  }
+
+  ${media.mobile} {
+    ${props => (props.$alignleft === 'true' ? 'transform: translate(10%, 25%);' : 'transform: translate(-20%, 25%);')}
+  }
 `;
 
 export const PopularUserWrapper = styled.div`
@@ -64,6 +72,12 @@ export const PopularUserWrapper = styled.div`
     & > div > div > img {
       width: 35%;
       height: 100%;
+    }
+  }
+
+  ${media.mobile} {
+    & > div > div > img {
+      width: 45%;
     }
   }
 `;
@@ -115,6 +129,28 @@ export const PopularUserContents = styled.div`
       -webkit-line-clamp: 5;
     }
   }
+
+  ${media.mobile} {
+    width: 55%;
+
+    & > div:first-child > div {
+      font-size: 0.6rem;
+      font-weight: 500;
+      margin-bottom: 0.7em;
+    }
+
+    & > div > h1 {
+      font-size: 0.8rem;
+      font-weight: 500;
+      margin-bottom: 1em;
+    }
+
+    & > div > p {
+      -webkit-line-clamp: 3;
+      font-size: 0.7rem;
+      margin-bottom: 1em;
+    }
+  }
 `;
 
 export const PopularOptions = styled.div`
@@ -132,5 +168,19 @@ export const PopularOptions = styled.div`
 
   & > div > span > svg {
     margin-right: 0.4em;
+  }
+
+  ${media.mobile} {
+    & > div {
+      font-size: 0.6rem;
+    }
+
+    & > div:first-child {
+      margin-right: 0.7em;
+    }
+
+    & > div > span > svg {
+      margin-right: 0.3em;
+    }
   }
 `;

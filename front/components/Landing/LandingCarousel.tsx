@@ -32,7 +32,8 @@ const LandingCarousel = () => {
   return (
     <CarouselWrapper>
       <CarouselImage as={motion.div} key={currentIndex} {...CarouselAnimation}>
-        <img src={bestProduct[currentIndex].img} alt={`${bestProduct[currentIndex].user}의 작품`} />
+        <img src={bestProduct[currentIndex].img} alt={`${bestProduct[currentIndex].user}의 작품 배경 이미지`} />
+        <img src={bestProduct[currentIndex].img} alt={`${bestProduct[currentIndex].user}의 작품 이미지`} />
         <p>@Made by {bestProduct[currentIndex].user}</p>
       </CarouselImage>
 

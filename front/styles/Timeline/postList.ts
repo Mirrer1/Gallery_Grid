@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import media from 'styles/media';
-import { ShadowStyle } from 'styles/Common/shadow';
+import { DarkShadowStyle } from 'styles/Common/shadow';
 import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
 
 export const PostContainer = styled.div`
@@ -28,18 +28,30 @@ export const CategoryItem = styled.p<{ $selected: boolean }>`
   font-size: 0.7rem;
   cursor: pointer;
   opacity: ${props => (props.$selected ? '100%' : '40%')};
+  margin-right: 1em;
 
-  &:first-child {
-    margin-right: 1em;
+  &:last-child {
+    margin-right: 0;
+  }
+
+  ${media.mobile} {
+    font-size: 0.65rem;
+    margin-right: 0.8em;
   }
 `;
 
 export const PostWrapper = styled.article<{ $firstpost: boolean }>`
   background-color: white;
-  padding: ${props => (props.$firstpost ? '0 2.5em 2.5em 2.5em' : '2.5em')};
+  padding: 1.5em 2.5em;
 
   ${media.tablet} {
-    padding: ${props => (props.$firstpost ? '0 1.5em 1.5em 1.5em' : '1.5em')};
+    padding: 1.5em 2em;
+    /* padding: ${props => (props.$firstpost ? '0 1.5em 1.5em 1.5em' : '1.5em')}; */
+  }
+
+  ${media.mobile} {
+    padding: ${props => (props.$firstpost ? '0 0.8em 0.8em 0.8em' : '0.8em')};
+    /* padding: 0; */
   }
 `;
 
@@ -74,6 +86,16 @@ export const PostHeader = styled.div`
   & > div > div > p {
     font-size: 0.6rem;
     opacity: 40%;
+  }
+
+  ${media.mobile} {
+    & > div > img {
+      margin-right: 0.5em;
+    }
+
+    & > div > div > h1 {
+      font-size: 0.8rem;
+    }
   }
 `;
 
@@ -111,7 +133,7 @@ export const PostTooltipBtn = styled.span<{ $visible: boolean }>`
   transition: opacity 0.3s;
   z-index: 10;
   background-color: #fff;
-  ${ShadowStyle}
+  ${DarkShadowStyle}
 
   & > button {
     ${HoverStyle('&')}
@@ -185,19 +207,21 @@ export const PostContents = styled.div`
   }
 
   & > div > p {
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     opacity: 60%;
     line-height: 1.5;
     margin-bottom: 1em;
+    padding: 0 0.3em;
   }
 `;
 
 export const PostOptions = styled.div`
   ${({ theme }) => theme.flexSet('start')}
+  padding: 0 0.3em;
 
   & > div {
     opacity: 60%;
-    font-size: 0.7rem;
+    font-size: 0.8rem;
     ${ReverseHoverStyle('&')}
     cursor: pointer;
   }
@@ -208,5 +232,19 @@ export const PostOptions = styled.div`
 
   & > div > span > svg {
     margin-right: 0.4em;
+  }
+
+  ${media.mobile} {
+    & > div {
+      font-size: 0.7rem;
+    }
+
+    & > div:first-child {
+      margin-right: 0.7em;
+    }
+
+    & > div > span > svg {
+      margin-right: 0.3em;
+    }
   }
 `;

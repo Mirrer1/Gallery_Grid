@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 
 import media from 'styles/media';
 import { HoverStyle } from 'styles/Common/hover';
+import { ShadowStyle } from 'styles/Common/shadow';
 
 export const CarouselWrapper = styled(motion.section)`
   flex-grow: 1;
@@ -14,46 +15,70 @@ export const CarouselWrapper = styled(motion.section)`
 `;
 
 export const CarouselImage = styled.div`
+  position: relative;
   ${({ theme }) => theme.flexSet('center', 'end')};
-  margin-bottom: 1em;
+  margin-bottom: 4em;
   width: 100%;
 
-  & > img {
+  & > img:first-child {
     width: 80%;
     height: 600px;
-    margin-right: 1em;
+    filter: blur(5px);
+    ${ShadowStyle}
+  }
+
+  & > img:nth-child(2) {
+    width: 65%;
+    height: 500px;
+    position: absolute;
+    top: 50%;
+    left: 35%;
+    transform: translate(-50%, -50%);
+    ${ShadowStyle}
   }
 
   & > p {
-    writing-mode: vertical-rl;
-    opacity: 40%;
+    position: absolute;
+    right: 13%;
+    bottom: 3%;
+    color: #fffafa;
   }
 
   ${media.tablet} {
-    & > img {
+    & > img:first-child {
       height: 450px;
-      margin-right: 0.7em;
+    }
+
+    & > img:nth-child(2) {
+      width: 70%;
+      height: 320px;
+      left: 37%;
     }
 
     & > p {
-      font-size: 0.8rem;
+      font-size: 0.85rem;
     }
   }
 
   ${media.mobile} {
     ${({ theme }) => theme.flexColumnSet('center', 'end')};
-    margin-bottom: 0.7em;
+    margin-bottom: 3em;
 
-    & > img {
+    & > img:first-child {
       width: 100%;
       height: 400px;
       margin-right: 0;
       margin-bottom: 0.3em;
     }
 
+    & > img:nth-child(2) {
+      width: 90%;
+      left: 50%;
+    }
+
     & > p {
-      writing-mode: horizontal-tb;
       font-size: 0.7rem;
+      right: 3%;
     }
   }
 `;
@@ -78,7 +103,7 @@ export const CarouselBtn = styled.div`
   }
 
   ${media.mobile} {
-    padding: 0;
+    padding: 0 1em;
 
     & > button > span {
       font-size: 0.7rem;

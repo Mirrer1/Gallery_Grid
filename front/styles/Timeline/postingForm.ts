@@ -34,6 +34,18 @@ export const PostingWrapper = styled.form`
     margin-right: 1.5em;
     cursor: pointer;
   }
+
+  ${media.mobile} {
+    & > textarea {
+      font-size: 0.7rem;
+      padding: 1em;
+    }
+
+    & > div > div > span {
+      font-size: 0.75rem;
+      margin-right: 1em;
+    }
+  }
 `;
 
 export const PostingBtn = styled.button<{ $active: boolean }>`
@@ -45,4 +57,9 @@ export const PostingBtn = styled.button<{ $active: boolean }>`
   font-weight: 500;
   padding: 0.7em 2em;
   border-radius: 5px;
+
+  ${media.mobile} {
+    font-size: 0.65rem;
+    padding: 0.6em 1.8em;
+  }
 `;
