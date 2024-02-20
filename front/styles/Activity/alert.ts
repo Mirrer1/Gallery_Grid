@@ -1,12 +1,19 @@
 import styled from 'styled-components';
+import { motion } from 'framer-motion';
 
+import media from 'styles/media';
 import { HoverStyle } from 'styles/Common/hover';
 
-export const AlertWrapper = styled.section`
+export const AlertWrapper = styled(motion.section)`
   height: 81%;
   overflow-y: scroll;
   background-color: white;
   border-radius: 5px;
+
+  ${media.tablet} {
+    height: 100%;
+    overflow-y: visible;
+  }
 `;
 
 export const AlertDivider = styled.div`
@@ -27,20 +34,29 @@ export const AlertDivider = styled.div`
     background-color: rgba(0, 0, 0, 0.06);
     margin: 15px 10px;
   }
+
+  ${media.mobile} {
+    font-size: 0.65rem;
+  }
 `;
 
 export const AlertItemWrapper = styled.section`
   padding: 1em 1.5em;
+
+  ${media.mobile} {
+    padding: 0.5em 0.5em 0.8em 0.5em;
+  }
 `;
 
-export const AlertHeader = styled.div`
+export const AlertHeader = styled.div<{ $type: string }>`
   ${({ theme }) => theme.flexSet('start')}
+  margin-bottom: ${props => (props.$type === 'follow' ? '0' : '0.5em')};
 
   & > img {
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    margin-right: 0.5em;
+    margin-right: 1em;
   }
 
   & > p {
@@ -53,6 +69,7 @@ export const AlertHeader = styled.div`
   & > h1 {
     width: 80%;
     font-size: 0.9rem;
+    line-height: 1.3;
     padding-bottom: 0.2em;
     word-wrap: break-word;
 
@@ -67,10 +84,31 @@ export const AlertHeader = styled.div`
       font-weight: 600;
     }
   }
+
+  ${media.mobile} {
+    & > img {
+      width: 40px;
+      height: 40px;
+      margin-right: 0.7em;
+    }
+
+    & > p {
+      display: none;
+    }
+
+    & > h1 {
+      width: 80%;
+      font-size: 0.7rem;
+    }
+  }
 `;
 
 export const AlertContentWrapper = styled.div`
   margin: 0 1em 0 3.5em;
+
+  ${media.mobile} {
+    margin: 0;
+  }
 `;
 
 export const AlertContent = styled.div`
@@ -115,6 +153,22 @@ export const AlertContent = styled.div`
   & > div > div > span {
     margin-right: 0.3em;
   }
+
+  ${media.mobile} {
+    ${({ theme }) => theme.flexColumnSet()}
+    padding: 0.5em 0.7em;
+
+    & > img {
+      width: 100%;
+      height: 150px;
+      margin-bottom: 0.3em;
+    }
+
+    & > div {
+      width: 100%;
+      padding: 0 0.2em;
+    }
+  }
 `;
 
 export const AlertContentBtn = styled.div`
@@ -139,5 +193,19 @@ export const AlertContentBtn = styled.div`
     font-weight: 500;
     padding: 0.8em 1.7em;
     border-radius: 5px;
+  }
+
+  ${media.mobile} {
+    padding-left: 3em;
+
+    & > button:first-child {
+      font-size: 0.65rem;
+      padding: 0.5em 1.5em;
+    }
+
+    & > button:last-child {
+      font-size: 0.65rem;
+      padding: 0.6em 1.3em;
+    }
   }
 `;

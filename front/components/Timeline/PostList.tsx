@@ -143,9 +143,12 @@ const PostList = () => {
     setCategory(category);
 
     if (firstPostRef.current) {
+      const windowWidth = window.innerWidth;
+      const blockType = windowWidth < 576 ? 'start' : windowWidth < 992 ? 'end' : 'start';
+
       firstPostRef.current.scrollIntoView({
         behavior: 'smooth',
-        block: 'center'
+        block: blockType
       });
     }
   }, []);
@@ -188,7 +191,7 @@ const PostList = () => {
           Recent
         </CategoryItem>
 
-        <CategoryItem onClick={() => onClickCategory('recent')} $selected={category === 'recent'}>
+        <CategoryItem onClick={() => onClickCategory('follow')} $selected={category === 'follow'}>
           Follow
         </CategoryItem>
       </PostCategory>

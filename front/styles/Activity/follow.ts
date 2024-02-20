@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+import media from 'styles/media';
 import { HoverStyle } from 'styles/Common/hover';
 import { ShadowStyle } from 'styles/Common/shadow';
 
@@ -11,6 +12,12 @@ export const FollowTableWrapper = styled.section<{ $type: string }>`
   margin-right: ${props => (props.$type === 'follower' ? '1em' : '0')};
   margin-bottom: 1em;
   ${ShadowStyle}
+
+  ${media.mobile} {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: ${props => (props.$type === 'follower' ? '0.3em' : '0.5em')};
+  }
 `;
 
 export const FollowTableInfo = styled.div`
@@ -31,6 +38,22 @@ export const FollowTableInfo = styled.div`
 
     &:first-child {
       margin-right: 0.3em;
+    }
+  }
+
+  ${media.mobile} {
+    padding: 0.8em 1em;
+
+    & > h1 {
+      font-size: 0.8rem;
+    }
+
+    & > div > span {
+      font-size: 0.8rem;
+
+      &:first-child {
+        margin-right: 0.2em;
+      }
     }
   }
 `;
@@ -57,6 +80,21 @@ export const FollowTableHeader = styled.thead<{ $visible: boolean }>`
     font-size: 0.6rem;
     opacity: 40%;
     padding: 1.5em 1.2em 0.5em 1.2em;
+  }
+
+  ${media.tablet} {
+    & > tr > td {
+      font-size: 0.55rem;
+      padding: 1em 0.5em 0em 0.5em;
+    }
+  }
+
+  ${media.mobile} {
+    & > tr > td {
+      &:nth-child(4) {
+        display: none;
+      }
+    }
   }
 `;
 
@@ -102,6 +140,44 @@ export const FollowTableBody = styled.tbody<{ $visible: boolean }>`
       padding: 0.7em 1.5em;
       border-radius: 5px;
       ${HoverStyle('&')}
+    }
+  }
+
+  ${media.tablet} {
+    max-height: ${props => (props.$visible ? '170px' : '0')};
+
+    & > tr > td {
+      font-size: 0.7rem;
+      padding: 0.7em;
+
+      &:first-child {
+        & > img {
+          width: 40px;
+          height: 40px;
+        }
+      }
+
+      &:last-child > button {
+        font-size: 0.5rem;
+        padding: 0.7em 1.2em;
+      }
+    }
+  }
+
+  ${media.mobile} {
+    max-height: ${props => (props.$visible ? '155px' : '0')};
+
+    & > tr > td {
+      &:first-child {
+        & > img {
+          width: 35px;
+          height: 35px;
+        }
+      }
+
+      &:nth-child(4) {
+        display: none;
+      }
     }
   }
 `;

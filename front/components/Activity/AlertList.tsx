@@ -1,11 +1,12 @@
 import React from 'react';
 
 import AlertItem from './AlertItem';
+import { slideInFromBottom } from 'styles/Common/animation';
 import { AlertDivider, AlertWrapper } from 'styles/Activity/alert';
 
 const AlertList = () => {
   return (
-    <AlertWrapper>
+    <AlertWrapper {...slideInFromBottom(0.3)}>
       <AlertDivider>Today</AlertDivider>
       <AlertItem type="like" />
       <AlertItem type="comment" />

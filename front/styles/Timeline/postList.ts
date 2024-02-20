@@ -33,14 +33,25 @@ export const CategoryItem = styled.p<{ $selected: boolean }>`
   &:last-child {
     margin-right: 0;
   }
+
+  ${media.mobile} {
+    font-size: 0.65rem;
+    margin-right: 0.8em;
+  }
 `;
 
 export const PostWrapper = styled.article<{ $firstpost: boolean }>`
   background-color: white;
-  padding: ${props => (props.$firstpost ? '0 2.5em 2.5em 2.5em' : '2.5em')};
+  padding: 1.5em 2.5em;
 
   ${media.tablet} {
-    padding: ${props => (props.$firstpost ? '0 1.5em 1.5em 1.5em' : '1.5em')};
+    padding: 1.5em 2em;
+    /* padding: ${props => (props.$firstpost ? '0 1.5em 1.5em 1.5em' : '1.5em')}; */
+  }
+
+  ${media.mobile} {
+    padding: ${props => (props.$firstpost ? '0 0.8em 0.8em 0.8em' : '0.8em')};
+    /* padding: 0; */
   }
 `;
 
@@ -75,6 +86,16 @@ export const PostHeader = styled.div`
   & > div > div > p {
     font-size: 0.6rem;
     opacity: 40%;
+  }
+
+  ${media.mobile} {
+    & > div > img {
+      margin-right: 0.5em;
+    }
+
+    & > div > div > h1 {
+      font-size: 0.8rem;
+    }
   }
 `;
 
@@ -186,15 +207,17 @@ export const PostContents = styled.div`
   }
 
   & > div > p {
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     opacity: 60%;
     line-height: 1.5;
     margin-bottom: 1em;
+    padding: 0 0.3em;
   }
 `;
 
 export const PostOptions = styled.div`
   ${({ theme }) => theme.flexSet('start')}
+  padding: 0 0.3em;
 
   & > div {
     opacity: 60%;
@@ -209,5 +232,19 @@ export const PostOptions = styled.div`
 
   & > div > span > svg {
     margin-right: 0.4em;
+  }
+
+  ${media.mobile} {
+    & > div {
+      font-size: 0.7rem;
+    }
+
+    & > div:first-child {
+      margin-right: 0.7em;
+    }
+
+    & > div > span > svg {
+      margin-right: 0.3em;
+    }
   }
 `;

@@ -21,7 +21,7 @@ export const MobileHeaderWrapper = styled.header`
     }
 
     & > div > h1 {
-      font-size: 1.2rem;
+      font-size: 1rem;
       font-weight: 700;
     }
   }
@@ -39,12 +39,14 @@ export const MobileHeaderContent = styled.div`
     ${HoverStyle('&')}
 
     &:first-child {
-      width: 37px;
-      margin-right: 0.5em;
+      width: 30px;
+      height: 30px;
+      margin-right: 0.2em;
     }
 
     &:last-child {
-      width: 35px;
+      width: 30px;
+      height: 30px;
     }
   }
 
@@ -55,7 +57,7 @@ export const MobileHeaderContent = styled.div`
   }
 
   & > div > span {
-    font-size: 1.1rem;
+    font-size: 0.8rem;
     opacity: 40%;
   }
 `;

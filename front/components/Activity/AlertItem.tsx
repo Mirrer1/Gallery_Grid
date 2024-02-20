@@ -12,8 +12,9 @@ import {
 const AlertItem = ({ type }: { type: string }) => {
   return (
     <AlertItemWrapper>
-      <AlertHeader>
+      <AlertHeader $type={type}>
         <img src="https://i.pinimg.com/564x/aa/06/d7/aa06d77cd048b867f5d0b40362e62a76.jpg" alt="프로필 이미지1" />
+
         <p>14:47</p>
         {type === 'like' ? (
           <h1>

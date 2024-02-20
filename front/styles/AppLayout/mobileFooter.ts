@@ -16,7 +16,7 @@ export const MobileFooterWrapper = styled.footer`
     background-color: #fff;
 
     & > span {
-      font-size: 1.5rem;
+      font-size: 1.1rem;
       ${ReverseHoverStyle('&')}
     }
   }

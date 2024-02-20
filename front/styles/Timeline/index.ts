@@ -38,6 +38,6 @@ export const CommunitySection = styled(motion.article)`
   }
 
   ${media.mobile} {
-    height: 200px;
+    height: 160px;
   }
 `;

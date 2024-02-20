@@ -1,8 +1,15 @@
 import styled from 'styled-components';
+import { motion } from 'framer-motion';
+
+import media from 'styles/media';
 
 export const ActivityWrapper = styled.div`
   height: 100%;
   padding: 0.5em 1em;
+
+  ${media.tablet} {
+    padding: 0;
+  }
 `;
 
 export const ActivityHeader = styled.header`
@@ -25,6 +32,29 @@ export const ActivityHeader = styled.header`
       padding-right: 0;
     }
   }
+
+  ${media.tablet} {
+    padding: 0.5em;
+    margin-bottom: 1em;
+
+    & > div {
+      justify-content: center;
+    }
+  }
+
+  ${media.mobile} {
+    padding: 0.5em 0.8em;
+    margin-bottom: 0.7em;
+
+    & > div {
+      justify-content: space-between;
+    }
+
+    & > div > div {
+      margin-right: 0;
+      padding-right: 3.5em;
+    }
+  }
 `;
 
 export const HeaderItem = styled.div`
@@ -39,9 +69,23 @@ export const HeaderItem = styled.div`
     font-size: 1.3rem;
     font-weight: 700;
   }
+
+  ${media.mobile} {
+    & > h1 {
+      font-size: 0.6rem;
+    }
+
+    & > p {
+      font-size: 1rem;
+    }
+  }
 `;
 
-export const FollowWrapper = styled.div`
+export const FollowWrapper = styled(motion.div)`
   height: 8%;
   ${({ theme }) => theme.flexSet('center', 'start')};
+
+  ${media.mobile} {
+    ${({ theme }) => theme.flexColumnSet()};
+  }
 `;

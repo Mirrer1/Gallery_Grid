@@ -4,6 +4,7 @@ import Head from 'next/head';
 import AppLayout from 'components/AppLayout';
 import FollowList from 'components/Activity/FollowList';
 import AlertList from 'components/Activity/AlertList';
+import { slideInFromBottom } from 'styles/Common/animation';
 import { ActivityHeader, ActivityWrapper, FollowWrapper, HeaderItem } from 'styles/Activity';
 
 const Activity = () => {
@@ -166,7 +167,7 @@ const Activity = () => {
             </div>
           </ActivityHeader>
 
-          <FollowWrapper>
+          <FollowWrapper {...slideInFromBottom()}>
             <FollowList type="follower" list={followerList} />
             <FollowList type="following" list={followerList} />
           </FollowWrapper>

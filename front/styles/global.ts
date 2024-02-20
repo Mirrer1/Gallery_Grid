@@ -190,6 +190,16 @@ const GlobalStyles = createGlobalStyle`
       max-width: 960px !important;
     }
   }
+
+  @media only screen and (max-width: 992px) {
+    .body{
+      -ms-overflow-style: none;
+    }
+
+    ::-webkit-scrollbar {
+      display: none;
+    }
+  }
 `;
 
 export default GlobalStyles;
