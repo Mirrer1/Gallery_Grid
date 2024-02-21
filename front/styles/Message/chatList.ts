@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import media from 'styles/media';
 import { ReverseHoverStyle } from 'styles/Common/hover';
 
-export const ChatListWrapper = styled.div`
-  width: 50%;
+export const ChatListWrapper = styled.article`
+  width: 40%;
   height: 100%;
   padding: 1.5em;
 `;
