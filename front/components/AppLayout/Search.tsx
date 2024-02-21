@@ -7,11 +7,14 @@ import { SearchWrapper } from 'styles/AppLayout/search';
 const Search = () => {
   const [keyword, onChangeKeyword] = useInput('');
 
-  const handleKeyPress = useCallback((event: React.KeyboardEvent) => {
-    if (event.key === 'Enter') {
-      console.log(keyword);
-    }
-  }, []);
+  const handleKeyPress = useCallback(
+    (event: React.KeyboardEvent) => {
+      if (event.key === 'Enter') {
+        console.log(keyword);
+      }
+    },
+    [keyword]
+  );
 
   return (
     <SearchWrapper>
