@@ -1,10 +1,16 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { SearchOutlined, UserAddOutlined } from '@ant-design/icons';
 
 import useInput from 'utils/useInput';
+import { slideInFromBottom } from 'styles/Common/animation';
 import { ChatListHeader, ChatListItem, ChatListItemWrapper, ChatListWrapper } from 'styles/Message/chatList';
 
-const Message = () => {
+type ChatProps = {
+  visibleChat: boolean;
+  setVisibleChat: (value: boolean) => void;
+};
+
+const Message = ({ visibleChat, setVisibleChat }: ChatProps) => {
   const [keyword, onChangeKeyword] = useInput('');
 
   const list = [
@@ -103,8 +109,12 @@ const Message = () => {
     [keyword]
   );
 
+  const onVisibleChat = useCallback(() => {
+    setVisibleChat(true);
+  }, []);
+
   return (
-    <ChatListWrapper>
+    <ChatListWrapper $visible={visibleChat}>
       <ChatListHeader>
         <div>
           <label htmlFor="chatSearch">
@@ -124,9 +134,9 @@ const Message = () => {
         <UserAddOutlined />
       </ChatListHeader>
 
-      <ChatListItemWrapper>
+      <ChatListItemWrapper {...slideInFromBottom()}>
         {list.map(chat => (
-          <ChatListItem key={chat.id}>
+          <ChatListItem key={chat.id} onClick={onVisibleChat}>
             <div>
               <img src={chat.profile} alt={`${chat.nickname}의 프로필 이미지`} />
 

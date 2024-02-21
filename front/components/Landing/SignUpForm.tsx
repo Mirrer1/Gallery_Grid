@@ -4,7 +4,6 @@ import { GoogleOutlined } from '@ant-design/icons';
 import Router from 'next/router';
 
 import useInput from 'utils/useInput';
-import { IMenu } from 'types/Menu';
 import { useValidate } from 'utils/useValidate';
 import { slideInFromBottom } from 'styles/Common/animation';
 import {
@@ -18,7 +17,11 @@ import {
   AccountAlert
 } from 'styles/Landing/accountForm';
 
-const SignUpForm = ({ onClickMenu }: IMenu) => {
+type MenuProps = {
+  onClickMenu: (menu: string) => void;
+};
+
+const SignUpForm = ({ onClickMenu }: MenuProps) => {
   const [nickname, onChangeNickname] = useInput('');
   const [email, onChangeEmail] = useInput('');
   const [password, onChangePassword] = useInput('');

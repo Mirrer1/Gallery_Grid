@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Head from 'next/head';
 
 import AppLayout from 'components/AppLayout';
@@ -7,6 +7,8 @@ import Chat from 'components/Message/Chat';
 import { MessageWrapper } from 'styles/Message';
 
 const Message = () => {
+  const [visibleChat, setVisibleChat] = useState(false);
+
   return (
     <>
       <Head>
@@ -15,8 +17,8 @@ const Message = () => {
 
       <AppLayout>
         <MessageWrapper>
-          <ChatList />
-          <Chat />
+          <ChatList visibleChat={visibleChat} setVisibleChat={setVisibleChat} />
+          <Chat visibleChat={visibleChat} setVisibleChat={setVisibleChat} />
         </MessageWrapper>
       </AppLayout>
     </>

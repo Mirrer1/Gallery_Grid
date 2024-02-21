@@ -4,7 +4,6 @@ import Router from 'next/router';
 
 import useInput from 'utils/useInput';
 import { useValidate } from 'utils/useValidate';
-import { IMenu } from 'types/Menu';
 import { slideInFromBottom } from 'styles/Common/animation';
 import {
   AccountBtn,
@@ -18,7 +17,11 @@ import {
   AccountAlert
 } from 'styles/Landing/accountForm';
 
-const LoginForm = ({ onClickMenu }: IMenu) => {
+type MenuProps = {
+  onClickMenu: (menu: string) => void;
+};
+
+const LoginForm = ({ onClickMenu }: MenuProps) => {
   const [email, onChangeEmail] = useInput('');
   const [password, onChangePassword] = useInput('');
   const [rememberMe, onChangeRememberMe] = useInput(false);
