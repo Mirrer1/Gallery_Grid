@@ -2,6 +2,9 @@ import React from 'react';
 import Head from 'next/head';
 
 import AppLayout from 'components/AppLayout';
+import ChatList from 'components/Message/ChatList';
+import Chat from 'components/Message/Chat';
+import { MessageWrapper } from 'styles/Message';
 
 const Message = () => {
   return (
@@ -11,8 +14,10 @@ const Message = () => {
       </Head>
 
       <AppLayout>
-        <div>This is</div>
-        <div>Message Page!</div>
+        <MessageWrapper>
+          <ChatList />
+          <Chat />
+        </MessageWrapper>
       </AppLayout>
     </>
   );

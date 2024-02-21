@@ -197,7 +197,7 @@ const PostList = () => {
       </PostCategory>
 
       {postList.map((post, i) => (
-        <PostWrapper key={post.id} $firstpost={i === 0} ref={i === 0 ? firstPostRef : null}>
+        <PostWrapper key={post.id} ref={i === 0 ? firstPostRef : null}>
           <PostHeader>
             <div>
               <img src={post.profile} alt="author profile image" />

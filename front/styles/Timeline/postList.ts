@@ -40,18 +40,16 @@ export const CategoryItem = styled.p<{ $selected: boolean }>`
   }
 `;
 
-export const PostWrapper = styled.article<{ $firstpost: boolean }>`
+export const PostWrapper = styled.article`
   background-color: white;
   padding: 1.5em 2.5em;
 
   ${media.tablet} {
     padding: 1.5em 2em;
-    /* padding: ${props => (props.$firstpost ? '0 1.5em 1.5em 1.5em' : '1.5em')}; */
   }
 
   ${media.mobile} {
-    padding: ${props => (props.$firstpost ? '0 0.8em 0.8em 0.8em' : '0.8em')};
-    /* padding: 0; */
+    padding: 1em 0.8em;
   }
 `;
 
