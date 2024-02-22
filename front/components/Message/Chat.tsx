@@ -11,7 +11,7 @@ type ChatProps = {
 
 const Chat = ({ visibleChat, setVisibleChat }: ChatProps) => {
   const [chat, onChangeChat] = useInput('');
-  const chatItemRef = useRef<HTMLDivElement>(null);
+  const lastChatItemRef = useRef<HTMLDivElement>(null);
 
   const handleKeyPress = useCallback(
     (event: React.KeyboardEvent) => {
@@ -27,14 +27,16 @@ const Chat = ({ visibleChat, setVisibleChat }: ChatProps) => {
   }, []);
 
   useEffect(() => {
-    if (chatItemRef.current) {
-      chatItemRef.current.scrollTop = chatItemRef.current.scrollHeight;
+    if (lastChatItemRef.current) {
+      lastChatItemRef.current.scrollIntoView({
+        block: 'start'
+      });
     }
   }, [visibleChat]);
 
   return (
-    <ChatWrapper $visible={visibleChat} ref={chatItemRef}>
-      <div ref={chatItemRef}>
+    <ChatWrapper $visible={visibleChat}>
+      <div>
         <ChatHeader>
           <div>
             <h1>user1</h1>
@@ -48,7 +50,7 @@ const Chat = ({ visibleChat, setVisibleChat }: ChatProps) => {
           </p>
         </ChatHeader>
 
-        <ChatItemWrapper ref={chatItemRef}>
+        <ChatItemWrapper>
           <ReceiveChat>
             <div>
               <img src="https://i.pinimg.com/564x/ed/30/6c/ed306c69bf2cd486a926babf2912bef9.jpg" />
@@ -142,7 +144,7 @@ const Chat = ({ visibleChat, setVisibleChat }: ChatProps) => {
             <p>Lorem ipsum dolor sit amet consecte p</p>
           </SendChat>
 
-          <ReceiveChat>
+          <ReceiveChat ref={lastChatItemRef}>
             <div>
               <img src="https://i.pinimg.com/564x/ed/30/6c/ed306c69bf2cd486a926babf2912bef9.jpg" />
               <div>10:41</div>
