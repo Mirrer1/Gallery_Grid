@@ -4,11 +4,15 @@ import { toast } from 'react-toastify';
 import LandingCarousel from './LandingCarousel';
 import LoginForm from './LoginForm';
 import SignUpForm from './SignUpForm';
-import { IMenuContents } from 'types/Menu';
 import { slideInFromLeft } from 'styles/Common/animation';
 import { ContentsText, ContentsWrapper, ContentBreak, HeaderBreak } from 'styles/Landing/menuContents';
 
-const MenuContents = ({ selectMenu, onClickMenu }: IMenuContents) => {
+type MenuContentsProps = {
+  selectMenu: string;
+  onClickMenu: (menu: string) => void;
+};
+
+const MenuContents = ({ selectMenu, onClickMenu }: MenuContentsProps) => {
   const onClickMore = useCallback(() => {
     toast.warning('로그인이 필요한 서비스입니다.');
     onClickMenu('login');

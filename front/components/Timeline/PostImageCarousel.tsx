@@ -6,7 +6,6 @@ import 'swiper/css/effect-coverflow';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 
-import { ICarousel } from 'types/Carousel';
 import {
   BackgroundImageContainer,
   CarouselOutsideArea,
@@ -14,7 +13,12 @@ import {
   ImageCarouselWrapper
 } from 'styles/Timeline/imageCarousel';
 
-const PostImageCarousel = ({ images, setIsModalVisible }: ICarousel) => {
+type CarouselProps = {
+  images: string[];
+  setIsModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+const PostImageCarousel = ({ images, setIsModalVisible }: CarouselProps) => {
   const [activeIndex, setActiveIndex] = useState(0);
 
   const hideCarousel = useCallback(() => {
