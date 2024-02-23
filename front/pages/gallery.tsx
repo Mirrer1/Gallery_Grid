@@ -82,11 +82,7 @@ const Gallery = () => {
       id: 'as6',
       user: 'Lorem ipsum dolor',
       profile: 'https://t3.ftcdn.net/jpg/05/16/27/58/360_F_516275801_f3Fsp17x6HQK0xQgDQEELoTuERO4SsWV.jpg',
-      img: [
-        'https://i.ibb.co/n70QqMG/drawing-series-by.jpg',
-        'https://i.ibb.co/BCsx9nZ/image.jpg',
-        'https://i.ibb.co/8bqzbyV/1.jpg'
-      ],
+      img: ['https://i.ibb.co/n70QqMG/drawing-series-by.jpg'],
       createdAt: '25 mins ago',
       desc: '가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하'
     },
@@ -144,56 +140,64 @@ const Gallery = () => {
 
       <AppLayout>
         <GalleryWrapper>
-          <h1>FILTER:</h1>
+          <div>
+            <h1>FILTER:</h1>
 
-          <GalleryCategoryWrapper>
-            <div>
-              <GalleryCategoryBtn type="button" onClick={() => onClickCategory('all')} $selected={selectMenu === 'all'}>
-                All
-              </GalleryCategoryBtn>
+            <GalleryCategoryWrapper>
+              <div>
+                <GalleryCategoryBtn
+                  type="button"
+                  onClick={() => onClickCategory('all')}
+                  $selected={selectMenu === 'all'}
+                >
+                  All
+                </GalleryCategoryBtn>
 
-              <GalleryCategoryBtn
-                type="button"
-                onClick={() => onClickCategory('board')}
-                $selected={selectMenu === 'board'}
-              >
-                Board
-              </GalleryCategoryBtn>
+                <GalleryCategoryBtn
+                  type="button"
+                  onClick={() => onClickCategory('board')}
+                  $selected={selectMenu === 'board'}
+                >
+                  Board
+                </GalleryCategoryBtn>
 
-              <GalleryCategoryBtn
-                type="button"
-                onClick={() => onClickCategory('like')}
-                $selected={selectMenu === 'like'}
-              >
-                Like
-              </GalleryCategoryBtn>
+                <GalleryCategoryBtn
+                  type="button"
+                  onClick={() => onClickCategory('like')}
+                  $selected={selectMenu === 'like'}
+                >
+                  Like
+                </GalleryCategoryBtn>
 
-              <GalleryCategoryBtn
-                type="button"
-                onClick={() => onClickCategory('comment')}
-                $selected={selectMenu === 'comment'}
-              >
-                Comment
-              </GalleryCategoryBtn>
-            </div>
+                <GalleryCategoryBtn
+                  type="button"
+                  onClick={() => onClickCategory('comment')}
+                  $selected={selectMenu === 'comment'}
+                >
+                  Comment
+                </GalleryCategoryBtn>
+              </div>
 
-            <div>
-              {selectSort === 'best' ? (
-                <button type="button" onClick={() => onClickSort('new')}>
-                  인기순
-                </button>
-              ) : (
-                <button type="button" onClick={() => onClickSort('best')}>
-                  최신순
-                </button>
-              )}
+              <div>
+                {selectSort === 'best' ? (
+                  <button type="button" onClick={() => onClickSort('new')}>
+                    인기순
+                  </button>
+                ) : (
+                  <button type="button" onClick={() => onClickSort('best')}>
+                    최신순
+                  </button>
+                )}
 
-              <SwapOutlined />
-            </div>
-          </GalleryCategoryWrapper>
+                <SwapOutlined />
+              </div>
+            </GalleryCategoryWrapper>
+          </div>
 
-          <BigPostPreview post={postList[0]} />
-          <PostPreview />
+          <div>
+            <BigPostPreview post={postList[0]} />
+            <PostPreview post={postList} />
+          </div>
         </GalleryWrapper>
       </AppLayout>
     </>

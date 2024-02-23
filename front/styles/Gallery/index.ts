@@ -4,14 +4,25 @@ import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
 
 export const GalleryWrapper = styled.section`
   background-color: white;
+  height: 96%;
   border-radius: 5px;
-  padding: 1.5em;
-  margin: 2em;
+  padding: 1.5em 1.5em 0.5em 1.5em;
+  margin: 1em;
 
-  & > h1 {
-    font-size: 1.4rem;
-    font-weight: 600;
-    margin-bottom: 1em;
+  & > div:first-child {
+    height: 11%;
+
+    & > h1 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin-bottom: 1em;
+    }
+  }
+
+  & > div:last-child {
+    height: 89%;
+    overflow-y: scroll;
+    padding: 1em 1em 1em 0em;
   }
 `;
 
@@ -19,7 +30,6 @@ export const GalleryCategoryWrapper = styled.nav`
   ${({ theme }) => theme.flexSet('space-between')}
   border-bottom: 2px solid ${({ theme }) => theme.colors.darkBg};
   padding-bottom: 1em;
-  margin-bottom: 1em;
 
   & > div:last-child {
     font-size: 0.75rem;
