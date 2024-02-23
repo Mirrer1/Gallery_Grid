@@ -165,35 +165,51 @@ export const PostContents = styled.div`
     cursor: pointer;
     width: 100%;
     height: 350px;
-  }
 
-  & > div:first-child > img {
-    width: 100%;
-    height: 100%;
-    margin-right: 1em;
-    border-radius: 5px;
-  }
-
-  & > div:first-child > div {
-    ${({ theme }) => theme.flexSet()};
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-  }
-
-  & > div:first-child > div > div {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    margin-right: 4px;
-    background-color: #b5b5b5;
-
-    &:first-child {
-      background-color: ${({ theme }) => theme.colors.primary};
+    &:hover {
+      & > span {
+        opacity: 100%;
+      }
     }
 
-    &:last-child {
-      margin-right: 0;
+    & > img {
+      width: 100%;
+      height: 100%;
+      margin-right: 1em;
+      border-radius: 5px;
+    }
+
+    & > div {
+      ${({ theme }) => theme.flexSet()};
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+    }
+
+    & > div > div {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      margin-right: 4px;
+      background-color: #b5b5b5;
+
+      &:first-child {
+        background-color: ${({ theme }) => theme.colors.primary};
+      }
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+
+    & > span {
+      opacity: 0;
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      font-size: 1.2rem;
+      transition: opacity 200ms ease-in-out;
+      ${HoverStyle('&')}
     }
   }
 
@@ -210,6 +226,15 @@ export const PostContents = styled.div`
     line-height: 1.5;
     margin-bottom: 1em;
     padding: 0 0.3em;
+  }
+
+  ${media.mobile} {
+    & > div:first-child {
+      & > span {
+        opacity: 100%;
+        font-size: 1rem;
+      }
+    }
   }
 `;
 
