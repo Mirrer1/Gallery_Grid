@@ -1,5 +1,7 @@
-import { ArrowsAltOutlined } from '@ant-design/icons';
 import React from 'react';
+import { ArrowsAltOutlined } from '@ant-design/icons';
+
+import { BigPostPreviewContent, BigPostPreviewImage, BigPostPreviewWrapper } from 'styles/Gallery/bigPostPreview';
 
 const BigPostPreview = ({ post }: any) => {
   // {
@@ -22,8 +24,8 @@ const BigPostPreview = ({ post }: any) => {
   // },
 
   return (
-    <section>
-      <div>
+    <BigPostPreviewWrapper>
+      <BigPostPreviewImage>
         <img src={post.img[0]} alt={`${post.user}의 게시글 이미지`} />
 
         <div>
@@ -33,13 +35,13 @@ const BigPostPreview = ({ post }: any) => {
         </div>
 
         <ArrowsAltOutlined />
-      </div>
+      </BigPostPreviewImage>
 
-      <div>
+      <BigPostPreviewContent>
         <h1>{post.desc}</h1>
         <p>{post.user}</p>
-      </div>
-    </section>
+      </BigPostPreviewContent>
+    </BigPostPreviewWrapper>
   );
 };
 

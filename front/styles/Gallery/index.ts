@@ -4,6 +4,7 @@ import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
 
 export const GalleryWrapper = styled.section`
   background-color: white;
+  border-radius: 5px;
   padding: 1.5em;
   margin: 2em;
 
