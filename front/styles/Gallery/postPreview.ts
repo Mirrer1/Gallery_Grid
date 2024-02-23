@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 
+import media from 'styles/media';
 import { HoverStyle } from 'styles/Common/hover';
 
 export const PostPreviewWrapper = styled(motion.section)`
@@ -26,6 +27,10 @@ export const PostPreviewWrapper = styled(motion.section)`
         opacity: 100%;
       }
     }
+  }
+
+  ${media.tablet} {
+    grid-template-columns: repeat(2, 1fr);
   }
 `;
 
@@ -73,6 +78,10 @@ export const PostPreviewImage = styled.div`
     right: 8px;
     transition: opacity 200ms ease-in-out;
   }
+
+  ${media.mobile} {
+    height: 200px;
+  }
 `;
 
 export const PostPreviewContent = styled.div`
@@ -90,7 +99,7 @@ export const PostPreviewContent = styled.div`
     font-weight: 700;
     line-height: 1.2;
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -103,6 +112,27 @@ export const PostPreviewContent = styled.div`
     text-decoration: underline;
     opacity: 70%;
     margin-bottom: 1.5em;
+  }
+
+  ${media.tablet} {
+    & > h1 {
+      font-size: 0.8rem;
+      -webkit-line-clamp: 2;
+    }
+
+    & > p {
+      font-size: 0.55rem;
+    }
+  }
+
+  ${media.mobile} {
+    & > h1 {
+      font-size: 0.7rem;
+    }
+
+    & > p {
+      font-size: 0.5rem;
+    }
   }
 `;
 
@@ -120,5 +150,11 @@ export const PostPreviewOption = styled.div`
 
   & > div > span > svg {
     margin-right: 0.2em;
+  }
+
+  ${media.mobile} {
+    & > div {
+      font-size: 0.55rem;
+    }
   }
 `;

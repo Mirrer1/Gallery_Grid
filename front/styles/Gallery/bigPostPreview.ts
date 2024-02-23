@@ -2,27 +2,28 @@ import styled from 'styled-components';
 import { motion } from 'framer-motion';
 
 import { HoverStyle } from 'styles/Common/hover';
+import media from 'styles/media';
 
 export const BigPostPreviewWrapper = styled(motion.section)`
   width: 100%;
   position: relative;
   margin-bottom: 1em;
+  cursor: pointer;
+
+  &:hover {
+    & > div:first-child > span {
+      opacity: 100%;
+    }
+  }
 `;
 
 export const BigPostPreviewImage = styled.div`
   position: relative;
-  cursor: pointer;
   width: 100%;
   height: 350px;
 
-  &:hover {
-    & > span {
-      opacity: 100%;
-    }
-  }
-
   & > img {
-    width: 70%;
+    width: 60%;
     height: 100%;
     border-radius: 5px;
   }
@@ -35,8 +36,8 @@ export const BigPostPreviewImage = styled.div`
   }
 
   & > div > div {
-    width: 6px;
-    height: 6px;
+    width: 7px;
+    height: 7px;
     border-radius: 50%;
     margin-right: 4px;
     background-color: #b5b5b5;
@@ -54,19 +55,32 @@ export const BigPostPreviewImage = styled.div`
     opacity: 0;
     position: absolute;
     top: 8px;
-    right: 31%;
+    right: 41%;
     font-size: 1.2rem;
     transition: opacity 200ms ease-in-out;
     ${HoverStyle('&')}
+  }
+
+  ${media.tablet} {
+    & > img {
+      width: 75%;
+    }
+
+    & > span {
+      right: 27%;
+    }
+  }
+
+  ${media.mobile} {
+    height: 250px;
   }
 `;
 
 export const BigPostPreviewContent = styled.div`
   position: absolute;
   bottom: 12%;
-  left: 62%;
-  width: fit-content;
-  cursor: pointer;
+  left: 54%;
+  width: 32%;
 
   & > h1 {
     width: 95%;
@@ -88,6 +102,32 @@ export const BigPostPreviewContent = styled.div`
     opacity: 70%;
     margin-bottom: 1.5em;
   }
+
+  ${media.tablet} {
+    left: 66%;
+
+    & > h1 {
+      font-size: 1.3rem;
+    }
+
+    & > p {
+      font-size: 0.6rem;
+    }
+  }
+
+  ${media.mobile} {
+    width: 35%;
+    left: 65%;
+
+    & > h1 {
+      font-size: 1rem;
+      -webkit-line-clamp: 3;
+    }
+
+    & > p {
+      font-size: 0.6rem;
+    }
+  }
 `;
 
 export const BigPostPreviewOption = styled.div`
@@ -104,5 +144,17 @@ export const BigPostPreviewOption = styled.div`
 
   & > div > span > svg {
     margin-right: 0.2em;
+  }
+
+  ${media.tablet} {
+    & > div {
+      font-size: 0.65rem;
+    }
+  }
+
+  ${media.mobile} {
+    & > div {
+      font-size: 0.6rem;
+    }
   }
 `;

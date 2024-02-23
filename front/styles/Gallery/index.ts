@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+import media from 'styles/media';
 import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
 
 export const GalleryWrapper = styled.section`
@@ -24,6 +25,33 @@ export const GalleryWrapper = styled.section`
     overflow-y: scroll;
     padding: 1em 1em 1em 0em;
   }
+
+  ${media.tablet} {
+    margin: 0;
+
+    & > div:first-child {
+      & > h1 {
+        font-size: 1.2rem;
+        margin-bottom: 0.7em;
+      }
+    }
+
+    & > div:last-child {
+      padding: 0.7em;
+    }
+  }
+
+  ${media.mobile} {
+    padding: 0;
+
+    & > div:first-child {
+      padding: 1em 1em 0.5em 1em;
+    }
+
+    & > div:last-child {
+      padding: 0.5em 1em;
+    }
+  }
 `;
 
 export const GalleryCategoryWrapper = styled.nav`
@@ -39,6 +67,12 @@ export const GalleryCategoryWrapper = styled.nav`
       margin-right: 0.2em;
     }
   }
+
+  ${media.tablet} {
+    & > div:last-child {
+      font-size: 0.65rem;
+    }
+  }
 `;
 
 export const GalleryCategoryBtn = styled.button<{ $selected: boolean }>`
@@ -52,4 +86,9 @@ export const GalleryCategoryBtn = styled.button<{ $selected: boolean }>`
   text-decoration: ${props => (props.$selected ? 'underline' : 'none')};
   text-decoration-thickness: ${props => (props.$selected ? '2px' : '0')};
   text-underline-offset: ${props => (props.$selected ? '5px' : '0')};
+
+  ${media.tablet} {
+    font-size: 0.8rem;
+    margin-right: 1.5em;
+  }
 `;
