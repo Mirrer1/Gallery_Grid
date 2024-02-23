@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
 
-export const GalleryWrapper = styled.div`
+export const GalleryWrapper = styled.section`
   background-color: white;
   padding: 1.5em;
   margin: 2em;
@@ -10,11 +10,11 @@ export const GalleryWrapper = styled.div`
   & > h1 {
     font-size: 1.4rem;
     font-weight: 600;
-    margin-bottom: 1.5em;
+    margin-bottom: 1em;
   }
 `;
 
-export const GalleryCategoryWrapper = styled.div`
+export const GalleryCategoryWrapper = styled.nav`
   ${({ theme }) => theme.flexSet('space-between')}
   border-bottom: 2px solid ${({ theme }) => theme.colors.darkBg};
   padding-bottom: 1em;
