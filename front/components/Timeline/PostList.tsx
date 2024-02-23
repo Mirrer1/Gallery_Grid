@@ -1,5 +1,12 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { CommentOutlined, DeleteOutlined, EditOutlined, LikeOutlined, MoreOutlined } from '@ant-design/icons';
+import {
+  ArrowsAltOutlined,
+  CommentOutlined,
+  DeleteOutlined,
+  EditOutlined,
+  LikeOutlined,
+  MoreOutlined
+} from '@ant-design/icons';
 
 import PostImageCarousel from './PostImageCarousel';
 import {
@@ -237,6 +244,8 @@ const PostList = () => {
                   <div key={i}></div>
                 ))}
               </div>
+
+              <ArrowsAltOutlined onClick={() => showCarousel(post.img)} />
             </div>
 
             <div>

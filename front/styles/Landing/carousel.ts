@@ -42,6 +42,7 @@ export const CarouselImage = styled.div`
     right: 13%;
     bottom: 3%;
     color: #fffafa;
+    font-weight: 500;
   }
 
   ${media.tablet} {
