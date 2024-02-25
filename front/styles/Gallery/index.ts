@@ -7,7 +7,7 @@ export const GalleryWrapper = styled.section`
   background-color: white;
   height: 96%;
   border-radius: 5px;
-  padding: 1.5em 1.5em 0.5em 1.5em;
+  padding: 2em 2em 0.5em 2em;
   margin: 1em;
 
   & > div:first-child {
@@ -27,6 +27,7 @@ export const GalleryWrapper = styled.section`
   }
 
   ${media.tablet} {
+    padding: 1.5em 1.5em 0.5em 1.5em;
     margin: 0;
 
     & > div:first-child {
