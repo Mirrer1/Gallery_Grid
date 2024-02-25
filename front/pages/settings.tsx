@@ -2,6 +2,7 @@ import React from 'react';
 import Head from 'next/head';
 
 import AppLayout from 'components/AppLayout';
+import SettingForm from 'components/Settings/SettingForm';
 
 const Settings = () => {
   return (
@@ -11,8 +12,11 @@ const Settings = () => {
       </Head>
 
       <AppLayout>
-        <div>This is</div>
-        <div>Settings Page!</div>
+        <section>
+          <h1>Profile Settings</h1>
+
+          <SettingForm />
+        </section>
       </AppLayout>
     </>
   );
