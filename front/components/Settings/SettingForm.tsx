@@ -2,6 +2,7 @@ import React, { useCallback } from 'react';
 
 import useInput from 'utils/useInput';
 import { useValidate } from 'utils/useValidate';
+import { slideInFromBottom } from 'styles/Common/animation';
 import {
   SettingBtn,
   SettingFormWrapper,
@@ -30,7 +31,7 @@ const SettingForm = () => {
   );
 
   return (
-    <SettingFormWrapper onSubmit={onSubmitForm}>
+    <SettingFormWrapper onSubmit={onSubmitForm} {...slideInFromBottom(0.3)}>
       <h2>Profile Settings</h2>
 
       <SettingNickname>

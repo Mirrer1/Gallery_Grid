@@ -1,9 +1,9 @@
 import styled from 'styled-components';
+import { motion } from 'framer-motion';
 
-import theme from 'styles/theme';
 import { HoverStyle } from 'styles/Common/hover';
 
-export const SettingFormWrapper = styled.form`
+export const SettingFormWrapper = styled(motion.form)`
   position: absolute;
   right: 3%;
   bottom: 3%;

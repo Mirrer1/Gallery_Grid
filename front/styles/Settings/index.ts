@@ -1,4 +1,6 @@
 import styled from 'styled-components';
+import { motion } from 'framer-motion';
+
 import { ReverseHoverStyle } from 'styles/Common/hover';
 
 export const SettingWrapper = styled.section`
@@ -10,7 +12,7 @@ export const SettingWrapper = styled.section`
   border-radius: 5px;
 `;
 
-export const SettingProfile = styled.div`
+export const SettingProfile = styled(motion.div)`
   width: 47%;
   position: absolute;
   top: 10%;
