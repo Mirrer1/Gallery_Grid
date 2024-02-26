@@ -39,12 +39,21 @@ export const SettingNickname = styled.div`
     border-bottom: 1.5px solid #e4e5ec;
     overflow-x: hidden;
     padding: 0.5em 0.5em 0.5em 0.2em;
+    margin-bottom: 0.3em;
     transition: border-bottom 200ms ease-in-out;
 
     &:focus {
       outline: none;
       border-bottom: 1.8px solid #bfbfbf;
     }
+  }
+
+  & > div {
+    width: 100%;
+    font-size: 0.7rem;
+    font-weight: 500;
+    opacity: 40%;
+    padding-right: 0.1em;
   }
 `;
 
