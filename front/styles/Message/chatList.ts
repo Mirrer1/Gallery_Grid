@@ -8,12 +8,12 @@ export const ChatListWrapper = styled.article<{ $visible: boolean }>`
   ${({ theme }) => theme.flexColumnSet()};
   width: ${props => (props.$visible ? '35%' : '100%')};
   height: 100%;
-  padding: 1.5em 0.75em 1.5em 1.5em;
+  padding: 2em 0.75em 2em 1.5em;
 
   ${media.tablet} {
-    display: ${props => (props.$visible ? 'none' : 'block')};
+    display: ${props => (props.$visible ? 'none' : 'flex')};
     width: 100%;
-    padding: 0 0.5em;
+    padding: 0.5em 0.5em 0 0.5em;
   }
 `;
 
@@ -113,9 +113,8 @@ export const ChatListItem = styled.div`
   border-radius: 5px;
   padding: 1em 0.3em 1em 0.7em;
   margin-bottom: 0.5em;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   overflow-y: scroll;
-  transition: transform 200ms ease-in-out;
+  transition: transform 250ms ease-in-out;
 
   &:hover {
     transform: scale(1.03);
@@ -187,10 +186,15 @@ export const ChatListItem = styled.div`
 
   ${media.mobile} {
     padding: 0.8em 0.3em 0.8em 0.7em;
+    margin-bottom: 0.5em;
 
     & > div:first-child {
       & > img {
         margin-right: 0.7em;
+      }
+
+      & > div {
+        width: 70%;
       }
 
       & > div > h1 {

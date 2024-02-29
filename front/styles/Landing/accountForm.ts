@@ -11,11 +11,12 @@ export const AccountWrapper = styled(motion.section)`
   padding-top: 4em;
 
   ${media.tablet} {
+    width: 100%;
     padding-top: 3em;
   }
 
   ${media.mobile} {
-    width: 100%;
+    /* width: 100%; */
     padding-top: 0;
   }
 `;

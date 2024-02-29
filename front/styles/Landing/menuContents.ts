@@ -6,20 +6,20 @@ import { motion } from 'framer-motion';
 
 export const ContentsWrapper = styled.main`
   ${({ theme }) => theme.flexSet('space-between', 'start')};
-  padding: 2em 3em 0 6em;
+  padding: 2em 10em 0 10em;
 
   ${media.tablet} {
-    padding: 6em 0 0 3em;
+    ${({ theme }) => theme.flexColumnSet('center', 'center')};
+    padding: 2em 4em;
   }
 
   ${media.mobile} {
-    ${({ theme }) => theme.flexColumnSet('center', 'center')};
     padding: 1em;
   }
 `;
 
 export const ContentsText = styled(motion.section)<{ $selected: string }>`
-  width: 35%;
+  width: 45%;
   margin: 2em 0 0 0;
 
   & > div {
@@ -56,9 +56,13 @@ export const ContentsText = styled(motion.section)<{ $selected: string }>`
   }
 
   ${media.tablet} {
+    width: 100%;
+    text-align: center;
+    margin-right: 0;
     margin: 1.5em 0 0 0;
 
     & > div {
+      ${({ theme }) => theme.flexSet()};
       font-size: 0.8rem;
       margin-bottom: 3em;
     }
@@ -75,19 +79,11 @@ export const ContentsText = styled(motion.section)<{ $selected: string }>`
 
     & > button {
       font-size: 0.9rem;
+      margin-bottom: 2.5em;
     }
   }
 
   ${media.mobile} {
-    margin-right: 0;
-    text-align: center;
-    width: 100%;
-
-    & > div {
-      ${({ theme }) => theme.flexSet()};
-      margin-bottom: 3em;
-    }
-
     & > p {
       font-size: 0.7rem;
       margin-bottom: ${props => (props.$selected === 'home' ? '1em' : '4em')};
@@ -95,27 +91,18 @@ export const ContentsText = styled(motion.section)<{ $selected: string }>`
 
     & > button {
       font-size: 0.8rem;
-      margin-bottom: 2.5em;
     }
   }
 `;
 
-export const HeaderBreak = styled.br`
+export const HeaderBreak = styled.br<{ $selected: string }>`
   display: block;
 
-  ${media.mobile} {
-    display: none;
-  }
-`;
-
-export const ContentBreak = styled.br`
-  display: none;
-
   ${media.tablet} {
-    display: block;
+    display: none;
   }
 
   ${media.mobile} {
-    display: none;
+    display: ${props => props.$selected === 'signup' && 'block'};
   }
 `;

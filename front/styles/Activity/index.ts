@@ -5,10 +5,15 @@ import media from 'styles/media';
 
 export const ActivityWrapper = styled.div`
   height: 100%;
-  padding: 0.5em 1em;
+  padding: 1em 2em;
 
   ${media.tablet} {
     padding: 0;
+  }
+
+  ${media.mobile} {
+    padding: 0;
+    margin-bottom: 0.5em;
   }
 `;
 

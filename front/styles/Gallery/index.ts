@@ -7,7 +7,7 @@ export const GalleryWrapper = styled.section`
   background-color: white;
   height: 96%;
   border-radius: 5px;
-  padding: 1.5em 1.5em 0.5em 1.5em;
+  padding: 2em 2em 0.5em 2em;
   margin: 1em;
 
   & > div:first-child {
@@ -23,10 +23,11 @@ export const GalleryWrapper = styled.section`
   & > div:last-child {
     height: 89%;
     overflow-y: scroll;
-    padding: 1em 1em 1em 0em;
+    padding: 0.7em 1em 0.7em 0em;
   }
 
   ${media.tablet} {
+    padding: 1.5em 1.5em 0.5em 1.5em;
     margin: 0;
 
     & > div:first-child {
@@ -37,19 +38,20 @@ export const GalleryWrapper = styled.section`
     }
 
     & > div:last-child {
-      padding: 0.7em;
+      padding: 0.7em 0 0.2em 0;
     }
   }
 
   ${media.mobile} {
     padding: 0;
+    margin-bottom: 0.5em;
 
     & > div:first-child {
-      padding: 1em 1em 0.5em 1em;
+      padding: 1em 1em 0.7em 1em;
     }
 
     & > div:last-child {
-      padding: 0.5em 1em;
+      padding: 0 1em 0.7em 1em;
     }
   }
 `;

@@ -13,6 +13,7 @@ export const BigPostPreviewWrapper = styled(motion.section)`
   &:hover {
     & > div:first-child > span {
       opacity: 100%;
+      ${HoverStyle('&')}
     }
   }
 `;
@@ -54,25 +55,25 @@ export const BigPostPreviewImage = styled.div`
   & > span {
     opacity: 0;
     position: absolute;
-    top: 8px;
-    right: 41%;
-    font-size: 1.2rem;
+    top: 0;
+    right: 0;
+    font-size: 1.4rem;
     transition: opacity 200ms ease-in-out;
-    ${HoverStyle('&')}
   }
 
   ${media.tablet} {
     & > img {
       width: 75%;
     }
-
-    & > span {
-      right: 27%;
-    }
   }
 
   ${media.mobile} {
     height: 250px;
+
+    & > span {
+      font-size: 1.1rem;
+      top: 5px;
+    }
   }
 `;
 

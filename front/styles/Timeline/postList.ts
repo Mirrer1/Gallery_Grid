@@ -60,51 +60,57 @@ export const PostHeader = styled.div`
 
   & > div {
     ${({ theme }) => theme.flexSet()}
-  }
 
-  & > div > img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    margin-right: 1em;
-  }
+    & > img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 1em;
+    }
 
-  & > div > div > h1 {
-    font-size: 0.9rem;
-    font-weight: 500;
-    margin-bottom: 0.3em;
-    cursor: pointer;
-  }
+    & > div > h1 {
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-bottom: 0.3em;
+      cursor: pointer;
 
-  & > div > div > h1:hover {
-    text-decoration: underline;
-    text-underline-offset: 1.5px;
-  }
+      &:hover {
+        text-decoration: underline;
+        text-underline-offset: 1.5px;
+      }
+    }
 
-  & > div > div > p {
-    font-size: 0.6rem;
-    opacity: 40%;
+    & > div > p {
+      font-size: 0.6rem;
+      opacity: 40%;
+    }
   }
 
   ${media.mobile} {
-    & > div > img {
-      margin-right: 0.5em;
-    }
+    & > div {
+      & > img {
+        margin-right: 0.5em;
+      }
 
-    & > div > div > h1 {
-      font-size: 0.8rem;
+      & > div > h1 {
+        font-size: 0.8rem;
+      }
     }
   }
 `;
 
 export const PostFollowBtn = styled.button`
   ${HoverStyle('&')}
-  font-size: 0.6rem;
+  font-size: 0.7rem;
   background-color: ${({ theme }) => theme.colors.primary};
   color: white;
   font-weight: 500;
   padding: 0.7em 1.5em;
   border-radius: 5px;
+
+  ${media.mobile} {
+    font-size: 0.6rem;
+  }
 `;
 
 export const PostTooltip = styled.div`
