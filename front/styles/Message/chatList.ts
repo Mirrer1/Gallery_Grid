@@ -13,7 +13,7 @@ export const ChatListWrapper = styled.article<{ $visible: boolean }>`
   ${media.tablet} {
     display: ${props => (props.$visible ? 'none' : 'flex')};
     width: 100%;
-    padding: 0.5em;
+    padding: 0.5em 0.5em 0 0.5em;
   }
 `;
 
@@ -113,7 +113,6 @@ export const ChatListItem = styled.div`
   border-radius: 5px;
   padding: 1em 0.3em 1em 0.7em;
   margin-bottom: 0.5em;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   overflow-y: scroll;
   transition: transform 250ms ease-in-out;
 
@@ -187,10 +186,15 @@ export const ChatListItem = styled.div`
 
   ${media.mobile} {
     padding: 0.8em 0.3em 0.8em 0.7em;
+    margin-bottom: 0.5em;
 
     & > div:first-child {
       & > img {
         margin-right: 0.7em;
+      }
+
+      & > div {
+        width: 70%;
       }
 
       & > div > h1 {

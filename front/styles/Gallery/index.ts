@@ -44,6 +44,7 @@ export const GalleryWrapper = styled.section`
 
   ${media.mobile} {
     padding: 0;
+    margin-bottom: 0.5em;
 
     & > div:first-child {
       padding: 1em 1em 0.5em 1em;

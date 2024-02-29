@@ -51,12 +51,12 @@ const SettingForm = () => {
         <textarea
           id="introText"
           rows={3}
-          maxLength={300}
+          maxLength={200}
           placeholder="본인을 나타낼 수 있는 소개말을 작성해보세요."
           value={introText}
           onChange={onChangeIntroText}
         />
-        <div>{introText.length} / 300</div>
+        <div>{introText.length} / 200</div>
       </SettingIntro>
 
       <SettingRecommendation>

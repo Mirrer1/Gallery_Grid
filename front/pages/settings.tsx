@@ -5,7 +5,7 @@ import Head from 'next/head';
 import AppLayout from 'components/AppLayout';
 import SettingForm from 'components/Settings/SettingForm';
 import { slideInFromBottom } from 'styles/Common/animation';
-import { SettingProfile, SettingWrapper } from 'styles/Settings';
+import { MobileImageBtn, SettingProfile, SettingWrapper } from 'styles/Settings';
 
 const Settings = () => {
   return (
@@ -17,10 +17,12 @@ const Settings = () => {
       <AppLayout>
         <SettingWrapper>
           <SettingProfile {...slideInFromBottom()}>
-            <img
-              src="https://i.pinimg.com/564x/fc/9d/e8/fc9de80da08a4e4f57199ccc16228f2b.jpg"
-              alt="유저 프로필 이미지"
-            />
+            <label htmlFor="setting-image">
+              <img
+                src="https://i.pinimg.com/564x/fc/9d/e8/fc9de80da08a4e4f57199ccc16228f2b.jpg"
+                alt="유저 프로필 이미지"
+              />
+            </label>
 
             <div>
               <h1>Lorem ipsum dolor</h1>
@@ -36,6 +38,9 @@ const Settings = () => {
             <label htmlFor="setting-image">
               <CameraOutlined />
             </label>
+
+            <MobileImageBtn htmlFor="setting-image">사진 변경</MobileImageBtn>
+
             <input type="file" id="setting-image" />
           </SettingProfile>
 

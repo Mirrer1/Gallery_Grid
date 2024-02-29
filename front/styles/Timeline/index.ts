@@ -11,6 +11,10 @@ export const TimelineWrapper = styled.section`
   ${media.tablet} {
     ${({ theme }) => theme.flexColumnSet('start')}
   }
+
+  ${media.mobile} {
+    margin-bottom: 0.5em;
+  }
 `;
 
 export const PostsSection = styled(motion.article)`

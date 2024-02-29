@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 
+import media from 'styles/media';
 import { HoverStyle } from 'styles/Common/hover';
 
 export const SettingFormWrapper = styled(motion.form)`
@@ -8,6 +9,7 @@ export const SettingFormWrapper = styled(motion.form)`
   right: 3%;
   bottom: 3%;
   width: 50%;
+  height: 64%;
   padding: 1.5em;
   border-radius: 5px;
   background-color: white;
@@ -19,6 +21,28 @@ export const SettingFormWrapper = styled(motion.form)`
     font-weight: 700;
     margin-bottom: 2em;
   }
+
+  ${media.tablet} {
+    position: absolute;
+    top: 46.5%;
+    left: 27%;
+    width: 70%;
+    height: 51.8%;
+  }
+
+  ${media.mobile} {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 1em;
+    box-shadow: none;
+
+    & > h2 {
+      font-size: 1.3rem;
+      margin-bottom: 1.5em;
+    }
+  }
 `;
 
 export const SettingNickname = styled.div`
@@ -26,7 +50,7 @@ export const SettingNickname = styled.div`
   margin-bottom: 1.5em;
 
   & > label {
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     font-weight: 700;
     opacity: 30%;
     margin-bottom: 0.2em;
@@ -42,6 +66,10 @@ export const SettingNickname = styled.div`
     margin-bottom: 0.3em;
     transition: border-bottom 200ms ease-in-out;
 
+    &::placeholder {
+      font-size: 0.9rem;
+    }
+
     &:focus {
       outline: none;
       border-bottom: 1.8px solid #bfbfbf;
@@ -50,10 +78,45 @@ export const SettingNickname = styled.div`
 
   & > div {
     width: 100%;
-    font-size: 0.7rem;
+    font-size: 0.6rem;
     font-weight: 500;
     opacity: 40%;
-    padding-right: 0.1em;
+    padding-left: 0.5em;
+  }
+
+  ${media.tablet} {
+    & > label {
+      font-size: 0.65rem;
+    }
+
+    & > input {
+      font-size: 0.85rem;
+
+      &::placeholder {
+        font-size: 0.85rem;
+      }
+    }
+  }
+
+  ${media.mobile} {
+    margin-bottom: 2em;
+
+    & > label {
+      font-size: 0.6rem;
+    }
+
+    & > input {
+      font-size: 0.7rem;
+
+      &::placeholder {
+        font-size: 0.7rem;
+      }
+    }
+
+    & > div {
+      font-size: 0.55rem;
+      padding-left: 0.3em;
+    }
   }
 `;
 
@@ -92,6 +155,44 @@ export const SettingIntro = styled.div`
     opacity: 40%;
     padding-right: 0.1em;
   }
+
+  ${media.tablet} {
+    & > label {
+      font-size: 0.65rem;
+    }
+
+    & > textarea {
+      font-size: 0.85rem;
+
+      &::placeholder {
+        font-size: 0.85rem;
+      }
+    }
+
+    & > div {
+      font-size: 0.65rem;
+    }
+  }
+
+  ${media.mobile} {
+    margin-bottom: 1.5em;
+
+    & > label {
+      font-size: 0.6rem;
+    }
+
+    & > textarea {
+      font-size: 0.7rem;
+
+      &::placeholder {
+        font-size: 0.7rem;
+      }
+    }
+
+    & > div {
+      font-size: 0.65rem;
+    }
+  }
 `;
 
 export const SettingRecommendation = styled.div`
@@ -112,7 +213,8 @@ export const SettingRecommendation = styled.div`
     padding: 1em;
 
     & > p {
-      width: 70%;
+      width: 90%;
+      opacity: 65%;
     }
   }
 
@@ -166,6 +268,32 @@ export const SettingRecommendation = styled.div`
     outline-offset: max(2px, 0.1em);
     outline: max(2px, 0.1em) solid tomato;
   }
+
+  ${media.tablet} {
+    & > h3 {
+      font-size: 0.65rem;
+    }
+
+    & > div {
+      font-size: 0.8rem;
+    }
+  }
+
+  ${media.mobile} {
+    margin-bottom: 2.5em;
+
+    & > h3 {
+      font-size: 0.6rem;
+    }
+
+    & > div {
+      font-size: 0.7rem;
+    }
+
+    [type='checkbox'] {
+      height: 1.5em;
+    }
+  }
 `;
 
 export const SettingBtn = styled.div`
@@ -179,5 +307,11 @@ export const SettingBtn = styled.div`
     padding: 0.7em 1.2em;
     border-radius: 5px;
     ${HoverStyle('&')};
+  }
+
+  ${media.tablet} {
+    & > button {
+      font-size: 0.8rem;
+    }
   }
 `;

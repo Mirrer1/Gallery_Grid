@@ -13,6 +13,7 @@ export const ActivityWrapper = styled.div`
 
   ${media.mobile} {
     padding: 0;
+    margin-bottom: 0.5em;
   }
 `;
 
