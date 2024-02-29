@@ -5,7 +5,7 @@ import LandingCarousel from './LandingCarousel';
 import LoginForm from './LoginForm';
 import SignUpForm from './SignUpForm';
 import { slideInFromLeft } from 'styles/Common/animation';
-import { ContentsText, ContentsWrapper, ContentBreak, HeaderBreak } from 'styles/Landing/menuContents';
+import { ContentsText, ContentsWrapper, HeaderBreak } from 'styles/Landing/menuContents';
 
 type MenuContentsProps = {
   selectMenu: string;
@@ -44,19 +44,19 @@ const MenuContents = ({ selectMenu, onClickMenu }: MenuContentsProps) => {
         {selectMenu === 'home' ? (
           <h1>
             Gallery&nbsp;
-            <HeaderBreak />
+            <HeaderBreak $selected={selectMenu} />
             Grid
           </h1>
         ) : selectMenu === 'login' ? (
           <h1>
             Welcome&nbsp;
-            <HeaderBreak />
+            <HeaderBreak $selected={selectMenu} />
             Back
           </h1>
         ) : selectMenu === 'signup' ? (
           <h1>
             Create&nbsp;Your&nbsp;
-            <HeaderBreak />
+            <HeaderBreak $selected={selectMenu} />
             Future
           </h1>
         ) : null}
@@ -65,25 +65,21 @@ const MenuContents = ({ selectMenu, onClickMenu }: MenuContentsProps) => {
           <p>
             당신의 창의력을 펼쳐보세요. 여기가 바로 시작입니다.
             <br />
-            예술가들의 커뮤니티에서 영감을 얻고, <ContentBreak />
-            당신의 작품을 세상과 공유하세요.
+            예술가들의 커뮤니티에서 영감을 얻고, 당신의 작품을 세상과 공유하세요.
             <br />
-            새로운 미술 세계를 경험하고, <ContentBreak />
-            무한한 가능성을 탐험해보세요.
+            새로운 미술 세계를 경험하고, 무한한 가능성을 탐험해보세요.
           </p>
         ) : selectMenu === 'login' ? (
           <p>
             당신의 예술 여정을 다시 시작하세요.
             <br />
-            Gallery Grid에서 영감을 공유하고 <ContentBreak />
-            새로운 아이디어를 발견하세요.
+            Gallery Grid에서 영감을 공유하고 새로운 아이디어를 발견하세요.
           </p>
         ) : selectMenu === 'signup' ? (
           <p>
             창작의 세계에 오신 것을 환영합니다.
             <br />
-            Gallery Grid에서 당신만의 예술을 선보이고, <ContentBreak />
-            무한한 영감을 얻으세요.
+            Gallery Grid에서 당신만의 예술을 선보이고, 무한한 영감을 얻으세요.
           </p>
         ) : null}
 

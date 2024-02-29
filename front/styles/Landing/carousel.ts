@@ -3,13 +3,13 @@ import { motion } from 'framer-motion';
 
 import media from 'styles/media';
 import { HoverStyle } from 'styles/Common/hover';
-import { ShadowStyle } from 'styles/Common/shadow';
+import { ImageShadowStyle, ShadowStyle } from 'styles/Common/shadow';
 
 export const CarouselWrapper = styled(motion.section)`
   flex-grow: 1;
-  width: 65%;
+  width: 55%;
 
-  ${media.mobile} {
+  ${media.tablet} {
     width: 100%;
   }
 `;
@@ -24,7 +24,6 @@ export const CarouselImage = styled.div`
     width: 80%;
     height: 600px;
     filter: blur(5px);
-    ${ShadowStyle}
   }
 
   & > img:nth-child(2) {
@@ -34,7 +33,7 @@ export const CarouselImage = styled.div`
     top: 50%;
     left: 35%;
     transform: translate(-50%, -50%);
-    ${ShadowStyle}
+    ${ImageShadowStyle}
   }
 
   & > p {
@@ -46,40 +45,45 @@ export const CarouselImage = styled.div`
   }
 
   ${media.tablet} {
-    & > img:first-child {
-      height: 450px;
-    }
-
-    & > img:nth-child(2) {
-      width: 70%;
-      height: 320px;
-      left: 37%;
-    }
-
-    & > p {
-      font-size: 0.85rem;
-    }
-  }
-
-  ${media.mobile} {
     ${({ theme }) => theme.flexColumnSet('center', 'end')};
-    margin-bottom: 3em;
+    height: 600px;
+    margin-bottom: 2em;
 
     & > img:first-child {
       width: 100%;
-      height: 400px;
+      height: 100%;
       margin-right: 0;
       margin-bottom: 0.3em;
     }
 
     & > img:nth-child(2) {
       width: 90%;
+      height: 85%;
+      top: 46%;
       left: 50%;
     }
 
     & > p {
-      font-size: 0.7rem;
-      right: 3%;
+      right: 2%;
+      bottom: 4%;
+      font-size: 1rem;
+    }
+  }
+
+  ${media.mobile} {
+    justify-content: start;
+    height: 355px;
+    margin-bottom: 1.5em;
+
+    & > img:nth-child(2) {
+      top: 46%;
+      left: 50%;
+    }
+
+    & > p {
+      font-size: 0.8rem;
+      bottom: 3.5%;
+      right: 5%;
     }
   }
 `;
@@ -96,16 +100,10 @@ export const CarouselBtn = styled.div`
   }
 
   ${media.tablet} {
-    padding: 0 3em;
-
-    & > button > span {
-      font-size: 0.8rem;
-    }
+    padding: 0 1em;
   }
 
   ${media.mobile} {
-    padding: 0 1em;
-
     & > button > span {
       font-size: 0.7rem;
     }
