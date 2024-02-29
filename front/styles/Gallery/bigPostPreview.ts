@@ -13,6 +13,7 @@ export const BigPostPreviewWrapper = styled(motion.section)`
   &:hover {
     & > div:first-child > span {
       opacity: 100%;
+      ${HoverStyle('&')}
     }
   }
 `;
@@ -58,7 +59,6 @@ export const BigPostPreviewImage = styled.div`
     right: 0;
     font-size: 1.4rem;
     transition: opacity 200ms ease-in-out;
-    ${HoverStyle('&')}
   }
 
   ${media.tablet} {

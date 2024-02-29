@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { CompassOutlined, PaperClipOutlined, SmileOutlined, TagOutlined } from '@ant-design/icons';
+import { CompassOutlined, PaperClipOutlined, SmileOutlined } from '@ant-design/icons';
 
 import useInput from 'utils/useInput';
 import { PostingBtn, PostingWrapper } from 'styles/Timeline/postingForm';
@@ -23,7 +23,6 @@ const PostingForm = () => {
       <div>
         <div>
           <PaperClipOutlined />
-          <TagOutlined />
           <SmileOutlined />
           <CompassOutlined />
         </div>

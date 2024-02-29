@@ -116,51 +116,66 @@ export const AlertContent = styled.div`
   ${({ theme }) => theme.flexSet('start')}
   border: 2px solid rgba(0, 0, 0, 0.06);
   border-radius: 5px;
-  padding: 0.5em 1em;
+  padding: 1em;
 
   & > img {
-    width: 12%;
-    height: 100px;
+    width: 20%;
+    height: 150px;
     border-radius: 5px;
   }
 
   & > div {
-    width: 88%;
+    width: 80%;
     padding-left: 1em;
+
+    & > p {
+      display: -webkit-box;
+      -webkit-line-clamp: 5;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: normal;
+      font-size: 0.8rem;
+      opacity: 60%;
+      line-height: 1.5;
+      margin-bottom: 0.5em;
+    }
+
+    & > div {
+      display: inline-block;
+      cursor: pointer;
+      opacity: 60%;
+      font-size: 0.7rem;
+      margin-right: 0.7em;
+
+      & > span {
+        margin-right: 0.3em;
+      }
+    }
   }
 
-  & > div > p {
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: normal;
-    font-size: 0.8rem;
-    opacity: 60%;
-    line-height: 1.5;
-    margin-bottom: 0.5em;
-  }
+  ${media.tablet} {
+    padding: 0.7em;
 
-  & > div > div {
-    display: inline-block;
-    cursor: pointer;
-    opacity: 60%;
-    font-size: 0.7rem;
-    margin-right: 0.7em;
-  }
+    & > img {
+      width: 30%;
+    }
 
-  & > div > div > span {
-    margin-right: 0.3em;
+    & > div {
+      width: 70%;
+
+      & > p {
+        -webkit-line-clamp: 4;
+      }
+    }
   }
 
   ${media.mobile} {
     ${({ theme }) => theme.flexColumnSet()}
-    padding: 0.5em 0.7em;
 
     & > img {
       width: 100%;
-      height: 150px;
+      height: 230px;
       margin-bottom: 0.3em;
     }
 
@@ -191,8 +206,20 @@ export const AlertContentBtn = styled.div`
     font-size: 0.8rem;
     color: white;
     font-weight: 500;
-    padding: 0.8em 1.7em;
+    padding: 0.77em 1.7em;
     border-radius: 5px;
+  }
+
+  ${media.tablet} {
+    & > button:first-child {
+      font-size: 0.75rem;
+      padding: 0.5em 1.5em;
+    }
+
+    & > button:last-child {
+      font-size: 0.75rem;
+      padding: 0.6em 1.1em;
+    }
   }
 
   ${media.mobile} {
@@ -200,12 +227,10 @@ export const AlertContentBtn = styled.div`
 
     & > button:first-child {
       font-size: 0.65rem;
-      padding: 0.5em 1.5em;
     }
 
     & > button:last-child {
       font-size: 0.65rem;
-      padding: 0.6em 1.3em;
     }
   }
 `;

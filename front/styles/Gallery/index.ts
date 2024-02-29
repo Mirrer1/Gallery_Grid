@@ -23,7 +23,7 @@ export const GalleryWrapper = styled.section`
   & > div:last-child {
     height: 89%;
     overflow-y: scroll;
-    padding: 1em 1em 1em 0em;
+    padding: 0.7em 1em 0.7em 0em;
   }
 
   ${media.tablet} {
@@ -38,7 +38,7 @@ export const GalleryWrapper = styled.section`
     }
 
     & > div:last-child {
-      padding: 0.7em;
+      padding: 0.7em 0 0.2em 0;
     }
   }
 
@@ -47,11 +47,11 @@ export const GalleryWrapper = styled.section`
     margin-bottom: 0.5em;
 
     & > div:first-child {
-      padding: 1em 1em 0.5em 1em;
+      padding: 1em 1em 0.7em 1em;
     }
 
     & > div:last-child {
-      padding: 0.5em 1em;
+      padding: 0 1em 0.7em 1em;
     }
   }
 `;
