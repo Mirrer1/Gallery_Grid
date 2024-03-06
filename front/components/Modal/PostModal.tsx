@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
-import { CloseOutlined } from '@ant-design/icons';
 
-import PostModalCarousel from './PostModalCarousel';
+import ModalCarousel from './ModalCarousel';
+import ModalContent from './ModalContent';
 import { ModalOutsideArea, PostModalBtn, PostModalWrapper } from 'styles/Modal/postModal';
 
 const PostModal = () => {
@@ -15,9 +15,8 @@ const PostModal = () => {
         <PostModalBtn />
       </ModalOutsideArea>
 
-      <PostModalCarousel />
-
-      <div>모달 컨텐츠</div>
+      <ModalCarousel />
+      <ModalContent />
     </PostModalWrapper>
   );
 };

@@ -1,9 +1,9 @@
 import React, { useCallback, useState } from 'react';
 import { CaretLeftOutlined, CaretRightOutlined } from '@ant-design/icons';
 
-import { ModalCarouselBtn, ModalCarouselWrapper } from 'styles/Modal/postModalCarousel';
+import { ModalCarouselBtn, ModalCarouselWrapper } from 'styles/Modal/modalCarousel';
 
-const PostModalCarousel = () => {
+const ModalCarousel = () => {
   const postImages = [
     'https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg',
     'https://i.pinimg.com/564x/b1/bc/32/b1bc32636df7757cc51cf52a71a2a78f.jpg',
@@ -59,4 +59,4 @@ const PostModalCarousel = () => {
   );
 };
 
-export default PostModalCarousel;
+export default ModalCarousel;
