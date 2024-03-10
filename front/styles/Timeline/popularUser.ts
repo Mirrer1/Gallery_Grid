@@ -40,22 +40,22 @@ export const PopularUserWrapper = styled.div`
     flex-wrap: nowrap;
     transition: transform 400ms ease-in-out;
     height: 100%;
-  }
 
-  & > div:hover ${PopularBtn} {
-    opacity: 100%;
-  }
+    &:hover ${PopularBtn} {
+      opacity: 100%;
+    }
 
-  & > div > div {
-    width: 100%;
-    height: 98%;
-    position: relative;
-  }
+    & > div {
+      width: 100%;
+      height: 98%;
+      position: relative;
 
-  & > div > div > img {
-    width: 100%;
-    height: 60%;
-    border-radius: 5px 5px 0 0;
+      & > img {
+        width: 100%;
+        height: 60%;
+        border-radius: 5px 5px 0 0;
+      }
+    }
   }
 
   ${media.tablet} {
@@ -67,11 +67,11 @@ export const PopularUserWrapper = styled.div`
     & > div > div {
       display: flex;
       height: 100%;
-    }
 
-    & > div > div > img {
-      width: 35%;
-      height: 100%;
+      & > img {
+        width: 35%;
+        height: 100%;
+      }
     }
   }
 
@@ -100,12 +100,12 @@ export const PopularUserContents = styled.div`
     font-size: 0.9rem;
     font-weight: 500;
     margin-bottom: 1em;
-  }
 
-  & > div > h1:hover {
-    cursor: pointer;
-    text-decoration: underline;
-    text-underline-offset: 1.5px;
+    &:hover {
+      cursor: pointer;
+      text-decoration: underline;
+      text-underline-offset: 1.5px;
+    }
   }
 
   & > div > p {

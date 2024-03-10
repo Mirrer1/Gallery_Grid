@@ -9,6 +9,7 @@ import {
 } from '@ant-design/icons';
 
 import PostImageCarousel from './PostImageCarousel';
+import { Tooltip, TooltipBtn, TooltipOutsideArea } from 'styles/Tooltip';
 import {
   PostWrapper,
   PostHeader,
@@ -17,8 +18,6 @@ import {
   PostCategory,
   CategoryItem,
   PostContainer,
-  PostTooltip,
-  PostTooltipBtn,
   PostFollowBtn
 } from 'styles/Timeline/postList';
 
@@ -172,20 +171,9 @@ const PostList = () => {
     [isTooltipVisible]
   );
 
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      const tooltipElement = document.getElementById(`tooltip-${isTooltipVisible}`);
-      if (tooltipElement && !tooltipElement.contains(e.target as HTMLElement)) {
-        setIsTooltipVisible(null);
-      }
-    };
-
-    document.addEventListener('click', handleClickOutside);
-
-    return () => {
-      document.removeEventListener('click', handleClickOutside);
-    };
-  }, [isTooltipVisible]);
+  const hideTooltip = useCallback(() => {
+    setIsTooltipVisible(null);
+  }, []);
 
   return (
     <PostContainer>
@@ -218,10 +206,11 @@ const PostList = () => {
             <div>
               <PostFollowBtn type="button">Follow</PostFollowBtn>
 
-              <PostTooltip id={`tooltip-${post.id}`}>
-                <MoreOutlined onClick={() => handleTooltip(post.id)} />
+              <Tooltip>
+                {isTooltipVisible && <TooltipOutsideArea onClick={hideTooltip}></TooltipOutsideArea>}
 
-                <PostTooltipBtn $visible={isTooltipVisible === post.id}>
+                <MoreOutlined onClick={() => handleTooltip(post.id)} />
+                <TooltipBtn $visible={isTooltipVisible === post.id}>
                   <button type="button">
                     <EditOutlined />
                     수정
@@ -230,8 +219,8 @@ const PostList = () => {
                     <DeleteOutlined />
                     삭제
                   </button>
-                </PostTooltipBtn>
-              </PostTooltip>
+                </TooltipBtn>
+              </Tooltip>
             </div>
           </PostHeader>
 

@@ -4,6 +4,7 @@ import Head from 'next/head';
 import AppLayout from 'components/AppLayout';
 import FollowList from 'components/Activity/FollowList';
 import AlertList from 'components/Activity/AlertList';
+import PostModal from 'components/Modal/PostModal';
 import { slideInFromBottom } from 'styles/Common/animation';
 import { ActivityHeader, ActivityWrapper, FollowWrapper, HeaderItem } from 'styles/Activity';
 
@@ -174,6 +175,8 @@ const Activity = () => {
 
           <AlertList />
         </ActivityWrapper>
+
+        <PostModal />
       </AppLayout>
     </>
   );

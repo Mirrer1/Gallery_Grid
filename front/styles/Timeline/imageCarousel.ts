@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { CloseOutlined } from '@ant-design/icons';
 
 import { HoverStyle } from 'styles/Common/hover';
+import media from 'styles/media';
 
 export const ImageCarouselWrapper = styled.div`
   position: relative;
@@ -38,10 +39,18 @@ export const CarouselOutsideArea = styled.div`
 
 export const HideSwiperBtn = styled(CloseOutlined)`
   position: absolute;
+  top: 12px;
+  right: 12px;
+  color: white;
+  font-size: 1.2rem;
   opacity: 85%;
-  top: 10px;
-  right: 10px;
   cursor: pointer;
-  z-index: 12;
   ${HoverStyle('&')}
+  z-index: 12;
+
+  ${media.mobile} {
+    top: 10px;
+    right: 10px;
+    font-size: 1.1rem;
+  }
 `;
