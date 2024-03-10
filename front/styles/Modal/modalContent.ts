@@ -24,8 +24,8 @@ export const ModalContentWrapper = styled.div`
 
 export const ModalContentHeader = styled.div`
   ${({ theme }) => theme.flexSet('space-between')};
-  height: 10%;
-  padding: 0.5em;
+  height: 11%;
+  padding: 0.8em;
   border-bottom: 1px solid ${({ theme }) => theme.colors.darkBg};
 
   & > div:first-child {
@@ -104,11 +104,11 @@ export const ModalContentHeader = styled.div`
 `;
 
 export const ModalContentText = styled.div`
-  height: 74%;
+  height: 73%;
   font-size: 0.75rem;
   opacity: 60%;
   line-height: 1.5;
-  padding: 0.7em 1em;
+  padding: 0.7em 1.2em;
   border-bottom: 1px solid ${({ theme }) => theme.colors.darkBg};
   overflow-y: scroll;
 
@@ -119,21 +119,20 @@ export const ModalContentText = styled.div`
 
   ${media.mobile} {
     height: 61%;
-    font-size: 0.61rem;
+    font-size: 0.65rem;
   }
 `;
 
 export const ModalContentOptions = styled.div`
   height: 9%;
   opacity: 60%;
-  padding: 0.5em 0.7em;
+  padding: 0.7em 0.9em;
   border-bottom: 1px solid ${({ theme }) => theme.colors.darkBg};
 
   & > div:first-child {
     margin-bottom: 0.5em;
 
     & > span {
-      font-size: 1.1rem;
       cursor: pointer;
       ${HoverStyle('&')};
     }
@@ -186,7 +185,7 @@ export const ModalCommentInput = styled.div<{ $active: boolean }>`
   background-color: white;
   border-radius: 5px;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-  padding: 0.5em;
+  padding: 0.7em;
 
   & > div:first-child {
     width: 90%;
