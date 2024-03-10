@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 
+import media from 'styles/media';
+
 export const ModalCarouselBtn = styled.div<{ $alignleft: string }>`
   opacity: 0;
   position: absolute;
@@ -15,6 +17,13 @@ export const ModalCarouselBtn = styled.div<{ $alignleft: string }>`
   cursor: pointer;
   transition: opacity 250ms ease-in-out;
   z-index: 30;
+
+  ${media.mobile} {
+    bottom: 45%;
+    font-size: 0.8rem;
+    padding: 0.4em;
+    ${props => (props.$alignleft === 'true' ? 'left: 2px;' : 'right: 0;')}
+  }
 `;
 
 export const ModalCarouselWrapper = styled.div`
@@ -47,5 +56,16 @@ export const ModalCarouselWrapper = styled.div`
         height: 100%;
       }
     }
+  }
+
+  ${media.tablet} {
+    width: 45%;
+    height: 50%;
+  }
+
+  ${media.mobile} {
+    width: 85%;
+    height: 40%;
+    border-radius: 5px 5px 0 0;
   }
 `;

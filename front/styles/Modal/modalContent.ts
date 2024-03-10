@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
+import media from 'styles/media';
 
 export const ModalContentWrapper = styled.div`
   width: 25%;
@@ -8,6 +9,17 @@ export const ModalContentWrapper = styled.div`
   background-color: white;
   border-radius: 0 5px 5px 0;
   z-index: 30;
+
+  ${media.tablet} {
+    width: 40%;
+    height: 50%;
+  }
+
+  ${media.mobile} {
+    width: 85%;
+    height: 40%;
+    border-radius: 0 0 5px 5px;
+  }
 `;
 
 export const ModalContentHeader = styled.div`
@@ -46,15 +58,48 @@ export const ModalContentHeader = styled.div`
   }
 
   & > div:last-child {
+    ${({ theme }) => theme.flexSet()};
+
     & > button {
-      ${HoverStyle('&')}
       font-size: 0.7rem;
       background-color: ${({ theme }) => theme.colors.primary};
       color: white;
       font-weight: 500;
       padding: 0.7em 1.5em;
       border-radius: 5px;
+      ${HoverStyle('&')}
     }
+  }
+
+  ${media.tablet} {
+    height: 13%;
+    padding: 0.6em;
+
+    & > div:first-child {
+      & > img {
+        width: 38px;
+        height: 38px;
+      }
+
+      & > div > h1 {
+        font-size: 0.8rem;
+      }
+
+      & > div > p {
+        font-size: 0.65rem;
+      }
+    }
+
+    & > div:last-child {
+      & > button {
+        font-size: 0.6rem;
+        padding: 0.73em 1.5em 0.7em 1.5em;
+      }
+    }
+  }
+
+  ${media.mobile} {
+    height: 17%;
   }
 `;
 
@@ -66,6 +111,16 @@ export const ModalContentText = styled.div`
   padding: 0.7em 1em;
   border-bottom: 1px solid ${({ theme }) => theme.colors.darkBg};
   overflow-y: scroll;
+
+  ${media.tablet} {
+    height: 66%;
+    font-size: 0.7rem;
+  }
+
+  ${media.mobile} {
+    height: 61%;
+    font-size: 0.61rem;
+  }
 `;
 
 export const ModalContentOptions = styled.div`
@@ -93,6 +148,33 @@ export const ModalContentOptions = styled.div`
 
     & > p:first-child {
       margin-right: 0.5rem;
+    }
+  }
+
+  ${media.tablet} {
+    height: 12%;
+
+    & > div:first-child {
+      & > span {
+        font-size: 0.9rem;
+      }
+    }
+
+    & > div:last-child {
+      font-size: 0.6rem;
+
+      & > p:first-child {
+        margin-right: 0.4rem;
+      }
+    }
+  }
+
+  ${media.mobile} {
+    ${({ theme }) => theme.flexSet('space-between')};
+    height: 10%;
+
+    & > div:first-child {
+      margin-bottom: 0;
     }
   }
 `;
@@ -145,5 +227,23 @@ export const ModalCommentInput = styled.div<{ $active: boolean }>`
       padding: 0.4em 0.4em 0.4em 0.6em;
       ${HoverStyle('&')};
     }
+  }
+
+  ${media.tablet} {
+    height: 9%;
+
+    & > div:first-child {
+      & > span {
+        width: 9%;
+      }
+
+      & > input {
+        width: 93%;
+      }
+    }
+  }
+
+  ${media.mobile} {
+    height: 12%;
   }
 `;

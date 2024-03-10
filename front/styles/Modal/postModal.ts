@@ -14,6 +14,10 @@ export const PostModalWrapper = styled.section`
   height: 100%;
   background-color: rgba(0, 0, 0, 0.6);
   z-index: 25;
+
+  ${media.mobile} {
+    ${({ theme }) => theme.flexColumnSet()};
+  }
 `;
 
 export const ModalOutsideArea = styled.div`
