@@ -1,10 +1,37 @@
-import React, { useCallback } from 'react';
-import { CommentOutlined, LikeOutlined, MoreOutlined, SendOutlined, SmileOutlined } from '@ant-design/icons';
+import React, { useCallback, useState } from 'react';
+import {
+  CommentOutlined,
+  DeleteOutlined,
+  EditOutlined,
+  LikeOutlined,
+  MoreOutlined,
+  SendOutlined,
+  SmileOutlined
+} from '@ant-design/icons';
 
 import useInput from 'utils/useInput';
+import {
+  ModalCommentInput,
+  ModalContentHeader,
+  ModalContentOptions,
+  ModalContentText,
+  ModalContentWrapper,
+  PostTooltip,
+  PostTooltipBtn,
+  TooltipOutsideArea
+} from 'styles/Modal/modalContent';
 
 const ModalContent = () => {
   const [comment, onChangeComment] = useInput('');
+  const [isTooltipVisible, setIsTooltipVisible] = useState(false);
+
+  const handleTooltip = useCallback(() => {
+    setIsTooltipVisible(true);
+  }, [isTooltipVisible]);
+
+  const hideTooltip = useCallback(() => {
+    setIsTooltipVisible(false);
+  }, []);
 
   const handleKeyPress = useCallback(
     (event: React.KeyboardEvent) => {
@@ -16,24 +43,53 @@ const ModalContent = () => {
   );
 
   return (
-    <>
-      <div>
-        <img />
-
+    <ModalContentWrapper>
+      <ModalContentHeader>
         <div>
-          <h1>Likemirrer_</h1>
-          <p>2014.4.29</p>
+          <img
+            src="https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg"
+            alt="게시글 작성자 프로필 이미지"
+          />
+
+          <div>
+            <h1>Likemirrer_</h1>
+            <p>2014.4.29</p>
+          </div>
         </div>
 
         <div>
           <button type="button">Follow</button>
-          <MoreOutlined />
+
+          <PostTooltip id="tooltip">
+            {isTooltipVisible && <TooltipOutsideArea onClick={hideTooltip}></TooltipOutsideArea>}
+
+            <MoreOutlined onClick={handleTooltip} />
+            <PostTooltipBtn $visible={isTooltipVisible}>
+              <button type="button">
+                <EditOutlined />
+                수정
+              </button>
+              <button type="button">
+                <DeleteOutlined />
+                삭제
+              </button>
+            </PostTooltipBtn>
+          </PostTooltip>
         </div>
-      </div>
+      </ModalContentHeader>
 
-      <p>Lorem ipsum dolor sit</p>
+      <ModalContentText>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab dolorum adipisci sequi aperiam totam dolor ratione,
+        impedit expedita voluptatem animi iusto error. Sed quos sunt molestias ducimus quam, magnam asperiores
+        accusantium omnis error labore inventore! Odit, quidem officiis perspiciatis dolor similique consectetur sint
+        eum error quia voluptas tenetur id distinctio! Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab
+        dolorum adipisci sequi aperiam totam dolor ratione, impedit expedita voluptatem animi iusto error. Sed quos sunt
+        molestias ducimus quam, magnam asperiores accusantium omnis error labore inventore! Odit, quidem officiis
+        perspiciatis dolor similique consectetur sint eum error quia voluptas tenetur id distinctio! Lorem ipsum dolor
+        sit amet consectetur adi
+      </ModalContentText>
 
-      <div>
+      <ModalContentOptions>
         <div>
           <LikeOutlined />
           <CommentOutlined />
@@ -44,24 +100,25 @@ const ModalContent = () => {
           {/* 좋아요 없으면 "가장 먼저 좋아요를 눌러보세요" 문구로 대체 */}
           <p>댓글 29개</p>
         </div>
-      </div>
+      </ModalContentOptions>
 
-      {/* <ChatInputWrapper $active={chat.length === 0}> */}
-      <div>
+      <ModalCommentInput $active={comment.length === 0}>
         <div>
           <SmileOutlined />
           <input
             type="text"
-            placeholder="Type a Comment..."
+            placeholder="Type a Message..."
             value={comment}
             onChange={onChangeComment}
             onKeyPress={handleKeyPress}
           />
         </div>
 
-        <SendOutlined />
-      </div>
-    </>
+        <div>
+          <SendOutlined />
+        </div>
+      </ModalCommentInput>
+    </ModalContentWrapper>
   );
 };
 

@@ -3,6 +3,8 @@ import { CloseOutlined } from '@ant-design/icons';
 
 import { HoverStyle } from 'styles/Common/hover';
 
+import media from 'styles/media';
+
 export const PostModalWrapper = styled.section`
   position: fixed;
   top: 0;
@@ -24,10 +26,17 @@ export const ModalOutsideArea = styled.div`
 
 export const PostModalBtn = styled(CloseOutlined)`
   position: absolute;
-  top: 10px;
-  right: 10px;
-  font-size: 1.1rem;
+  top: 12px;
+  right: 12px;
+  color: white;
+  font-size: 1.2rem;
   opacity: 85%;
   cursor: pointer;
   ${HoverStyle('&')}
+
+  ${media.mobile} {
+    top: 10px;
+    right: 10px;
+    font-size: 1.1rem;
+  }
 `;

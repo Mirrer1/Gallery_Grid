@@ -66,6 +66,7 @@ export const PostHeader = styled.div`
       height: 40px;
       border-radius: 50%;
       margin-right: 1em;
+      cursor: pointer;
     }
 
     & > div > h1 {
@@ -127,8 +128,8 @@ export const PostTooltipBtn = styled.span<{ $visible: boolean }>`
   visibility: ${props => (props.$visible ? 'visible' : 'hidden')};
   opacity: ${props => (props.$visible ? '1' : '0')};
   position: absolute;
-  top: -80%;
-  right: 140%;
+  top: -75%;
+  right: 100%;
   width: 145px;
   text-align: center;
   border-radius: 6px;
