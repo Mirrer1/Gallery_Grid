@@ -42,7 +42,7 @@ export const PostingWrapper = styled.form`
     }
 
     & > div > div > span {
-      font-size: 0.75rem;
+      font-size: 0.9rem;
       margin-right: 1em;
     }
   }
@@ -59,7 +59,6 @@ export const PostingBtn = styled.button<{ $active: boolean }>`
   border-radius: 5px;
 
   ${media.mobile} {
-    font-size: 0.65rem;
-    padding: 0.6em 1.8em;
+    font-size: 0.75rem;
   }
 `;
