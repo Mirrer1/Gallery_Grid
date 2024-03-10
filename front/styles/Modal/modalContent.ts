@@ -1,8 +1,6 @@
 import styled from 'styled-components';
 
 import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
-import { DarkShadowStyle } from 'styles/Common/shadow';
-import media from 'styles/media';
 
 export const ModalContentWrapper = styled.div`
   width: 25%;
@@ -57,64 +55,6 @@ export const ModalContentHeader = styled.div`
       padding: 0.7em 1.5em;
       border-radius: 5px;
     }
-  }
-`;
-
-export const TooltipOutsideArea = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 29;
-`;
-
-export const PostTooltip = styled.div`
-  position: relative;
-  display: inline-block;
-  cursor: pointer;
-
-  & > span:first-child {
-    ${HoverStyle('&')}
-  }
-`;
-
-export const PostTooltipBtn = styled.div<{ $visible: boolean }>`
-  visibility: ${props => (props.$visible ? 'visible' : 'hidden')};
-  opacity: ${props => (props.$visible ? '1' : '0')};
-  position: absolute;
-  top: -75%;
-  right: 100%;
-  width: 145px;
-  text-align: center;
-  border-radius: 6px;
-  padding: 7px 0;
-  margin-left: -60px;
-  transition: opacity 0.3s;
-  z-index: 30;
-  background-color: #fff;
-  ${DarkShadowStyle}
-
-  & > button {
-    ${HoverStyle('&')}
-    font-size: 0.7rem;
-    font-weight: 500;
-    padding: 0.7em 1em;
-  }
-
-  & > button:first-child {
-    margin-right: 0.3em;
-    color: ${({ theme }) => theme.colors.primary};
-    border: 1px ${({ theme }) => theme.colors.primary} solid;
-  }
-
-  & > button:last-child {
-    color: ${({ theme }) => theme.colors.red};
-    border: 1px ${({ theme }) => theme.colors.red} solid;
-  }
-
-  & > button > span {
-    margin-right: 0.5em;
   }
 `;
 

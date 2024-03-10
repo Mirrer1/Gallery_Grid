@@ -10,15 +10,13 @@ import {
 } from '@ant-design/icons';
 
 import useInput from 'utils/useInput';
+import { Tooltip, TooltipBtn, TooltipOutsideArea } from 'styles/Tooltip';
 import {
   ModalCommentInput,
   ModalContentHeader,
   ModalContentOptions,
   ModalContentText,
-  ModalContentWrapper,
-  PostTooltip,
-  PostTooltipBtn,
-  TooltipOutsideArea
+  ModalContentWrapper
 } from 'styles/Modal/modalContent';
 
 const ModalContent = () => {
@@ -60,11 +58,11 @@ const ModalContent = () => {
         <div>
           <button type="button">Follow</button>
 
-          <PostTooltip id="tooltip">
+          <Tooltip>
             {isTooltipVisible && <TooltipOutsideArea onClick={hideTooltip}></TooltipOutsideArea>}
 
             <MoreOutlined onClick={handleTooltip} />
-            <PostTooltipBtn $visible={isTooltipVisible}>
+            <TooltipBtn $visible={isTooltipVisible}>
               <button type="button">
                 <EditOutlined />
                 수정
@@ -73,8 +71,8 @@ const ModalContent = () => {
                 <DeleteOutlined />
                 삭제
               </button>
-            </PostTooltipBtn>
-          </PostTooltip>
+            </TooltipBtn>
+          </Tooltip>
         </div>
       </ModalContentHeader>
 
