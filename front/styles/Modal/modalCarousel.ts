@@ -6,7 +6,7 @@ export const ModalCarouselBtn = styled.div<{ $alignleft: string }>`
   opacity: 0;
   position: absolute;
   bottom: 50%;
-  ${props => (props.$alignleft === 'true' ? 'left: 0;' : 'right: 0;')}
+  ${props => (props.$alignleft === 'true' ? 'left: 2px;' : 'right: 0;')}
   ${props => (props.$alignleft === 'true' ? 'transform: translate(10%, -50%);' : 'transform: translate(-20%, -50%);')}  
   font-size: 0.85rem;
   padding: 0.5em;
@@ -22,7 +22,6 @@ export const ModalCarouselBtn = styled.div<{ $alignleft: string }>`
     bottom: 45%;
     font-size: 0.8rem;
     padding: 0.4em;
-    ${props => (props.$alignleft === 'true' ? 'left: 2px;' : 'right: 0;')}
   }
 `;
 

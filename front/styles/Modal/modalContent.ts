@@ -135,6 +135,7 @@ export const ModalContentOptions = styled.div`
     & > span {
       font-size: 1.1rem;
       cursor: pointer;
+      ${HoverStyle('&')};
     }
 
     & > span:first-child {
