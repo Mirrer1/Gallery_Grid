@@ -9,7 +9,7 @@ import {
 } from '@ant-design/icons';
 
 import PostImageCarousel from './PostImageCarousel';
-import { Tooltip, TooltipBtn, TooltipOutsideArea } from 'styles/Tooltip';
+import { Tooltip, TooltipBtn, TooltipOutsideArea } from 'styles/Common/tooltip';
 import {
   PostWrapper,
   PostHeader,
