@@ -147,16 +147,6 @@ const PostList = () => {
 
   const onClickCategory = useCallback((category: string) => {
     setCategory(category);
-
-    if (firstPostRef.current) {
-      const windowWidth = window.innerWidth;
-      const blockType = windowWidth < 576 ? 'start' : windowWidth < 992 ? 'end' : 'start';
-
-      firstPostRef.current.scrollIntoView({
-        behavior: 'smooth',
-        block: blockType
-      });
-    }
   }, []);
 
   const showCarousel = useCallback((images: string[]) => {
@@ -175,8 +165,19 @@ const PostList = () => {
     setIsTooltipVisible(null);
   }, []);
 
+  useEffect(() => {
+    if (firstPostRef.current) {
+      firstPostRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  }, [category]);
+
   return (
     <PostContainer>
+      <div ref={firstPostRef}></div>
+
       <PostCategory>
         <CategoryItem onClick={() => onClickCategory('best')} $selected={category === 'best'}>
           Best
@@ -192,7 +193,7 @@ const PostList = () => {
       </PostCategory>
 
       {postList.map((post, i) => (
-        <PostWrapper key={post.id} ref={i === 0 ? firstPostRef : null}>
+        <PostWrapper key={post.id}>
           <PostHeader>
             <div>
               <img src={post.profile} alt="author profile image" />

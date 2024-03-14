@@ -41,14 +41,14 @@ export const CategoryItem = styled.p<{ $selected: boolean }>`
 
 export const PostWrapper = styled.article`
   background-color: white;
-  padding: 1.5em 2.5em;
+  padding: 1em 1.5em;
 
   ${media.tablet} {
-    padding: 1.5em 2em;
+    padding: 1em 2em;
   }
 
   ${media.mobile} {
-    padding: 1em 0.8em;
+    padding: 0.8em;
   }
 `;
 
