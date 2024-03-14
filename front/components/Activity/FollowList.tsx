@@ -9,6 +9,7 @@ import {
   FollowTableInfo,
   FollowTableWrapper
 } from 'styles/Activity/follow';
+import { ModalOutsideArea } from 'styles/Modal/postModal';
 
 const FollowList = ({ type, list }: IFollowList) => {
   const [isTableVisible, setTableVisible] = useState(false);

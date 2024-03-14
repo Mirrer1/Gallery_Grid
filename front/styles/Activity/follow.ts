@@ -11,12 +11,14 @@ export const FollowTableWrapper = styled.section<{ $type: string }>`
   border-radius: 5px;
   margin-right: ${props => (props.$type === 'follower' ? '1em' : '0')};
   margin-bottom: 1em;
+  z-index: 35;
   ${ShadowStyle}
 
   ${media.mobile} {
     width: 100%;
     margin-right: 0;
     margin-bottom: ${props => (props.$type === 'follower' ? '0.3em' : '0.5em')};
+    box-shadow: none;
   }
 `;
 
@@ -129,7 +131,11 @@ export const FollowTableBody = styled.tbody<{ $visible: boolean }>`
     &:nth-child(2) {
       color: ${({ theme }) => theme.colors.primary};
       font-weight: 700;
-      ${HoverStyle('&')}
+
+      &:hover {
+        text-decoration: underline;
+        text-underline-offset: 1.5px;
+      }
     }
 
     &:last-child > button {
