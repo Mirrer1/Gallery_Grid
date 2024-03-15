@@ -4,7 +4,7 @@ import media from 'styles/media';
 import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
 
 export const PostContainer = styled.div`
-  height: 80%;
+  height: 69%;
   overflow-y: scroll;
 
   ${media.tablet} {

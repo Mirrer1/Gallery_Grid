@@ -18,7 +18,7 @@ export const TimelineWrapper = styled.section`
 `;
 
 export const PostsSection = styled(motion.article)`
-  width: 70%;
+  width: 65%;
   padding: 2em 1em 0 2em;
 
   ${media.tablet} {
@@ -30,7 +30,7 @@ export const PostsSection = styled(motion.article)`
 `;
 
 export const CommunitySection = styled(motion.article)`
-  width: 30%;
+  width: 35%;
   padding: 2em 2em 2em 1em;
 
   ${media.tablet} {
