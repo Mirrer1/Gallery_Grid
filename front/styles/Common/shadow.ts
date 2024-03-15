@@ -1,9 +1,7 @@
 import { css } from 'styled-components';
 
 export const ShadowStyle = css`
-  box-shadow:
-    0 20px 25px -5px rgba(0, 0, 0, 0.1),
-    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 `;
 
 export const DarkShadowStyle = css`

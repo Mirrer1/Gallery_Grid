@@ -18,7 +18,6 @@ export const FollowTableWrapper = styled.section<{ $type: string }>`
     width: 100%;
     margin-right: 0;
     margin-bottom: ${props => (props.$type === 'follower' ? '0.3em' : '0.5em')};
-    box-shadow: none;
   }
 `;
 

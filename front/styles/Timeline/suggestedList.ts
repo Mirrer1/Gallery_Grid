@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 import media from 'styles/media';
 import { ReverseHoverStyle } from 'styles/Common/hover';
+import { ShadowStyle } from 'styles/Common/shadow';
 
 export const SuggestedWrapper = styled.div`
   ${({ theme }) => theme.flexColumnSet('center', 'start')}
@@ -9,6 +10,7 @@ export const SuggestedWrapper = styled.div`
   background-color: white;
   padding: 2em 1.5em;
   border-radius: 5px;
+  ${ShadowStyle}
 
   ${media.tablet} {
     display: none;

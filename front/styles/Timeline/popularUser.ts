@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 import media from 'styles/media';
+import { ShadowStyle } from 'styles/Common/shadow';
 
 export const PopularBtn = styled.div<{ $alignleft: string }>`
   opacity: 0;
@@ -33,6 +34,7 @@ export const PopularUserWrapper = styled.div`
   margin-bottom: 1em;
   overflow: hidden;
   height: 60%;
+  ${ShadowStyle}
 
   & > div {
     position: relative;
