@@ -4,6 +4,7 @@ import Head from 'next/head';
 import AppLayout from 'components/AppLayout';
 import UserInfo from 'components/User/UserInfo';
 import UserPosts from 'components/User/UserPosts';
+import { UserWrapper } from 'styles/User';
 
 const user = () => {
   return (
@@ -14,10 +15,10 @@ const user = () => {
       </Head>
 
       <AppLayout>
-        <section>
+        <UserWrapper>
           <UserInfo />
           <UserPosts />
-        </section>
+        </UserWrapper>
       </AppLayout>
     </>
   );

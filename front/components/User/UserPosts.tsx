@@ -1,6 +1,9 @@
 import React from 'react';
 import { ArrowsAltOutlined, CommentOutlined, LikeOutlined } from '@ant-design/icons';
 
+import { slideInFromBottom } from 'styles/Common/animation';
+import { UserPostContent, UserPostImage, UserPostOption, UserPostsWrapper } from 'styles/User/userPosts';
+
 const UserPosts = () => {
   const posts = [
     {
@@ -116,10 +119,10 @@ const UserPosts = () => {
   ];
 
   return (
-    <article>
+    <UserPostsWrapper {...slideInFromBottom(0.3)}>
       {posts.map((post: any, i: any) => (
         <article key={i}>
-          <div>
+          <UserPostImage>
             <img src={post.img[0]} alt={`${post.user}의 게시글 이미지`} />
 
             <div>
@@ -129,13 +132,13 @@ const UserPosts = () => {
             </div>
 
             <ArrowsAltOutlined />
-          </div>
+          </UserPostImage>
 
-          <div>
+          <UserPostContent>
             <h1>{post.desc}</h1>
             <p>{post.user}</p>
 
-            <div>
+            <UserPostOption>
               <div>
                 <LikeOutlined />
                 <span>24</span>
@@ -145,11 +148,11 @@ const UserPosts = () => {
                 <CommentOutlined />
                 <span>13</span>
               </div>
-            </div>
-          </div>
+            </UserPostOption>
+          </UserPostContent>
         </article>
       ))}
-    </article>
+    </UserPostsWrapper>
   );
 };
 
