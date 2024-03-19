@@ -4,6 +4,7 @@ import { GoogleOutlined } from '@ant-design/icons';
 import Router from 'next/router';
 
 import useInput from 'utils/useInput';
+import { IMenuProps } from './MenuContents';
 import { useValidate } from 'utils/useValidate';
 import { slideInFromBottom } from 'styles/Common/animation';
 import {
@@ -18,17 +19,12 @@ import {
   AuthOptionsWrapper
 } from 'styles/Landing/accountForm';
 
-type IMenuProps = {
-  selectMenu: string;
-  onClickMenu: (menu: string) => void;
-};
-
 const SignUpForm = ({ selectMenu, onClickMenu }: IMenuProps) => {
   const [nickname, onChangeNickname] = useInput('');
   const [email, onChangeEmail] = useInput('');
   const [password, onChangePassword] = useInput('');
   const [passwordCheck, onChangePasswordCheck] = useInput('');
-  const [termsAccepted, onChangeTermsAccepted] = useInput(false);
+  const [term, onChangeTerm] = useInput(false);
 
   const onMoveLogin = useCallback(() => {
     onClickMenu('login');
@@ -55,7 +51,7 @@ const SignUpForm = ({ selectMenu, onClickMenu }: IMenuProps) => {
         return;
       }
 
-      if (!termsAccepted) {
+      if (!term) {
         toast.warning('이용약관을 체크해주세요.');
         return;
       }
@@ -63,7 +59,7 @@ const SignUpForm = ({ selectMenu, onClickMenu }: IMenuProps) => {
       console.log({ nickname, email, password });
       Router.push('/timeline');
     },
-    [nickname, email, password, passwordCheck, termsAccepted]
+    [nickname, email, password, passwordCheck, term]
   );
 
   return (
@@ -104,7 +100,7 @@ const SignUpForm = ({ selectMenu, onClickMenu }: IMenuProps) => {
 
         <AuthOptionsWrapper $menu={selectMenu}>
           <div>
-            <input type="checkbox" id="terms-accepted" checked={termsAccepted} onChange={onChangeTermsAccepted} />
+            <input type="checkbox" id="terms-accepted" checked={term} onChange={onChangeTerm} />
             <label htmlFor="terms-accepted">개인정보 수집, 이용약관에 동의하십니까?</label>
           </div>
         </AuthOptionsWrapper>

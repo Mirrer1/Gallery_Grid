@@ -7,7 +7,7 @@ import SignUpForm from './SignUpForm';
 import { slideInFromLeft } from 'styles/Common/animation';
 import { ContentsText, ContentsWrapper, HeaderBreak } from 'styles/Landing/menuContents';
 
-type IMenuProps = {
+export type IMenuProps = {
   selectMenu: string;
   onClickMenu: (menu: string) => void;
 };

@@ -3,6 +3,7 @@ import { GoogleOutlined } from '@ant-design/icons';
 import Router from 'next/router';
 
 import useInput from 'utils/useInput';
+import { IMenuProps } from './MenuContents';
 import { useValidate } from 'utils/useValidate';
 import { slideInFromBottom } from 'styles/Common/animation';
 import {
@@ -16,11 +17,6 @@ import {
   AuthOptionsWrapper,
   AccountAlert
 } from 'styles/Landing/accountForm';
-
-type IMenuProps = {
-  selectMenu: string;
-  onClickMenu: (menu: string) => void;
-};
 
 const LoginForm = ({ selectMenu, onClickMenu }: IMenuProps) => {
   const [email, onChangeEmail] = useInput('');
