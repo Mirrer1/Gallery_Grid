@@ -1,9 +1,11 @@
 import React from 'react';
 
+import { UserInfoActivity, UserInfoImage, UserInfoText, UserInfoWrapper } from 'styles/User/userInfo';
+
 const UserInfo = () => {
   return (
-    <>
-      <div>
+    <UserInfoWrapper>
+      <UserInfoImage>
         <img
           src="https://i.pinimg.com/564x/fc/9d/e8/fc9de80da08a4e4f57199ccc16228f2b.jpg"
           alt="큰 유저 프로필 이미지"
@@ -12,18 +14,18 @@ const UserInfo = () => {
           src="https://i.pinimg.com/564x/fc/9d/e8/fc9de80da08a4e4f57199ccc16228f2b.jpg"
           alt="작은 유저 프로필 이미지"
         />
-      </div>
+      </UserInfoImage>
 
-      <div>
+      <UserInfoText>
         <div>
           <h1>Lorem ipsum dolor</h1>
           <button type="button">Follow</button>
         </div>
 
         <p>Lorem ipsum dolor sit amet consectetur onsectetur onsectetur onsectetur</p>
-      </div>
+      </UserInfoText>
 
-      <div>
+      <UserInfoActivity>
         <div>
           <h2>Total Post</h2>
           <p>286</p>
@@ -38,8 +40,8 @@ const UserInfo = () => {
           <h2>Following</h2>
           <p>286</p>
         </div>
-      </div>
-    </>
+      </UserInfoActivity>
+    </UserInfoWrapper>
   );
 };
 

@@ -3,6 +3,7 @@ import Head from 'next/head';
 
 import AppLayout from 'components/AppLayout';
 import UserInfo from 'components/User/UserInfo';
+import UserPosts from 'components/User/UserPosts';
 
 const user = () => {
   return (
@@ -15,6 +16,7 @@ const user = () => {
       <AppLayout>
         <section>
           <UserInfo />
+          <UserPosts />
         </section>
       </AppLayout>
     </>
