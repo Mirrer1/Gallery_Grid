@@ -14,18 +14,21 @@ import {
   AccountGoogle,
   AccountInput,
   AccountWrapper,
-  AccountAlert
+  AccountAlert,
+  AuthOptionsWrapper
 } from 'styles/Landing/accountForm';
 
-type MenuProps = {
+type IMenuProps = {
+  selectMenu: string;
   onClickMenu: (menu: string) => void;
 };
 
-const SignUpForm = ({ onClickMenu }: MenuProps) => {
+const SignUpForm = ({ selectMenu, onClickMenu }: IMenuProps) => {
   const [nickname, onChangeNickname] = useInput('');
   const [email, onChangeEmail] = useInput('');
   const [password, onChangePassword] = useInput('');
   const [passwordCheck, onChangePasswordCheck] = useInput('');
+  const [termsAccepted, onChangeTermsAccepted] = useInput(false);
 
   const onMoveLogin = useCallback(() => {
     onClickMenu('login');
@@ -52,10 +55,15 @@ const SignUpForm = ({ onClickMenu }: MenuProps) => {
         return;
       }
 
+      if (!termsAccepted) {
+        toast.warning('이용약관을 체크해주세요.');
+        return;
+      }
+
       console.log({ nickname, email, password });
       Router.push('/timeline');
     },
-    [nickname, email, password, passwordCheck]
+    [nickname, email, password, passwordCheck, termsAccepted]
   );
 
   return (
@@ -93,6 +101,13 @@ const SignUpForm = ({ onClickMenu }: MenuProps) => {
           <label>Confirm password</label>
           <span></span>
         </AccountInput>
+
+        <AuthOptionsWrapper $menu={selectMenu}>
+          <div>
+            <input type="checkbox" id="terms-accepted" checked={termsAccepted} onChange={onChangeTermsAccepted} />
+            <label htmlFor="terms-accepted">개인정보 수집, 이용약관에 동의하십니까?</label>
+          </div>
+        </AuthOptionsWrapper>
 
         <AccountBtn>
           <button type="submit">Create my account&nbsp;&nbsp;&nbsp;&nbsp;→</button>

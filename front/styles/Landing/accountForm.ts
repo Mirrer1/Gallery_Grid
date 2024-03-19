@@ -174,7 +174,7 @@ export const AccountAlert = styled.p<{ $login: string }>`
   font-size: 0.7rem;
   opacity: 50%;
   padding-left: 5px;
-  margin-bottom: ${props => (props.$login === 'true' ? '1em' : '3em')};
+  margin-bottom: ${props => (props.$login === 'true' ? '1em' : '2.5em')};
 
   ${media.tablet} {
     font-size: 0.6rem;
@@ -185,8 +185,9 @@ export const AccountAlert = styled.p<{ $login: string }>`
   }
 `;
 
-export const AuthOptionsWrapper = styled.div`
-  ${({ theme }) => theme.flexSet('space-between')};
+export const AuthOptionsWrapper = styled.div<{ $menu: string }>`
+  ${({ theme }) => theme.flexSet()};
+  justify-content: ${props => (props.$menu === 'login' ? 'space-between' : 'center')};
   margin-bottom: 1em;
 
   & > div {

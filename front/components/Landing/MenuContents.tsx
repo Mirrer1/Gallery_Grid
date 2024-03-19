@@ -7,12 +7,12 @@ import SignUpForm from './SignUpForm';
 import { slideInFromLeft } from 'styles/Common/animation';
 import { ContentsText, ContentsWrapper, HeaderBreak } from 'styles/Landing/menuContents';
 
-type MenuContentsProps = {
+type IMenuProps = {
   selectMenu: string;
   onClickMenu: (menu: string) => void;
 };
 
-const MenuContents = ({ selectMenu, onClickMenu }: MenuContentsProps) => {
+const MenuContents = ({ selectMenu, onClickMenu }: IMenuProps) => {
   const onClickMore = useCallback(() => {
     toast.warning('로그인이 필요한 서비스입니다.');
     onClickMenu('login');
@@ -93,9 +93,9 @@ const MenuContents = ({ selectMenu, onClickMenu }: MenuContentsProps) => {
       {selectMenu === 'home' ? (
         <LandingCarousel />
       ) : selectMenu === 'login' ? (
-        <LoginForm onClickMenu={onClickMenu} />
+        <LoginForm selectMenu={selectMenu} onClickMenu={onClickMenu} />
       ) : selectMenu === 'signup' ? (
-        <SignUpForm onClickMenu={onClickMenu} />
+        <SignUpForm selectMenu={selectMenu} onClickMenu={onClickMenu} />
       ) : null}
     </ContentsWrapper>
   );

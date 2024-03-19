@@ -17,11 +17,12 @@ import {
   AccountAlert
 } from 'styles/Landing/accountForm';
 
-type MenuProps = {
+type IMenuProps = {
+  selectMenu: string;
   onClickMenu: (menu: string) => void;
 };
 
-const LoginForm = ({ onClickMenu }: MenuProps) => {
+const LoginForm = ({ selectMenu, onClickMenu }: IMenuProps) => {
   const [email, onChangeEmail] = useInput('');
   const [password, onChangePassword] = useInput('');
   const [rememberMe, onChangeRememberMe] = useInput(false);
@@ -73,7 +74,7 @@ const LoginForm = ({ onClickMenu }: MenuProps) => {
         </AccountInput>
         <AccountAlert $login="true">8~16자 영문 대 소문자, 숫자를 사용하세요.</AccountAlert>
 
-        <AuthOptionsWrapper>
+        <AuthOptionsWrapper $menu={selectMenu}>
           <div>
             <input type="checkbox" id="remember-me" checked={rememberMe} onChange={onChangeRememberMe} />
             <label htmlFor="remember-me">Remember me</label>
