@@ -2,6 +2,7 @@ import React from 'react';
 import Head from 'next/head';
 
 import AppLayout from 'components/AppLayout';
+import UserInfo from 'components/User/UserInfo';
 
 const user = () => {
   return (
@@ -12,7 +13,9 @@ const user = () => {
       </Head>
 
       <AppLayout>
-        <div>유저 상세페이지</div>
+        <section>
+          <UserInfo />
+        </section>
       </AppLayout>
     </>
   );
