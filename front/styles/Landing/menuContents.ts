@@ -49,10 +49,10 @@ export const ContentsText = styled(motion.section)<{ $selected: string }>`
     margin-bottom: 3em;
   }
 
-  ${HoverStyle('& > button')};
   & > button {
     font-size: 1.1rem;
     font-weight: 500;
+    ${HoverStyle('&')};
   }
 
   ${media.tablet} {

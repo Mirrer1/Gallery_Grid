@@ -18,7 +18,13 @@ const PostingForm = () => {
 
   return (
     <PostingWrapper onSubmit={onSubmitForm}>
-      <textarea rows={6} placeholder="당신의 작품에 대한 이야기를 들려주세요." value={text} onChange={onChangeText} />
+      <textarea
+        rows={6}
+        maxLength={2000}
+        placeholder="당신의 작품에 대한 이야기를 들려주세요."
+        value={text}
+        onChange={onChangeText}
+      />
 
       <div>
         <div>
@@ -28,6 +34,8 @@ const PostingForm = () => {
         </div>
 
         <div>
+          <p>{text.length} / 2000</p>
+
           <PostingBtn type="submit" $active={text.length !== 0}>
             Post
           </PostingBtn>

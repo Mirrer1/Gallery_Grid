@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 
 import media from 'styles/media';
 import { HoverStyle } from 'styles/Common/hover';
+import { ShadowStyle } from 'styles/Common/shadow';
 
 export const SettingFormWrapper = styled(motion.form)`
   position: absolute;
@@ -14,7 +15,7 @@ export const SettingFormWrapper = styled(motion.form)`
   border-radius: 5px;
   background-color: white;
   z-index: 10;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  ${ShadowStyle}
 
   & > h2 {
     font-size: 1.1rem;

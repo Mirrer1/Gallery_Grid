@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 
 import media from 'styles/media';
 import { ReverseHoverStyle } from 'styles/Common/hover';
+import { ShadowStyle } from 'styles/Common/shadow';
 
 export const ChatListWrapper = styled.article<{ $visible: boolean }>`
   ${({ theme }) => theme.flexColumnSet()};
@@ -115,6 +116,7 @@ export const ChatListItem = styled.div`
   margin-bottom: 0.5em;
   overflow-y: scroll;
   transition: transform 250ms ease-in-out;
+  ${ShadowStyle}
 
   &:hover {
     transform: scale(1.03);

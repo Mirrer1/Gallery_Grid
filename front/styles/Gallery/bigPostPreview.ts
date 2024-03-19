@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { motion } from 'framer-motion';
 
 import { HoverStyle } from 'styles/Common/hover';
+import { ShadowStyle } from 'styles/Common/shadow';
 import media from 'styles/media';
 
 export const BigPostPreviewWrapper = styled(motion.section)`
@@ -9,6 +10,7 @@ export const BigPostPreviewWrapper = styled(motion.section)`
   position: relative;
   margin-bottom: 1em;
   cursor: pointer;
+  ${ShadowStyle};
 
   &:hover {
     & > div:first-child > span {

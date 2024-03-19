@@ -76,8 +76,12 @@ export const AlertHeader = styled.div<{ $type: string }>`
     & > span:first-child {
       color: ${({ theme }) => theme.colors.primary};
       font-weight: 600;
-      ${HoverStyle('&')}
       cursor: pointer;
+
+      &:hover {
+        text-decoration: underline;
+        text-underline-offset: 1.5px;
+      }
     }
 
     & > span:last-child {

@@ -1,34 +1,11 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import {
-  ArrowsAltOutlined,
-  CommentOutlined,
-  DeleteOutlined,
-  EditOutlined,
-  LikeOutlined,
-  MoreOutlined
-} from '@ant-design/icons';
+import React from 'react';
+import { ArrowsAltOutlined, CommentOutlined, LikeOutlined } from '@ant-design/icons';
 
-import PostImageCarousel from './PostImageCarousel';
-import { Tooltip, TooltipBtn, TooltipOutsideArea } from 'styles/Common/tooltip';
-import {
-  PostWrapper,
-  PostHeader,
-  PostContents,
-  PostOptions,
-  PostCategory,
-  CategoryItem,
-  PostContainer,
-  PostFollowBtn
-} from 'styles/Timeline/postList';
+import { slideInFromBottom } from 'styles/Common/animation';
+import { UserPostContent, UserPostImage, UserPostOption, UserPostsWrapper } from 'styles/User/userPosts';
 
-const PostList = () => {
-  const firstPostRef = useRef<HTMLDivElement>(null);
-  const [category, setCategory] = useState('best');
-  const [modalImages, setModalImages] = useState<string[]>([]);
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isTooltipVisible, setIsTooltipVisible] = useState<string | null>(null);
-
-  const postList = [
+const UserPosts = () => {
+  const posts = [
     {
       id: 'as1',
       user: 'Lorem ipsum dolor',
@@ -45,7 +22,7 @@ const PostList = () => {
         'https://i.ibb.co/8bqzbyV/1.jpg'
       ],
       createdAt: '25 mins ago',
-      desc: '가나다라마바나다사가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하'
+      desc: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Praesentium harum in maiores delectus, illum nemo veritatis aut, ipsum ab odio reiciendis sed veniam eveniet quasi impedit mollitia natus tempora, cum deserunt iure eos quis esse quibusdam. Maxime sapiente, soluta reiciendis, nemo distinctio eveniet, libero facere ipsam ratione est hic voluptatibus?'
     },
     {
       id: 'as2',
@@ -99,11 +76,7 @@ const PostList = () => {
       id: 'as6',
       user: 'Lorem ipsum dolor',
       profile: 'https://t3.ftcdn.net/jpg/05/16/27/58/360_F_516275801_f3Fsp17x6HQK0xQgDQEELoTuERO4SsWV.jpg',
-      img: [
-        'https://i.ibb.co/n70QqMG/drawing-series-by.jpg',
-        'https://i.ibb.co/BCsx9nZ/image.jpg',
-        'https://i.ibb.co/8bqzbyV/1.jpg'
-      ],
+      img: ['https://i.ibb.co/n70QqMG/drawing-series-by.jpg'],
       createdAt: '25 mins ago',
       desc: '가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하'
     },
@@ -145,121 +118,42 @@ const PostList = () => {
     }
   ];
 
-  const onClickCategory = useCallback((category: string) => {
-    setCategory(category);
-  }, []);
-
-  const showCarousel = useCallback((images: string[]) => {
-    setModalImages(images);
-    setIsModalVisible(true);
-  }, []);
-
-  const handleTooltip = useCallback(
-    (postId: string) => {
-      setIsTooltipVisible(isTooltipVisible === postId ? null : postId);
-    },
-    [isTooltipVisible]
-  );
-
-  const hideTooltip = useCallback(() => {
-    setIsTooltipVisible(null);
-  }, []);
-
-  useEffect(() => {
-    if (firstPostRef.current) {
-      firstPostRef.current.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-      });
-    }
-  }, [category]);
-
   return (
-    <PostContainer>
-      <div ref={firstPostRef}></div>
+    <UserPostsWrapper {...slideInFromBottom(0.3)}>
+      {posts.map((post: any, i: any) => (
+        <article key={i}>
+          <UserPostImage>
+            <img src={post.img[0]} alt={`${post.user}의 게시글 이미지`} />
 
-      <PostCategory>
-        <CategoryItem onClick={() => onClickCategory('best')} $selected={category === 'best'}>
-          Best
-        </CategoryItem>
-
-        <CategoryItem onClick={() => onClickCategory('recent')} $selected={category === 'recent'}>
-          Recent
-        </CategoryItem>
-
-        <CategoryItem onClick={() => onClickCategory('follow')} $selected={category === 'follow'}>
-          Follow
-        </CategoryItem>
-      </PostCategory>
-
-      {postList.map((post, i) => (
-        <PostWrapper key={post.id}>
-          <PostHeader>
             <div>
-              <img src={post.profile} alt="author profile image" />
-
-              <div>
-                <h1>{post.user}</h1>
-                <p>{post.createdAt}</p>
-              </div>
+              {post.img.map((_: any, i: any) => (
+                <div key={i}></div>
+              ))}
             </div>
 
-            <div>
-              <PostFollowBtn type="button">Follow</PostFollowBtn>
+            <ArrowsAltOutlined />
+          </UserPostImage>
 
-              <Tooltip>
-                {isTooltipVisible && <TooltipOutsideArea onClick={hideTooltip}></TooltipOutsideArea>}
+          <UserPostContent>
+            <h1>{post.desc}</h1>
+            <p>{post.user}</p>
 
-                <MoreOutlined onClick={() => handleTooltip(post.id)} />
-                <TooltipBtn $visible={isTooltipVisible === post.id}>
-                  <button type="button">
-                    <EditOutlined />
-                    수정
-                  </button>
-                  <button type="button">
-                    <DeleteOutlined />
-                    삭제
-                  </button>
-                </TooltipBtn>
-              </Tooltip>
-            </div>
-          </PostHeader>
-
-          <PostContents>
-            <div>
-              <img src={post.img[0]} alt="post image" onClick={() => showCarousel(post.img)} />
-
+            <UserPostOption>
               <div>
-                {post.img.map((_, i) => (
-                  <div key={i}></div>
-                ))}
+                <LikeOutlined />
+                <span>24</span>
               </div>
 
-              <ArrowsAltOutlined onClick={() => showCarousel(post.img)} />
-            </div>
-
-            <div>
-              <p>{post.desc}</p>
-
-              <PostOptions>
-                <div>
-                  <LikeOutlined />
-                  <span>24</span>
-                </div>
-
-                <div>
-                  <CommentOutlined />
-                  <span>13</span>
-                </div>
-              </PostOptions>
-            </div>
-          </PostContents>
-        </PostWrapper>
+              <div>
+                <CommentOutlined />
+                <span>13</span>
+              </div>
+            </UserPostOption>
+          </UserPostContent>
+        </article>
       ))}
-
-      {isModalVisible && <PostImageCarousel images={modalImages} setIsModalVisible={setIsModalVisible} />}
-    </PostContainer>
+    </UserPostsWrapper>
   );
 };
 
-export default PostList;
+export default UserPosts;

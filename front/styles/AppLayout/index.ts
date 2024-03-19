@@ -126,12 +126,11 @@ export const NavbarItem = styled(Link)<{ $selected: boolean }>`
   ${ReverseHoverStyle('&')}
   ${({ theme }) => theme.flexSet('start')};
   opacity: ${props => (props.$selected ? '100%' : '40%')};
-  text-decoration: ${props => (props.$selected ? 'underline' : 'none')};
-  text-decoration-thickness: ${props => (props.$selected ? '2px' : '0')};
-  text-underline-offset: ${props => (props.$selected ? '5px' : '0')};
+  color: ${props => props.$selected && '#6BA2E6'};
+  transform: ${props => props.$selected && 'scale(1.03)'};
+  font-weight: ${props => (props.$selected ? '700' : '500')};
   font-size: 0.9rem;
   margin-bottom: 1.8em;
-  font-weight: 500;
 
   & > span {
     margin-right: 0.7em;

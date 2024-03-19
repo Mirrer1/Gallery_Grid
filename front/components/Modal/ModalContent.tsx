@@ -10,7 +10,7 @@ import {
 } from '@ant-design/icons';
 
 import useInput from 'utils/useInput';
-import { Tooltip, TooltipBtn, TooltipOutsideArea } from 'styles/Tooltip';
+import { Tooltip, TooltipBtn, TooltipOutsideArea } from 'styles/Common/tooltip';
 import {
   ModalCommentInput,
   ModalContentHeader,
