@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 
+import media from 'styles/media';
 import { HoverStyle } from 'styles/Common/hover';
 import { DarkShadowStyle } from 'styles/Common/shadow';
 
@@ -10,6 +11,15 @@ export const UserInfoWrapper = styled(motion.section)`
   ${({ theme }) => theme.flexColumnSet()};
   margin-right: 1em;
   padding: 0 1em;
+
+  ${media.tablet} {
+    width: 100%;
+    margin-right: 0;
+  }
+
+  ${media.mobile} {
+    padding: 0;
+  }
 `;
 
 export const UserInfoImage = styled.div`
@@ -33,6 +43,10 @@ export const UserInfoImage = styled.div`
     width: 100px;
     height: 100px;
     border-radius: 50%;
+  }
+
+  ${media.tablet} {
+    margin-bottom: 3em;
   }
 `;
 
@@ -64,6 +78,26 @@ export const UserInfoText = styled.div`
     opacity: 60%;
     line-height: 1.3;
   }
+
+  ${media.tablet} {
+    margin-bottom: 2em;
+  }
+
+  ${media.mobile} {
+    & > div {
+      & > h1 {
+        font-size: 1.1rem;
+      }
+
+      & > button {
+        font-size: 0.6rem;
+      }
+    }
+
+    & > p {
+      font-size: 0.7rem;
+    }
+  }
 `;
 
 export const UserInfoActivity = styled.div`
@@ -90,6 +124,33 @@ export const UserInfoActivity = styled.div`
 
   & > div:last-child {
     margin-right: 0;
+    padding-right: 0;
     border-right: none;
+  }
+
+  ${media.tablet} {
+    margin-bottom: 2.5em;
+
+    & > div {
+      margin-right: 3.5em;
+      padding-right: 3.5em;
+    }
+  }
+
+  ${media.mobile} {
+    margin-bottom: 1.5em;
+
+    & > div {
+      margin-right: 1.5em;
+      padding-right: 1.5em;
+
+      & > h2 {
+        font-size: 0.7rem;
+      }
+
+      & > p {
+        font-size: 1.2rem;
+      }
+    }
   }
 `;
