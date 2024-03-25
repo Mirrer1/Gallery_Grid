@@ -46,7 +46,7 @@ const LoginForm = ({ selectMenu, onClickMenu }: IMenuProps) => {
 
       console.log({ email, password, rememberMe });
       dispatch(loginAction(true));
-      // Router.push('/timeline');
+      Router.push('/timeline');
     },
     [email, password, rememberMe]
   );

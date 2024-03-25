@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { DownOutlined, FileSearchOutlined, UpOutlined } from '@ant-design/icons';
 
 import { IFollowList, IFollowUser } from 'types/Follow';
@@ -9,17 +9,31 @@ import {
   FollowTableInfo,
   FollowTableWrapper
 } from 'styles/Activity/follow';
-import { ModalOutsideArea } from 'styles/Modal/postModal';
 
 const FollowList = ({ type, list }: IFollowList) => {
+  const tableRef = useRef<HTMLDivElement | null>(null);
   const [isTableVisible, setTableVisible] = useState(false);
 
   const toggleTableVisibility = () => {
     setTableVisible(!isTableVisible);
   };
 
+  useEffect(() => {
+    const handleClick = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (tableRef.current && !tableRef.current.contains(target)) {
+        setTableVisible(false);
+      }
+    };
+    document.addEventListener('click', handleClick, true);
+
+    return () => {
+      document.removeEventListener('click', handleClick, true);
+    };
+  }, []);
+
   return (
-    <FollowTableWrapper $type={type}>
+    <FollowTableWrapper ref={tableRef} $type={type} $visible={isTableVisible}>
       <FollowTableInfo>
         <h1>{type === 'follower' ? 'Follower' : 'Following'}</h1>
 

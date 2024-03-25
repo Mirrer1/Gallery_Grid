@@ -4,11 +4,12 @@ import media from 'styles/media';
 import { HoverStyle } from 'styles/Common/hover';
 import { ShadowStyle } from 'styles/Common/shadow';
 
-export const FollowTableWrapper = styled.section<{ $type: string }>`
+export const FollowTableWrapper = styled.section<{ $type: string; $visible: boolean }>`
+  position: relative;
   flex-grow: 1;
   width: 47%;
   background-color: white;
-  border-radius: 5px;
+  border-radius: ${props => (props.$visible ? '5px 5px 0 0' : '5px')};
   margin-right: ${props => (props.$type === 'follower' ? '1em' : '0')};
   margin-bottom: 1em;
   z-index: 35;
@@ -18,6 +19,7 @@ export const FollowTableWrapper = styled.section<{ $type: string }>`
     width: 100%;
     margin-right: 0;
     margin-bottom: ${props => (props.$type === 'follower' ? '0.3em' : '0.5em')};
+    z-index: ${props => (props.$type === 'follower' && props.$visible ? '35' : '30')};
   }
 `;
 
@@ -60,8 +62,14 @@ export const FollowTableInfo = styled.div`
 `;
 
 export const FollowTable = styled.table`
+  position: absolute;
+  top: 99%;
   width: 100%;
   text-align: center;
+  background-color: white;
+  border-top: 1.5px solid #e4e5ec;
+  border-radius: 0 0 5px 5px;
+  ${ShadowStyle}
 `;
 
 export const FollowTableHeader = styled.thead<{ $visible: boolean }>`
@@ -85,13 +93,10 @@ export const FollowTableHeader = styled.thead<{ $visible: boolean }>`
 
   ${media.tablet} {
     & > tr > td {
-      font-size: 0.55rem;
+      font-size: 0.6rem;
       padding: 1em 0.5em 0em 0.5em;
-    }
-  }
 
-  ${media.mobile} {
-    & > tr > td {
+      &:nth-child(3),
       &:nth-child(4) {
         display: none;
       }
@@ -101,7 +106,7 @@ export const FollowTableHeader = styled.thead<{ $visible: boolean }>`
 
 export const FollowTableBody = styled.tbody<{ $visible: boolean }>`
   display: block;
-  max-height: ${props => (props.$visible ? '210px' : '0')};
+  max-height: ${props => (props.$visible ? '225px' : '0')};
   overflow-y: scroll;
   transition: max-height 300ms ease-in-out;
 
@@ -121,8 +126,8 @@ export const FollowTableBody = styled.tbody<{ $visible: boolean }>`
 
       & > img {
         margin: 0 auto;
-        width: 50px;
-        height: 50px;
+        width: 55px;
+        height: 55px;
         border-radius: 50%;
       }
     }
@@ -138,7 +143,7 @@ export const FollowTableBody = styled.tbody<{ $visible: boolean }>`
     }
 
     &:last-child > button {
-      font-size: 0.6rem;
+      font-size: 0.7rem;
       background-color: ${({ theme }) => theme.colors.primary};
       color: white;
       font-weight: 500;
@@ -149,39 +154,27 @@ export const FollowTableBody = styled.tbody<{ $visible: boolean }>`
   }
 
   ${media.tablet} {
-    max-height: ${props => (props.$visible ? '170px' : '0')};
+    max-height: ${props => (props.$visible ? '205px' : '0')};
 
     & > tr > td {
-      font-size: 0.7rem;
+      font-size: 0.8rem;
       padding: 0.7em;
 
       &:first-child {
         & > img {
-          width: 40px;
-          height: 40px;
+          width: 50px;
+          height: 50px;
         }
+      }
+
+      &:nth-child(3),
+      &:nth-child(4) {
+        display: none;
       }
 
       &:last-child > button {
-        font-size: 0.5rem;
+        font-size: 0.6rem;
         padding: 0.7em 1.2em;
-      }
-    }
-  }
-
-  ${media.mobile} {
-    max-height: ${props => (props.$visible ? '155px' : '0')};
-
-    & > tr > td {
-      &:first-child {
-        & > img {
-          width: 35px;
-          height: 35px;
-        }
-      }
-
-      &:nth-child(4) {
-        display: none;
       }
     }
   }
