@@ -1,10 +1,12 @@
 import React, { useCallback } from 'react';
+import { useDispatch } from 'react-redux';
 import { GoogleOutlined } from '@ant-design/icons';
 import Router from 'next/router';
 
 import useInput from 'utils/useInput';
 import { IMenuProps } from './MenuContents';
 import { useValidate } from 'utils/useValidate';
+import { loginAction } from 'reducers/user';
 import { slideInFromBottom } from 'styles/Common/animation';
 import {
   AccountBtn,
@@ -19,6 +21,7 @@ import {
 } from 'styles/Landing/accountForm';
 
 const LoginForm = ({ selectMenu, onClickMenu }: IMenuProps) => {
+  const dispatch = useDispatch();
   const [email, onChangeEmail] = useInput('');
   const [password, onChangePassword] = useInput('');
   const [rememberMe, onChangeRememberMe] = useInput(false);
@@ -42,7 +45,8 @@ const LoginForm = ({ selectMenu, onClickMenu }: IMenuProps) => {
       // }
 
       console.log({ email, password, rememberMe });
-      Router.push('/timeline');
+      dispatch(loginAction(true));
+      // Router.push('/timeline');
     },
     [email, password, rememberMe]
   );

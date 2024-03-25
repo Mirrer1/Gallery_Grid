@@ -4,6 +4,7 @@ import { ToastContainer } from 'react-toastify';
 import Head from 'next/head';
 import 'react-toastify/dist/ReactToastify.css';
 
+import wrapper from 'store/configureStore';
 import GlobalStyle from 'styles/global';
 import theme from 'styles/theme';
 
@@ -35,4 +36,4 @@ function MyApp({ Component, pageProps }: AppProps) {
   );
 }
 
-export default MyApp;
+export default wrapper.withRedux(MyApp);
