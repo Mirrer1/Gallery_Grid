@@ -1,6 +1,10 @@
 import { useState, useCallback, ChangeEvent } from 'react';
 
-type ReturnTypes<T extends string | boolean> = [T, (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void];
+type ReturnTypes<T extends string | boolean> = [
+  T,
+  (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void,
+  React.Dispatch<React.SetStateAction<T>>
+];
 
 const useInput = <T extends string | boolean>(initialValue: T): ReturnTypes<T> => {
   const [value, setValue] = useState<T>(initialValue);
@@ -18,7 +22,7 @@ const useInput = <T extends string | boolean>(initialValue: T): ReturnTypes<T> =
     setValue(newValue as T);
   }, []);
 
-  return [value, handler];
+  return [value, handler, setValue];
 };
 
 export default useInput;

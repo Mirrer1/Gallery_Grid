@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import media from 'styles/media';
-import { HoverStyle } from 'styles/Common/hover';
+import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
 import { ShadowStyle } from 'styles/Common/shadow';
 
 export const FollowTableWrapper = styled.section<{ $type: string; $visible: boolean }>`
@@ -14,6 +14,10 @@ export const FollowTableWrapper = styled.section<{ $type: string; $visible: bool
   margin-bottom: 1em;
   z-index: 35;
   ${ShadowStyle}
+
+  ${media.tablet} {
+    margin-bottom: 0.5em;
+  }
 
   ${media.mobile} {
     width: 100%;
@@ -36,7 +40,6 @@ export const FollowTableInfo = styled.div`
 
   & > div > span {
     ${HoverStyle('&')}
-    font-size: 0.9rem;
     opacity: 80%;
 
     &:first-child {
@@ -44,7 +47,7 @@ export const FollowTableInfo = styled.div`
     }
   }
 
-  ${media.mobile} {
+  ${media.tablet} {
     padding: 0.8em 1em;
 
     & > h1 {
@@ -52,7 +55,7 @@ export const FollowTableInfo = styled.div`
     }
 
     & > div > span {
-      font-size: 0.8rem;
+      font-size: 0.9rem;
 
       &:first-child {
         margin-right: 0.2em;
@@ -176,6 +179,58 @@ export const FollowTableBody = styled.tbody<{ $visible: boolean }>`
         font-size: 0.6rem;
         padding: 0.7em 1.2em;
       }
+    }
+  }
+`;
+
+export const FollowSearch = styled.div<{ $visible: boolean }>`
+  display: ${props => (props.$visible ? 'block' : 'none')};
+  position: absolute;
+  top: 102%;
+  width: 100%;
+  padding: 0.3em 0.4em;
+  background-color: white;
+  ${ShadowStyle}
+
+  & > input {
+    width: 90%;
+    font-size: 0.8rem;
+    padding: 0.3em;
+    border: none;
+
+    &:focus {
+      outline: none;
+    }
+
+    &::placeholder {
+      opacity: 60%;
+    }
+  }
+
+  & > span {
+    width: 5%;
+    font-size: 0.8rem;
+    opacity: 60%;
+    ${ReverseHoverStyle('&')};
+  }
+
+  ${media.tablet} {
+    & > input {
+      width: 84%;
+    }
+
+    & > span {
+      width: 8%;
+    }
+  }
+
+  ${media.mobile} {
+    & > input {
+      width: 90%;
+    }
+
+    & > span {
+      width: 5%;
     }
   }
 `;
