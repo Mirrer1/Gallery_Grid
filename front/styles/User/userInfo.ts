@@ -100,57 +100,52 @@ export const UserInfoText = styled.div`
   }
 `;
 
-export const UserInfoActivity = styled.div`
+export const UserActivityWrapper = styled.div`
   ${({ theme }) => theme.flexSet()};
+`;
 
-  & > div {
-    text-align: center;
-    margin-right: 1.5em;
-    padding-right: 1.5em;
-    border-right: 3px solid #e4e5ec;
+export const UserActivityItem = styled.div<{ $selected: boolean }>`
+  text-align: center;
+  padding: 1em 2em;
+  transition: box-shadow 200ms ease-in-out;
+  box-shadow: ${props => (props.$selected ? 'rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px' : 'none')};
 
-    & > h2 {
-      font-size: 0.8rem;
-      opacity: 80%;
-      margin-bottom: 0.3em;
-    }
-
-    & > p {
-      color: ${({ theme }) => theme.colors.primary};
-      font-size: 1.3rem;
-      font-weight: 700;
-    }
+  &:hover {
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
   }
 
-  & > div:last-child {
-    margin-right: 0;
-    padding-right: 0;
-    border-right: none;
+  & > h2 {
+    font-size: 0.8rem;
+    opacity: 80%;
+    margin-bottom: 0.3em;
+  }
+
+  & > p {
+    color: ${({ theme }) => theme.colors.primary};
+    font-size: 1.3rem;
+    font-weight: 700;
   }
 
   ${media.tablet} {
     margin-bottom: 2.5em;
-
-    & > div {
-      margin-right: 3.5em;
-      padding-right: 3.5em;
-    }
   }
 
   ${media.mobile} {
     margin-bottom: 1.5em;
 
-    & > div {
-      margin-right: 1.5em;
-      padding-right: 1.5em;
+    & > h2 {
+      font-size: 0.7rem;
+    }
 
-      & > h2 {
-        font-size: 0.7rem;
-      }
-
-      & > p {
-        font-size: 1.2rem;
-      }
+    & > p {
+      font-size: 1.2rem;
     }
   }
+`;
+
+export const UserInfoDivider = styled.span`
+  width: 3px;
+  height: 37.42px;
+  background-color: #e4e5ec;
+  padding: 0;
 `;

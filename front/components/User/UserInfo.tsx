@@ -1,9 +1,25 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 
 import { slideInFromBottom } from 'styles/Common/animation';
-import { UserInfoActivity, UserInfoImage, UserInfoText, UserInfoWrapper } from 'styles/User/userInfo';
+import {
+  UserActivityItem,
+  UserActivityWrapper,
+  UserInfoDivider,
+  UserInfoImage,
+  UserInfoText,
+  UserInfoWrapper
+} from 'styles/User/userInfo';
 
-const UserInfo = () => {
+type InfoProps = {
+  selectedActivity: 'posts' | 'follower' | 'following';
+  setSelectedActivity: (value: 'posts' | 'follower' | 'following') => void;
+};
+
+const UserInfo = ({ selectedActivity, setSelectedActivity }: InfoProps) => {
+  const handleActivity = useCallback((info: 'posts' | 'follower' | 'following') => {
+    setSelectedActivity(info);
+  }, []);
+
   return (
     <UserInfoWrapper {...slideInFromBottom()}>
       <UserInfoImage>
@@ -30,22 +46,26 @@ const UserInfo = () => {
         </p>
       </UserInfoText>
 
-      <UserInfoActivity>
-        <div>
+      <UserActivityWrapper>
+        <UserActivityItem onClick={() => handleActivity('posts')} $selected={selectedActivity === 'posts'}>
           <h2>Total Post</h2>
           <p>286</p>
-        </div>
+        </UserActivityItem>
 
-        <div>
+        <UserInfoDivider></UserInfoDivider>
+
+        <UserActivityItem onClick={() => handleActivity('follower')} $selected={selectedActivity === 'follower'}>
           <h2>Follower</h2>
           <p>286</p>
-        </div>
+        </UserActivityItem>
 
-        <div>
+        <UserInfoDivider></UserInfoDivider>
+
+        <UserActivityItem onClick={() => handleActivity('following')} $selected={selectedActivity === 'following'}>
           <h2>Following</h2>
           <p>286</p>
-        </div>
-      </UserInfoActivity>
+        </UserActivityItem>
+      </UserActivityWrapper>
     </UserInfoWrapper>
   );
 };

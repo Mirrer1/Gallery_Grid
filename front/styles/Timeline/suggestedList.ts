@@ -28,14 +28,14 @@ export const SuggestedInfo = styled.div<{ $islast: boolean }>`
   margin-bottom: ${props => (props.$islast ? '0' : '1.2em')};
 
   & > img {
-    width: 14%;
+    width: 17%;
     height: 50px;
     border-radius: 50%;
     margin-right: 1em;
   }
 
   & > div {
-    width: 86%;
+    width: 80%;
   }
 
   & > div > div {

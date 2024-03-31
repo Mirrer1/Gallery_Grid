@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Head from 'next/head';
 
 import AppLayout from 'components/AppLayout';
 import UserInfo from 'components/User/UserInfo';
 import UserPosts from 'components/User/UserPosts';
+import UserFollowList from 'components/User/UserFollowList';
 import { UserWrapper } from 'styles/User';
 
 const user = () => {
+  const [selectedActivity, setSelectedActivity] = useState<'posts' | 'follower' | 'following'>('posts');
+
   return (
     <>
       <Head>
@@ -16,8 +19,9 @@ const user = () => {
 
       <AppLayout>
         <UserWrapper>
-          <UserInfo />
-          <UserPosts />
+          <UserInfo selectedActivity={selectedActivity} setSelectedActivity={setSelectedActivity} />
+
+          {selectedActivity === 'posts' ? <UserPosts /> : <UserFollowList type={selectedActivity} />}
         </UserWrapper>
       </AppLayout>
     </>
