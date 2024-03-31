@@ -15,7 +15,7 @@ export const SearchWrapper = styled.div`
   & > input {
     flex-shrink: 1;
     font-size: 0.9rem;
-    padding: 0.5em 0 0.5em 1.2em;
+    padding: 0.5em 0 0.5em 0.5em;
     border: none;
     overflow-x: hidden;
 
@@ -35,7 +35,6 @@ export const SearchWrapper = styled.div`
 
     & > input {
       font-size: 0.8rem;
-      padding: 0.5em 1em;
       border: none;
     }
   }

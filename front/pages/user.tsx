@@ -4,7 +4,8 @@ import Head from 'next/head';
 import AppLayout from 'components/AppLayout';
 import UserInfo from 'components/User/UserInfo';
 import UserPosts from 'components/User/UserPosts';
-import UserFollowList from 'components/User/UserFollowList';
+import UserFollowerList from 'components/User/UserFollowerList';
+import UserFollowingList from 'components/User/UserFollowingList';
 import { UserWrapper } from 'styles/User';
 
 const user = () => {
@@ -21,7 +22,13 @@ const user = () => {
         <UserWrapper>
           <UserInfo selectedActivity={selectedActivity} setSelectedActivity={setSelectedActivity} />
 
-          {selectedActivity === 'posts' ? <UserPosts /> : <UserFollowList type={selectedActivity} />}
+          {selectedActivity === 'posts' ? (
+            <UserPosts />
+          ) : selectedActivity === 'follower' ? (
+            <UserFollowerList />
+          ) : (
+            <UserFollowingList />
+          )}
         </UserWrapper>
       </AppLayout>
     </>
