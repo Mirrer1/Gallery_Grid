@@ -4,9 +4,8 @@ import Head from 'next/head';
 import AppLayout from 'components/AppLayout';
 import UserInfo from 'components/User/UserInfo';
 import UserPosts from 'components/User/UserPosts';
-import UserFollowerList from 'components/User/UserFollowerList';
-import UserFollowingList from 'components/User/UserFollowingList';
 import { UserWrapper } from 'styles/User';
+import UserFollowList from 'components/User/UserFollowList';
 
 const user = () => {
   const [selectedActivity, setSelectedActivity] = useState<'posts' | 'follower' | 'following'>('posts');
@@ -22,13 +21,7 @@ const user = () => {
         <UserWrapper>
           <UserInfo selectedActivity={selectedActivity} setSelectedActivity={setSelectedActivity} />
 
-          {selectedActivity === 'posts' ? (
-            <UserPosts />
-          ) : selectedActivity === 'follower' ? (
-            <UserFollowerList />
-          ) : (
-            <UserFollowingList />
-          )}
+          {selectedActivity === 'posts' ? <UserPosts /> : <UserFollowList type={selectedActivity} />}
         </UserWrapper>
       </AppLayout>
     </>

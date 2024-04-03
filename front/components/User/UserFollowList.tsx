@@ -11,7 +11,11 @@ import {
   UserSearchWrapper
 } from 'styles/User/userFollowList';
 
-const UserFollowingList = () => {
+type UserFollowProps = {
+  type: 'follower' | 'following';
+};
+
+const UserFollowList = ({ type }: UserFollowProps) => {
   const list = [
     {
       id: 1,
@@ -165,7 +169,7 @@ const UserFollowingList = () => {
       profile: 'https://i.pinimg.com/564x/fc/9d/e8/fc9de80da08a4e4f57199ccc16228f2b.jpg',
       nickname: 'user3',
       desc: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Blanditiis, placeat.',
-      follower: 1,
+      follower: 2,
       followerImg: ['	https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg']
     }
   ];
@@ -182,7 +186,7 @@ const UserFollowingList = () => {
   );
 
   return (
-    <UserFollowListWrapper {...slideInFromBottom(0.3)}>
+    <UserFollowListWrapper key={type} {...slideInFromBottom(0.3)}>
       <UserSearchWrapper>
         <label htmlFor="user-search">
           <SearchOutlined />
@@ -209,8 +213,8 @@ const UserFollowingList = () => {
                 <p>{user.desc}</p>
 
                 <div>
-                  <img src={user.followerImg[0]} alt="유저 팔로잉 이미지1" />
-                  <img src={user.followerImg[1]} alt="유저 팔로잉 이미지2" />
+                  <img src={user.followerImg[0]} alt="유저 팔로워 이미지1" />
+                  <img src={user.followerImg[1]} alt="유저 팔로워 이미지2" />
                   <p>{formatFollowerCount(user.follower)} followers</p>
                 </div>
               </div>
@@ -226,4 +230,4 @@ const UserFollowingList = () => {
   );
 };
 
-export default UserFollowingList;
+export default UserFollowList;

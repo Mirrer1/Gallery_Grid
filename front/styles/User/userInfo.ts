@@ -63,7 +63,7 @@ export const UserInfoText = styled.div`
     }
 
     & > button {
-      font-size: 0.7rem;
+      font-size: 0.8rem;
       background-color: ${({ theme }) => theme.colors.primary};
       color: white;
       font-weight: 500;
@@ -88,10 +88,6 @@ export const UserInfoText = styled.div`
       & > h1 {
         font-size: 1.1rem;
       }
-
-      & > button {
-        font-size: 0.6rem;
-      }
     }
 
     & > p {
@@ -101,7 +97,8 @@ export const UserInfoText = styled.div`
 `;
 
 export const UserActivityWrapper = styled.div`
-  ${({ theme }) => theme.flexSet()};
+  ${({ theme }) => theme.flexSet('space-around')};
+  width: 100%;
 `;
 
 export const UserActivityItem = styled.div<{ $selected: boolean }>`
@@ -131,21 +128,16 @@ export const UserActivityItem = styled.div<{ $selected: boolean }>`
   }
 
   ${media.mobile} {
-    margin-bottom: 1.5em;
+    padding: 1em;
+    margin-bottom: 0.5em;
 
     & > h2 {
       font-size: 0.7rem;
+      margin-bottom: 0.4em;
     }
 
     & > p {
-      font-size: 1.2rem;
+      font-size: 1rem;
     }
   }
-`;
-
-export const UserInfoDivider = styled.span`
-  width: 3px;
-  height: 37.42px;
-  background-color: #e4e5ec;
-  padding: 0;
 `;

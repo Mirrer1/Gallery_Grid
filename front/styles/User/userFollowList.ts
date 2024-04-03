@@ -2,12 +2,18 @@ import styled from 'styled-components';
 import { motion } from 'framer-motion';
 
 import { HoverStyle } from 'styles/Common/hover';
+import media from 'styles/media';
 
 export const UserFollowListWrapper = styled(motion.section)`
   width: 60%;
   height: 100%;
   overflow-y: scroll;
   padding: 0.7em 1.5em 0.7em 0em;
+
+  ${media.tablet} {
+    width: 100%;
+    padding: 0.7em 0 0.2em 0;
+  }
 `;
 
 export const UserSearchWrapper = styled.div`
@@ -39,6 +45,28 @@ export const UserSearchWrapper = styled.div`
       opacity: 60%;
     }
   }
+
+  ${media.tablet} {
+    padding: 0 0.5em;
+
+    & > label > span {
+      font-size: 0.8rem;
+    }
+
+    & > input {
+      font-size: 0.8rem;
+    }
+  }
+
+  ${media.mobile} {
+    & > label > span {
+      font-size: 0.7rem;
+    }
+
+    & > input {
+      font-size: 0.7rem;
+    }
+  }
 `;
 
 export const UserFollowListItemWrapper = styled.div``;
@@ -50,6 +78,7 @@ export const UserFollowListItem = styled.div`
 
   &:last-child {
     margin-bottom: 0;
+    border-bottom: none;
   }
 
   & > div:first-child {
@@ -81,14 +110,14 @@ export const UserFollowListItem = styled.div`
         white-space: normal;
         font-size: 0.8rem;
         opacity: 60%;
-        margin-bottom: 0.5em;
+        margin-bottom: 0.8em;
       }
 
       & > div {
         ${({ theme }) => theme.flexSet('start')};
         font-size: 0.8rem;
         font-weight: 500;
-        margin-bottom: 0.8em;
+        margin-bottom: 1em;
 
         & > img {
           width: 15px;
@@ -113,6 +142,48 @@ export const UserFollowListItem = styled.div`
       padding: 0.7em 1.5em;
       border-radius: 5px;
       ${HoverStyle('&')};
+    }
+  }
+
+  ${media.tablet} {
+    & > div:first-child {
+      & > div {
+        & > h1 {
+          font-size: 0.9rem;
+        }
+
+        & > p {
+          font-size: 0.7rem;
+        }
+
+        & > div {
+          font-size: 0.7rem;
+        }
+      }
+    }
+  }
+
+  ${media.mobile} {
+    ${({ theme }) => theme.flexColumnSet()};
+
+    & > div:first-child {
+      width: 100%;
+
+      & > div {
+        & > p {
+          -webkit-line-clamp: 2;
+        }
+      }
+    }
+
+    & > div:last-child {
+      ${({ theme }) => theme.flexSet()};
+      width: 100%;
+      margin-bottom: 0.8em;
+
+      & > button {
+        width: 50%;
+      }
     }
   }
 `;

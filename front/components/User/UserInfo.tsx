@@ -4,7 +4,6 @@ import { slideInFromBottom } from 'styles/Common/animation';
 import {
   UserActivityItem,
   UserActivityWrapper,
-  UserInfoDivider,
   UserInfoImage,
   UserInfoText,
   UserInfoWrapper
@@ -52,14 +51,10 @@ const UserInfo = ({ selectedActivity, setSelectedActivity }: InfoProps) => {
           <p>286</p>
         </UserActivityItem>
 
-        <UserInfoDivider></UserInfoDivider>
-
         <UserActivityItem onClick={() => handleActivity('follower')} $selected={selectedActivity === 'follower'}>
           <h2>Follower</h2>
           <p>286</p>
         </UserActivityItem>
-
-        <UserInfoDivider></UserInfoDivider>
 
         <UserActivityItem onClick={() => handleActivity('following')} $selected={selectedActivity === 'following'}>
           <h2>Following</h2>
