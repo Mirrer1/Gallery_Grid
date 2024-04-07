@@ -78,9 +78,11 @@ export const AlertHeader = styled.div<{ $type: string }>`
       font-weight: 600;
       cursor: pointer;
 
-      &:hover {
-        text-decoration: underline;
-        text-underline-offset: 1.5px;
+      @media (min-width: 992px) {
+        &:hover {
+          text-decoration: underline;
+          text-underline-offset: 1.5px;
+        }
       }
     }
 

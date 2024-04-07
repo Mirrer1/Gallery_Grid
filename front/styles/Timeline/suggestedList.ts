@@ -50,9 +50,11 @@ export const SuggestedInfo = styled.div<{ $islast: boolean }>`
     font-weight: 500;
     cursor: pointer;
 
-    &:hover {
-      text-decoration: underline;
-      text-underline-offset: 1.5px;
+    @media (min-width: 992px) {
+      &:hover {
+        text-decoration: underline;
+        text-underline-offset: 1.5px;
+      }
     }
   }
 

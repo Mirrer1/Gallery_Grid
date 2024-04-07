@@ -74,9 +74,11 @@ export const PostHeader = styled.div`
       margin-bottom: 0.3em;
       cursor: pointer;
 
-      &:hover {
-        text-decoration: underline;
-        text-underline-offset: 1.5px;
+      @media (min-width: 992px) {
+        &:hover {
+          text-decoration: underline;
+          text-underline-offset: 1.5px;
+        }
       }
     }
 
@@ -123,9 +125,11 @@ export const PostContents = styled.div`
     width: 100%;
     height: 350px;
 
-    &:hover {
-      & > span {
-        opacity: 100%;
+    @media (min-width: 992px) {
+      &:hover {
+        & > span {
+          opacity: 100%;
+        }
       }
     }
 
@@ -185,7 +189,7 @@ export const PostContents = styled.div`
     padding: 0 0.3em;
   }
 
-  ${media.mobile} {
+  ${media.tablet} {
     & > div:first-child {
       & > span {
         opacity: 100%;

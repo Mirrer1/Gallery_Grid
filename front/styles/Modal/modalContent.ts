@@ -11,13 +11,13 @@ export const ModalContentWrapper = styled.div`
   z-index: 30;
 
   ${media.tablet} {
-    width: 40%;
-    height: 50%;
+    width: 45%;
+    height: 60%;
   }
 
   ${media.mobile} {
-    width: 85%;
-    height: 40%;
+    width: 90%;
+    height: 45%;
     border-radius: 0 0 5px 5px;
   }
 `;
@@ -45,9 +45,11 @@ export const ModalContentHeader = styled.div`
       margin-bottom: 0.3em;
       cursor: pointer;
 
-      &:hover {
-        text-decoration: underline;
-        text-underline-offset: 1.5px;
+      @media (min-width: 992px) {
+        &:hover {
+          text-decoration: underline;
+          text-underline-offset: 1.5px;
+        }
       }
     }
 
@@ -105,7 +107,7 @@ export const ModalContentHeader = styled.div`
 
 export const ModalContentText = styled.div`
   height: 73%;
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   opacity: 60%;
   line-height: 1.5;
   padding: 0.7em 1.2em;
@@ -114,12 +116,12 @@ export const ModalContentText = styled.div`
 
   ${media.tablet} {
     height: 66%;
-    font-size: 0.7rem;
+    font-size: 0.75rem;
   }
 
   ${media.mobile} {
     height: 61%;
-    font-size: 0.65rem;
+    font-size: 0.7rem;
   }
 `;
 
@@ -161,8 +163,6 @@ export const ModalContentOptions = styled.div`
     }
 
     & > div:last-child {
-      font-size: 0.6rem;
-
       & > p:first-child {
         margin-right: 0.4rem;
       }

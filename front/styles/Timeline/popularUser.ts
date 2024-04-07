@@ -19,6 +19,7 @@ export const PopularBtn = styled.div<{ $alignleft: string }>`
   transition: opacity 250ms ease-in-out;
 
   ${media.tablet} {
+    opacity: 100%;
     ${props => (props.$alignleft === 'true' ? 'transform: translate(10%, -10%);' : 'transform: translate(-20%, -10%);')}
   }
 
@@ -43,8 +44,10 @@ export const PopularUserWrapper = styled.div`
     transition: transform 400ms ease-in-out;
     height: 100%;
 
-    &:hover ${PopularBtn} {
-      opacity: 100%;
+    @media (min-width: 992px) {
+      &:hover ${PopularBtn} {
+        opacity: 100%;
+      }
     }
 
     & > div {
@@ -103,10 +106,12 @@ export const PopularUserContents = styled.div`
     font-weight: 500;
     margin-bottom: 1em;
 
-    &:hover {
-      cursor: pointer;
-      text-decoration: underline;
-      text-underline-offset: 1.5px;
+    @media (min-width: 992px) {
+      &:hover {
+        cursor: pointer;
+        text-decoration: underline;
+        text-underline-offset: 1.5px;
+      }
     }
   }
 

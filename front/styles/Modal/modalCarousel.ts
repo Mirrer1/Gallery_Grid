@@ -18,7 +18,8 @@ export const ModalCarouselBtn = styled.div<{ $alignleft: string }>`
   transition: opacity 250ms ease-in-out;
   z-index: 30;
 
-  ${media.mobile} {
+  ${media.tablet} {
+    opacity: 100%;
     bottom: 45%;
     font-size: 0.8rem;
     padding: 0.4em;
@@ -41,8 +42,10 @@ export const ModalCarouselWrapper = styled.div`
     transition: transform 400ms ease-in-out;
     height: 100%;
 
-    &:hover ${ModalCarouselBtn} {
-      opacity: 100%;
+    @media (min-width: 992px) {
+      &:hover ${ModalCarouselBtn} {
+        opacity: 100%;
+      }
     }
 
     & > div {
@@ -58,12 +61,12 @@ export const ModalCarouselWrapper = styled.div`
   }
 
   ${media.tablet} {
-    width: 45%;
-    height: 50%;
+    width: 50%;
+    height: 60%;
   }
 
   ${media.mobile} {
-    width: 85%;
+    width: 90%;
     height: 40%;
     border-radius: 5px 5px 0 0;
   }

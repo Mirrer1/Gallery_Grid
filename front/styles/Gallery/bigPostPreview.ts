@@ -12,10 +12,18 @@ export const BigPostPreviewWrapper = styled(motion.section)`
   cursor: pointer;
   ${ShadowStyle};
 
-  &:hover {
+  @media (min-width: 992px) {
+    &:hover {
+      & > div:first-child > span {
+        opacity: 100%;
+        ${HoverStyle('&')}
+      }
+    }
+  }
+
+  ${media.tablet} {
     & > div:first-child > span {
       opacity: 100%;
-      ${HoverStyle('&')}
     }
   }
 `;
@@ -57,8 +65,8 @@ export const BigPostPreviewImage = styled.div`
   & > span {
     opacity: 0;
     position: absolute;
-    top: 0;
-    right: 0;
+    top: 5px;
+    right: 5px;
     font-size: 1.4rem;
     transition: opacity 200ms ease-in-out;
   }
@@ -81,9 +89,9 @@ export const BigPostPreviewImage = styled.div`
 
 export const BigPostPreviewContent = styled.div`
   position: absolute;
-  bottom: 12%;
+  bottom: 5%;
   left: 54%;
-  width: 32%;
+  width: 44%;
 
   & > h1 {
     width: 95%;
@@ -107,10 +115,13 @@ export const BigPostPreviewContent = styled.div`
   }
 
   ${media.tablet} {
-    left: 66%;
+    left: 48%;
+    bottom: 3%;
+    width: 50%;
 
     & > h1 {
-      font-size: 1.3rem;
+      font-size: 1rem;
+      -webkit-line-clamp: 2;
     }
 
     & > p {
@@ -119,12 +130,11 @@ export const BigPostPreviewContent = styled.div`
   }
 
   ${media.mobile} {
-    width: 35%;
-    left: 65%;
+    left: 57%;
+    width: 40%;
 
     & > h1 {
-      font-size: 1rem;
-      -webkit-line-clamp: 3;
+      font-size: 0.8rem;
     }
 
     & > p {

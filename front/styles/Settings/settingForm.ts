@@ -25,10 +25,10 @@ export const SettingFormWrapper = styled(motion.form)`
 
   ${media.tablet} {
     position: absolute;
-    top: 46.5%;
+    top: 41%;
     left: 27%;
     width: 70%;
-    height: 51.8%;
+    height: 57%;
   }
 
   ${media.mobile} {
@@ -278,6 +278,10 @@ export const SettingRecommendation = styled.div`
     & > div {
       font-size: 0.8rem;
     }
+
+    [type='checkbox'] {
+      height: 1.3em;
+    }
   }
 
   ${media.mobile} {
@@ -289,10 +293,6 @@ export const SettingRecommendation = styled.div`
 
     & > div {
       font-size: 0.7rem;
-    }
-
-    [type='checkbox'] {
-      height: 1.5em;
     }
   }
 `;

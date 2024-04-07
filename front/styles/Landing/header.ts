@@ -18,15 +18,11 @@ export const HeaderWrapper = styled.header`
   }
 
   ${media.tablet} {
-    padding: 1.5em;
+    padding: 1.5em 2em;
 
     & > img {
-      width: 12%;
+      display: none;
     }
-  }
-
-  ${media.mobile} {
-    padding: 1.5em 1em;
   }
 `;
 
@@ -40,7 +36,7 @@ export const MenuButton = styled.button<{ $selected: boolean }>`
   text-underline-offset: ${props => (props.$selected ? '10px' : '0')};
 
   ${media.tablet} {
-    margin-right: 4em;
+    margin-right: 3em;
   }
 
   ${media.mobile} {

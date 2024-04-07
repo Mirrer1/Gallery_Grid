@@ -103,7 +103,7 @@ export const ChatListItemWrapper = styled(motion.div)`
   overflow-y: scroll;
   padding: 0 1em;
 
-  ${media.mobile} {
+  ${media.tablet} {
     padding: 0;
   }
 `;

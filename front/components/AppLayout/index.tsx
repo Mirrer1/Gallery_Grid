@@ -1,4 +1,4 @@
-import React, { ReactNode, useCallback, useState } from 'react';
+import React, { ReactNode, useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import {
   AreaChartOutlined,
@@ -28,6 +28,10 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
 
   const onClickMessage = useCallback(() => {
     router.push('/message');
+  }, []);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
   }, []);
 
   return (

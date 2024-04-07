@@ -139,9 +139,11 @@ export const FollowTableBody = styled.tbody<{ $visible: boolean }>`
       color: ${({ theme }) => theme.colors.primary};
       font-weight: 700;
 
-      &:hover {
-        text-decoration: underline;
-        text-underline-offset: 1.5px;
+      @media (min-width: 992px) {
+        &:hover {
+          text-decoration: underline;
+          text-underline-offset: 1.5px;
+        }
       }
     }
 

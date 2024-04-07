@@ -13,24 +13,32 @@ export const PostPreviewWrapper = styled(motion.section)`
     width: 100%;
     position: relative;
 
-    &:hover {
-      & > div:first-child > img {
-        filter: blur(5px);
-      }
+    @media (min-width: 992px) {
+      &:hover {
+        & > div:first-child > img {
+          filter: blur(5px);
+        }
 
-      & > div:first-child > span {
-        opacity: 100%;
-        ${HoverStyle('&')};
-      }
+        & > div:first-child > span {
+          opacity: 100%;
+          ${HoverStyle('&')};
+        }
 
-      & > div:last-child {
-        opacity: 100%;
+        & > div:last-child {
+          opacity: 100%;
+        }
       }
     }
   }
 
   ${media.tablet} {
     grid-template-columns: repeat(2, 1fr);
+
+    & > article {
+      & > div:first-child > span {
+        opacity: 100%;
+      }
+    }
   }
 `;
 

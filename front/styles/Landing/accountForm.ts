@@ -16,7 +16,6 @@ export const AccountWrapper = styled(motion.section)`
   }
 
   ${media.mobile} {
-    /* width: 100%; */
     padding-top: 0;
   }
 `;
@@ -213,8 +212,10 @@ export const AuthOptionsWrapper = styled.div<{ $menu: string }>`
     font-weight: 500;
   }
 
-  & > button:hover {
-    text-decoration: underline;
+  @media (min-width: 992px) {
+    & > button:hover {
+      text-decoration: underline;
+    }
   }
 
   ${media.tablet} {

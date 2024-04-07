@@ -10,7 +10,7 @@ export const ContentsWrapper = styled.main`
 
   ${media.tablet} {
     ${({ theme }) => theme.flexColumnSet('center', 'center')};
-    padding: 2em 4em;
+    padding: 2em 2.5em;
   }
 
   ${media.mobile} {

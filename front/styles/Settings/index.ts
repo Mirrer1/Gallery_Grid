@@ -13,6 +13,7 @@ export const SettingWrapper = styled.section`
   border-radius: 5px;
 
   ${media.tablet} {
+    margin: 0;
     height: 100vh;
   }
 
@@ -82,7 +83,7 @@ export const SettingProfile = styled(motion.div)`
     top: 0;
     left: 0;
     width: 100%;
-    height: 49%;
+    height: 43%;
 
     & > label > img {
       width: 70%;
