@@ -205,7 +205,7 @@ export const PostOptions = styled.div`
 
   & > div {
     opacity: 60%;
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     ${ReverseHoverStyle('&')}
     cursor: pointer;
   }
@@ -220,7 +220,7 @@ export const PostOptions = styled.div`
 
   ${media.mobile} {
     & > div {
-      font-size: 0.7rem;
+      font-size: 0.8rem;
     }
 
     & > div:first-child {

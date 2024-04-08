@@ -6,7 +6,6 @@ import Router from 'next/router';
 import useInput from 'utils/useInput';
 import { IMenuProps } from './MenuContents';
 import { useValidate } from 'utils/useValidate';
-import { loginAction } from 'reducers/user';
 import { slideInFromBottom } from 'styles/Common/animation';
 import {
   AccountBtn,
@@ -45,7 +44,6 @@ const LoginForm = ({ selectMenu, onClickMenu }: IMenuProps) => {
       // }
 
       console.log({ email, password, rememberMe });
-      dispatch(loginAction(true));
       Router.push('/timeline');
     },
     [email, password, rememberMe]
