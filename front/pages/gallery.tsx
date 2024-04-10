@@ -1,13 +1,17 @@
 import React, { useCallback, useState } from 'react';
-import Head from 'next/head';
+import { useSelector } from 'react-redux';
 import { SwapOutlined } from '@ant-design/icons';
+import Head from 'next/head';
 
 import AppLayout from 'components/AppLayout';
 import BigPostPreview from 'components/Gallery/BigPostPreview';
 import PostPreview from 'components/Gallery/PostPreview';
+import PostModal from 'components/Modal/PostModal';
+import { RootState } from 'store/reducers';
 import { GalleryCategoryBtn, GalleryCategoryWrapper, GalleryWrapper } from 'styles/Gallery';
 
 const Gallery = () => {
+  const { isPostModalVisible } = useSelector((state: RootState) => state.post);
   const [selectMenu, setSelectMenu] = useState('all');
   const [selectSort, setSelectSort] = useState('best');
 
@@ -199,6 +203,8 @@ const Gallery = () => {
             <PostPreview post={postList} />
           </div>
         </GalleryWrapper>
+
+        {isPostModalVisible && <PostModal />}
       </AppLayout>
     </>
   );

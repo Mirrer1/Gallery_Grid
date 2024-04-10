@@ -1,9 +1,13 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import Head from 'next/head';
 
 import AppLayout from 'components/AppLayout';
 import FollowList from 'components/Activity/FollowList';
 import AlertList from 'components/Activity/AlertList';
+import PostModal from 'components/Modal/PostModal';
+
+import { RootState } from 'store/reducers';
 import { slideInFromBottom } from 'styles/Common/animation';
 import { ActivityHeader, ActivityWrapper, FollowWrapper, HeaderItem } from 'styles/Activity';
 
@@ -74,6 +78,8 @@ const Activity = () => {
     }
   ];
 
+  const { isPostModalVisible } = useSelector((state: RootState) => state.post);
+
   return (
     <>
       <Head>
@@ -108,6 +114,8 @@ const Activity = () => {
 
           <AlertList />
         </ActivityWrapper>
+
+        {isPostModalVisible && <PostModal />}
       </AppLayout>
     </>
   );

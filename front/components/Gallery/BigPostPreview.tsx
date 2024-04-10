@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useCallback } from 'react';
+import { useDispatch } from 'react-redux';
 import { ArrowsAltOutlined, CommentOutlined, LikeOutlined } from '@ant-design/icons';
 
 import { slideInFromBottom } from 'styles/Common/animation';
@@ -8,10 +9,17 @@ import {
   BigPostPreviewWrapper,
   BigPostPreviewOption
 } from 'styles/Gallery/bigPostPreview';
+import { showPostModal } from 'store/actions/postAction';
 
 const BigPostPreview = ({ post }: any) => {
+  const dispatch = useDispatch();
+
+  const onClickPost = useCallback(() => {
+    dispatch(showPostModal());
+  }, []);
+
   return (
-    <BigPostPreviewWrapper {...slideInFromBottom()}>
+    <BigPostPreviewWrapper {...slideInFromBottom()} onClick={onClickPost}>
       <BigPostPreviewImage>
         <img src={post.img[0]} alt={`${post.user}의 게시글 이미지`} />
 

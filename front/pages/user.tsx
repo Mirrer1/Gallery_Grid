@@ -1,13 +1,18 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import Head from 'next/head';
 
 import AppLayout from 'components/AppLayout';
 import UserInfo from 'components/User/UserInfo';
 import UserPosts from 'components/User/UserPosts';
-import { UserWrapper } from 'styles/User';
 import UserFollowList from 'components/User/UserFollowList';
+import PostModal from 'components/Modal/PostModal';
+
+import { RootState } from 'store/reducers';
+import { UserWrapper } from 'styles/User';
 
 const user = () => {
+  const { isPostModalVisible } = useSelector((state: RootState) => state.post);
   const [selectedActivity, setSelectedActivity] = useState<'posts' | 'follower' | 'following'>('posts');
 
   return (
@@ -23,6 +28,8 @@ const user = () => {
 
           {selectedActivity === 'posts' ? <UserPosts /> : <UserFollowList type={selectedActivity} />}
         </UserWrapper>
+
+        {isPostModalVisible && <PostModal />}
       </AppLayout>
     </>
   );

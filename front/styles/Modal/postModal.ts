@@ -13,7 +13,7 @@ export const PostModalWrapper = styled.section`
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.6);
-  z-index: 25;
+  z-index: 50;
 
   ${media.mobile} {
     ${({ theme }) => theme.flexColumnSet()};

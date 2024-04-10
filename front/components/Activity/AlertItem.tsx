@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useCallback } from 'react';
+import { useDispatch } from 'react-redux';
 import { CommentOutlined, LikeOutlined, LikeTwoTone } from '@ant-design/icons';
 
+import { showPostModal } from 'store/actions/postAction';
 import {
   AlertContentWrapper,
   AlertHeader,
@@ -10,6 +12,12 @@ import {
 } from 'styles/Activity/alert';
 
 const AlertItem = ({ type }: { type: string }) => {
+  const dispatch = useDispatch();
+
+  const onClickPost = useCallback(() => {
+    dispatch(showPostModal());
+  }, []);
+
   return (
     <AlertItemWrapper>
       <AlertHeader $type={type}>
@@ -33,7 +41,7 @@ const AlertItem = ({ type }: { type: string }) => {
 
       <AlertContentWrapper>
         {type === 'like' || type === 'comment' ? (
-          <AlertContent>
+          <AlertContent onClick={onClickPost}>
             <img src="https://i.pinimg.com/564x/fb/13/18/fb1318cf654aae07299360fd4b66bf70.jpg" alt="게시글 이미지1" />
 
             <div>

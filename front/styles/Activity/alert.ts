@@ -151,11 +151,11 @@ export const AlertContent = styled.div`
       display: inline-block;
       cursor: pointer;
       opacity: 60%;
-      font-size: 0.7rem;
-      margin-right: 0.7em;
+      font-size: 0.8rem;
+      margin-right: 0.5em;
 
       & > span {
-        margin-right: 0.3em;
+        margin-right: 0.2em;
       }
     }
   }

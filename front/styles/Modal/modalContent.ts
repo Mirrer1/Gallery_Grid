@@ -135,6 +135,7 @@ export const ModalContentOptions = styled.div`
     margin-bottom: 0.5em;
 
     & > span {
+      font-size: 1.1rem;
       cursor: pointer;
       ${HoverStyle('&')};
     }
@@ -146,7 +147,7 @@ export const ModalContentOptions = styled.div`
 
   & > div:last-child {
     ${({ theme }) => theme.flexSet('start')};
-    font-size: 0.7rem;
+    font-size: 0.8rem;
 
     & > p:first-child {
       margin-right: 0.5rem;
@@ -158,11 +159,13 @@ export const ModalContentOptions = styled.div`
 
     & > div:first-child {
       & > span {
-        font-size: 0.9rem;
+        font-size: 1rem;
       }
     }
 
     & > div:last-child {
+      font-size: 0.7rem;
+
       & > p:first-child {
         margin-right: 0.4rem;
       }

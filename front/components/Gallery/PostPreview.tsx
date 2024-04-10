@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useCallback } from 'react';
+import { useDispatch } from 'react-redux';
 import { ArrowsAltOutlined, CommentOutlined, LikeOutlined } from '@ant-design/icons';
 
+import { showPostModal } from 'store/actions/postAction';
 import { slideInFromBottom } from 'styles/Common/animation';
 import {
   PostPreviewContent,
@@ -10,10 +12,16 @@ import {
 } from 'styles/Gallery/postPreview';
 
 const PostPreview = ({ post }: any) => {
+  const dispatch = useDispatch();
+
+  const onClickPost = useCallback(() => {
+    dispatch(showPostModal());
+  }, []);
+
   return (
     <PostPreviewWrapper {...slideInFromBottom(0.3)}>
       {post.map((post: any, i: any) => (
-        <article key={i}>
+        <article key={i} onClick={onClickPost}>
           <PostPreviewImage>
             <img src={post.img[0]} alt={`${post.user}의 게시글 이미지`} />
 
