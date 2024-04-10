@@ -125,9 +125,8 @@ export const ModalContentText = styled.div`
   }
 `;
 
-export const ModalContentOptions = styled.div`
+export const ModalContentOptions = styled.div<{ $isCommentListVisible: boolean }>`
   height: 9%;
-  opacity: 60%;
   padding: 0.7em 0.9em;
   border-bottom: 1px solid ${({ theme }) => theme.colors.darkBg};
 
@@ -142,6 +141,10 @@ export const ModalContentOptions = styled.div`
 
     & > span:first-child {
       margin-right: 0.5rem;
+    }
+
+    & > span:last-child {
+      color: ${props => (props.$isCommentListVisible ? '#6BA2E6' : 'black')};
     }
   }
 

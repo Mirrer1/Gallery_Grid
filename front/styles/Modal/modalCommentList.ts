@@ -1,51 +1,27 @@
 import styled from 'styled-components';
-import { motion } from 'framer-motion';
 
-import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
-import { ShadowStyle } from 'styles/Common/shadow';
 import media from 'styles/media';
+import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
 
-export const CommentListWrapper = styled(motion.article)<{ $isCommentListVisible: boolean }>`
-  position: absolute;
-  top: 3.9%;
-  left: 3.9%;
-  width: 88%;
-  height: 93%;
-  background-color: white;
-  border-radius: 5px;
-  z-index: 50;
-  ${ShadowStyle}
-
-  ${media.tablet} {
-    position: fixed;
-    top: auto;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 65%;
-    border-radius: 5px 5px 0 0;
-  }
+export const ModalCommentListWrapper = styled.div`
+  height: 73%;
+  padding: 0.5em 1em;
+  border-bottom: 1px solid #e4e5ec;
+  overflow-y: scroll;
 `;
 
-export const CommentListHeader = styled.div`
+export const ModalCommentListHeader = styled.div`
   ${({ theme }) => theme.flexSet('end')};
-  height: 5%;
-  border-bottom: 1.5px solid #e4e5ec;
+  height: 3%;
   padding: 0 0.5em;
 
   & > span {
     ${HoverStyle('&')};
   }
-
-  ${media.tablet} {
-    height: 8%;
-  }
 `;
 
-export const CommentListItemWrapper = styled.div`
-  height: 95%;
-  padding: 0.8em 1em;
-  overflow-y: scroll;
+export const ModalCommentListItemWrapper = styled.div`
+  height: 97%;
 
   & > div {
     margin-bottom: 1em;
@@ -54,13 +30,9 @@ export const CommentListItemWrapper = styled.div`
   & > div:last-child {
     margin-bottom: 0;
   }
-
-  ${media.tablet} {
-    height: 92%;
-  }
 `;
 
-export const CommentListItem = styled.div<{ $reply: boolean }>`
+export const ModalCommentListItem = styled.div<{ $reply: boolean }>`
   padding-left: ${props => (props.$reply ? '2em' : '0')};
 
   & > div {

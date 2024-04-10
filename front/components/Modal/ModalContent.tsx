@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import {
   CommentOutlined,
   DeleteOutlined,
@@ -10,6 +11,9 @@ import {
 } from '@ant-design/icons';
 
 import useInput from 'utils/useInput';
+import ModalCommentList from './ModalCommentList';
+import { RootState } from 'store/reducers';
+import { hideCommentList, showCommentList } from 'store/actions/postAction';
 import { Tooltip, TooltipBtn, TooltipOutsideArea } from 'styles/Common/tooltip';
 import {
   ModalCommentInput,
@@ -20,8 +24,10 @@ import {
 } from 'styles/Modal/modalContent';
 
 const ModalContent = () => {
+  const dispatch = useDispatch();
   const [comment, onChangeComment] = useInput('');
   const [isTooltipVisible, setIsTooltipVisible] = useState(false);
+  const { isCommentListVisible } = useSelector((state: RootState) => state.post);
 
   const handleTooltip = useCallback(() => {
     setIsTooltipVisible(true);
@@ -30,6 +36,11 @@ const ModalContent = () => {
   const hideTooltip = useCallback(() => {
     setIsTooltipVisible(false);
   }, []);
+
+  const onToggleComment = useCallback(() => {
+    if (isCommentListVisible) dispatch(hideCommentList());
+    else dispatch(showCommentList());
+  }, [isCommentListVisible]);
 
   const handleKeyPress = useCallback(
     (event: React.KeyboardEvent) => {
@@ -76,21 +87,25 @@ const ModalContent = () => {
         </div>
       </ModalContentHeader>
 
-      <ModalContentText>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab dolorum adipisci sequi aperiam totam dolor ratione,
-        impedit expedita voluptatem animi iusto error. Sed quos sunt molestias ducimus quam, magnam asperiores
-        accusantium omnis error labore inventore! Odit, quidem officiis perspiciatis dolor similique consectetur sint
-        eum error quia voluptas tenetur id distinctio! Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab
-        dolorum adipisci sequi aperiam totam dolor ratione, impedit expedita voluptatem animi iusto error. Sed quos sunt
-        molestias ducimus quam, magnam asperiores accusantium omnis error labore inventore! Odit, quidem officiis
-        perspiciatis dolor similique consectetur sint eum error quia voluptas tenetur id distinctio! Lorem ipsum dolor
-        sit amet consectetur adi
-      </ModalContentText>
+      {isCommentListVisible ? (
+        <ModalCommentList />
+      ) : (
+        <ModalContentText>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab dolorum adipisci sequi aperiam totam dolor
+          ratione, impedit expedita voluptatem animi iusto error. Sed quos sunt molestias ducimus quam, magnam
+          asperiores accusantium omnis error labore inventore! Odit, quidem officiis perspiciatis dolor similique
+          consectetur sint eum error quia voluptas tenetur id distinctio! Lorem ipsum dolor sit amet consectetur
+          adipisicing elit. Ab dolorum adipisci sequi aperiam totam dolor ratione, impedit expedita voluptatem animi
+          iusto error. Sed quos sunt molestias ducimus quam, magnam asperiores accusantium omnis error labore inventore!
+          Odit, quidem officiis perspiciatis dolor similique consectetur sint eum error quia voluptas tenetur id
+          distinctio! Lorem ipsum dolor sit amet consectetur adi
+        </ModalContentText>
+      )}
 
-      <ModalContentOptions>
+      <ModalContentOptions $isCommentListVisible={isCommentListVisible}>
         <div>
           <LikeOutlined />
-          <CommentOutlined />
+          <CommentOutlined onClick={onToggleComment} />
         </div>
 
         <div>

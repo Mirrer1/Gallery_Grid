@@ -1,19 +1,16 @@
 import React, { useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { CaretDownOutlined } from '@ant-design/icons';
+import { useDispatch } from 'react-redux';
 
-import ReplyComment from './ReplyComment';
-import { RootState } from 'store/reducers';
 import { hideCommentList } from 'store/actions/postAction';
-import { slideInFromBottom } from 'styles/Common/animation';
 import {
-  CommentListHeader,
-  CommentListItem,
-  CommentListItemWrapper,
-  CommentListWrapper
-} from 'styles/Timeline/commentList';
+  ModalCommentListHeader,
+  ModalCommentListItem,
+  ModalCommentListItemWrapper,
+  ModalCommentListWrapper
+} from 'styles/Modal/modalCommentList';
 
-const CommentList = () => {
+const ModalCommentList = () => {
   const contentList = [
     {
       id: 1,
@@ -82,22 +79,21 @@ const CommentList = () => {
   ];
 
   const dispatch = useDispatch();
-  const { isCommentListVisible } = useSelector((state: RootState) => state.post);
 
   const onHideComment = useCallback(() => {
     dispatch(hideCommentList());
   }, []);
 
   return (
-    <CommentListWrapper $isCommentListVisible={isCommentListVisible} {...slideInFromBottom()}>
-      <CommentListHeader>
+    <ModalCommentListWrapper>
+      <ModalCommentListHeader>
         <CaretDownOutlined onClick={onHideComment} />
-      </CommentListHeader>
+      </ModalCommentListHeader>
 
-      <CommentListItemWrapper>
+      <ModalCommentListItemWrapper>
         {contentList.map(comment => (
           <>
-            <CommentListItem key={comment.id} $reply={false}>
+            <ModalCommentListItem key={comment.id} $reply={false}>
               <div>
                 <div>
                   <img src={comment.profile} alt={`${comment.nickname}의 프로필 이미지`} />
@@ -115,14 +111,14 @@ const CommentList = () => {
               </div>
 
               <p>{comment.content}</p>
-            </CommentListItem>
+            </ModalCommentListItem>
 
-            <ReplyComment />
+            {/* <ReplyComment /> */}
           </>
         ))}
-      </CommentListItemWrapper>
-    </CommentListWrapper>
+      </ModalCommentListItemWrapper>
+    </ModalCommentListWrapper>
   );
 };
 
-export default CommentList;
+export default ModalCommentList;

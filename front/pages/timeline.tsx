@@ -29,17 +29,6 @@ const Timeline = () => {
             <PostList />
           </PostsSection>
 
-          {/* {isCommentListVisible ? (
-            <CommunitySection key="comments" {...slideInFromBottom(0.3)}>
-              <CommentList />
-            </CommunitySection>
-          ) : (
-            <CommunitySection key="community" {...slideInFromBottom(0.3)}>
-              <PopularUser />
-              <SuggestedList />
-            </CommunitySection>
-          )} */}
-
           <CommunitySection {...slideInFromBottom(0.3)}>
             <PopularUser />
             <SuggestedList />
