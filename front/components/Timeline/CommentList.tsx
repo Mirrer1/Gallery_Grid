@@ -3,26 +3,32 @@ import { useDispatch } from 'react-redux';
 import { ArrowDownOutlined } from '@ant-design/icons';
 
 import { hideCommentList } from 'store/actions/postAction';
+import {
+  CommentListHeader,
+  CommentListItem,
+  CommentListItemWrapper,
+  CommentListWrapper
+} from 'styles/Timeline/commentList';
 
-const contentList = () => {
+const CommentList = () => {
   const contentList = [
     {
       id: 1,
-      nickname: 'user1',
+      nickname: 'userasd1',
       profile: 'https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg',
       content: '안녕하세요. 저는 댓글1입니다.',
       createdAt: '2024-2-14'
     },
     {
       id: 2,
-      nickname: 'user2',
+      nickname: 'useasdasdr2',
       profile: 'https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg',
       content: '안녕하세요. 저는 댓글2입니다.',
       createdAt: '2024-2-11'
     },
     {
       id: 3,
-      nickname: 'user3',
+      nickname: 'usedasdasdr3',
       profile: 'https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg',
       content: '안녕하세요. 저는 댓글3입니다.',
       createdAt: '2024-6-24'
@@ -78,35 +84,36 @@ const contentList = () => {
   }, []);
 
   return (
-    <article>
-      <div>
-        <header>Comments</header>
+    <CommentListWrapper>
+      <CommentListHeader>
         <ArrowDownOutlined onClick={onHideComment} />
-      </div>
+      </CommentListHeader>
 
-      <div>
-        {contentList.map(content => (
-          <div key={content.id}>
+      <CommentListItemWrapper>
+        {contentList.map(comment => (
+          <CommentListItem key={comment.id}>
             <div>
-              <img src={content.profile} alt={`${content.nickname}의 프로필 이미지`} />
-
               <div>
-                <h1>{content.nickname}</h1>
-                <p>{content.createdAt}</p>
+                <img src={comment.profile} alt={`${comment.nickname}의 프로필 이미지`} />
+
+                <div>
+                  <h1>{comment.nickname}</h1>
+                  <p>{comment.createdAt}</p>
+                </div>
               </div>
 
               <div>
-                <button>수정</button>
-                <button>삭제</button>
+                <button type="button">수정</button>
+                <button type="button">삭제</button>
               </div>
             </div>
 
-            <div>{content.content}</div>
-          </div>
+            <p>{comment.content}</p>
+          </CommentListItem>
         ))}
-      </div>
-    </article>
+      </CommentListItemWrapper>
+    </CommentListWrapper>
   );
 };
 
-export default contentList;
+export default CommentList;
