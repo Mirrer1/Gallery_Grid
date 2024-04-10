@@ -199,14 +199,13 @@ export const PostContents = styled.div`
   }
 `;
 
-export const PostOptions = styled.div`
+export const PostOptions = styled.div<{ $isCommentListVisible: boolean }>`
   ${({ theme }) => theme.flexSet('start')}
   padding: 0 0.3em;
 
   & > div {
-    opacity: 60%;
     font-size: 0.9rem;
-    ${ReverseHoverStyle('&')}
+    ${HoverStyle('&')}
     cursor: pointer;
   }
 
@@ -214,8 +213,12 @@ export const PostOptions = styled.div`
     margin-right: 1em;
   }
 
+  & > div:last-child {
+    color: ${props => (props.$isCommentListVisible ? '#6BA2E6' : 'black')};
+  }
+
   & > div > span > svg {
-    margin-right: 0.4em;
+    margin-right: 0.3em;
   }
 
   ${media.mobile} {
@@ -225,10 +228,6 @@ export const PostOptions = styled.div`
 
     & > div:first-child {
       margin-right: 0.7em;
-    }
-
-    & > div > span > svg {
-      margin-right: 0.3em;
     }
   }
 `;

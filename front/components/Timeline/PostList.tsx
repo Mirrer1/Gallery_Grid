@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   ArrowsAltOutlined,
   CommentOutlined,
@@ -10,6 +10,8 @@ import {
 } from '@ant-design/icons';
 
 import PostImageCarousel from './PostImageCarousel';
+import { RootState } from 'store/reducers';
+import { hideCommentList, showCommentList } from 'store/actions/postAction';
 import { Tooltip, TooltipBtn, TooltipOutsideArea } from 'styles/Common/tooltip';
 import {
   PostWrapper,
@@ -21,11 +23,12 @@ import {
   PostContainer,
   PostFollowBtn
 } from 'styles/Timeline/postList';
-import { showCommentList } from 'store/actions/postAction';
 
 const PostList = () => {
   const dispatch = useDispatch();
   const firstPostRef = useRef<HTMLDivElement>(null);
+  const { isCommentListVisible } = useSelector((state: RootState) => state.post);
+
   const [category, setCategory] = useState('best');
   const [modalImages, setModalImages] = useState<string[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -168,9 +171,10 @@ const PostList = () => {
     setIsTooltipVisible(null);
   }, []);
 
-  const onClickComment = useCallback(() => {
-    dispatch(showCommentList());
-  }, []);
+  const onToggleComment = useCallback(() => {
+    if (isCommentListVisible) dispatch(hideCommentList());
+    else dispatch(showCommentList());
+  }, [isCommentListVisible]);
 
   useEffect(() => {
     if (firstPostRef.current) {
@@ -248,13 +252,13 @@ const PostList = () => {
             <div>
               <p>{post.desc}</p>
 
-              <PostOptions>
+              <PostOptions $isCommentListVisible={isCommentListVisible}>
                 <div>
                   <LikeOutlined />
                   <span>24</span>
                 </div>
 
-                <div onClick={onClickComment}>
+                <div onClick={onToggleComment}>
                   <CommentOutlined />
                   <span>13</span>
                 </div>

@@ -1,0 +1,112 @@
+import React, { useCallback } from 'react';
+import { useDispatch } from 'react-redux';
+import { ArrowDownOutlined } from '@ant-design/icons';
+
+import { hideCommentList } from 'store/actions/postAction';
+
+const contentList = () => {
+  const contentList = [
+    {
+      id: 1,
+      nickname: 'user1',
+      profile: 'https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg',
+      content: '안녕하세요. 저는 댓글1입니다.',
+      createdAt: '2024-2-14'
+    },
+    {
+      id: 2,
+      nickname: 'user2',
+      profile: 'https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg',
+      content: '안녕하세요. 저는 댓글2입니다.',
+      createdAt: '2024-2-11'
+    },
+    {
+      id: 3,
+      nickname: 'user3',
+      profile: 'https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg',
+      content: '안녕하세요. 저는 댓글3입니다.',
+      createdAt: '2024-6-24'
+    },
+    {
+      id: 4,
+      nickname: 'user4',
+      profile: 'https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg',
+      content: '안녕하세요. 저는 댓글4입니다.',
+      createdAt: '2023-1-26'
+    },
+    {
+      id: 5,
+      nickname: 'user5',
+      profile: 'https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg',
+      content: '안녕하세요. 저는 댓글5입니다.',
+      createdAt: '2023-2-22'
+    },
+    {
+      id: 6,
+      nickname: 'user6',
+      profile: 'https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg',
+      content: '안녕하세요. 저는 댓글6입니다.',
+      createdAt: '2023-12-12'
+    },
+    {
+      id: 7,
+      nickname: 'user7',
+      profile: 'https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg',
+      content: '안녕하세요. 저는 댓글7입니다.',
+      createdAt: '2023-11-4'
+    },
+    {
+      id: 8,
+      nickname: 'user8',
+      profile: 'https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg',
+      content: '안녕하세요. 저는 댓글8입니다.',
+      createdAt: '2023-9-1'
+    },
+    {
+      id: 9,
+      nickname: 'user9',
+      profile: 'https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg',
+      content: '안녕하세요. 저는 댓글9입니다.',
+      createdAt: '2023-6-12'
+    }
+  ];
+
+  const dispatch = useDispatch();
+
+  const onHideComment = useCallback(() => {
+    dispatch(hideCommentList());
+  }, []);
+
+  return (
+    <article>
+      <div>
+        <header>Comments</header>
+        <ArrowDownOutlined onClick={onHideComment} />
+      </div>
+
+      <div>
+        {contentList.map(content => (
+          <div key={content.id}>
+            <div>
+              <img src={content.profile} alt={`${content.nickname}의 프로필 이미지`} />
+
+              <div>
+                <h1>{content.nickname}</h1>
+                <p>{content.createdAt}</p>
+              </div>
+
+              <div>
+                <button>수정</button>
+                <button>삭제</button>
+              </div>
+            </div>
+
+            <div>{content.content}</div>
+          </div>
+        ))}
+      </div>
+    </article>
+  );
+};
+
+export default contentList;
