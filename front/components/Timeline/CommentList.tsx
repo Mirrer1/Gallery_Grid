@@ -1,8 +1,10 @@
 import React, { useCallback } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { ArrowDownOutlined } from '@ant-design/icons';
 
+import { RootState } from 'store/reducers';
 import { hideCommentList } from 'store/actions/postAction';
+import { slideInFromBottom } from 'styles/Common/animation';
 import {
   CommentListHeader,
   CommentListItem,
@@ -16,7 +18,8 @@ const CommentList = () => {
       id: 1,
       nickname: 'userasd1',
       profile: 'https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg',
-      content: '안녕하세요. 저는 댓글1입니다.',
+      content:
+        '안녕하세요. 저는 댓글1입니다.안녕하세요. 저는 댓글1입니다.안녕하세요. 저는 댓글1입니다.안녕하세요. 저는 댓글1입니다.안녕하세요. 저는 댓글1입니다.안녕하세요. 저는 댓글1입니다.안녕하세요. 저는 댓글1입니다.안녕하세요. 저는 댓글1입니다.안녕하세요. 저는 댓글1입니다.안녕하세요. 저는 댓글1입니다.안녕하세요. 저는 댓글1입니다.안녕하세요. 저는 댓글1입니다.안녕하세요. 저는 댓글1입니다.안녕하세요. 저는 댓글1입니다.안녕하세요. 저는 댓글1입니다.안녕하세요. 저는 댓글1입니다.',
       createdAt: '2024-2-14'
     },
     {
@@ -78,13 +81,14 @@ const CommentList = () => {
   ];
 
   const dispatch = useDispatch();
+  const { isCommentListVisible } = useSelector((state: RootState) => state.post);
 
   const onHideComment = useCallback(() => {
     dispatch(hideCommentList());
   }, []);
 
   return (
-    <CommentListWrapper>
+    <CommentListWrapper $isCommentListVisible={isCommentListVisible} {...slideInFromBottom()}>
       <CommentListHeader>
         <ArrowDownOutlined onClick={onHideComment} />
       </CommentListHeader>

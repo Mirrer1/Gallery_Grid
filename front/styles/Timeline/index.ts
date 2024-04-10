@@ -30,6 +30,7 @@ export const PostsSection = styled(motion.article)`
 `;
 
 export const CommunitySection = styled(motion.article)`
+  position: relative;
   width: 35%;
   padding: 2em 2em 2em 1em;
 

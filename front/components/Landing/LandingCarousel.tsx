@@ -21,13 +21,13 @@ const LandingCarousel = () => {
     setCurrentIndex(prevIndex => (prevIndex - 1 + bestProduct.length) % bestProduct.length);
   }, []);
 
-  // useEffect(() => {
-  //   const timer = setTimeout(() => {
-  //     handleNext();
-  //   }, 3000);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      handleNext();
+    }, 3000);
 
-  //   return () => clearTimeout(timer);
-  // }, [currentIndex, handleNext]);
+    return () => clearTimeout(timer);
+  }, [currentIndex, handleNext]);
 
   return (
     <CarouselWrapper>

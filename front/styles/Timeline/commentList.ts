@@ -1,14 +1,30 @@
 import styled from 'styled-components';
+import { motion } from 'framer-motion';
 
 import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
 import { ShadowStyle } from 'styles/Common/shadow';
+import media from 'styles/media';
 
-export const CommentListWrapper = styled.article`
-  width: 100%;
-  height: 100%;
+export const CommentListWrapper = styled(motion.article)<{ $isCommentListVisible: boolean }>`
+  position: absolute;
+  top: 3.9%;
+  left: 3.9%;
+  width: 88%;
+  height: 93%;
   background-color: white;
   border-radius: 5px;
+  z-index: 50;
   ${ShadowStyle}
+
+  ${media.tablet} {
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 65%;
+    border-radius: 5px 5px 0 0;
+  }
 `;
 
 export const CommentListHeader = styled.div`
@@ -20,6 +36,10 @@ export const CommentListHeader = styled.div`
   & > span {
     font-size: 0.9rem;
     ${HoverStyle('&')};
+  }
+
+  ${media.tablet} {
+    height: 8%;
   }
 `;
 
@@ -34,6 +54,10 @@ export const CommentListItemWrapper = styled.div`
 
   & > div:last-child {
     margin-bottom: 0;
+  }
+
+  ${media.tablet} {
+    height: 92%;
   }
 `;
 

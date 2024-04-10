@@ -29,7 +29,7 @@ const Timeline = () => {
             <PostList />
           </PostsSection>
 
-          {isCommentListVisible ? (
+          {/* {isCommentListVisible ? (
             <CommunitySection key="comments" {...slideInFromBottom(0.3)}>
               <CommentList />
             </CommunitySection>
@@ -38,7 +38,14 @@ const Timeline = () => {
               <PopularUser />
               <SuggestedList />
             </CommunitySection>
-          )}
+          )} */}
+
+          <CommunitySection {...slideInFromBottom(0.3)}>
+            <PopularUser />
+            <SuggestedList />
+
+            {isCommentListVisible && <CommentList />}
+          </CommunitySection>
         </TimelineWrapper>
       </AppLayout>
     </>
