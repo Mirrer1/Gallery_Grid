@@ -2,6 +2,7 @@ import React, { useCallback } from 'react';
 import { CaretDownOutlined } from '@ant-design/icons';
 import { useDispatch } from 'react-redux';
 
+import ModalReplyComment from './ModalReplyComment';
 import { hideCommentList } from 'store/actions/postAction';
 import {
   ModalCommentListHeader,
@@ -113,7 +114,7 @@ const ModalCommentList = () => {
               <p>{comment.content}</p>
             </ModalCommentListItem>
 
-            {/* <ReplyComment /> */}
+            <ModalReplyComment />
           </>
         ))}
       </ModalCommentListItemWrapper>
