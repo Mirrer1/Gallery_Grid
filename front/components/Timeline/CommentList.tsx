@@ -2,6 +2,7 @@ import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ArrowDownOutlined } from '@ant-design/icons';
 
+import ReplyComment from './ReplyComment';
 import { RootState } from 'store/reducers';
 import { hideCommentList } from 'store/actions/postAction';
 import { slideInFromBottom } from 'styles/Common/animation';
@@ -95,25 +96,29 @@ const CommentList = () => {
 
       <CommentListItemWrapper>
         {contentList.map(comment => (
-          <CommentListItem key={comment.id}>
-            <div>
+          <>
+            <CommentListItem key={comment.id} $reply={false}>
               <div>
-                <img src={comment.profile} alt={`${comment.nickname}의 프로필 이미지`} />
+                <div>
+                  <img src={comment.profile} alt={`${comment.nickname}의 프로필 이미지`} />
+
+                  <div>
+                    <h1>{comment.nickname}</h1>
+                    <p>{comment.createdAt}</p>
+                  </div>
+                </div>
 
                 <div>
-                  <h1>{comment.nickname}</h1>
-                  <p>{comment.createdAt}</p>
+                  <button type="button">수정</button>
+                  <button type="button">삭제</button>
                 </div>
               </div>
 
-              <div>
-                <button type="button">수정</button>
-                <button type="button">삭제</button>
-              </div>
-            </div>
+              <p>{comment.content}</p>
+            </CommentListItem>
 
-            <p>{comment.content}</p>
-          </CommentListItem>
+            <ReplyComment />
+          </>
         ))}
       </CommentListItemWrapper>
     </CommentListWrapper>

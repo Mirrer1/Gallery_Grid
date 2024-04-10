@@ -61,7 +61,9 @@ export const CommentListItemWrapper = styled.div`
   }
 `;
 
-export const CommentListItem = styled.div`
+export const CommentListItem = styled.div<{ $reply: boolean }>`
+  padding-left: ${props => (props.$reply ? '2em' : '0')};
+
   & > div {
     ${({ theme }) => theme.flexSet('space-between')};
 
