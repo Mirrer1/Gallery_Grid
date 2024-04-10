@@ -5,15 +5,23 @@ import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
 
 export const ModalCommentListWrapper = styled.div`
   height: 73%;
-  padding: 0.5em 1em;
+  padding: 0.8em;
   border-bottom: 1px solid #e4e5ec;
   overflow-y: scroll;
+
+  ${media.tablet} {
+    height: 66%;
+    padding: 0.6em;
+  }
+
+  ${media.mobile} {
+    height: 61%;
+  }
 `;
 
 export const ModalCommentListHeader = styled.div`
   ${({ theme }) => theme.flexSet('end')};
   height: 3%;
-  padding: 0 0.5em;
 
   & > span {
     ${HoverStyle('&')};
@@ -66,7 +74,7 @@ export const ModalCommentListItem = styled.div<{ $reply: boolean }>`
         }
 
         & > p {
-          font-size: 0.65rem;
+          font-size: 0.7rem;
           opacity: 40%;
         }
       }
@@ -90,5 +98,30 @@ export const ModalCommentListItem = styled.div<{ $reply: boolean }>`
     font-size: 0.75rem;
     line-height: 1.5;
     margin-left: 0.5em;
+  }
+
+  ${media.tablet} {
+    & > div {
+      & > div:first-child {
+        & > img {
+          width: 38px;
+          height: 38px;
+        }
+
+        & > div {
+          & > h1 {
+            font-size: 0.8rem;
+          }
+
+          & > p {
+            font-size: 0.65rem;
+          }
+        }
+      }
+    }
+
+    & > p {
+      font-size: 0.7rem;
+    }
   }
 `;
