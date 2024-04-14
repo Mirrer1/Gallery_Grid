@@ -31,12 +31,8 @@ export const ModalCommentListHeader = styled.div`
 export const ModalCommentListItemWrapper = styled.div`
   height: 97%;
 
-  & > div {
+  & > div > div {
     margin-bottom: 1em;
-  }
-
-  & > div:last-child {
-    margin-bottom: 0;
   }
 `;
 

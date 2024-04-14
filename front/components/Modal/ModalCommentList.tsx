@@ -93,8 +93,8 @@ const ModalCommentList = () => {
 
       <ModalCommentListItemWrapper>
         {contentList.map(comment => (
-          <>
-            <ModalCommentListItem key={comment.id} $reply={false}>
+          <div key={comment.id}>
+            <ModalCommentListItem $reply={false}>
               <div>
                 <div>
                   <img src={comment.profile} alt={`${comment.nickname}의 프로필 이미지`} />
@@ -115,7 +115,7 @@ const ModalCommentList = () => {
             </ModalCommentListItem>
 
             <ModalReplyComment />
-          </>
+          </div>
         ))}
       </ModalCommentListItemWrapper>
     </ModalCommentListWrapper>

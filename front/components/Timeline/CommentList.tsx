@@ -96,8 +96,8 @@ const CommentList = () => {
 
       <CommentListItemWrapper>
         {contentList.map(comment => (
-          <>
-            <CommentListItem key={comment.id} $reply={false}>
+          <div key={comment.id}>
+            <CommentListItem $reply={false}>
               <div>
                 <div>
                   <img src={comment.profile} alt={`${comment.nickname}의 프로필 이미지`} />
@@ -118,7 +118,7 @@ const CommentList = () => {
             </CommentListItem>
 
             <ReplyComment />
-          </>
+          </div>
         ))}
       </CommentListItemWrapper>
     </CommentListWrapper>

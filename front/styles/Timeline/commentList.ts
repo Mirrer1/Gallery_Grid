@@ -47,12 +47,8 @@ export const CommentListItemWrapper = styled.div`
   padding: 0.8em 1em;
   overflow-y: scroll;
 
-  & > div {
+  & > div > div {
     margin-bottom: 1em;
-  }
-
-  & > div:last-child {
-    margin-bottom: 0;
   }
 
   ${media.tablet} {

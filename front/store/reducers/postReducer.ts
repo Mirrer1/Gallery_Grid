@@ -32,7 +32,8 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
     case HIDE_POST_MODAL:
       return {
         ...state,
-        isPostModalVisible: false
+        isPostModalVisible: false,
+        isCommentListVisible: false
       };
     default:
       return state;

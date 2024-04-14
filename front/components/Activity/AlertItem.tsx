@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { CommentOutlined, LikeOutlined, LikeTwoTone } from '@ant-design/icons';
 
-import { showPostModal } from 'store/actions/postAction';
+import { showCommentList, showPostModal } from 'store/actions/postAction';
 import {
   AlertContentWrapper,
   AlertHeader,
@@ -15,6 +15,7 @@ const AlertItem = ({ type }: { type: string }) => {
   const dispatch = useDispatch();
 
   const onClickPost = useCallback(() => {
+    if (type === 'comment') dispatch(showCommentList());
     dispatch(showPostModal());
   }, []);
 
