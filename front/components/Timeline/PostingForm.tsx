@@ -1,13 +1,19 @@
 import React, { useCallback, useState } from 'react';
-import { CompassOutlined, PaperClipOutlined, SmileOutlined } from '@ant-design/icons';
+import { CloseOutlined, CompassOutlined, PaperClipOutlined, SmileOutlined } from '@ant-design/icons';
 import EmojiPicker, { IEmojiData } from 'emoji-picker-react';
 
 import useInput from 'utils/useInput';
+import { useLocation } from 'utils/useLocation';
 import { PostingBtn, PostingEmojiPicker, PostingWrapper } from 'styles/Timeline/postingForm';
 
 const PostingForm = () => {
   const [text, onChangeText, setText] = useInput<string>('');
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const { location, getLocation, setLocation } = useLocation();
+
+  const setInitialLocation = useCallback(() => {
+    setLocation(null);
+  }, []);
 
   const onEmojiClick = useCallback(
     (event: MouseEvent, emojiObject: IEmojiData) => {
@@ -47,7 +53,14 @@ const PostingForm = () => {
         <div>
           <PaperClipOutlined />
           <SmileOutlined onClick={toggleEmojiPicker} />
-          <CompassOutlined />
+          {location ? (
+            <div onClick={setInitialLocation}>
+              <p>{location?.address}</p>
+              <CloseOutlined />
+            </div>
+          ) : (
+            <CompassOutlined onClick={getLocation} />
+          )}
         </div>
 
         {showEmojiPicker && (

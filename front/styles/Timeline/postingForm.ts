@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import media from 'styles/media';
-import { HoverStyle } from 'styles/Common/hover';
+import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
 
 export const PostingWrapper = styled.form`
   background-color: ${({ theme }) => theme.colors.darkBg};
@@ -33,11 +33,34 @@ export const PostingWrapper = styled.form`
     background-color: ${({ theme }) => theme.colors.darkBg};
     padding: 0 1.2em;
 
-    & > div:first-child > span {
-      ${HoverStyle('&')}
-      opacity: 70%;
-      margin-right: 1em;
-      cursor: pointer;
+    & > div:first-child {
+      ${({ theme }) => theme.flexSet()};
+
+      & > span {
+        ${HoverStyle('&')}
+        opacity: 70%;
+        margin-right: 1em;
+        cursor: pointer;
+      }
+
+      & > div {
+        position: relative;
+        display: inline-block;
+        opacity: 70%;
+        ${HoverStyle('&')}
+        cursor: pointer;
+
+        & > p {
+          font-size: 0.8rem;
+        }
+
+        & > span {
+          position: absolute;
+          top: -35%;
+          right: -13%;
+          font-size: 0.5rem;
+        }
+      }
     }
 
     & > div:last-child {
@@ -66,8 +89,20 @@ export const PostingWrapper = styled.form`
     & > div {
       padding: 0 1em;
 
-      & > div:first-child > span {
-        font-size: 0.9rem;
+      & > div:first-child {
+        & > span {
+          font-size: 0.9rem;
+        }
+
+        & > div {
+          & > p {
+            font-size: 0.7rem;
+          }
+
+          & > span {
+            font-size: 0.48rem;
+          }
+        }
       }
 
       & > div:last-child {
