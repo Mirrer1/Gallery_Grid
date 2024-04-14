@@ -1,11 +1,28 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { CompassOutlined, PaperClipOutlined, SmileOutlined } from '@ant-design/icons';
+import EmojiPicker, { IEmojiData } from 'emoji-picker-react';
 
 import useInput from 'utils/useInput';
-import { PostingBtn, PostingWrapper } from 'styles/Timeline/postingForm';
+import { PostingBtn, PostingEmojiPicker, PostingWrapper } from 'styles/Timeline/postingForm';
 
 const PostingForm = () => {
-  const [text, onChangeText] = useInput('');
+  const [text, onChangeText, setText] = useInput<string>('');
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+
+  const onEmojiClick = useCallback(
+    (event: MouseEvent, emojiObject: IEmojiData) => {
+      setText(prevText => prevText + emojiObject.emoji);
+    },
+    [setText]
+  );
+
+  const toggleEmojiPicker = useCallback(() => {
+    setShowEmojiPicker(prev => !prev);
+  }, []);
+
+  const closeEmojiPicker = useCallback(() => {
+    setShowEmojiPicker(false);
+  }, []);
 
   const onSubmitForm = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
@@ -29,9 +46,19 @@ const PostingForm = () => {
       <div>
         <div>
           <PaperClipOutlined />
-          <SmileOutlined />
+          <SmileOutlined onClick={toggleEmojiPicker} />
           <CompassOutlined />
         </div>
+
+        {showEmojiPicker && (
+          <PostingEmojiPicker>
+            <div onClick={closeEmojiPicker} />
+
+            <div>
+              <EmojiPicker onEmojiClick={onEmojiClick} />
+            </div>
+          </PostingEmojiPicker>
+        )}
 
         <div>
           <p>{text.length} / 2000</p>

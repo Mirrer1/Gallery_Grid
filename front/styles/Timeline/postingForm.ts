@@ -26,6 +26,7 @@ export const PostingWrapper = styled.form`
   }
 
   & > div {
+    position: relative;
     ${({ theme }) => theme.flexSet('space-between')};
     width: 100%;
     height: 30%;
@@ -76,6 +77,24 @@ export const PostingWrapper = styled.form`
         }
       }
     }
+  }
+`;
+
+export const PostingEmojiPicker = styled.div`
+  & > div:first-child {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 49;
+  }
+
+  & > div:last-child {
+    position: absolute;
+    top: 75%;
+    left: 5%;
+    z-index: 50;
   }
 `;
 
