@@ -1,14 +1,16 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { CloseOutlined, CompassOutlined, PaperClipOutlined, SmileOutlined } from '@ant-design/icons';
-import EmojiPicker, { IEmojiData } from 'emoji-picker-react';
+import { IEmojiData } from 'emoji-picker-react';
 
 import useInput from 'utils/useInput';
 import { useLocation } from 'utils/useLocation';
 import { PostingBtn, PostingEmojiPicker, PostingWrapper } from 'styles/Timeline/postingForm';
 
 const PostingForm = () => {
-  const [text, onChangeText, setText] = useInput<string>('');
+  const [EmojiPicker, setEmojiPicker] =
+    useState<React.ComponentType<{ onEmojiClick: (event: MouseEvent, emojiObject: IEmojiData) => void }>>();
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [text, onChangeText, setText] = useInput<string>('');
   const { location, getLocation, setLocation } = useLocation();
 
   const setInitialLocation = useCallback(() => {
@@ -39,6 +41,14 @@ const PostingForm = () => {
     [text]
   );
 
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      import('emoji-picker-react').then(module => {
+        setEmojiPicker(() => module.default);
+      });
+    }
+  }, []);
+
   return (
     <PostingWrapper onSubmit={onSubmitForm}>
       <textarea
@@ -63,7 +73,7 @@ const PostingForm = () => {
           )}
         </div>
 
-        {showEmojiPicker && (
+        {showEmojiPicker && EmojiPicker && (
           <PostingEmojiPicker>
             <div onClick={closeEmojiPicker} />
 
