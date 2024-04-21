@@ -4,7 +4,7 @@ import media from 'styles/media';
 import { ReverseHoverStyle } from 'styles/Common/hover';
 import { ShadowStyle } from 'styles/Common/shadow';
 
-export const SuggestedWrapper = styled.div`
+export const SuggestedWrapper = styled.div<{ $listvisible: boolean }>`
   ${({ theme }) => theme.flexColumnSet('center', 'start')}
   height: 38%;
   background-color: white;
@@ -13,7 +13,36 @@ export const SuggestedWrapper = styled.div`
   ${ShadowStyle}
 
   ${media.tablet} {
-    display: none;
+    display: ${props => (props.$listvisible ? 'block' : 'none')};
+    position: fixed;
+    bottom: -17%;
+    right: -25%;
+    transform: translate(-50%, -50%);
+    width: 55%;
+    height: 300px;
+    border: 1px solid ${({ theme }) => theme.colors.darkBg};
+    z-index: 50;
+  }
+
+  ${media.mobile} {
+    bottom: -10%;
+    right: -37%;
+    width: 85%;
+  }
+`;
+
+export const SuggestedOutsideArea = styled.div<{ $listvisible: boolean }>`
+  display: none;
+
+  ${media.tablet} {
+    display: ${props => (props.$listvisible ? 'block' : 'none')};
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 49;
+    cursor: pointer;
   }
 `;
 
@@ -21,6 +50,19 @@ export const SuggestedHeader = styled.div`
   font-size: 0.9rem;
   font-weight: 500;
   margin-bottom: 2em;
+
+  & > span {
+    display: none;
+  }
+
+  ${media.tablet} {
+    width: 100%;
+    ${({ theme }) => theme.flexSet('space-between')};
+
+    & > span {
+      display: block;
+    }
+  }
 `;
 
 export const SuggestedInfo = styled.div<{ $islast: boolean }>`

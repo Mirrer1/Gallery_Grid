@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { CloseOutlined, SearchOutlined } from '@ant-design/icons';
+import { CloseOutlined, LogoutOutlined, SearchOutlined } from '@ant-design/icons';
 import Router from 'next/router';
 
 import { MobileHeaderContent, MobileHeaderInput, MobileHeaderWrapper } from 'styles/AppLayout/mobileHeader';
@@ -32,6 +32,10 @@ const MobileHeader = ({ showInput, showSearch, hideSearch }: ISearch) => {
     Router.push('/settings');
   }, []);
 
+  const onClickLogout = useCallback(() => {
+    console.log('로그아웃!');
+  }, []);
+
   useEffect(() => {
     if (!showInput) setKeyword('');
   }, [showInput]);
@@ -56,6 +60,10 @@ const MobileHeader = ({ showInput, showSearch, hideSearch }: ISearch) => {
           <h1>Gallery Grid</h1>
 
           <MobileHeaderContent>
+            <div onClick={showSearch}>
+              <SearchOutlined />
+            </div>
+
             <div onClick={onClickProfile}>
               <img
                 src="https://t3.ftcdn.net/jpg/05/16/27/58/360_F_516275801_f3Fsp17x6HQK0xQgDQEELoTuERO4SsWV.jpg"
@@ -63,8 +71,8 @@ const MobileHeader = ({ showInput, showSearch, hideSearch }: ISearch) => {
               />
             </div>
 
-            <div onClick={showSearch}>
-              <SearchOutlined />
+            <div>
+              <LogoutOutlined onClick={onClickLogout} />
             </div>
           </MobileHeaderContent>
         </div>

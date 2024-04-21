@@ -1,4 +1,6 @@
 import React from 'react';
+import { useRouter } from 'next/router';
+import { useSelector } from 'react-redux';
 import {
   AreaChartOutlined,
   FieldTimeOutlined,
@@ -6,19 +8,20 @@ import {
   PictureOutlined,
   SettingOutlined
 } from '@ant-design/icons';
-import { useRouter } from 'next/router';
 
+import { RootState } from 'store/reducers';
 import { MobileFooterItem, MobileFooterWrapper } from 'styles/AppLayout/mobileFooter';
 
 const MobileFooter = () => {
   const router = useRouter();
+  const { isCarouselVisible } = useSelector((state: RootState) => state.post);
 
   const navigateTo = (path: string) => {
     router.push(path);
   };
 
   return (
-    <MobileFooterWrapper>
+    <MobileFooterWrapper $carouselvisible={isCarouselVisible}>
       <MobileFooterItem
         as={AreaChartOutlined}
         $selected={router.pathname === '/activity'}
@@ -48,8 +51,6 @@ const MobileFooter = () => {
         $selected={router.pathname === '/settings'}
         onClick={() => navigateTo('/settings')}
       />
-
-      {/* <MobileFooterItem as={LogoutOutlined} $selected={router.pathname === '/logout'} /> */}
     </MobileFooterWrapper>
   );
 };

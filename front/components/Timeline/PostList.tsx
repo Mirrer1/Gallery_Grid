@@ -11,7 +11,7 @@ import {
 
 import PostImageCarousel from './PostImageCarousel';
 import { RootState } from 'store/reducers';
-import { hideCommentList, showCommentList } from 'store/actions/postAction';
+import { hideCommentList, showCommentList, showPostCarousel } from 'store/actions/postAction';
 import { Tooltip, TooltipBtn, TooltipOutsideArea } from 'styles/Common/tooltip';
 import {
   PostWrapper,
@@ -27,11 +27,10 @@ import {
 const PostList = () => {
   const dispatch = useDispatch();
   const firstPostRef = useRef<HTMLDivElement>(null);
-  const { isCommentListVisible } = useSelector((state: RootState) => state.post);
+  const { isCommentListVisible, isCarouselVisible } = useSelector((state: RootState) => state.post);
 
   const [category, setCategory] = useState('best');
   const [modalImages, setModalImages] = useState<string[]>([]);
-  const [isModalVisible, setIsModalVisible] = useState(false);
   const [isTooltipVisible, setIsTooltipVisible] = useState<string | null>(null);
 
   const postList = [
@@ -157,7 +156,7 @@ const PostList = () => {
 
   const showCarousel = useCallback((images: string[]) => {
     setModalImages(images);
-    setIsModalVisible(true);
+    dispatch(showPostCarousel());
   }, []);
 
   const handleTooltip = useCallback(
@@ -268,7 +267,7 @@ const PostList = () => {
         </PostWrapper>
       ))}
 
-      {isModalVisible && <PostImageCarousel images={modalImages} setIsModalVisible={setIsModalVisible} />}
+      {isCarouselVisible && <PostImageCarousel images={modalImages} />}
     </PostContainer>
   );
 };

@@ -1,9 +1,14 @@
-import React from 'react';
-import { UserAddOutlined } from '@ant-design/icons';
+import React, { useCallback } from 'react';
+import { CaretDownOutlined, UserAddOutlined } from '@ant-design/icons';
 
-import { SuggestedHeader, SuggestedInfo, SuggestedWrapper } from 'styles/Timeline/suggestedList';
+import { SuggestedHeader, SuggestedInfo, SuggestedOutsideArea, SuggestedWrapper } from 'styles/Timeline/suggestedList';
 
-const SuggestedList = () => {
+type SuggestedProps = {
+  suggestedListVisible: boolean;
+  setSuggestedListVisible: (value: boolean) => void;
+};
+
+const SuggestedList = ({ suggestedListVisible, setSuggestedListVisible }: SuggestedProps) => {
   const SuggestedUsers = [
     {
       nickname: 'user1',
@@ -22,27 +27,36 @@ const SuggestedList = () => {
     }
   ];
 
+  const hideSuggestedList = useCallback(() => {
+    setSuggestedListVisible(false);
+  }, [suggestedListVisible]);
+
   return (
-    <SuggestedWrapper>
-      <SuggestedHeader>
-        <h1>Suggested people</h1>
-      </SuggestedHeader>
+    <>
+      <SuggestedOutsideArea onClick={hideSuggestedList} $listvisible={suggestedListVisible} />
 
-      {SuggestedUsers.map((user, i) => (
-        <SuggestedInfo key={i} $islast={i === SuggestedUsers.length - 1}>
-          <img src={user.profile} alt={`${user.nickname}의 프로필 이미지`} />
+      <SuggestedWrapper $listvisible={suggestedListVisible}>
+        <SuggestedHeader>
+          <h1>Suggested people</h1>
+          <CaretDownOutlined onClick={hideSuggestedList} />
+        </SuggestedHeader>
 
-          <div>
+        {SuggestedUsers.map((user, i) => (
+          <SuggestedInfo key={i} $islast={i === SuggestedUsers.length - 1}>
+            <img src={user.profile} alt={`${user.nickname}의 프로필 이미지`} />
+
             <div>
-              <h2>{user.nickname}</h2>
-              <UserAddOutlined />
-            </div>
+              <div>
+                <h2>{user.nickname}</h2>
+                <UserAddOutlined />
+              </div>
 
-            <p>{user.desc}</p>
-          </div>
-        </SuggestedInfo>
-      ))}
-    </SuggestedWrapper>
+              <p>{user.desc}</p>
+            </div>
+          </SuggestedInfo>
+        ))}
+      </SuggestedWrapper>
+    </>
   );
 };
 

@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Swiper as SwiperClass, EffectCoverflow, Pagination, Navigation } from 'swiper';
 import 'swiper/css';
@@ -6,6 +7,7 @@ import 'swiper/css/effect-coverflow';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 
+import { hidePostCarousel } from 'store/actions/postAction';
 import {
   BackgroundImageContainer,
   CarouselOutsideArea,
@@ -15,14 +17,14 @@ import {
 
 type CarouselProps = {
   images: string[];
-  setIsModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const PostImageCarousel = ({ images, setIsModalVisible }: CarouselProps) => {
+const PostImageCarousel = ({ images }: CarouselProps) => {
+  const dispatch = useDispatch();
   const [activeIndex, setActiveIndex] = useState(0);
 
   const hideCarousel = useCallback(() => {
-    setIsModalVisible(false);
+    dispatch(hidePostCarousel());
   }, []);
 
   const handleSlideChange = useCallback(

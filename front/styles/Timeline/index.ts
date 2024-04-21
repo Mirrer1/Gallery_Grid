@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { motion } from 'framer-motion';
 
 import media from 'styles/media';
+import { ShadowStyle } from 'styles/Common/shadow';
 
 export const TimelineWrapper = styled.section`
   display: flex;
@@ -44,5 +45,34 @@ export const CommunitySection = styled(motion.article)`
 
   ${media.mobile} {
     height: 160px;
+  }
+`;
+
+export const MobileSuggestedBtn = styled.div<{ $listvisible: boolean }>`
+  display: none;
+
+  ${media.tablet} {
+    display: ${props => (props.$listvisible ? 'none' : 'block')};
+    position: fixed;
+    bottom: -1.5%;
+    right: -1.5%;
+    transform: translate(-50%, -50%);
+    border: 1px solid ${({ theme }) => theme.colors.darkBg};
+    padding: 0.8em;
+    border-radius: 50%;
+    z-index: 48;
+    ${ShadowStyle};
+
+    & > span {
+      font-size: 1.1rem;
+      opacity: 60%;
+    }
+  }
+
+  ${media.mobile} {
+    bottom: 6%;
+    right: -3%;
+    border: 1px solid ${({ theme }) => theme.colors.darkBg};
+    background-color: ${({ theme }) => theme.colors.lightBg};
   }
 `;

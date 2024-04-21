@@ -41,7 +41,13 @@ export const MobileHeaderContent = styled.div`
     &:first-child {
       width: 30px;
       height: 30px;
-      margin-right: 0.2em;
+      margin-right: 0.3em;
+    }
+
+    &:nth-child(2) {
+      width: 30px;
+      height: 30px;
+      margin-right: 0.3em;
     }
 
     &:last-child {

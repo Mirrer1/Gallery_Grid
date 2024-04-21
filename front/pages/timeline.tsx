@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { UsergroupAddOutlined } from '@ant-design/icons';
 import Head from 'next/head';
 
 import AppLayout from 'components/AppLayout';
@@ -11,10 +12,15 @@ import CommentList from 'components/Timeline/CommentList';
 
 import { RootState } from 'store/reducers';
 import { slideInFromBottom } from 'styles/Common/animation';
-import { CommunitySection, PostsSection, TimelineWrapper } from 'styles/Timeline';
+import { CommunitySection, MobileSuggestedBtn, PostsSection, TimelineWrapper } from 'styles/Timeline';
 
 const Timeline = () => {
-  const { isCommentListVisible } = useSelector((state: RootState) => state.post);
+  const { isCommentListVisible, isCarouselVisible } = useSelector((state: RootState) => state.post);
+  const [suggestedListVisible, setSuggestedListVisible] = useState(false);
+
+  const showSuggestedList = useCallback(() => {
+    setSuggestedListVisible(true);
+  }, []);
 
   return (
     <>
@@ -31,10 +37,17 @@ const Timeline = () => {
 
           <CommunitySection {...slideInFromBottom(0.3)}>
             <PopularUser />
-            <SuggestedList />
+            <SuggestedList
+              suggestedListVisible={suggestedListVisible}
+              setSuggestedListVisible={setSuggestedListVisible}
+            />
 
             {isCommentListVisible && <CommentList />}
           </CommunitySection>
+
+          <MobileSuggestedBtn $listvisible={suggestedListVisible || isCarouselVisible}>
+            <UsergroupAddOutlined onClick={showSuggestedList} />
+          </MobileSuggestedBtn>
         </TimelineWrapper>
       </AppLayout>
     </>

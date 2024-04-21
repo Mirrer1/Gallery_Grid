@@ -5,7 +5,6 @@ import { HoverStyle } from 'styles/Common/hover';
 import media from 'styles/media';
 
 export const ImageCarouselWrapper = styled.div`
-  position: relative;
   position: fixed;
   top: 50%;
   left: 50%;
