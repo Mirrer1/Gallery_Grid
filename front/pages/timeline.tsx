@@ -1,6 +1,7 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { UsergroupAddOutlined } from '@ant-design/icons';
+import { useDispatch } from 'react-redux';
 import Head from 'next/head';
 
 import AppLayout from 'components/AppLayout';
@@ -15,6 +16,7 @@ import { slideInFromBottom } from 'styles/Common/animation';
 import { CommunitySection, MobileSuggestedBtn, PostsSection, TimelineWrapper } from 'styles/Timeline';
 
 const Timeline = () => {
+  const dispatch = useDispatch();
   const { isCommentListVisible, isCarouselVisible } = useSelector((state: RootState) => state.post);
   const [suggestedListVisible, setSuggestedListVisible] = useState(false);
 

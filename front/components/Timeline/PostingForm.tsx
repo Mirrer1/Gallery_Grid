@@ -1,17 +1,22 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { CloseOutlined, CompassOutlined, PaperClipOutlined, SmileOutlined } from '@ant-design/icons';
 import { IEmojiData } from 'emoji-picker-react';
+import { useDispatch } from 'react-redux';
 
 import useInput from 'utils/useInput';
 import { useLocation } from 'utils/useLocation';
+import { addPostRequest } from 'store/actions/postAction';
 import { PostingBtn, PostingEmojiPicker, PostingWrapper } from 'styles/Timeline/postingForm';
 
 const PostingForm = () => {
+  const dispatch = useDispatch();
   const [EmojiPicker, setEmojiPicker] =
     useState<React.ComponentType<{ onEmojiClick: (event: MouseEvent, emojiObject: IEmojiData) => void }>>();
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [text, onChangeText, setText] = useInput<string>('');
   const { location, getLocation, setLocation } = useLocation();
+  const [images, setImages] = useState<File[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const setInitialLocation = useCallback(() => {
     setLocation(null);
@@ -32,13 +37,29 @@ const PostingForm = () => {
     setShowEmojiPicker(false);
   }, []);
 
+  const onClickImageUpload = useCallback(() => {
+    if (fileInputRef.current) fileInputRef.current.click();
+  }, []);
+
+  const onFileChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+
+    if (files && files.length > 0) {
+      const file = files[0];
+      setImages(prevImages => [...prevImages, file]);
+    }
+  }, []);
+
   const onSubmitForm = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
 
       console.log(text);
+      console.log(images);
+
+      dispatch(addPostRequest());
     },
-    [text]
+    [text, images]
   );
 
   useEffect(() => {
@@ -61,7 +82,9 @@ const PostingForm = () => {
 
       <div>
         <div>
-          <PaperClipOutlined />
+          <PaperClipOutlined onClick={onClickImageUpload} />
+          <input type="file" ref={fileInputRef} onChange={onFileChange} />
+
           <SmileOutlined onClick={toggleEmojiPicker} />
           {location ? (
             <div onClick={setInitialLocation}>

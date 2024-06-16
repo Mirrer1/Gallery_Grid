@@ -204,7 +204,7 @@ export const PostOptions = styled.div<{ $isCommentListVisible: boolean }>`
   padding: 0 0.3em;
 
   & > div {
-    font-size: 0.9rem;
+    font-size: 0.7rem;
     ${HoverStyle('&')}
     cursor: pointer;
   }
@@ -222,10 +222,6 @@ export const PostOptions = styled.div<{ $isCommentListVisible: boolean }>`
   }
 
   ${media.mobile} {
-    & > div {
-      font-size: 0.8rem;
-    }
-
     & > div:first-child {
       margin-right: 0.7em;
     }

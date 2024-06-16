@@ -36,6 +36,10 @@ export const PostingWrapper = styled.form`
     & > div:first-child {
       ${({ theme }) => theme.flexSet()};
 
+      & > input {
+        display: none;
+      }
+
       & > span {
         ${HoverStyle('&')}
         opacity: 70%;

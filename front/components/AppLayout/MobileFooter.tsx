@@ -14,14 +14,14 @@ import { MobileFooterItem, MobileFooterWrapper } from 'styles/AppLayout/mobileFo
 
 const MobileFooter = () => {
   const router = useRouter();
-  const { isCarouselVisible } = useSelector((state: RootState) => state.post);
+  const { isCarouselVisible, isPostModalVisible } = useSelector((state: RootState) => state.post);
 
   const navigateTo = (path: string) => {
     router.push(path);
   };
 
   return (
-    <MobileFooterWrapper $carouselvisible={isCarouselVisible}>
+    <MobileFooterWrapper $visible={isCarouselVisible || isPostModalVisible}>
       <MobileFooterItem
         as={AreaChartOutlined}
         $selected={router.pathname === '/activity'}

@@ -18,6 +18,7 @@ import {
   AuthOptionsWrapper,
   AccountAlert
 } from 'styles/Landing/accountForm';
+import { loginRequest } from 'store/actions/userAction';
 
 const LoginForm = ({ selectMenu, onClickMenu }: IMenuProps) => {
   const dispatch = useDispatch();
@@ -44,6 +45,7 @@ const LoginForm = ({ selectMenu, onClickMenu }: IMenuProps) => {
       // }
 
       console.log({ email, password, rememberMe });
+      dispatch(loginRequest());
       Router.push('/timeline');
     },
     [email, password, rememberMe]

@@ -2,10 +2,15 @@ import {
   HIDE_COMMENT_LIST,
   HIDE_POST_CAROUSEL,
   HIDE_POST_MODAL,
+  ADD_POST_REQUEST,
   SHOW_COMMENT_LIST,
   SHOW_POST_CAROUSEL,
   SHOW_POST_MODAL
 } from 'store/types/postType';
+
+export const addPostRequest = () => ({
+  type: ADD_POST_REQUEST
+});
 
 export const showCommentList = () => ({
   type: SHOW_COMMENT_LIST
