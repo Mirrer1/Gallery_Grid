@@ -12,6 +12,7 @@ import SuggestedList from 'components/Timeline/SuggestedList';
 import CommentList from 'components/Timeline/CommentList';
 
 import { RootState } from 'store/reducers';
+import { loadPostsRequest } from 'store/actions/postAction';
 import { slideInFromBottom } from 'styles/Common/animation';
 import { CommunitySection, MobileSuggestedBtn, PostsSection, TimelineWrapper } from 'styles/Timeline';
 
@@ -22,6 +23,10 @@ const Timeline = () => {
 
   const showSuggestedList = useCallback(() => {
     setSuggestedListVisible(true);
+  }, []);
+
+  useEffect(() => {
+    dispatch(loadPostsRequest());
   }, []);
 
   return (

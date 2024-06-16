@@ -5,8 +5,13 @@ import {
   ADD_POST_REQUEST,
   SHOW_COMMENT_LIST,
   SHOW_POST_CAROUSEL,
-  SHOW_POST_MODAL
+  SHOW_POST_MODAL,
+  LOAD_POSTS_REQUEST
 } from 'store/types/postType';
+
+export const loadPostsRequest = () => ({
+  type: LOAD_POSTS_REQUEST
+});
 
 export const addPostRequest = () => ({
   type: ADD_POST_REQUEST
