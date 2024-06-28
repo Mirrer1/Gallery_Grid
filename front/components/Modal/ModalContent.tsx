@@ -120,7 +120,7 @@ const ModalContent = () => {
           <SmileOutlined />
           <input
             type="text"
-            placeholder="Type a Message..."
+            placeholder="Type a Comment..."
             value={comment}
             onChange={onChangeComment}
             onKeyPress={handleKeyPress}
