@@ -77,11 +77,11 @@ const FollowList = ({ type, list }: IFollowList) => {
       <FollowTable>
         <FollowTableHeader $visible={isTableVisible}>
           <tr>
-            <td></td>
+            <td />
             <td>USER NAME</td>
             <td>FOLLOWER</td>
             <td>FOLLOWING</td>
-            <td></td>
+            <td />
           </tr>
         </FollowTableHeader>
 

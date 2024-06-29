@@ -75,27 +75,27 @@ const SignUpForm = ({ selectMenu, onClickMenu }: IMenuProps) => {
         <AccountInput $largemargin="false">
           <input type="text" value={nickname} onChange={onChangeNickname} required />
           <label>User name</label>
-          <span></span>
+          <span />
         </AccountInput>
         <AccountAlert $login="false">2~16자 영문 대 소문자, 한글, 숫자를 사용하세요.</AccountAlert>
 
         <AccountInput $largemargin="true">
           <input type="text" value={email} onChange={onChangeEmail} required />
           <label>Email address</label>
-          <span></span>
+          <span />
         </AccountInput>
 
         <AccountInput $largemargin="false">
           <input type="password" value={password} onChange={onChangePassword} required />
           <label>Password</label>
-          <span></span>
+          <span />
         </AccountInput>
         <AccountAlert $login="false">8~16자 영문 대 소문자, 숫자를 사용하세요.</AccountAlert>
 
         <AccountInput $largemargin="true">
           <input type="password" value={passwordCheck} onChange={onChangePasswordCheck} required />
           <label>Confirm password</label>
-          <span></span>
+          <span />
         </AccountInput>
 
         <AuthOptionsWrapper $menu={selectMenu}>

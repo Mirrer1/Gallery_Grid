@@ -13,8 +13,8 @@ const Chat = ({ visibleChat, setVisibleChat }: ChatProps) => {
   const [chat, onChangeChat] = useInput('');
   const lastChatItemRef = useRef<HTMLDivElement>(null);
 
-  const handleKeyPress = useCallback(
-    (event: React.KeyboardEvent) => {
+  const handleKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLInputElement>) => {
       if (event.key === 'Enter') {
         console.log(chat);
       }
@@ -53,7 +53,10 @@ const Chat = ({ visibleChat, setVisibleChat }: ChatProps) => {
         <ChatItemWrapper>
           <ReceiveChat>
             <div>
-              <img src="https://i.pinimg.com/564x/ed/30/6c/ed306c69bf2cd486a926babf2912bef9.jpg" />
+              <img
+                src="https://i.pinimg.com/564x/ed/30/6c/ed306c69bf2cd486a926babf2912bef9.jpg"
+                alt="Chat Receiver Profile Image"
+              />
               <div>10:24</div>
             </div>
 
@@ -68,7 +71,10 @@ const Chat = ({ visibleChat, setVisibleChat }: ChatProps) => {
 
           <ReceiveChat>
             <div>
-              <img src="https://i.pinimg.com/564x/ed/30/6c/ed306c69bf2cd486a926babf2912bef9.jpg" />
+              <img
+                src="https://i.pinimg.com/564x/ed/30/6c/ed306c69bf2cd486a926babf2912bef9.jpg"
+                alt="Chat Receiver Profile Image"
+              />
               <div>10:41</div>
             </div>
 
@@ -79,7 +85,10 @@ const Chat = ({ visibleChat, setVisibleChat }: ChatProps) => {
 
           <ReceiveChat>
             <div>
-              <img src="https://i.pinimg.com/564x/ed/30/6c/ed306c69bf2cd486a926babf2912bef9.jpg" />
+              <img
+                src="https://i.pinimg.com/564x/ed/30/6c/ed306c69bf2cd486a926babf2912bef9.jpg"
+                alt="Chat Receiver Profile Image"
+              />
               <div>10:24</div>
             </div>
 
@@ -94,7 +103,10 @@ const Chat = ({ visibleChat, setVisibleChat }: ChatProps) => {
 
           <ReceiveChat>
             <div>
-              <img src="https://i.pinimg.com/564x/ed/30/6c/ed306c69bf2cd486a926babf2912bef9.jpg" />
+              <img
+                src="https://i.pinimg.com/564x/ed/30/6c/ed306c69bf2cd486a926babf2912bef9.jpg"
+                alt="Chat Receiver Profile Image"
+              />
               <div>10:41</div>
             </div>
 
@@ -105,7 +117,10 @@ const Chat = ({ visibleChat, setVisibleChat }: ChatProps) => {
 
           <ReceiveChat>
             <div>
-              <img src="https://i.pinimg.com/564x/ed/30/6c/ed306c69bf2cd486a926babf2912bef9.jpg" />
+              <img
+                src="https://i.pinimg.com/564x/ed/30/6c/ed306c69bf2cd486a926babf2912bef9.jpg"
+                alt="Chat Receiver Profile Image"
+              />
               <div>10:24</div>
             </div>
 
@@ -120,7 +135,10 @@ const Chat = ({ visibleChat, setVisibleChat }: ChatProps) => {
 
           <ReceiveChat>
             <div>
-              <img src="https://i.pinimg.com/564x/ed/30/6c/ed306c69bf2cd486a926babf2912bef9.jpg" />
+              <img
+                src="https://i.pinimg.com/564x/ed/30/6c/ed306c69bf2cd486a926babf2912bef9.jpg"
+                alt="Chat Receiver Profile Image"
+              />
               <div>10:41</div>
             </div>
 
@@ -131,7 +149,10 @@ const Chat = ({ visibleChat, setVisibleChat }: ChatProps) => {
 
           <ReceiveChat>
             <div>
-              <img src="https://i.pinimg.com/564x/ed/30/6c/ed306c69bf2cd486a926babf2912bef9.jpg" />
+              <img
+                src="https://i.pinimg.com/564x/ed/30/6c/ed306c69bf2cd486a926babf2912bef9.jpg"
+                alt="Chat Receiver Profile Image"
+              />
               <div>10:24</div>
             </div>
 
@@ -146,7 +167,10 @@ const Chat = ({ visibleChat, setVisibleChat }: ChatProps) => {
 
           <ReceiveChat ref={lastChatItemRef}>
             <div>
-              <img src="https://i.pinimg.com/564x/ed/30/6c/ed306c69bf2cd486a926babf2912bef9.jpg" />
+              <img
+                src="https://i.pinimg.com/564x/ed/30/6c/ed306c69bf2cd486a926babf2912bef9.jpg"
+                alt="Chat Receiver Profile Image"
+              />
               <div>10:41</div>
             </div>
 
@@ -164,7 +188,7 @@ const Chat = ({ visibleChat, setVisibleChat }: ChatProps) => {
               placeholder="Type a Message..."
               value={chat}
               onChange={onChangeChat}
-              onKeyPress={handleKeyPress}
+              onKeyDown={handleKeyDown}
             />
           </div>
 

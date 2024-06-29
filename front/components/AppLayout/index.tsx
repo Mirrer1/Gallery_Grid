@@ -96,7 +96,7 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
         </NavbarItems>
       </aside>
 
-      <div></div>
+      <div />
 
       <MobileHeader showInput={showInput} showSearch={showSearch} hideSearch={hideSearch} />
 

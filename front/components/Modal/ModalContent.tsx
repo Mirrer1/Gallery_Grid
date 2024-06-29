@@ -42,8 +42,8 @@ const ModalContent = () => {
     else dispatch(showCommentList());
   }, [isCommentListVisible]);
 
-  const handleKeyPress = useCallback(
-    (event: React.KeyboardEvent) => {
+  const handleKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLInputElement>) => {
       if (event.key === 'Enter') {
         console.log(comment);
       }
@@ -70,7 +70,7 @@ const ModalContent = () => {
           <button type="button">Follow</button>
 
           <Tooltip>
-            {isTooltipVisible && <TooltipOutsideArea onClick={hideTooltip}></TooltipOutsideArea>}
+            {isTooltipVisible && <TooltipOutsideArea onClick={hideTooltip} />}
 
             <MoreOutlined onClick={handleTooltip} />
             <TooltipBtn $visible={isTooltipVisible}>
@@ -123,7 +123,7 @@ const ModalContent = () => {
             placeholder="Type a Comment..."
             value={comment}
             onChange={onChangeComment}
-            onKeyPress={handleKeyPress}
+            onKeyDown={handleKeyDown}
           />
         </div>
 

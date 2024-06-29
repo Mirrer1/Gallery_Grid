@@ -44,10 +44,10 @@ const PostImageCarousel = ({ images }: CarouselProps) => {
         <BackgroundImageContainer $background={images[activeIndex]} />
 
         <Swiper
-          effect={'coverflow'}
+          effect="coverflow"
           grabCursor={true}
           centeredSlides={true}
-          slidesPerView={'auto'}
+          slidesPerView="auto"
           coverflowEffect={{
             rotate: 50,
             stretch: 0,

@@ -64,13 +64,13 @@ const LoginForm = ({ selectMenu, onClickMenu }: IMenuProps) => {
         <AccountInput $largemargin="true">
           <input type="text" value={email} onChange={onChangeEmail} required />
           <label>Email address</label>
-          <span></span>
+          <span />
         </AccountInput>
 
         <AccountInput $largemargin="false">
           <input type="password" value={password} onChange={onChangePassword} required />
           <label>Password</label>
-          <span></span>
+          <span />
         </AccountInput>
         <AccountAlert $login="true">8~16자 영문 대 소문자, 숫자를 사용하세요.</AccountAlert>
 

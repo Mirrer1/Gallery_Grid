@@ -25,7 +25,7 @@ const BigPostPreview = ({ post }: any) => {
 
         <div>
           {post.img.map((_: any, i: any) => (
-            <div key={i}></div>
+            <div key={i} />
           ))}
         </div>
 

@@ -24,19 +24,19 @@ const MenuContents = ({ selectMenu, onClickMenu }: IMenuProps) => {
         {selectMenu === 'home' ? (
           <div>
             <p>Work</p>
-            <div></div>
+            <div />
             <p>1</p>
           </div>
         ) : selectMenu === 'login' ? (
           <div>
             <p>Login</p>
-            <div></div>
+            <div />
             <p>2</p>
           </div>
         ) : selectMenu === 'signup' ? (
           <div>
             <p>Sign Up</p>
-            <div></div>
+            <div />
             <p>3</p>
           </div>
         ) : null}

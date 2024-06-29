@@ -176,8 +176,8 @@ const UserFollowList = ({ type }: UserFollowProps) => {
 
   const [keyword, onChangeKeyword] = useInput('');
 
-  const handleKeyPress = useCallback(
-    (event: React.KeyboardEvent) => {
+  const handleKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLInputElement>) => {
       if (event.key === 'Enter') {
         console.log(keyword);
       }
@@ -198,7 +198,7 @@ const UserFollowList = ({ type }: UserFollowProps) => {
           placeholder="Search"
           value={keyword}
           onChange={onChangeKeyword}
-          onKeyPress={handleKeyPress}
+          onKeyDown={handleKeyDown}
         />
       </UserSearchWrapper>
 
