@@ -9,19 +9,19 @@ export default class Post extends Model {
       {
         content: {
           type: DataTypes.TEXT,
-          allowNull: false,
+          allowNull: false
         },
         location: {
           type: DataTypes.STRING(30),
-          allowNull: true,
-        },
+          allowNull: true
+        }
       },
       {
         modelName: 'Post',
         tableName: 'posts',
         charset: 'utf8mb4',
         collate: 'utf8mb4_general_ci',
-        sequelize,
+        sequelize
       }
     );
     return Post;

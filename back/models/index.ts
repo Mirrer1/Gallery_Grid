@@ -13,12 +13,7 @@ const env = process.env.NODE_ENV || 'development';
 const config = require('../config/config.json')[env];
 const db: any = {};
 
-const sequelize = new Sequelize(
-  config.database,
-  config.username,
-  config.password,
-  config
-);
+const sequelize = new Sequelize(config.database, config.username, config.password, config);
 
 db.User = User.initModel(sequelize);
 db.Post = Post.initModel(sequelize);
@@ -29,7 +24,7 @@ db.Comment = Comment.initModel(sequelize);
 db.Image = Image.initModel(sequelize);
 db.Report = Report.initModel(sequelize);
 
-Object.keys(db).forEach((modelName) => {
+Object.keys(db).forEach(modelName => {
   if (db[modelName].associate) {
     db[modelName].associate(db);
   }

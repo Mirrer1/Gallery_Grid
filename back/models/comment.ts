@@ -8,15 +8,15 @@ export default class Comment extends Model {
       {
         content: {
           type: DataTypes.TEXT,
-          allowNull: false,
-        },
+          allowNull: false
+        }
       },
       {
         modelName: 'Comment',
         tableName: 'comments',
         charset: 'utf8mb4',
         collate: 'utf8mb4_general_ci',
-        sequelize,
+        sequelize
       }
     );
     return Comment;

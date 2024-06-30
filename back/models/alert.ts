@@ -8,15 +8,15 @@ export default class Alert extends Model {
       {
         type: {
           type: DataTypes.STRING(30),
-          allowNull: false,
-        },
+          allowNull: false
+        }
       },
       {
         modelName: 'Alert',
         tableName: 'alerts',
         charset: 'utf8',
         collate: 'utf8_general_ci',
-        sequelize,
+        sequelize
       }
     );
     return Alert;

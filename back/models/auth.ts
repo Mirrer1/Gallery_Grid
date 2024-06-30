@@ -9,19 +9,19 @@ export default class Auth extends Model {
       {
         email: {
           type: DataTypes.STRING(30),
-          allowNull: false,
+          allowNull: false
         },
         code: {
           type: DataTypes.INTEGER,
-          allowNull: false,
-        },
+          allowNull: false
+        }
       },
       {
         modelName: 'Auth',
         tableName: 'auths',
         charset: 'utf8',
         collate: 'utf8_general_ci',
-        sequelize,
+        sequelize
       }
     );
     return Auth;

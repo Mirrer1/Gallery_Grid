@@ -1,12 +1,15 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { GoogleOutlined } from '@ant-design/icons';
-import Router from 'next/router';
+import { useDispatch, useSelector } from 'react-redux';
 
 import useInput from 'utils/useInput';
 import { IMenuProps } from './MenuContents';
 import { useValidate } from 'utils/useValidate';
 import { slideInFromBottom } from 'styles/Common/animation';
+import { resetSignUpMessage, signUpRequest } from 'store/actions/userAction';
+import { RootState } from 'store/reducers';
+
 import {
   AccountBtn,
   AccountDivider,
@@ -20,6 +23,9 @@ import {
 } from 'styles/Landing/accountForm';
 
 const SignUpForm = ({ selectMenu, onClickMenu }: IMenuProps) => {
+  const dispatch = useDispatch();
+  const { signUpMessage } = useSelector((state: RootState) => state.user);
+
   const [nickname, onChangeNickname] = useInput('');
   const [email, onChangeEmail] = useInput('');
   const [password, onChangePassword] = useInput('');
@@ -56,11 +62,24 @@ const SignUpForm = ({ selectMenu, onClickMenu }: IMenuProps) => {
         return;
       }
 
-      console.log({ nickname, email, password });
-      Router.push('/timeline');
+      dispatch(signUpRequest({ nickname, email, password }));
     },
     [nickname, email, password, passwordCheck, term]
   );
+
+  useEffect(() => {
+    const { message, type } = signUpMessage;
+    if (message) {
+      if (type === 'success') {
+        toast.success(message);
+        onMoveLogin();
+      } else if (type === 'error') {
+        toast.warning(message);
+      }
+
+      dispatch(resetSignUpMessage());
+    }
+  }, [signUpMessage]);
 
   return (
     <AccountWrapper {...slideInFromBottom()}>

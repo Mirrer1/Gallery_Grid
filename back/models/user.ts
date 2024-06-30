@@ -13,32 +13,32 @@ export default class User extends Model {
         email: {
           type: DataTypes.STRING(30),
           allowNull: false,
-          unique: true,
+          unique: true
         },
         password: {
           type: DataTypes.STRING(100),
-          allowNull: false,
+          allowNull: false
         },
         nickname: {
           type: DataTypes.STRING(30),
           allowNull: false,
-          unique: true,
+          unique: true
         },
         desc: {
           type: DataTypes.STRING(250),
-          allowNull: true,
+          allowNull: true
         },
         isRecommended: {
           type: DataTypes.BOOLEAN,
-          allowNull: false,
-        },
+          allowNull: false
+        }
       },
       {
         modelName: 'User',
         tableName: 'users',
         charset: 'utf8',
         collate: 'utf8_general_ci',
-        sequelize,
+        sequelize
       }
     );
     return User;
@@ -52,29 +52,29 @@ export default class User extends Model {
     db.User.hasMany(db.Chat, { as: 'SentMessages', foreignKey: 'SenderId' });
     db.User.hasMany(db.Chat, {
       as: 'ReceivedMessages',
-      foreignKey: 'ReceiverId',
+      foreignKey: 'ReceiverId'
     });
     db.User.hasMany(db.Report, {
       foreignKey: 'ReporterId',
-      as: 'ReportsFiled',
+      as: 'ReportsFiled'
     });
     db.User.hasMany(db.Report, {
       foreignKey: 'ReportedUserId',
-      as: 'ReportsReceived',
+      as: 'ReportsReceived'
     });
     db.User.belongsTo(db.Image, {
       as: 'ProfileImage',
-      foreignKey: 'ProfileImageId',
+      foreignKey: 'ProfileImageId'
     });
     db.User.belongsToMany(db.User, {
       through: 'Follow',
       as: 'Followers',
-      foreignKey: 'FollowingId',
+      foreignKey: 'FollowingId'
     });
     db.User.belongsToMany(db.User, {
       through: 'Follow',
       as: 'Followings',
-      foreignKey: 'FollowerId',
+      foreignKey: 'FollowerId'
     });
   }
 }

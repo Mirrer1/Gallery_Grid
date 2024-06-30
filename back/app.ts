@@ -1,4 +1,7 @@
 import express from 'express';
+import cors from 'cors';
+
+import userRouter from './routes/user';
 import postRouter from './routes/post';
 import db from './models';
 
@@ -8,6 +11,15 @@ db.sequelize
   .then(() => console.log('Database Connection Successful'))
   .catch(console.error);
 
+app.use(
+  cors({
+    origin: true
+  })
+);
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.use('/user', userRouter);
 app.use('/post', postRouter);
 
 app.listen(3065, () => {

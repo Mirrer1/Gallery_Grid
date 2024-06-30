@@ -8,15 +8,15 @@ export default class Image extends Model {
       {
         src: {
           type: DataTypes.STRING(200),
-          allowNull: false,
-        },
+          allowNull: false
+        }
       },
       {
         modelName: 'Image',
         tableName: 'images',
         charset: 'utf8',
         collate: 'utf8_general_ci',
-        sequelize,
+        sequelize
       }
     );
     return Image;
@@ -26,7 +26,7 @@ export default class Image extends Model {
     db.Image.belongsTo(db.Post);
     db.Image.hasOne(db.User, {
       as: 'ProfileImage',
-      foreignKey: 'ProfileImageId',
+      foreignKey: 'ProfileImageId'
     });
     db.Image.hasMany(db.Chat, { as: 'ChatMessages', foreignKey: 'ImageId' });
   }

@@ -9,19 +9,19 @@ export default class Chat extends Model {
       {
         content: {
           type: DataTypes.TEXT,
-          allowNull: false,
+          allowNull: false
         },
         checked: {
           type: DataTypes.BOOLEAN,
-          allowNull: false,
-        },
+          allowNull: false
+        }
       },
       {
         modelName: 'Chat',
         tableName: 'chats',
         charset: 'utf8mb4',
         collate: 'utf8mb4_general_ci',
-        sequelize,
+        sequelize
       }
     );
     return Chat;

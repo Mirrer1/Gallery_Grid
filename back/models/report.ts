@@ -9,19 +9,19 @@ export default class Report extends Model {
       {
         type: {
           type: DataTypes.STRING(30),
-          allowNull: false,
+          allowNull: false
         },
         content: {
           type: DataTypes.TEXT,
-          allowNull: false,
-        },
+          allowNull: false
+        }
       },
       {
         modelName: 'Report',
         tableName: 'reports',
         charset: 'utf8',
         collate: 'utf8_general_ci',
-        sequelize,
+        sequelize
       }
     );
     return Report;
@@ -31,12 +31,12 @@ export default class Report extends Model {
     db.Report.belongsTo(db.User, { foreignKey: 'ReporterId', as: 'Reporter' });
     db.Report.belongsTo(db.User, {
       foreignKey: 'ReportedUserId',
-      as: 'ReportedUser',
+      as: 'ReportedUser'
     });
     db.Report.belongsTo(db.Post, { foreignKey: 'PostId', as: 'ReportedPost' });
     db.Report.belongsTo(db.Comment, {
       foreignKey: 'CommentId',
-      as: 'ReportedComment',
+      as: 'ReportedComment'
     });
   }
 }
