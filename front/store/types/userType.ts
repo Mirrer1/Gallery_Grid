@@ -21,32 +21,34 @@ export type UserState = {
   };
 };
 
-export interface SignUpResponse {
+export interface ResponseMessage {
   message: string;
 }
 
-export interface SignUpData {
-  nickname: string;
+export interface AuthData {
   email: string;
   password: string;
+  nickname?: string;
 }
 
 export interface loginRequestAction {
   type: typeof LOGIN_REQUEST;
+  data: AuthData;
 }
 
 export interface loginSuccessAction {
   type: typeof LOGIN_SUCCESS;
+  data: string;
 }
 
 export interface loginFailureAction {
   type: typeof LOGIN_FAILURE;
-  error: any;
+  error: string;
 }
 
 export interface signUpRequestAction {
   type: typeof SIGNUP_REQUEST;
-  data: SignUpData;
+  data: AuthData;
 }
 
 export interface signUpSuccessAction {

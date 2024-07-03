@@ -34,19 +34,19 @@ const LoginForm = ({ selectMenu, onClickMenu }: IMenuProps) => {
     (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
 
-      // const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-      // const passwordRegex = /^[A-Za-z\d]{8,16}$/;
+      const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+      const passwordRegex = /^[A-Za-z\d]{8,16}$/;
 
-      // if (
-      //   !useValidate(email, emailRegex, '이메일 형식이 올바르지 않습니다.') ||
-      //   !useValidate(password, passwordRegex, '비밀번호 형식이 올바르지 않습니다.')
-      // ) {
-      //   return;
-      // }
+      if (
+        !useValidate(email, emailRegex, '이메일 형식이 올바르지 않습니다.') ||
+        !useValidate(password, passwordRegex, '비밀번호 형식이 올바르지 않습니다.')
+      ) {
+        return;
+      }
 
-      console.log({ email, password, rememberMe });
-      dispatch(loginRequest());
-      Router.push('/timeline');
+      console.log({ email, password });
+      dispatch(loginRequest({ email, password }));
+      // Router.push('/timeline');
     },
     [email, password, rememberMe]
   );

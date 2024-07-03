@@ -1,4 +1,5 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
+import { DatabaseModels } from 'models';
 
 export default class Image extends Model {
   public src!: string;
@@ -22,7 +23,7 @@ export default class Image extends Model {
     return Image;
   }
 
-  static associate(db: any) {
+  static associate(db: DatabaseModels) {
     db.Image.belongsTo(db.Post);
     db.Image.hasOne(db.User, {
       as: 'ProfileImage',

@@ -1,10 +1,11 @@
-import { LOGIN_REQUEST, RESET_SIGNUP_MESSAGE, SIGNUP_REQUEST, SignUpData } from 'store/types/userType';
+import { LOGIN_REQUEST, RESET_SIGNUP_MESSAGE, SIGNUP_REQUEST, AuthData } from 'store/types/userType';
 
-export const loginRequest = () => ({
-  type: LOGIN_REQUEST
+export const loginRequest = (data: AuthData) => ({
+  type: LOGIN_REQUEST,
+  data
 });
 
-export const signUpRequest = (data: SignUpData) => ({
+export const signUpRequest = (data: AuthData) => ({
   type: SIGNUP_REQUEST,
   data
 });

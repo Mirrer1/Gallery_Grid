@@ -1,4 +1,5 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
+import { DatabaseModels } from 'models';
 
 export default class Comment extends Model {
   public content!: string;
@@ -22,7 +23,7 @@ export default class Comment extends Model {
     return Comment;
   }
 
-  static associate(db: any) {
+  static associate(db: DatabaseModels) {
     db.Comment.belongsTo(db.User);
     db.Comment.belongsTo(db.Post);
     db.Comment.hasMany(db.Alert);

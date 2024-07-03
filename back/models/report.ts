@@ -1,4 +1,5 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
+import { DatabaseModels } from 'models';
 
 export default class Report extends Model {
   public type!: string;
@@ -27,7 +28,7 @@ export default class Report extends Model {
     return Report;
   }
 
-  static associate(db: any) {
+  static associate(db: DatabaseModels) {
     db.Report.belongsTo(db.User, { foreignKey: 'ReporterId', as: 'Reporter' });
     db.Report.belongsTo(db.User, {
       foreignKey: 'ReportedUserId',

@@ -34,6 +34,7 @@ const reducer = (state: UserState = initialState, action: UserAction): UserState
       case LOGIN_SUCCESS:
         draft.loginLoading = false;
         draft.loginDone = true;
+        draft.me = action.data;
         break;
       case LOGIN_FAILURE:
         draft.loginLoading = false;

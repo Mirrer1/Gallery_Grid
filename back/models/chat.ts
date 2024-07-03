@@ -1,4 +1,5 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
+import { DatabaseModels } from 'models';
 
 export default class Chat extends Model {
   public content!: string;
@@ -27,7 +28,7 @@ export default class Chat extends Model {
     return Chat;
   }
 
-  static associate(db: any) {
+  static associate(db: DatabaseModels) {
     db.Chat.belongsTo(db.User, { as: 'Sender', foreignKey: 'SenderId' });
     db.Chat.belongsTo(db.User, { as: 'Receiver', foreignKey: 'ReceiverId' });
     db.Chat.belongsTo(db.Image, { as: 'Image', foreignKey: 'ImageId' });

@@ -1,4 +1,5 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
+import { DatabaseModels } from 'models';
 
 export default class Post extends Model {
   public content!: string;
@@ -27,7 +28,7 @@ export default class Post extends Model {
     return Post;
   }
 
-  static associate(db: any) {
+  static associate(db: DatabaseModels) {
     db.Post.hasMany(db.Comment);
     db.Post.hasMany(db.Image);
     db.Post.hasMany(db.Alert);

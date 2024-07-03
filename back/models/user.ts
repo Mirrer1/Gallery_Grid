@@ -1,4 +1,5 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
+import { DatabaseModels } from 'models';
 
 export default class User extends Model {
   public email!: string;
@@ -44,7 +45,7 @@ export default class User extends Model {
     return User;
   }
 
-  static associate(db: any) {
+  static associate(db: DatabaseModels) {
     db.User.hasMany(db.Post);
     db.User.hasMany(db.Comment);
     db.User.hasMany(db.Alert);

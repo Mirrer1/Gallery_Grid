@@ -8,25 +8,42 @@ import Chat from './chat';
 import Comment from './comment';
 import Image from './image';
 import Report from './report';
+import config from '../config/config';
 
 const env = process.env.NODE_ENV || 'development';
-const config = require('../config/config.json')[env];
-const db: any = {};
+const envConfig = config[env];
+const sequelize = new Sequelize(envConfig.database, envConfig.username, envConfig.password, envConfig);
 
-const sequelize = new Sequelize(config.database, config.username, config.password, config);
+export interface DatabaseModels {
+  sequelize: Sequelize;
+  Sequelize: typeof Sequelize;
+  User: typeof User;
+  Post: typeof Post;
+  Alert: typeof Alert;
+  Auth: typeof Auth;
+  Chat: typeof Chat;
+  Comment: typeof Comment;
+  Image: typeof Image;
+  Report: typeof Report;
+}
 
-db.User = User.initModel(sequelize);
-db.Post = Post.initModel(sequelize);
-db.Alert = Alert.initModel(sequelize);
-db.Auth = Auth.initModel(sequelize);
-db.Chat = Chat.initModel(sequelize);
-db.Comment = Comment.initModel(sequelize);
-db.Image = Image.initModel(sequelize);
-db.Report = Report.initModel(sequelize);
+const db: DatabaseModels = {
+  sequelize: new Sequelize(envConfig.database, envConfig.username, envConfig.password, envConfig),
+  Sequelize,
+  User: User.initModel(sequelize),
+  Post: Post.initModel(sequelize),
+  Alert: Alert.initModel(sequelize),
+  Auth: Auth.initModel(sequelize),
+  Chat: Chat.initModel(sequelize),
+  Comment: Comment.initModel(sequelize),
+  Image: Image.initModel(sequelize),
+  Report: Report.initModel(sequelize)
+};
 
-Object.keys(db).forEach(modelName => {
-  if (db[modelName].associate) {
-    db[modelName].associate(db);
+(Object.keys(db) as (keyof DatabaseModels)[]).forEach(modelName => {
+  const model = db[modelName];
+  if ('associate' in model) {
+    model.associate(db);
   }
 });
 

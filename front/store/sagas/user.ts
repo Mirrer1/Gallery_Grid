@@ -8,27 +8,25 @@ import {
   SIGNUP_FAILURE,
   SIGNUP_REQUEST,
   SIGNUP_SUCCESS,
-  SignUpData,
-  SignUpResponse,
-  UserAction,
-  signUpRequestAction
+  AuthData,
+  ResponseMessage,
+  signUpRequestAction,
+  loginRequestAction
 } from 'store/types/userType';
 
-function signUpAPI(data: SignUpData) {
-  return axios.post('http://localhost:3065/user', data);
+function signUpAPI(data: AuthData) {
+  return axios.post('/user', data);
 }
 
 function* signUp(action: signUpRequestAction) {
   try {
-    const result: AxiosResponse<SignUpResponse> = yield call(signUpAPI, action.data);
+    const result: AxiosResponse<ResponseMessage> = yield call(signUpAPI, action.data);
 
     yield put({
       type: SIGNUP_SUCCESS,
       data: result.data.message
     });
   } catch (error: any) {
-    console.log(error);
-
     yield put({
       type: SIGNUP_FAILURE,
       error: error.response.data.message
@@ -36,21 +34,22 @@ function* signUp(action: signUpRequestAction) {
   }
 }
 
-function loginAPI(data) {
-  return axios.post('/api/login', data);
+function loginAPI(data: AuthData) {
+  return axios.post('/user/login', data);
 }
 
-function* login(action: UserAction) {
+function* login(action: loginRequestAction) {
   try {
-    const result = yield call(loginAPI, action.data);
+    const result: AxiosResponse<ResponseMessage> = yield call(loginAPI, action.data);
+
     yield put({
       type: LOGIN_SUCCESS,
-      data: action.data
+      data: result.data
     });
   } catch (error: any) {
     yield put({
       type: LOGIN_FAILURE,
-      error: error.response.data
+      error: error.response.data.message
     });
   }
 }

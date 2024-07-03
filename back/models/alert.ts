@@ -1,4 +1,5 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
+import { DatabaseModels } from 'models';
 
 export default class Alert extends Model {
   public type!: string;
@@ -22,7 +23,7 @@ export default class Alert extends Model {
     return Alert;
   }
 
-  static associate(db: any) {
+  static associate(db: DatabaseModels) {
     db.Alert.belongsTo(db.Post);
     db.Alert.belongsTo(db.Comment);
     db.Alert.belongsTo(db.User, { as: 'Alerter' });

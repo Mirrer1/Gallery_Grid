@@ -1,4 +1,5 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
+import { DatabaseModels } from 'models';
 
 export default class Auth extends Model {
   public email!: string;
@@ -27,5 +28,5 @@ export default class Auth extends Model {
     return Auth;
   }
 
-  static associate(db: any) {}
+  static associate(db: DatabaseModels) {}
 }
