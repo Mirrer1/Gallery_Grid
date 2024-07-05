@@ -1,21 +1,32 @@
-import { DataTypes, Model, Sequelize } from 'sequelize';
-import { DatabaseModels } from 'models';
+import Sequelize, { CreationOptional, InferAttributes, InferCreationAttributes, Model } from 'sequelize';
+import User from './user';
+import Image from './image';
 
-export default class Chat extends Model {
-  public content!: string;
-  public checked!: boolean;
+class Chat extends Model<InferAttributes<Chat>, InferCreationAttributes<Chat>> {
+  declare id: CreationOptional<number>;
+  declare content: string;
+  declare checked: boolean;
+  declare createdAt: CreationOptional<Date>;
+  declare updatedAt: CreationOptional<Date>;
 
-  static initModel(sequelize: Sequelize): typeof Chat {
+  static initiate(sequelize: Sequelize.Sequelize) {
     Chat.init(
       {
+        id: {
+          type: Sequelize.INTEGER,
+          primaryKey: true,
+          autoIncrement: true
+        },
         content: {
-          type: DataTypes.TEXT,
+          type: Sequelize.TEXT,
           allowNull: false
         },
         checked: {
-          type: DataTypes.BOOLEAN,
+          type: Sequelize.BOOLEAN,
           allowNull: false
-        }
+        },
+        createdAt: Sequelize.DATE,
+        updatedAt: Sequelize.DATE
       },
       {
         modelName: 'Chat',
@@ -25,12 +36,13 @@ export default class Chat extends Model {
         sequelize
       }
     );
-    return Chat;
   }
 
-  static associate(db: DatabaseModels) {
-    db.Chat.belongsTo(db.User, { as: 'Sender', foreignKey: 'SenderId' });
-    db.Chat.belongsTo(db.User, { as: 'Receiver', foreignKey: 'ReceiverId' });
-    db.Chat.belongsTo(db.Image, { as: 'Image', foreignKey: 'ImageId' });
+  static associate() {
+    Chat.belongsTo(User, { as: 'Sender', foreignKey: 'SenderId' });
+    Chat.belongsTo(User, { as: 'Receiver', foreignKey: 'ReceiverId' });
+    Chat.belongsTo(Image, { as: 'Image', foreignKey: 'ImageId' });
   }
 }
+
+export default Chat;

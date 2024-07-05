@@ -1,16 +1,28 @@
-import { DataTypes, Model, Sequelize } from 'sequelize';
-import { DatabaseModels } from 'models';
+import Sequelize, { CreationOptional, InferAttributes, InferCreationAttributes, Model } from 'sequelize';
+import Post from './post';
+import User from './user';
+import Chat from './chat';
 
-export default class Image extends Model {
-  public src!: string;
+class Image extends Model<InferAttributes<Image>, InferCreationAttributes<Image>> {
+  declare id: CreationOptional<number>;
+  declare src: string;
+  declare createdAt: CreationOptional<Date>;
+  declare updatedAt: CreationOptional<Date>;
 
-  static initModel(sequelize: Sequelize): typeof Image {
+  static initiate(sequelize: Sequelize.Sequelize) {
     Image.init(
       {
+        id: {
+          type: Sequelize.INTEGER,
+          primaryKey: true,
+          autoIncrement: true
+        },
         src: {
-          type: DataTypes.STRING(200),
+          type: Sequelize.STRING(200),
           allowNull: false
-        }
+        },
+        createdAt: Sequelize.DATE,
+        updatedAt: Sequelize.DATE
       },
       {
         modelName: 'Image',
@@ -20,15 +32,19 @@ export default class Image extends Model {
         sequelize
       }
     );
-    return Image;
   }
 
-  static associate(db: DatabaseModels) {
-    db.Image.belongsTo(db.Post);
-    db.Image.hasOne(db.User, {
+  static associate() {
+    Image.belongsTo(Post);
+    Image.hasOne(User, {
       as: 'ProfileImage',
       foreignKey: 'ProfileImageId'
     });
-    db.Image.hasMany(db.Chat, { as: 'ChatMessages', foreignKey: 'ImageId' });
+    Image.hasMany(Chat, {
+      as: 'ChatMessages',
+      foreignKey: 'ImageId'
+    });
   }
 }
+
+export default Image;

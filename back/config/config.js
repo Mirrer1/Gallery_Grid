@@ -1,28 +1,27 @@
-import dotenv from 'dotenv';
-
+'use strict';
+const dotenv = require('dotenv');
 dotenv.config();
 
-export default {
+module.exports = {
   development: {
     username: 'root',
-    password: process.env.DB_PASSWORD!,
+    password: process.env.DB_PASSWORD,
     database: 'gallery-grid',
     host: '127.0.0.1',
-    dialect: 'mysql' as const
+    dialect: 'mysql'
   },
   test: {
     username: 'root',
-    password: process.env.DB_PASSWORD!,
+    password: process.env.DB_PASSWORD,
     database: 'gallery-grid',
     host: '127.0.0.1',
-    dialect: 'mysql' as const
+    dialect: 'mysql'
   },
   production: {
     username: 'root',
-    password: process.env.DB_PASSWORD!,
+    password: process.env.DB_PASSWORD,
     database: 'gallery-grid',
     host: '127.0.0.1',
-    dialect: 'mysql' as const,
-    logging: false
+    dialect: 'mysql'
   }
 };

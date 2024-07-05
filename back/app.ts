@@ -3,13 +3,18 @@ import cors from 'cors';
 
 import userRouter from './routes/user';
 import postRouter from './routes/post';
-import db from './models';
+import { sequelize } from './models';
 
 const app = express();
-db.sequelize
+
+sequelize
   .sync()
-  .then(() => console.log('Database Connection Successful!'))
-  .catch(console.error);
+  .then(() => {
+    console.log('Database Connection Successful!');
+  })
+  .catch(err => {
+    console.error(err);
+  });
 
 app.use(
   cors({

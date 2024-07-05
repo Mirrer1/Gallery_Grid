@@ -1,14 +1,13 @@
 {
-  "ts-node": {
-    "files": true
-  },
   "compilerOptions": {
-    "target": "ES2021",
-    "strict": true,
-    "lib": ["es2020"],
-    "esModuleInterop": true,
+    "target": "es2016",
+    "module": "commonjs",
     "moduleResolution": "node",
-    "typeRoots": ["./types"],
-    "baseUrl": "."
-  }
+    "resolveJsonModule": true,
+    "allowJs": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true
+  },
+  "exclude": ["**/*.js"]
 }
