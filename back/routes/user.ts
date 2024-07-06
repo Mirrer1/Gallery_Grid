@@ -3,6 +3,8 @@ import bcrypt from 'bcrypt';
 import { Op } from 'sequelize';
 
 import User from '../models/user';
+import passport from 'passport';
+import Image from '../models/image';
 
 const router = express.Router();
 
@@ -31,10 +33,48 @@ router.post('/', async (req, res, next) => {
     });
 
     res.status(200).json({ message: 'Gallery Grid에 오신걸 환영합니다.' });
-  } catch (error) {
-    console.error(error);
-    next(error);
+  } catch (err) {
+    console.error(err);
+    next(err);
   }
+});
+
+router.post('/login', async (req, res, next) => {
+  passport.authenticate('local', (err, user, info) => {
+    if (err) {
+      console.error(err);
+      next(err);
+    }
+
+    if (info) {
+      return res.status(401).send({ message: info.message });
+    }
+
+    return req.logIn(user, async loginErr => {
+      if (loginErr) {
+        console.error(loginErr);
+        next(loginErr);
+      }
+
+      const fullUser = await User.findOne({
+        where: { id: user.id },
+        include: [
+          {
+            model: Image,
+            as: 'ProfileImage',
+            where: { type: 'user' },
+            attributes: ['id', 'src'],
+            required: false
+          }
+        ],
+        attributes: {
+          exclude: ['password', 'isRecommended']
+        }
+      });
+
+      return res.status(200).json(fullUser);
+    });
+  })(req, res, next);
 });
 
 export default router;

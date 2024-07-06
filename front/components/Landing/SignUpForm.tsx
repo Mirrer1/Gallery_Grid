@@ -69,6 +69,7 @@ const SignUpForm = ({ selectMenu, onClickMenu }: IMenuProps) => {
 
   useEffect(() => {
     const { message, type } = signUpMessage;
+
     if (message) {
       if (type === 'success') {
         toast.success(message);

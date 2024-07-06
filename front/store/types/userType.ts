@@ -1,6 +1,7 @@
 export const LOGIN_REQUEST = 'LOGIN_REQUEST' as const;
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS' as const;
 export const LOGIN_FAILURE = 'LOGIN_FAILURE' as const;
+export const RESET_LOGIN_MESSAGE = 'RESET_LOGIN_MESSAGE' as const;
 
 export const SIGNUP_REQUEST = 'SIGNUP_REQUEST' as const;
 export const SIGNUP_SUCCESS = 'SIGNUP_SUCCESS' as const;
@@ -31,6 +32,17 @@ export interface AuthData {
   nickname?: string;
 }
 
+export interface User {
+  id: number;
+  email: string;
+  nickname: string;
+  desc: string;
+  isRecommended: boolean;
+  createdAt: string;
+  updatedAt: string;
+  ProfileImageId: string | null;
+}
+
 export interface loginRequestAction {
   type: typeof LOGIN_REQUEST;
   data: AuthData;
@@ -44,6 +56,10 @@ export interface loginSuccessAction {
 export interface loginFailureAction {
   type: typeof LOGIN_FAILURE;
   error: string;
+}
+
+export interface resetLoginMessageAction {
+  type: typeof RESET_LOGIN_MESSAGE;
 }
 
 export interface signUpRequestAction {
@@ -69,6 +85,7 @@ export type UserAction =
   | loginRequestAction
   | loginSuccessAction
   | loginFailureAction
+  | resetLoginMessageAction
   | signUpRequestAction
   | signUpSuccessAction
   | signUpFailureAction

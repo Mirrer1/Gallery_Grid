@@ -1,12 +1,15 @@
-import React, { useCallback } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useCallback, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { GoogleOutlined } from '@ant-design/icons';
+import { toast } from 'react-toastify';
 import Router from 'next/router';
 
 import useInput from 'utils/useInput';
 import { IMenuProps } from './MenuContents';
 import { useValidate } from 'utils/useValidate';
 import { slideInFromBottom } from 'styles/Common/animation';
+import { loginRequest, resetLoginMessage } from 'store/actions/userAction';
+import { RootState } from 'store/reducers';
 import {
   AccountBtn,
   AccountDivider,
@@ -18,10 +21,10 @@ import {
   AuthOptionsWrapper,
   AccountAlert
 } from 'styles/Landing/accountForm';
-import { loginRequest } from 'store/actions/userAction';
 
 const LoginForm = ({ selectMenu, onClickMenu }: IMenuProps) => {
   const dispatch = useDispatch();
+  const { loginDone, loginError } = useSelector((state: RootState) => state.user);
   const [email, onChangeEmail] = useInput('');
   const [password, onChangePassword] = useInput('');
   const [rememberMe, onChangeRememberMe] = useInput(false);
@@ -44,12 +47,18 @@ const LoginForm = ({ selectMenu, onClickMenu }: IMenuProps) => {
         return;
       }
 
-      console.log({ email, password });
       dispatch(loginRequest({ email, password }));
-      // Router.push('/timeline');
     },
     [email, password, rememberMe]
   );
+
+  useEffect(() => {
+    if (loginDone) Router.push('/timeline');
+    if (loginError) {
+      toast.warning(loginError);
+      dispatch(resetLoginMessage());
+    }
+  }, [loginDone, loginError]);
 
   return (
     <AccountWrapper {...slideInFromBottom()}>

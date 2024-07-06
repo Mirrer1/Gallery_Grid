@@ -68,7 +68,7 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
     User.hasMany(Chat, { as: 'ReceivedMessages', foreignKey: 'ReceiverId' });
     User.hasMany(Report, { foreignKey: 'ReporterId', as: 'ReportsFiled' });
     User.hasMany(Report, { foreignKey: 'ReportedUserId', as: 'ReportsReceived' });
-    User.belongsTo(Image, { as: 'ProfileImage', foreignKey: 'ProfileImageId' });
+    User.hasOne(Image, { as: 'ProfileImage', foreignKey: 'UserId' });
     User.belongsToMany(User, {
       through: 'Follow',
       as: 'Followers',

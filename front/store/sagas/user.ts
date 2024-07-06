@@ -11,7 +11,8 @@ import {
   AuthData,
   ResponseMessage,
   signUpRequestAction,
-  loginRequestAction
+  loginRequestAction,
+  User
 } from 'store/types/userType';
 
 function signUpAPI(data: AuthData) {
@@ -40,7 +41,7 @@ function loginAPI(data: AuthData) {
 
 function* login(action: loginRequestAction) {
   try {
-    const result: AxiosResponse<ResponseMessage> = yield call(loginAPI, action.data);
+    const result: AxiosResponse<User> = yield call(loginAPI, action.data);
 
     yield put({
       type: LOGIN_SUCCESS,

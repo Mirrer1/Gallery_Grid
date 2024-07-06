@@ -1,9 +1,13 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 
 import MenuContents from 'components/Landing/MenuContents';
+import { RootState } from 'store/reducers';
 import { ContactIcon, HeaderWrapper, MenuButton } from 'styles/Landing/header';
+import Router from 'next/router';
 
 const Landing = () => {
+  const { me } = useSelector((state: RootState) => state.user);
   const [selectMenu, setSelectMenu] = useState('home');
 
   const onClickMenu = useCallback((menu: string) => {
@@ -13,6 +17,10 @@ const Landing = () => {
   const onClickLogo = useCallback(() => {
     setSelectMenu('home');
   }, []);
+
+  useEffect(() => {
+    if (me) Router.replace('/timeline');
+  }, [me]);
 
   return (
     <>

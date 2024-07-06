@@ -4,6 +4,7 @@ import {
   LOGIN_FAILURE,
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
+  RESET_LOGIN_MESSAGE,
   RESET_SIGNUP_MESSAGE,
   SIGNUP_FAILURE,
   SIGNUP_REQUEST,
@@ -39,6 +40,9 @@ const reducer = (state: UserState = initialState, action: UserAction): UserState
       case LOGIN_FAILURE:
         draft.loginLoading = false;
         draft.loginError = action.error;
+        break;
+      case RESET_LOGIN_MESSAGE:
+        draft.loginError = null;
         break;
       case SIGNUP_REQUEST:
         draft.signUpLoading = true;
