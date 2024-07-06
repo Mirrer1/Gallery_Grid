@@ -12,7 +12,10 @@ import {
   ResponseMessage,
   signUpRequestAction,
   loginRequestAction,
-  User
+  User,
+  LOGOUT_REQUEST,
+  LOGOUT_SUCCESS,
+  LOGOUT_FAILURE
 } from 'store/types/userType';
 
 function signUpAPI(data: AuthData) {
@@ -55,6 +58,25 @@ function* login(action: loginRequestAction) {
   }
 }
 
+function logoutAPI() {
+  return axios.post('/user/logout');
+}
+
+function* logout() {
+  try {
+    yield call(logoutAPI);
+
+    yield put({
+      type: LOGOUT_SUCCESS
+    });
+  } catch (error: any) {
+    yield put({
+      type: LOGOUT_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
 function* watchSignUp() {
   yield takeLatest(SIGNUP_REQUEST, signUp);
 }
@@ -63,6 +85,10 @@ function* watchLogin() {
   yield takeLatest(LOGIN_REQUEST, login);
 }
 
+function* watchLogout() {
+  yield takeLatest(LOGOUT_REQUEST, logout);
+}
+
 export default function* userSaga() {
-  yield all([fork(watchLogin), fork(watchSignUp)]);
+  yield all([fork(watchLogin), fork(watchLogout), fork(watchSignUp)]);
 }

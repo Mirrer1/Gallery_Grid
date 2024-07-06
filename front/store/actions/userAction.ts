@@ -3,7 +3,8 @@ import {
   RESET_SIGNUP_MESSAGE,
   SIGNUP_REQUEST,
   AuthData,
-  RESET_LOGIN_MESSAGE
+  RESET_LOGIN_MESSAGE,
+  LOGOUT_REQUEST
 } from 'store/types/userType';
 
 export const loginRequest = (data: AuthData) => ({
@@ -13,6 +14,10 @@ export const loginRequest = (data: AuthData) => ({
 
 export const resetLoginMessage = () => ({
   type: RESET_LOGIN_MESSAGE
+});
+
+export const logoutRequest = () => ({
+  type: LOGOUT_REQUEST
 });
 
 export const signUpRequest = (data: AuthData) => ({

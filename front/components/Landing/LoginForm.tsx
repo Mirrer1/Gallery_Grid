@@ -2,7 +2,6 @@ import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { GoogleOutlined } from '@ant-design/icons';
 import { toast } from 'react-toastify';
-import Router from 'next/router';
 
 import useInput from 'utils/useInput';
 import { IMenuProps } from './MenuContents';
@@ -24,7 +23,7 @@ import {
 
 const LoginForm = ({ selectMenu, onClickMenu }: IMenuProps) => {
   const dispatch = useDispatch();
-  const { loginDone, loginError } = useSelector((state: RootState) => state.user);
+  const { loginError } = useSelector((state: RootState) => state.user);
   const [email, onChangeEmail] = useInput('');
   const [password, onChangePassword] = useInput('');
   const [rememberMe, onChangeRememberMe] = useInput(false);
@@ -53,12 +52,11 @@ const LoginForm = ({ selectMenu, onClickMenu }: IMenuProps) => {
   );
 
   useEffect(() => {
-    if (loginDone) Router.push('/timeline');
     if (loginError) {
       toast.warning(loginError);
       dispatch(resetLoginMessage());
     }
-  }, [loginDone, loginError]);
+  }, [loginError]);
 
   return (
     <AccountWrapper {...slideInFromBottom()}>

@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import Router from 'next/router';
 
 import MenuContents from 'components/Landing/MenuContents';
 import { RootState } from 'store/reducers';
 import { ContactIcon, HeaderWrapper, MenuButton } from 'styles/Landing/header';
-import Router from 'next/router';
 
 const Landing = () => {
   const { me } = useSelector((state: RootState) => state.user);
@@ -19,7 +19,7 @@ const Landing = () => {
   }, []);
 
   useEffect(() => {
-    if (me) Router.replace('/timeline');
+    if (me) Router.push('/timeline');
   }, [me]);
 
   return (

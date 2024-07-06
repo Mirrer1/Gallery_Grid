@@ -77,4 +77,17 @@ router.post('/login', async (req, res, next) => {
   })(req, res, next);
 });
 
+router.post('/logout', (req, res, next) => {
+  req.logout({}, err => {
+    if (err) {
+      console.error(err);
+      next(err);
+    }
+
+    req.session!.destroy(() => {
+      res.send('정상적으로 로그아웃 되었습니다.');
+    });
+  });
+});
+
 export default router;

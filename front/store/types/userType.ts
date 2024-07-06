@@ -3,6 +3,10 @@ export const LOGIN_SUCCESS = 'LOGIN_SUCCESS' as const;
 export const LOGIN_FAILURE = 'LOGIN_FAILURE' as const;
 export const RESET_LOGIN_MESSAGE = 'RESET_LOGIN_MESSAGE' as const;
 
+export const LOGOUT_REQUEST = 'LOGOUT_REQUEST' as const;
+export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS' as const;
+export const LOGOUT_FAILURE = 'LOGOUT_FAILURE' as const;
+
 export const SIGNUP_REQUEST = 'SIGNUP_REQUEST' as const;
 export const SIGNUP_SUCCESS = 'SIGNUP_SUCCESS' as const;
 export const SIGNUP_FAILURE = 'SIGNUP_FAILURE' as const;
@@ -13,6 +17,9 @@ export type UserState = {
   loginLoading: boolean;
   loginDone: boolean;
   loginError: null | string;
+  logoutLoading: boolean;
+  logoutDone: boolean;
+  logoutError: null | string;
   signUpLoading: boolean;
   signUpDone: boolean;
   signUpError: null | string;
@@ -62,6 +69,19 @@ export interface resetLoginMessageAction {
   type: typeof RESET_LOGIN_MESSAGE;
 }
 
+export interface logoutRequestAction {
+  type: typeof LOGOUT_REQUEST;
+}
+
+export interface logoutSuccessAction {
+  type: typeof LOGOUT_SUCCESS;
+}
+
+export interface logoutFailureAction {
+  type: typeof LOGOUT_FAILURE;
+  error: string;
+}
+
 export interface signUpRequestAction {
   type: typeof SIGNUP_REQUEST;
   data: AuthData;
@@ -85,6 +105,9 @@ export type UserAction =
   | loginRequestAction
   | loginSuccessAction
   | loginFailureAction
+  | logoutRequestAction
+  | logoutSuccessAction
+  | logoutFailureAction
   | resetLoginMessageAction
   | signUpRequestAction
   | signUpSuccessAction

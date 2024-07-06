@@ -4,6 +4,9 @@ import {
   LOGIN_FAILURE,
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
+  LOGOUT_FAILURE,
+  LOGOUT_REQUEST,
+  LOGOUT_SUCCESS,
   RESET_LOGIN_MESSAGE,
   RESET_SIGNUP_MESSAGE,
   SIGNUP_FAILURE,
@@ -18,6 +21,9 @@ export const initialState: UserState = {
   loginLoading: false,
   loginDone: false,
   loginError: null,
+  logoutLoading: false,
+  logoutDone: false,
+  logoutError: null,
   signUpLoading: false,
   signUpDone: false,
   signUpError: null,
@@ -43,6 +49,20 @@ const reducer = (state: UserState = initialState, action: UserAction): UserState
         break;
       case RESET_LOGIN_MESSAGE:
         draft.loginError = null;
+        break;
+      case LOGOUT_REQUEST:
+        draft.logoutLoading = true;
+        draft.logoutDone = false;
+        draft.logoutError = null;
+        break;
+      case LOGOUT_SUCCESS:
+        draft.logoutLoading = false;
+        draft.logoutDone = true;
+        draft.me = null;
+        break;
+      case LOGOUT_FAILURE:
+        draft.logoutLoading = false;
+        draft.logoutError = action.error;
         break;
       case SIGNUP_REQUEST:
         draft.signUpLoading = true;
