@@ -186,7 +186,7 @@ export const AccountAlert = styled.p<{ $login: string }>`
 
 export const AuthOptionsWrapper = styled.div<{ $menu: string }>`
   ${({ theme }) => theme.flexSet()};
-  justify-content: ${props => (props.$menu === 'login' ? 'space-between' : 'center')};
+  justify-content: ${props => (props.$menu === 'login' ? 'end' : 'center')};
   margin-bottom: 1em;
 
   & > div {
@@ -250,7 +250,7 @@ export const AuthOptionsWrapper = styled.div<{ $menu: string }>`
   }
 `;
 
-export const AccountBtn = styled.div`
+export const AccountBtn = styled.div<{ $menu: string }>`
   ${({ theme }) => theme.flexSet()};
   margin-bottom: 2em;
 
@@ -261,6 +261,11 @@ export const AccountBtn = styled.div`
     font-weight: 500;
     padding: 0.5em 2em 0.6em 2em;
     border: 1px solid rgba(217, 217, 217, 1);
+
+    & > span {
+      padding: ${props => (props.$menu === 'login' ? '0 2em;' : '0 5em')};
+      color: ${({ theme }) => theme.colors.primary};
+    }
   }
 
   ${media.tablet} {

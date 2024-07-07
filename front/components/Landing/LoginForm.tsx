@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { GoogleOutlined } from '@ant-design/icons';
+import { GoogleOutlined, LoadingOutlined } from '@ant-design/icons';
 import { toast } from 'react-toastify';
 
 import useInput from 'utils/useInput';
@@ -23,10 +23,9 @@ import {
 
 const LoginForm = ({ selectMenu, onClickMenu }: IMenuProps) => {
   const dispatch = useDispatch();
-  const { loginError } = useSelector((state: RootState) => state.user);
+  const { loginLoading, loginError } = useSelector((state: RootState) => state.user);
   const [email, onChangeEmail] = useInput('');
   const [password, onChangePassword] = useInput('');
-  const [rememberMe, onChangeRememberMe] = useInput(false);
 
   const onMoveSignup = useCallback(() => {
     onClickMenu('signup');
@@ -48,7 +47,7 @@ const LoginForm = ({ selectMenu, onClickMenu }: IMenuProps) => {
 
       dispatch(loginRequest({ email, password }));
     },
-    [email, password, rememberMe]
+    [email, password]
   );
 
   useEffect(() => {
@@ -82,16 +81,11 @@ const LoginForm = ({ selectMenu, onClickMenu }: IMenuProps) => {
         <AccountAlert $login="true">8~16자 영문 대 소문자, 숫자를 사용하세요.</AccountAlert>
 
         <AuthOptionsWrapper $menu={selectMenu}>
-          <div>
-            <input type="checkbox" id="remember-me" checked={rememberMe} onChange={onChangeRememberMe} />
-            <label htmlFor="remember-me">Remember me</label>
-          </div>
-
           <button type="button">Forget your password?</button>
         </AuthOptionsWrapper>
 
-        <AccountBtn>
-          <button type="submit">Log in&nbsp;&nbsp;&nbsp;&nbsp;→</button>
+        <AccountBtn $menu={selectMenu}>
+          <button type="submit">{loginLoading ? <LoadingOutlined /> : <>Log in&nbsp;&nbsp;&nbsp;&nbsp;→</>}</button>
         </AccountBtn>
       </AccountForm>
 

@@ -19,8 +19,10 @@ const Landing = () => {
   }, []);
 
   useEffect(() => {
-    if (me) Router.push('/timeline');
+    if (me) Router.replace('/timeline');
   }, [me]);
+
+  // if (me) return null;
 
   return (
     <>

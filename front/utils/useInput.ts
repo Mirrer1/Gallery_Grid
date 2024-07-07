@@ -1,25 +1,25 @@
 import { useState, useCallback, ChangeEvent } from 'react';
 
-type ReturnTypes<T extends string | boolean> = [
+type ReturnTypes<T> = [
   T,
   (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void,
   React.Dispatch<React.SetStateAction<T>>
 ];
 
-const useInput = <T extends string | boolean>(initialValue: T): ReturnTypes<T> => {
+const useInput = <T>(initialValue: T): ReturnTypes<T> => {
   const [value, setValue] = useState<T>(initialValue);
 
   const handler = useCallback((e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const target = e.target;
-    let newValue: string | boolean;
+    let newValue: T;
 
     if (target instanceof HTMLInputElement && target.type === 'checkbox') {
-      newValue = target.checked;
+      newValue = target.checked as unknown as T;
     } else {
-      newValue = target.value;
+      newValue = target.value as unknown as T;
     }
 
-    setValue(newValue as T);
+    setValue(newValue);
   }, []);
 
   return [value, handler, setValue];

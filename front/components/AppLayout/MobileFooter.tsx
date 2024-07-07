@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import {
   AreaChartOutlined,
@@ -14,40 +14,45 @@ import { MobileFooterItem, MobileFooterWrapper } from 'styles/AppLayout/mobileFo
 
 const MobileFooter = () => {
   const { isCarouselVisible, isPostModalVisible } = useSelector((state: RootState) => state.post);
+  const [pathname, setPathname] = useState<string | null>(null);
 
   const navigateTo = (path: string) => {
     Router.push(path);
   };
 
+  useEffect(() => {
+    if (typeof window !== 'undefined') setPathname(Router.pathname);
+  }, []);
+
   return (
     <MobileFooterWrapper $visible={isCarouselVisible || isPostModalVisible}>
       <MobileFooterItem
         as={AreaChartOutlined}
-        $selected={Router.pathname === '/activity'}
+        $selected={pathname === '/activity'}
         onClick={() => navigateTo('/activity')}
       />
 
       <MobileFooterItem
         as={PictureOutlined}
-        $selected={Router.pathname === '/gallery'}
+        $selected={pathname === '/gallery'}
         onClick={() => navigateTo('/gallery')}
       />
 
       <MobileFooterItem
         as={FieldTimeOutlined}
-        $selected={Router.pathname === '/timeline'}
+        $selected={pathname === '/timeline'}
         onClick={() => navigateTo('/timeline')}
       />
 
       <MobileFooterItem
         as={MessageOutlined}
-        $selected={Router.pathname === '/message'}
+        $selected={pathname === '/message'}
         onClick={() => navigateTo('/message')}
       />
 
       <MobileFooterItem
         as={SettingOutlined}
-        $selected={Router.pathname === '/settings'}
+        $selected={pathname === '/settings'}
         onClick={() => navigateTo('/settings')}
       />
     </MobileFooterWrapper>

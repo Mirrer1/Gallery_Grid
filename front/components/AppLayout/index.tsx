@@ -22,6 +22,7 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
   const dispatch = useDispatch();
   const { me } = useSelector((state: RootState) => state.user);
   const [showInput, setShowInput] = useState(false);
+  const [pathname, setPathname] = useState<string | null>(null);
 
   const showSearch = useCallback(() => {
     if (!showInput) setShowInput(true);
@@ -41,14 +42,17 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     if (!me) {
-      Router.push('/');
+      Router.replace('/');
       toast.success('정상적으로 로그아웃 되었습니다.');
     }
   }, [me]);
 
   useEffect(() => {
+    if (typeof window !== 'undefined') setPathname(Router.pathname);
     window.scrollTo(0, 0);
   }, []);
+
+  // if (!me) return null;
 
   return (
     <LayoutWrapper>
@@ -69,18 +73,18 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
           </NavbarProfile>
 
           <NavbarItems $firstmargin="true">
-            <NavbarItem href="/timeline" $selected={Router.pathname === '/timeline'}>
+            <NavbarItem href="/timeline" $selected={pathname === '/timeline'}>
               <FieldTimeOutlined />
               <p>Timeline</p>
             </NavbarItem>
 
-            <NavbarItem href="/activity" $selected={Router.pathname === '/activity'}>
+            <NavbarItem href="/activity" $selected={pathname === '/activity'}>
               <AreaChartOutlined />
               <p>Activity</p>
             </NavbarItem>
 
-            <NavbarMessage $selected={Router.pathname === '/message'}>
-              <NavbarItem href="/message" $selected={Router.pathname === '/message'}>
+            <NavbarMessage $selected={pathname === '/message'}>
+              <NavbarItem href="/message" $selected={pathname === '/message'}>
                 <MessageOutlined />
                 <p>Message</p>
               </NavbarItem>
@@ -92,7 +96,7 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
               </div>
             </NavbarMessage>
 
-            <NavbarItem href="/gallery" $selected={Router.pathname === '/gallery'}>
+            <NavbarItem href="/gallery" $selected={pathname === '/gallery'}>
               <PictureOutlined />
               <p>Gallery</p>
             </NavbarItem>
@@ -100,7 +104,7 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
         </div>
 
         <NavbarItems $firstmargin="false">
-          <NavbarItem href="/settings" $selected={Router.pathname === '/settings'}>
+          <NavbarItem href="/settings" $selected={pathname === '/settings'}>
             <SettingOutlined />
             <p>Settings</p>
           </NavbarItem>

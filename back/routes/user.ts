@@ -60,6 +60,16 @@ router.post('/login', async (req, res, next) => {
         where: { id: user.id },
         include: [
           {
+            model: User,
+            as: 'Followings',
+            attributes: ['id']
+          },
+          {
+            model: User,
+            as: 'Followers',
+            attributes: ['id']
+          },
+          {
             model: Image,
             as: 'ProfileImage',
             where: { type: 'user' },

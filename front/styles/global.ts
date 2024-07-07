@@ -200,6 +200,20 @@ const GlobalStyles = createGlobalStyle`
       display: none;
     }
   }
+
+  @media only screen and (max-width: 576px) {
+  .Toastify__toast-container {
+    top: 1%;
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+  }
+
+  .Toastify__toast {    
+    width: 70% !important;
+    font-size: 11px !important;    
+  }
+}
 `;
 
 export default GlobalStyles;

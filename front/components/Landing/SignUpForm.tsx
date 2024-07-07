@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from 'react';
 import { toast } from 'react-toastify';
-import { GoogleOutlined } from '@ant-design/icons';
+import { GoogleOutlined, LoadingOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 
 import useInput from 'utils/useInput';
@@ -24,7 +24,7 @@ import {
 
 const SignUpForm = ({ selectMenu, onClickMenu }: IMenuProps) => {
   const dispatch = useDispatch();
-  const { signUpMessage } = useSelector((state: RootState) => state.user);
+  const { signUpMessage, signUpLoading } = useSelector((state: RootState) => state.user);
 
   const [nickname, onChangeNickname] = useInput('');
   const [email, onChangeEmail] = useInput('');
@@ -125,8 +125,10 @@ const SignUpForm = ({ selectMenu, onClickMenu }: IMenuProps) => {
           </div>
         </AuthOptionsWrapper>
 
-        <AccountBtn>
-          <button type="submit">Create my account&nbsp;&nbsp;&nbsp;&nbsp;→</button>
+        <AccountBtn $menu={selectMenu}>
+          <button type="submit">
+            {signUpLoading ? <LoadingOutlined /> : <>Create my account&nbsp;&nbsp;&nbsp;&nbsp;→</>}
+          </button>
         </AccountBtn>
       </AccountForm>
 
