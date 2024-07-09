@@ -7,7 +7,7 @@ import useInput from 'utils/useInput';
 import { IMenuProps } from './MenuContents';
 import { useValidate } from 'utils/useValidate';
 import { slideInFromBottom } from 'styles/Common/animation';
-import { loginRequest, resetLoginMessage } from 'store/actions/userAction';
+import { loginGoogleRequest, loginRequest, resetLoginMessage } from 'store/actions/userAction';
 import { RootState } from 'store/reducers';
 import {
   AccountBtn,
@@ -23,7 +23,7 @@ import {
 
 const LoginForm = ({ selectMenu, onClickMenu }: IMenuProps) => {
   const dispatch = useDispatch();
-  const { loginLoading, loginError } = useSelector((state: RootState) => state.user);
+  const { loginLoading, loginError, loginGoogleLoading } = useSelector((state: RootState) => state.user);
   const [email, onChangeEmail] = useInput('');
   const [password, onChangePassword] = useInput('');
 
@@ -50,6 +50,10 @@ const LoginForm = ({ selectMenu, onClickMenu }: IMenuProps) => {
     [email, password]
   );
 
+  const onClickGoogleLogin = useCallback(() => {
+    dispatch(loginGoogleRequest());
+  }, []);
+
   useEffect(() => {
     if (loginError) {
       toast.warning(loginError);
@@ -59,9 +63,9 @@ const LoginForm = ({ selectMenu, onClickMenu }: IMenuProps) => {
 
   return (
     <AccountWrapper {...slideInFromBottom()}>
-      <AccountGoogle>
-        <GoogleOutlined />
-        <button type="button">Continue with Google</button>
+      <AccountGoogle onClick={onClickGoogleLogin}>
+        {!loginGoogleLoading && <GoogleOutlined />}
+        <button type="button">{loginGoogleLoading ? <LoadingOutlined /> : <>Continue with Google</>}</button>
       </AccountGoogle>
 
       <AccountDivider>OR LOGIN WITH EAMIL</AccountDivider>

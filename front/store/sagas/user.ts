@@ -15,7 +15,12 @@ import {
   User,
   LOGOUT_REQUEST,
   LOGOUT_SUCCESS,
-  LOGOUT_FAILURE
+  LOGOUT_FAILURE,
+  LOGIN_GOOGLE_REQUEST,
+  LOGIN_GOOGLE_FAILURE,
+  LOAD_MY_INFO_SUCCESS,
+  LOAD_MY_INFO_FAILURE,
+  LOAD_MY_INFO_REQUEST
 } from 'store/types/userType';
 
 function signUpAPI(data: AuthData) {
@@ -58,6 +63,43 @@ function* login(action: loginRequestAction) {
   }
 }
 
+function loginGoogleAPI() {
+  return `https://accounts.google.com/o/oauth2/v2/auth?client_id=${process.env.NEXT_PUBLIC_GOOGLE_ID}&redirect_uri=${process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI}&response_type=code&scope=profile email`;
+}
+
+function* loginGoogle() {
+  try {
+    yield call(() => {
+      window.location.href = loginGoogleAPI();
+    });
+  } catch (error: any) {
+    yield put({
+      type: LOGIN_GOOGLE_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
+function loadMyInfoAPI() {
+  return axios.get('/user');
+}
+
+function* loadMyInfo() {
+  try {
+    const result: AxiosResponse<User> = yield call(loadMyInfoAPI);
+
+    yield put({
+      type: LOAD_MY_INFO_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: LOAD_MY_INFO_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
 function logoutAPI() {
   return axios.post('/user/logout');
 }
@@ -85,10 +127,18 @@ function* watchLogin() {
   yield takeLatest(LOGIN_REQUEST, login);
 }
 
+function* watchLoginGoogle() {
+  yield takeLatest(LOGIN_GOOGLE_REQUEST, loginGoogle);
+}
+
+function* watchLoadMyInfo() {
+  yield takeLatest(LOAD_MY_INFO_REQUEST, loadMyInfo);
+}
+
 function* watchLogout() {
   yield takeLatest(LOGOUT_REQUEST, logout);
 }
 
 export default function* userSaga() {
-  yield all([fork(watchLogin), fork(watchLogout), fork(watchSignUp)]);
+  yield all([fork(watchLogin), fork(watchLoginGoogle), fork(watchLoadMyInfo), fork(watchLogout), fork(watchSignUp)]);
 }

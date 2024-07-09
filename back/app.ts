@@ -40,7 +40,8 @@ app.use(passport.session());
 
 app.use(
   cors({
-    origin: true
+    origin: true,
+    credentials: true
   })
 );
 app.use(express.json());

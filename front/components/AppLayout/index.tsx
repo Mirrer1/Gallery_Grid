@@ -1,5 +1,7 @@
 import React, { ReactNode, useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import Router from 'next/router';
 import {
   AreaChartOutlined,
   FieldTimeOutlined,
@@ -8,8 +10,6 @@ import {
   PictureOutlined,
   SettingOutlined
 } from '@ant-design/icons';
-import { toast } from 'react-toastify';
-import Router from 'next/router';
 
 import Search from './Search';
 import MobileHeader from './MobileHeader';

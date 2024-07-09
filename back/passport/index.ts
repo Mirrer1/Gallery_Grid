@@ -2,6 +2,7 @@ import passport from 'passport';
 
 import User from '../models/user';
 import local from './localStrategy';
+import google from './googleStrategy';
 
 export default () => {
   passport.serializeUser((user, done) => {
@@ -24,4 +25,5 @@ export default () => {
   });
 
   local();
+  google();
 };

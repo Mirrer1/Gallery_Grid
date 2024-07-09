@@ -40,6 +40,10 @@ export const AccountGoogle = styled.div`
   & > button {
     color: white;
     font-size: 1.1rem;
+
+    span {
+      font-size: 1.6rem;
+    }
   }
 
   ${media.tablet} {

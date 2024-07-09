@@ -5,10 +5,11 @@ import { Op } from 'sequelize';
 import User from '../models/user';
 import passport from 'passport';
 import Image from '../models/image';
+import { isLoggedIn, isNotLoggedIn } from './middleware';
 
 const router = express.Router();
 
-router.post('/', async (req, res, next) => {
+router.post('/', isNotLoggedIn, async (req, res, next) => {
   try {
     const { email, nickname, password } = req.body;
 
@@ -39,7 +40,7 @@ router.post('/', async (req, res, next) => {
   }
 });
 
-router.post('/login', async (req, res, next) => {
+router.post('/login', isNotLoggedIn, async (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {
     if (err) {
       console.error(err);
@@ -78,7 +79,7 @@ router.post('/login', async (req, res, next) => {
           }
         ],
         attributes: {
-          exclude: ['password', 'isRecommended']
+          exclude: ['password', 'isRecommended', 'snsId', 'provider']
         }
       });
 
@@ -87,7 +88,64 @@ router.post('/login', async (req, res, next) => {
   })(req, res, next);
 });
 
-router.post('/logout', (req, res, next) => {
+router.get('/', async (req, res, next) => {
+  try {
+    if (req.user) {
+      const user = await User.findOne({
+        where: { id: req.user.id },
+        include: [
+          {
+            model: User,
+            as: 'Followings',
+            attributes: ['id']
+          },
+          {
+            model: User,
+            as: 'Followers',
+            attributes: ['id']
+          },
+          {
+            model: Image,
+            as: 'ProfileImage',
+            where: { type: 'user' },
+            attributes: ['id', 'src'],
+            required: false
+          }
+        ],
+        attributes: {
+          exclude: ['password', 'isRecommended', 'snsId', 'provider']
+        }
+      });
+      res.status(200).json(user);
+    } else {
+      res.status(401).json({ message: '인증되지 않은 사용자입니다.' });
+    }
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+});
+
+router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+
+router.get(
+  '/google/callback',
+  passport.authenticate('google', { failureRedirect: 'http://localhost:3000' }),
+  (req, res) => {
+    if (req.user) {
+      req.login(req.user, (err: any) => {
+        if (err) {
+          return res.redirect('http://localhost:3000');
+        }
+        res.redirect('http://localhost:3000/auth');
+      });
+    } else {
+      res.redirect('http://localhost:3000');
+    }
+  }
+);
+
+router.post('/logout', isLoggedIn, (req, res, next) => {
   req.logout({}, err => {
     if (err) {
       console.error(err);

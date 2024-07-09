@@ -1,7 +1,13 @@
 import { produce } from 'immer';
 
 import {
+  LOAD_MY_INFO_FAILURE,
+  LOAD_MY_INFO_REQUEST,
+  LOAD_MY_INFO_SUCCESS,
   LOGIN_FAILURE,
+  LOGIN_GOOGLE_FAILURE,
+  LOGIN_GOOGLE_REQUEST,
+  LOGIN_GOOGLE_SUCCESS,
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
   LOGOUT_FAILURE,
@@ -21,6 +27,12 @@ export const initialState: UserState = {
   loginLoading: false,
   loginDone: false,
   loginError: null,
+  loginGoogleLoading: false,
+  loginGoogleDone: false,
+  loginGoogleError: null,
+  loadMyInfoLoading: false,
+  loadMyInfoDone: false,
+  loadMyInfoError: null,
   logoutLoading: false,
   logoutDone: false,
   logoutError: null,
@@ -46,6 +58,33 @@ const reducer = (state: UserState = initialState, action: UserAction): UserState
       case LOGIN_FAILURE:
         draft.loginLoading = false;
         draft.loginError = action.error;
+        break;
+      case LOGIN_GOOGLE_REQUEST:
+        draft.loginGoogleLoading = true;
+        draft.loginGoogleDone = false;
+        draft.loginGoogleError = null;
+        break;
+      case LOGIN_GOOGLE_SUCCESS:
+        draft.loginGoogleLoading = false;
+        draft.loginGoogleDone = true;
+        break;
+      case LOGIN_GOOGLE_FAILURE:
+        draft.loginGoogleLoading = false;
+        draft.loginGoogleError = action.error;
+        break;
+      case LOAD_MY_INFO_REQUEST:
+        draft.loadMyInfoLoading = true;
+        draft.loadMyInfoDone = false;
+        draft.loadMyInfoError = null;
+        break;
+      case LOAD_MY_INFO_SUCCESS:
+        draft.loadMyInfoLoading = false;
+        draft.loadMyInfoDone = true;
+        draft.me = action.data;
+        break;
+      case LOAD_MY_INFO_FAILURE:
+        draft.loadMyInfoLoading = false;
+        draft.loadMyInfoError = action.error;
         break;
       case RESET_LOGIN_MESSAGE:
         draft.loginError = null;

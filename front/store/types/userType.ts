@@ -3,6 +3,14 @@ export const LOGIN_SUCCESS = 'LOGIN_SUCCESS' as const;
 export const LOGIN_FAILURE = 'LOGIN_FAILURE' as const;
 export const RESET_LOGIN_MESSAGE = 'RESET_LOGIN_MESSAGE' as const;
 
+export const LOGIN_GOOGLE_REQUEST = 'LOGIN_GOOGLE_REQUEST' as const;
+export const LOGIN_GOOGLE_SUCCESS = 'LOGIN_GOOGLE_SUCCESS' as const;
+export const LOGIN_GOOGLE_FAILURE = 'LOGIN_GOOGLE_FAILURE' as const;
+
+export const LOAD_MY_INFO_REQUEST = 'LOAD_MY_INFO_REQUEST' as const;
+export const LOAD_MY_INFO_SUCCESS = 'LOAD_MY_INFO_SUCCESS' as const;
+export const LOAD_MY_INFO_FAILURE = 'LOAD_MY_INFO_FAILURE' as const;
+
 export const LOGOUT_REQUEST = 'LOGOUT_REQUEST' as const;
 export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS' as const;
 export const LOGOUT_FAILURE = 'LOGOUT_FAILURE' as const;
@@ -17,6 +25,12 @@ export type UserState = {
   loginLoading: boolean;
   loginDone: boolean;
   loginError: null | string;
+  loginGoogleLoading: boolean;
+  loginGoogleDone: boolean;
+  loginGoogleError: null | string;
+  loadMyInfoLoading: boolean;
+  loadMyInfoDone: boolean;
+  loadMyInfoError: null | string;
   logoutLoading: boolean;
   logoutDone: boolean;
   logoutError: null | string;
@@ -41,9 +55,12 @@ export interface AuthData {
 
 export interface User {
   id: number;
+  snsId?: string | null;
+  provider?: string | null;
   email: string;
+  password?: string | null;
   nickname: string;
-  desc: string;
+  desc?: string;
   isRecommended: boolean;
   createdAt: string;
   updatedAt: string;
@@ -62,6 +79,34 @@ export interface loginSuccessAction {
 
 export interface loginFailureAction {
   type: typeof LOGIN_FAILURE;
+  error: string;
+}
+
+export interface loginGoogleRequestAction {
+  type: typeof LOGIN_GOOGLE_REQUEST;
+}
+
+export interface loginGoogleSuccessAction {
+  type: typeof LOGIN_GOOGLE_SUCCESS;
+  data: string;
+}
+
+export interface loginGoogleFailureAction {
+  type: typeof LOGIN_GOOGLE_FAILURE;
+  error: string;
+}
+
+export interface loadMyInfoRequestAction {
+  type: typeof LOAD_MY_INFO_REQUEST;
+}
+
+export interface loadMyInfoSuccessAction {
+  type: typeof LOAD_MY_INFO_SUCCESS;
+  data: string;
+}
+
+export interface loadMyInfoFailureAction {
+  type: typeof LOAD_MY_INFO_FAILURE;
   error: string;
 }
 
@@ -105,6 +150,12 @@ export type UserAction =
   | loginRequestAction
   | loginSuccessAction
   | loginFailureAction
+  | loginGoogleRequestAction
+  | loginGoogleSuccessAction
+  | loginGoogleFailureAction
+  | loadMyInfoRequestAction
+  | loadMyInfoSuccessAction
+  | loadMyInfoFailureAction
   | logoutRequestAction
   | logoutSuccessAction
   | logoutFailureAction

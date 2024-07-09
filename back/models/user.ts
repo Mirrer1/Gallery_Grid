@@ -8,8 +8,10 @@ import Image from './image';
 
 class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare id: CreationOptional<number>;
+  declare snsId?: string;
+  declare provider?: string;
   declare email: string;
-  declare password: string;
+  declare password: string | null;
   declare nickname: string;
   declare desc?: string;
   declare isRecommended: boolean;
@@ -24,6 +26,15 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
           primaryKey: true,
           autoIncrement: true
         },
+        snsId: {
+          type: Sequelize.STRING,
+          allowNull: true,
+          unique: true
+        },
+        provider: {
+          type: Sequelize.STRING(20),
+          allowNull: true
+        },
         email: {
           type: Sequelize.STRING(30),
           allowNull: false,
@@ -31,7 +42,7 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
         },
         password: {
           type: Sequelize.STRING(100),
-          allowNull: false
+          allowNull: true
         },
         nickname: {
           type: Sequelize.STRING(30),
