@@ -7,8 +7,8 @@ import { SearchWrapper } from 'styles/AppLayout/search';
 const Search = () => {
   const [keyword, onChangeKeyword] = useInput('');
 
-  const handleKeyPress = useCallback(
-    (event: React.KeyboardEvent) => {
+  const handleKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLInputElement>) => {
       if (event.key === 'Enter') {
         console.log(keyword);
       }
@@ -28,7 +28,7 @@ const Search = () => {
         placeholder="Search"
         value={keyword}
         onChange={onChangeKeyword}
-        onKeyPress={handleKeyPress}
+        onKeyDown={handleKeyDown}
       />
     </SearchWrapper>
   );

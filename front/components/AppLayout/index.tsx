@@ -1,5 +1,7 @@
 import React, { ReactNode, useCallback, useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import Router from 'next/router';
 import {
   AreaChartOutlined,
   FieldTimeOutlined,
@@ -12,11 +14,15 @@ import {
 import Search from './Search';
 import MobileHeader from './MobileHeader';
 import MobileFooter from './MobileFooter';
+import { RootState } from 'store/reducers';
+import { logoutRequest } from 'store/actions/userAction';
 import { LayoutWrapper, NavbarItem, NavbarItems, NavbarLogout, NavbarMessage, NavbarProfile } from 'styles/AppLayout';
 
 const AppLayout = ({ children }: { children: ReactNode }) => {
-  const router = useRouter();
+  const dispatch = useDispatch();
+  const { me } = useSelector((state: RootState) => state.user);
   const [showInput, setShowInput] = useState(false);
+  const [pathname, setPathname] = useState<string | null>(null);
 
   const showSearch = useCallback(() => {
     if (!showInput) setShowInput(true);
@@ -27,12 +33,26 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
   }, [showInput]);
 
   const onClickMessage = useCallback(() => {
-    router.push('/message');
+    Router.push('/message');
+  }, []);
+
+  const onClickLogout = useCallback(() => {
+    dispatch(logoutRequest());
   }, []);
 
   useEffect(() => {
+    if (!me) {
+      Router.replace('/');
+      toast.success('정상적으로 로그아웃 되었습니다.');
+    }
+  }, [me]);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') setPathname(Router.pathname);
     window.scrollTo(0, 0);
   }, []);
+
+  // if (!me) return null;
 
   return (
     <LayoutWrapper>
@@ -53,18 +73,18 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
           </NavbarProfile>
 
           <NavbarItems $firstmargin="true">
-            <NavbarItem href="/timeline" $selected={router.pathname === '/timeline'}>
+            <NavbarItem href="/timeline" $selected={pathname === '/timeline'}>
               <FieldTimeOutlined />
               <p>Timeline</p>
             </NavbarItem>
 
-            <NavbarItem href="/activity" $selected={router.pathname === '/activity'}>
+            <NavbarItem href="/activity" $selected={pathname === '/activity'}>
               <AreaChartOutlined />
               <p>Activity</p>
             </NavbarItem>
 
-            <NavbarMessage $selected={router.pathname === '/message'}>
-              <NavbarItem href="/message" $selected={router.pathname === '/message'}>
+            <NavbarMessage $selected={pathname === '/message'}>
+              <NavbarItem href="/message" $selected={pathname === '/message'}>
                 <MessageOutlined />
                 <p>Message</p>
               </NavbarItem>
@@ -76,7 +96,7 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
               </div>
             </NavbarMessage>
 
-            <NavbarItem href="/gallery" $selected={router.pathname === '/gallery'}>
+            <NavbarItem href="/gallery" $selected={pathname === '/gallery'}>
               <PictureOutlined />
               <p>Gallery</p>
             </NavbarItem>
@@ -84,19 +104,19 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
         </div>
 
         <NavbarItems $firstmargin="false">
-          <NavbarItem href="/settings" $selected={router.pathname === '/settings'}>
+          <NavbarItem href="/settings" $selected={pathname === '/settings'}>
             <SettingOutlined />
             <p>Settings</p>
           </NavbarItem>
 
-          <NavbarLogout type="button">
+          <NavbarLogout type="button" onClick={onClickLogout}>
             <LogoutOutlined />
             <p>Logout</p>
           </NavbarLogout>
         </NavbarItems>
       </aside>
 
-      <div></div>
+      <div />
 
       <MobileHeader showInput={showInput} showSearch={showSearch} hideSearch={hideSearch} />
 

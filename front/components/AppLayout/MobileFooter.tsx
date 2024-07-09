@@ -1,5 +1,4 @@
-import React from 'react';
-import { useRouter } from 'next/router';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import {
   AreaChartOutlined,
@@ -8,47 +7,52 @@ import {
   PictureOutlined,
   SettingOutlined
 } from '@ant-design/icons';
+import Router from 'next/router';
 
 import { RootState } from 'store/reducers';
 import { MobileFooterItem, MobileFooterWrapper } from 'styles/AppLayout/mobileFooter';
 
 const MobileFooter = () => {
-  const router = useRouter();
   const { isCarouselVisible, isPostModalVisible } = useSelector((state: RootState) => state.post);
+  const [pathname, setPathname] = useState<string | null>(null);
 
   const navigateTo = (path: string) => {
-    router.push(path);
+    Router.push(path);
   };
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') setPathname(Router.pathname);
+  }, []);
 
   return (
     <MobileFooterWrapper $visible={isCarouselVisible || isPostModalVisible}>
       <MobileFooterItem
         as={AreaChartOutlined}
-        $selected={router.pathname === '/activity'}
+        $selected={pathname === '/activity'}
         onClick={() => navigateTo('/activity')}
       />
 
       <MobileFooterItem
         as={PictureOutlined}
-        $selected={router.pathname === '/gallery'}
+        $selected={pathname === '/gallery'}
         onClick={() => navigateTo('/gallery')}
       />
 
       <MobileFooterItem
         as={FieldTimeOutlined}
-        $selected={router.pathname === '/timeline'}
+        $selected={pathname === '/timeline'}
         onClick={() => navigateTo('/timeline')}
       />
 
       <MobileFooterItem
         as={MessageOutlined}
-        $selected={router.pathname === '/message'}
+        $selected={pathname === '/message'}
         onClick={() => navigateTo('/message')}
       />
 
       <MobileFooterItem
         as={SettingOutlined}
-        $selected={router.pathname === '/settings'}
+        $selected={pathname === '/settings'}
         onClick={() => navigateTo('/settings')}
       />
     </MobileFooterWrapper>

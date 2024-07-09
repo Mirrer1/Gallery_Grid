@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import { SearchOutlined, UserAddOutlined } from '@ant-design/icons';
 
 import useInput from 'utils/useInput';

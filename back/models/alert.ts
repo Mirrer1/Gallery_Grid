@@ -1,31 +1,45 @@
-import { DataTypes, Model, Sequelize } from 'sequelize';
+import Sequelize, { CreationOptional, InferAttributes, InferCreationAttributes, Model } from 'sequelize';
+import Post from './post';
+import Comment from './comment';
+import User from './user';
 
-export default class Alert extends Model {
-  public type!: string;
+class Alert extends Model<InferAttributes<Alert>, InferCreationAttributes<Alert>> {
+  declare id: CreationOptional<number>;
+  declare type: string;
+  declare createdAt: CreationOptional<Date>;
+  declare updatedAt: CreationOptional<Date>;
 
-  static initModel(sequelize: Sequelize): typeof Alert {
+  static initiate(sequelize: Sequelize.Sequelize) {
     Alert.init(
       {
-        type: {
-          type: DataTypes.STRING(30),
-          allowNull: false,
+        id: {
+          type: Sequelize.INTEGER,
+          primaryKey: true,
+          autoIncrement: true
         },
+        type: {
+          type: Sequelize.STRING(30),
+          allowNull: false
+        },
+        createdAt: Sequelize.DATE,
+        updatedAt: Sequelize.DATE
       },
       {
         modelName: 'Alert',
         tableName: 'alerts',
         charset: 'utf8',
         collate: 'utf8_general_ci',
-        sequelize,
+        sequelize
       }
     );
-    return Alert;
   }
 
-  static associate(db: any) {
-    db.Alert.belongsTo(db.Post);
-    db.Alert.belongsTo(db.Comment);
-    db.Alert.belongsTo(db.User, { as: 'Alerter' });
-    db.Alert.belongsTo(db.User, { as: 'Alerted' });
+  static associate() {
+    Alert.belongsTo(Post);
+    Alert.belongsTo(Comment);
+    Alert.belongsTo(User, { as: 'Alerter', foreignKey: 'alerterId' });
+    Alert.belongsTo(User, { as: 'Alerted', foreignKey: 'alertedId' });
   }
 }
+
+export default Alert;

@@ -1,7 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { CloseOutlined, LogoutOutlined, SearchOutlined } from '@ant-design/icons';
+import { useDispatch } from 'react-redux';
 import Router from 'next/router';
 
+import { logoutRequest } from 'store/actions/userAction';
 import { MobileHeaderContent, MobileHeaderInput, MobileHeaderWrapper } from 'styles/AppLayout/mobileHeader';
 
 type ISearch = {
@@ -11,6 +13,7 @@ type ISearch = {
 };
 
 const MobileHeader = ({ showInput, showSearch, hideSearch }: ISearch) => {
+  const dispatch = useDispatch();
   const [keyword, setKeyword] = useState('');
 
   const onChangeKeyword = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -33,7 +36,7 @@ const MobileHeader = ({ showInput, showSearch, hideSearch }: ISearch) => {
   }, []);
 
   const onClickLogout = useCallback(() => {
-    console.log('로그아웃!');
+    dispatch(logoutRequest());
   }, []);
 
   useEffect(() => {

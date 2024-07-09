@@ -1,31 +1,46 @@
-import { DataTypes, Model, Sequelize } from 'sequelize';
+import Sequelize, { CreationOptional, InferAttributes, InferCreationAttributes, Model } from 'sequelize';
+import User from './user';
+import Post from './post';
+import Alert from './alert';
+import Report from './report';
 
-export default class Comment extends Model {
-  public content!: string;
+class Comment extends Model<InferAttributes<Comment>, InferCreationAttributes<Comment>> {
+  declare id: CreationOptional<number>;
+  declare content: string;
+  declare createdAt: CreationOptional<Date>;
+  declare updatedAt: CreationOptional<Date>;
 
-  static initModel(sequelize: Sequelize): typeof Comment {
+  static initiate(sequelize: Sequelize.Sequelize) {
     Comment.init(
       {
-        content: {
-          type: DataTypes.TEXT,
-          allowNull: false,
+        id: {
+          type: Sequelize.INTEGER,
+          primaryKey: true,
+          autoIncrement: true
         },
+        content: {
+          type: Sequelize.TEXT,
+          allowNull: false
+        },
+        createdAt: Sequelize.DATE,
+        updatedAt: Sequelize.DATE
       },
       {
         modelName: 'Comment',
         tableName: 'comments',
         charset: 'utf8mb4',
         collate: 'utf8mb4_general_ci',
-        sequelize,
+        sequelize
       }
     );
-    return Comment;
   }
 
-  static associate(db: any) {
-    db.Comment.belongsTo(db.User);
-    db.Comment.belongsTo(db.Post);
-    db.Comment.hasMany(db.Alert);
-    db.Comment.hasMany(db.Report, { foreignKey: 'CommentId', as: 'Reports' });
+  static associate() {
+    Comment.belongsTo(User);
+    Comment.belongsTo(Post);
+    Comment.hasMany(Alert);
+    Comment.hasMany(Report, { foreignKey: 'CommentId', as: 'Reports' });
   }
 }
+
+export default Comment;

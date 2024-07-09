@@ -91,7 +91,7 @@ const PostList = () => {
 
   return (
     <PostContainer ref={postContainerRef}>
-      <div ref={firstPostRef}></div>
+      <div ref={firstPostRef} />
 
       <PostCategory>
         <CategoryItem onClick={() => onClickCategory('best')} $selected={category === 'best'}>
@@ -123,7 +123,7 @@ const PostList = () => {
               <PostFollowBtn type="button">Follow</PostFollowBtn>
 
               <Tooltip>
-                {isTooltipVisible && <TooltipOutsideArea onClick={hideTooltip}></TooltipOutsideArea>}
+                {isTooltipVisible && <TooltipOutsideArea onClick={hideTooltip} />}
 
                 <MoreOutlined onClick={() => handleTooltip(post.id)} />
                 <TooltipBtn $visible={isTooltipVisible === post.id}>
@@ -146,7 +146,7 @@ const PostList = () => {
 
               <div>
                 {post.img.map((_, i) => (
-                  <div key={i}></div>
+                  <div key={i} />
                 ))}
               </div>
 

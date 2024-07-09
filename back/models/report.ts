@@ -1,42 +1,50 @@
-import { DataTypes, Model, Sequelize } from 'sequelize';
+import Sequelize, { CreationOptional, InferAttributes, InferCreationAttributes, Model } from 'sequelize';
+import User from './user';
+import Post from './post';
+import Comment from './comment';
 
-export default class Report extends Model {
-  public type!: string;
-  public content!: string;
+class Report extends Model<InferAttributes<Report>, InferCreationAttributes<Report>> {
+  declare id: CreationOptional<number>;
+  declare type: string;
+  declare content: string;
+  declare createdAt: CreationOptional<Date>;
+  declare updatedAt: CreationOptional<Date>;
 
-  static initModel(sequelize: Sequelize): typeof Report {
+  static initiate(sequelize: Sequelize.Sequelize) {
     Report.init(
       {
+        id: {
+          type: Sequelize.INTEGER,
+          primaryKey: true,
+          autoIncrement: true
+        },
         type: {
-          type: DataTypes.STRING(30),
-          allowNull: false,
+          type: Sequelize.STRING(30),
+          allowNull: false
         },
         content: {
-          type: DataTypes.TEXT,
-          allowNull: false,
+          type: Sequelize.TEXT,
+          allowNull: false
         },
+        createdAt: Sequelize.DATE,
+        updatedAt: Sequelize.DATE
       },
       {
         modelName: 'Report',
         tableName: 'reports',
         charset: 'utf8',
         collate: 'utf8_general_ci',
-        sequelize,
+        sequelize
       }
     );
-    return Report;
   }
 
-  static associate(db: any) {
-    db.Report.belongsTo(db.User, { foreignKey: 'ReporterId', as: 'Reporter' });
-    db.Report.belongsTo(db.User, {
-      foreignKey: 'ReportedUserId',
-      as: 'ReportedUser',
-    });
-    db.Report.belongsTo(db.Post, { foreignKey: 'PostId', as: 'ReportedPost' });
-    db.Report.belongsTo(db.Comment, {
-      foreignKey: 'CommentId',
-      as: 'ReportedComment',
-    });
+  static associate() {
+    Report.belongsTo(User, { foreignKey: 'ReporterId', as: 'Reporter' });
+    Report.belongsTo(User, { foreignKey: 'ReportedUserId', as: 'ReportedUser' });
+    Report.belongsTo(Post, { foreignKey: 'PostId', as: 'ReportedPost' });
+    Report.belongsTo(Comment, { foreignKey: 'CommentId', as: 'ReportedComment' });
   }
 }
+
+export default Report;

@@ -1,80 +1,96 @@
-import { DataTypes, Model, Sequelize } from 'sequelize';
+import Sequelize, { CreationOptional, InferAttributes, InferCreationAttributes, Model } from 'sequelize';
+import Post from './post';
+import Alert from './alert';
+import Chat from './chat';
+import Report from './report';
+import Comment from './comment';
+import Image from './image';
 
-export default class User extends Model {
-  public email!: string;
-  public password!: string;
-  public nickname!: string;
-  public desc?: string;
-  public isRecommended!: boolean;
+class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
+  declare id: CreationOptional<number>;
+  declare snsId?: string;
+  declare provider?: string;
+  declare email: string;
+  declare password: string | null;
+  declare nickname: string;
+  declare desc?: string;
+  declare isRecommended: boolean;
+  declare createdAt: CreationOptional<Date>;
+  declare updatedAt: CreationOptional<Date>;
 
-  static initModel(sequelize: Sequelize): typeof User {
+  static initiate(sequelize: Sequelize.Sequelize) {
     User.init(
       {
+        id: {
+          type: Sequelize.INTEGER,
+          primaryKey: true,
+          autoIncrement: true
+        },
+        snsId: {
+          type: Sequelize.STRING,
+          allowNull: true,
+          unique: true
+        },
+        provider: {
+          type: Sequelize.STRING(20),
+          allowNull: true
+        },
         email: {
-          type: DataTypes.STRING(30),
+          type: Sequelize.STRING(30),
           allowNull: false,
-          unique: true,
+          unique: true
         },
         password: {
-          type: DataTypes.STRING(100),
-          allowNull: false,
+          type: Sequelize.STRING(100),
+          allowNull: true
         },
         nickname: {
-          type: DataTypes.STRING(30),
+          type: Sequelize.STRING(30),
           allowNull: false,
-          unique: true,
+          unique: true
         },
         desc: {
-          type: DataTypes.STRING(250),
-          allowNull: true,
+          type: Sequelize.STRING(250),
+          allowNull: true
         },
         isRecommended: {
-          type: DataTypes.BOOLEAN,
-          allowNull: false,
+          type: Sequelize.BOOLEAN,
+          allowNull: false
         },
+        createdAt: Sequelize.DATE,
+        updatedAt: Sequelize.DATE
       },
       {
         modelName: 'User',
         tableName: 'users',
         charset: 'utf8',
         collate: 'utf8_general_ci',
-        sequelize,
+        sequelize
       }
     );
-    return User;
   }
 
-  static associate(db: any) {
-    db.User.hasMany(db.Post);
-    db.User.hasMany(db.Comment);
-    db.User.hasMany(db.Alert);
-    db.User.belongsToMany(db.Post, { through: 'Like', as: 'Liked' });
-    db.User.hasMany(db.Chat, { as: 'SentMessages', foreignKey: 'SenderId' });
-    db.User.hasMany(db.Chat, {
-      as: 'ReceivedMessages',
-      foreignKey: 'ReceiverId',
-    });
-    db.User.hasMany(db.Report, {
-      foreignKey: 'ReporterId',
-      as: 'ReportsFiled',
-    });
-    db.User.hasMany(db.Report, {
-      foreignKey: 'ReportedUserId',
-      as: 'ReportsReceived',
-    });
-    db.User.belongsTo(db.Image, {
-      as: 'ProfileImage',
-      foreignKey: 'ProfileImageId',
-    });
-    db.User.belongsToMany(db.User, {
+  static associate() {
+    User.hasMany(Post);
+    User.hasMany(Comment);
+    User.hasMany(Alert);
+    User.belongsToMany(Post, { through: 'Like', as: 'Liked' });
+    User.hasMany(Chat, { as: 'SentMessages', foreignKey: 'SenderId' });
+    User.hasMany(Chat, { as: 'ReceivedMessages', foreignKey: 'ReceiverId' });
+    User.hasMany(Report, { foreignKey: 'ReporterId', as: 'ReportsFiled' });
+    User.hasMany(Report, { foreignKey: 'ReportedUserId', as: 'ReportsReceived' });
+    User.hasOne(Image, { as: 'ProfileImage', foreignKey: 'UserId' });
+    User.belongsToMany(User, {
       through: 'Follow',
       as: 'Followers',
-      foreignKey: 'FollowingId',
+      foreignKey: 'FollowingId'
     });
-    db.User.belongsToMany(db.User, {
+    User.belongsToMany(User, {
       through: 'Follow',
       as: 'Followings',
-      foreignKey: 'FollowerId',
+      foreignKey: 'FollowerId'
     });
   }
 }
+
+export default User;

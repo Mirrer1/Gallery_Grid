@@ -1,12 +1,15 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { toast } from 'react-toastify';
-import { GoogleOutlined } from '@ant-design/icons';
-import Router from 'next/router';
+import { GoogleOutlined, LoadingOutlined } from '@ant-design/icons';
+import { useDispatch, useSelector } from 'react-redux';
 
 import useInput from 'utils/useInput';
 import { IMenuProps } from './MenuContents';
 import { useValidate } from 'utils/useValidate';
 import { slideInFromBottom } from 'styles/Common/animation';
+import { loginGoogleRequest, resetSignUpMessage, signUpRequest } from 'store/actions/userAction';
+import { RootState } from 'store/reducers';
+
 import {
   AccountBtn,
   AccountDivider,
@@ -20,6 +23,9 @@ import {
 } from 'styles/Landing/accountForm';
 
 const SignUpForm = ({ selectMenu, onClickMenu }: IMenuProps) => {
+  const dispatch = useDispatch();
+  const { signUpMessage, signUpLoading, loginGoogleLoading } = useSelector((state: RootState) => state.user);
+
   const [nickname, onChangeNickname] = useInput('');
   const [email, onChangeEmail] = useInput('');
   const [password, onChangePassword] = useInput('');
@@ -56,17 +62,35 @@ const SignUpForm = ({ selectMenu, onClickMenu }: IMenuProps) => {
         return;
       }
 
-      console.log({ nickname, email, password });
-      Router.push('/timeline');
+      dispatch(signUpRequest({ nickname, email, password }));
     },
     [nickname, email, password, passwordCheck, term]
   );
 
+  const onClickGoogleLogin = useCallback(() => {
+    dispatch(loginGoogleRequest());
+  }, []);
+
+  useEffect(() => {
+    const { message, type } = signUpMessage;
+
+    if (message) {
+      if (type === 'success') {
+        toast.success(message);
+        onMoveLogin();
+      } else if (type === 'error') {
+        toast.warning(message);
+      }
+
+      dispatch(resetSignUpMessage());
+    }
+  }, [signUpMessage]);
+
   return (
     <AccountWrapper {...slideInFromBottom()}>
-      <AccountGoogle>
-        <GoogleOutlined />
-        <button type="button">Continue with Google</button>
+      <AccountGoogle onClick={onClickGoogleLogin}>
+        {!loginGoogleLoading && <GoogleOutlined />}
+        <button type="button">{loginGoogleLoading ? <LoadingOutlined /> : <>Continue with Google</>}</button>
       </AccountGoogle>
 
       <AccountDivider>OR SIGNUP WITH EAMIL</AccountDivider>
@@ -75,27 +99,27 @@ const SignUpForm = ({ selectMenu, onClickMenu }: IMenuProps) => {
         <AccountInput $largemargin="false">
           <input type="text" value={nickname} onChange={onChangeNickname} required />
           <label>User name</label>
-          <span></span>
+          <span />
         </AccountInput>
         <AccountAlert $login="false">2~16자 영문 대 소문자, 한글, 숫자를 사용하세요.</AccountAlert>
 
         <AccountInput $largemargin="true">
           <input type="text" value={email} onChange={onChangeEmail} required />
           <label>Email address</label>
-          <span></span>
+          <span />
         </AccountInput>
 
         <AccountInput $largemargin="false">
           <input type="password" value={password} onChange={onChangePassword} required />
           <label>Password</label>
-          <span></span>
+          <span />
         </AccountInput>
         <AccountAlert $login="false">8~16자 영문 대 소문자, 숫자를 사용하세요.</AccountAlert>
 
         <AccountInput $largemargin="true">
           <input type="password" value={passwordCheck} onChange={onChangePasswordCheck} required />
           <label>Confirm password</label>
-          <span></span>
+          <span />
         </AccountInput>
 
         <AuthOptionsWrapper $menu={selectMenu}>
@@ -105,8 +129,10 @@ const SignUpForm = ({ selectMenu, onClickMenu }: IMenuProps) => {
           </div>
         </AuthOptionsWrapper>
 
-        <AccountBtn>
-          <button type="submit">Create my account&nbsp;&nbsp;&nbsp;&nbsp;→</button>
+        <AccountBtn $menu={selectMenu}>
+          <button type="submit">
+            {signUpLoading ? <LoadingOutlined /> : <>Create my account&nbsp;&nbsp;&nbsp;&nbsp;→</>}
+          </button>
         </AccountBtn>
       </AccountForm>
 

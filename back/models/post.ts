@@ -1,38 +1,54 @@
-import { DataTypes, Model, Sequelize } from 'sequelize';
+import Sequelize, { CreationOptional, InferAttributes, InferCreationAttributes, Model } from 'sequelize';
+import Image from './image';
+import Comment from './comment';
+import Alert from './alert';
+import User from './user';
+import Report from './report';
 
-export default class Post extends Model {
-  public content!: string;
-  public location?: string;
+class Post extends Model<InferAttributes<Post>, InferCreationAttributes<Post>> {
+  declare id: CreationOptional<number>;
+  declare content: string;
+  declare location?: string;
+  declare createdAt: CreationOptional<Date>;
+  declare updatedAt: CreationOptional<Date>;
 
-  static initModel(sequelize: Sequelize): typeof Post {
+  static initiate(sequelize: Sequelize.Sequelize) {
     Post.init(
       {
+        id: {
+          type: Sequelize.INTEGER,
+          primaryKey: true,
+          autoIncrement: true
+        },
         content: {
-          type: DataTypes.TEXT,
-          allowNull: false,
+          type: Sequelize.TEXT,
+          allowNull: false
         },
         location: {
-          type: DataTypes.STRING(30),
-          allowNull: true,
+          type: Sequelize.STRING(30),
+          allowNull: true
         },
+        createdAt: Sequelize.DATE,
+        updatedAt: Sequelize.DATE
       },
       {
         modelName: 'Post',
         tableName: 'posts',
         charset: 'utf8mb4',
         collate: 'utf8mb4_general_ci',
-        sequelize,
+        sequelize
       }
     );
-    return Post;
   }
 
-  static associate(db: any) {
-    db.Post.hasMany(db.Comment);
-    db.Post.hasMany(db.Image);
-    db.Post.hasMany(db.Alert);
-    db.Post.belongsTo(db.User);
-    db.Post.hasMany(db.Report, { foreignKey: 'PostId', as: 'Reports' });
-    db.Post.belongsToMany(db.User, { through: 'Like', as: 'Likers' });
+  static associate() {
+    Post.hasMany(Comment);
+    Post.hasMany(Image);
+    Post.hasMany(Alert);
+    Post.belongsTo(User);
+    Post.hasMany(Report, { foreignKey: 'PostId', as: 'Reports' });
+    Post.belongsToMany(User, { through: 'Like', as: 'Likers' });
   }
 }
+
+export default Post;

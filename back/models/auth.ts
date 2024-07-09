@@ -1,31 +1,42 @@
-import { DataTypes, Model, Sequelize } from 'sequelize';
+import Sequelize, { CreationOptional, InferAttributes, InferCreationAttributes, Model } from 'sequelize';
 
-export default class Auth extends Model {
-  public email!: string;
-  public code!: number;
+class Auth extends Model<InferAttributes<Auth>, InferCreationAttributes<Auth>> {
+  declare id: CreationOptional<number>;
+  declare email: string;
+  declare code: number;
+  declare createdAt: CreationOptional<Date>;
+  declare updatedAt: CreationOptional<Date>;
 
-  static initModel(sequelize: Sequelize): typeof Auth {
+  static initiate(sequelize: Sequelize.Sequelize) {
     Auth.init(
       {
+        id: {
+          type: Sequelize.INTEGER,
+          primaryKey: true,
+          autoIncrement: true
+        },
         email: {
-          type: DataTypes.STRING(30),
-          allowNull: false,
+          type: Sequelize.STRING(30),
+          allowNull: false
         },
         code: {
-          type: DataTypes.INTEGER,
-          allowNull: false,
+          type: Sequelize.INTEGER,
+          allowNull: false
         },
+        createdAt: Sequelize.DATE,
+        updatedAt: Sequelize.DATE
       },
       {
         modelName: 'Auth',
         tableName: 'auths',
         charset: 'utf8',
         collate: 'utf8_general_ci',
-        sequelize,
+        sequelize
       }
     );
-    return Auth;
   }
 
-  static associate(db: any) {}
+  static associate() {}
 }
+
+export default Auth;

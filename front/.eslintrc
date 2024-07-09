@@ -36,7 +36,7 @@
     "react/prop-types": "off",
     "no-var": "warn",
     "no-multiple-empty-lines": "warn",
-    "no-console": ["warn", { "allow": ["warn", "error"] }],
+    "no-console": "off",
     "eqeqeq": "warn",
     "dot-notation": "warn",
     "react/destructuring-assignment": "warn",
@@ -44,10 +44,14 @@
     "react/no-direct-mutation-state": "warn",
     "react/jsx-no-useless-fragment": "warn",
     "react/no-unused-state": "warn",
+    "@typescript-eslint/no-unused-vars": "warn",
     "react/jsx-key": "warn",
     "react/self-closing-comp": "warn",
     "react/jsx-curly-brace-presence": "warn",
     "react-hooks/exhaustive-deps": "off",
+    "@next/next/no-img-element": "off",
+    "react-hooks/rules-of-hooks": "off",
+    "@typescript-eslint/no-explicit-any": "off",
     "prettier/prettier": [
       "error",
       {

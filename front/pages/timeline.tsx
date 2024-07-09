@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { UsergroupAddOutlined } from '@ant-design/icons';
-import { useDispatch } from 'react-redux';
 import Head from 'next/head';
 
 import AppLayout from 'components/AppLayout';
