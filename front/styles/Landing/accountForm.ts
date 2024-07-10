@@ -54,6 +54,10 @@ export const AccountGoogle = styled.div`
 
     & > button {
       font-size: 0.9rem;
+
+      span {
+        font-size: 1.3rem;
+      }
     }
   }
 

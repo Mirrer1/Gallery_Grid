@@ -19,7 +19,7 @@ const MenuContents = ({ selectMenu, onClickMenu }: IMenuProps) => {
   }, []);
 
   return (
-    <ContentsWrapper>
+    <ContentsWrapper $selected={selectMenu}>
       <ContentsText key={selectMenu} {...slideInFromLeft} $selected={selectMenu}>
         {selectMenu === 'home' ? (
           <div>
