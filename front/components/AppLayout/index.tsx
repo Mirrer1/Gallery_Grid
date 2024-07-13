@@ -40,12 +40,12 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
     dispatch(logoutRequest());
   }, []);
 
-  useEffect(() => {
-    if (!me) {
-      Router.replace('/');
-      toast.success('정상적으로 로그아웃 되었습니다.');
-    }
-  }, [me]);
+  // useEffect(() => {
+  //   if (!me) {
+  //     Router.replace('/');
+  //     toast.success('정상적으로 로그아웃 되었습니다.');
+  //   }
+  // }, [me]);
 
   useEffect(() => {
     if (typeof window !== 'undefined') setPathname(Router.pathname);

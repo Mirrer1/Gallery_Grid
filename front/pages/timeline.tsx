@@ -12,6 +12,7 @@ import CommentList from 'components/Timeline/CommentList';
 
 import { RootState } from 'store/reducers';
 import { loadPostsRequest } from 'store/actions/postAction';
+import { loadMyInfoRequest } from 'store/actions/userAction';
 import { slideInFromBottom } from 'styles/Common/animation';
 import { CommunitySection, MobileSuggestedBtn, PostsSection, TimelineWrapper } from 'styles/Timeline';
 
@@ -25,6 +26,7 @@ const Timeline = () => {
   }, []);
 
   useEffect(() => {
+    dispatch(loadMyInfoRequest());
     dispatch(loadPostsRequest());
   }, []);
 

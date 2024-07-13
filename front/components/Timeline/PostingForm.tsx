@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { CloseOutlined, CompassOutlined, PaperClipOutlined, SmileOutlined } from '@ant-design/icons';
+import { CloseOutlined, CompassOutlined, LoadingOutlined, PaperClipOutlined, SmileOutlined } from '@ant-design/icons';
 import { IEmojiData } from 'emoji-picker-react';
 import { useDispatch } from 'react-redux';
 
@@ -14,7 +14,7 @@ const PostingForm = () => {
     useState<React.ComponentType<{ onEmojiClick: (event: MouseEvent, emojiObject: IEmojiData) => void }>>();
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [text, onChangeText, setText] = useInput<string>('');
-  const { location, getLocation, setLocation } = useLocation();
+  const { location, getLocation, setLocation, loading } = useLocation();
   const [images, setImages] = useState<File[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -56,8 +56,9 @@ const PostingForm = () => {
 
       console.log(text);
       console.log(images);
+      console.log(location);
 
-      dispatch(addPostRequest());
+      // dispatch(addPostRequest());
     },
     [text, images]
   );
@@ -88,9 +89,11 @@ const PostingForm = () => {
           <SmileOutlined onClick={toggleEmojiPicker} />
           {location ? (
             <div onClick={setInitialLocation}>
-              <p>{location?.address}</p>
+              <p>{location}</p>
               <CloseOutlined />
             </div>
+          ) : loading ? (
+            <LoadingOutlined />
           ) : (
             <CompassOutlined onClick={getLocation} />
           )}
