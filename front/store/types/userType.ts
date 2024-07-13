@@ -47,7 +47,7 @@ export interface ResponseMessage {
   message: string;
 }
 
-export interface AuthData {
+export interface AuthResponse {
   email: string;
   password: string;
   nickname?: string;
@@ -69,7 +69,7 @@ export interface User {
 
 export interface loginRequestAction {
   type: typeof LOGIN_REQUEST;
-  data: AuthData;
+  data: AuthResponse;
 }
 
 export interface loginSuccessAction {
@@ -129,7 +129,7 @@ export interface logoutFailureAction {
 
 export interface signUpRequestAction {
   type: typeof SIGNUP_REQUEST;
-  data: AuthData;
+  data: AuthResponse;
 }
 
 export interface signUpSuccessAction {

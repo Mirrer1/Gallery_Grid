@@ -6,15 +6,17 @@ import {
   SHOW_COMMENT_LIST,
   SHOW_POST_CAROUSEL,
   SHOW_POST_MODAL,
-  LOAD_POSTS_REQUEST
+  LOAD_POSTS_REQUEST,
+  PostResponse
 } from 'store/types/postType';
 
 export const loadPostsRequest = () => ({
   type: LOAD_POSTS_REQUEST
 });
 
-export const addPostRequest = () => ({
-  type: ADD_POST_REQUEST
+export const addPostRequest = (data: PostResponse) => ({
+  type: ADD_POST_REQUEST,
+  data
 });
 
 export const showCommentList = () => ({

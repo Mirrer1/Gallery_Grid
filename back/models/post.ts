@@ -9,6 +9,7 @@ class Post extends Model<InferAttributes<Post>, InferCreationAttributes<Post>> {
   declare id: CreationOptional<number>;
   declare content: string;
   declare location?: string;
+  declare UserId: number;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 
@@ -28,6 +29,10 @@ class Post extends Model<InferAttributes<Post>, InferCreationAttributes<Post>> {
           type: Sequelize.STRING(30),
           allowNull: true
         },
+        UserId: {
+          type: Sequelize.INTEGER,
+          allowNull: false
+        },
         createdAt: Sequelize.DATE,
         updatedAt: Sequelize.DATE
       },
@@ -45,7 +50,7 @@ class Post extends Model<InferAttributes<Post>, InferCreationAttributes<Post>> {
     Post.hasMany(Comment);
     Post.hasMany(Image);
     Post.hasMany(Alert);
-    Post.belongsTo(User);
+    Post.belongsTo(User, { foreignKey: 'UserId' });
     Post.hasMany(Report, { foreignKey: 'PostId', as: 'Reports' });
     Post.belongsToMany(User, { through: 'Like', as: 'Likers' });
   }

@@ -2,14 +2,14 @@ import {
   LOGIN_REQUEST,
   RESET_SIGNUP_MESSAGE,
   SIGNUP_REQUEST,
-  AuthData,
+  AuthResponse,
   RESET_LOGIN_MESSAGE,
   LOGOUT_REQUEST,
   LOGIN_GOOGLE_REQUEST,
   LOAD_MY_INFO_REQUEST
 } from 'store/types/userType';
 
-export const loginRequest = (data: AuthData) => ({
+export const loginRequest = (data: AuthResponse) => ({
   type: LOGIN_REQUEST,
   data
 });
@@ -30,7 +30,7 @@ export const logoutRequest = () => ({
   type: LOGOUT_REQUEST
 });
 
-export const signUpRequest = (data: AuthData) => ({
+export const signUpRequest = (data: AuthResponse) => ({
   type: SIGNUP_REQUEST,
   data
 });

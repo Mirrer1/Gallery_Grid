@@ -13,7 +13,7 @@ const PostingForm = () => {
   const [EmojiPicker, setEmojiPicker] =
     useState<React.ComponentType<{ onEmojiClick: (event: MouseEvent, emojiObject: IEmojiData) => void }>>();
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  const [text, onChangeText, setText] = useInput<string>('');
+  const [content, onChangeContent, setContent] = useInput<string>('');
   const { location, getLocation, setLocation, loading } = useLocation();
   const [images, setImages] = useState<File[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -24,9 +24,9 @@ const PostingForm = () => {
 
   const onEmojiClick = useCallback(
     (event: MouseEvent, emojiObject: IEmojiData) => {
-      setText(prevText => prevText + emojiObject.emoji);
+      setContent(prevText => prevText + emojiObject.emoji);
     },
-    [setText]
+    [setContent]
   );
 
   const toggleEmojiPicker = useCallback(() => {
@@ -54,13 +54,9 @@ const PostingForm = () => {
     (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
 
-      console.log(text);
-      console.log(images);
-      console.log(location);
-
-      // dispatch(addPostRequest());
+      dispatch(addPostRequest({ content, location }));
     },
-    [text, images]
+    [content, images, location]
   );
 
   useEffect(() => {
@@ -72,13 +68,13 @@ const PostingForm = () => {
   }, []);
 
   return (
-    <PostingWrapper onSubmit={onSubmitForm}>
+    <PostingWrapper encType="multipart/form-data" onSubmit={onSubmitForm}>
       <textarea
         rows={6}
         maxLength={2000}
         placeholder="당신의 작품에 대한 이야기를 들려주세요."
-        value={text}
-        onChange={onChangeText}
+        value={content}
+        onChange={onChangeContent}
       />
 
       <div>
@@ -110,9 +106,9 @@ const PostingForm = () => {
         )}
 
         <div>
-          <p>{text.length} / 2000</p>
+          <p>{content.length} / 2000</p>
 
-          <PostingBtn type="submit" $active={text.length !== 0}>
+          <PostingBtn type="submit" $active={content.length !== 0}>
             Post
           </PostingBtn>
         </div>

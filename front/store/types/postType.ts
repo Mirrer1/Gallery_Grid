@@ -1,3 +1,5 @@
+import { User } from './userType';
+
 export const LOAD_POSTS_REQUEST = 'LOAD_POSTS_REQUEST' as const;
 export const LOAD_POSTS_SUCCESS = 'LOAD_POSTS_SUCCESS' as const;
 export const LOAD_POSTS_FAILURE = 'LOAD_POSTS_FAILURE' as const;
@@ -29,6 +31,21 @@ export type PostState = {
   isCarouselVisible: boolean;
 };
 
+export interface PostResponse {
+  content: string;
+  location: string | null;
+}
+
+export interface Post {
+  id: number;
+  content: string;
+  location: string | null;
+  UserId: number;
+  createdAt: string;
+  updatedAt: string;
+  User: User;
+}
+
 export interface loadPostsRequestAction {
   type: typeof LOAD_POSTS_REQUEST;
 }
@@ -39,20 +56,22 @@ export interface loadPostsSuccessAction {
 
 export interface loadPostsFailureAction {
   type: typeof LOAD_POSTS_FAILURE;
-  error: any;
+  error: string;
 }
 
 export interface addPostRequestAction {
   type: typeof ADD_POST_REQUEST;
+  data: PostResponse;
 }
 
 export interface addPostSuccessAction {
   type: typeof ADD_POST_SUCCESS;
+  data: Post;
 }
 
 export interface addPostFailureAction {
   type: typeof ADD_POST_FAILURE;
-  error: any;
+  error: string;
 }
 
 export interface ShowCommentListAction {
