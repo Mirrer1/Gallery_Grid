@@ -1,22 +1,24 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { CloseOutlined, CompassOutlined, LoadingOutlined, PaperClipOutlined, SmileOutlined } from '@ant-design/icons';
+import { useDispatch, useSelector } from 'react-redux';
 import { IEmojiData } from 'emoji-picker-react';
-import { useDispatch } from 'react-redux';
 
 import useInput from 'utils/useInput';
 import { useLocation } from 'utils/useLocation';
-import { addPostRequest } from 'store/actions/postAction';
+import { RootState } from 'store/reducers';
+import { addPostRequest, uploadImagesRequest } from 'store/actions/postAction';
 import { PostingBtn, PostingEmojiPicker, PostingWrapper } from 'styles/Timeline/postingForm';
 
 const PostingForm = () => {
   const dispatch = useDispatch();
-  const [EmojiPicker, setEmojiPicker] =
-    useState<React.ComponentType<{ onEmojiClick: (event: MouseEvent, emojiObject: IEmojiData) => void }>>();
-  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { imagePaths } = useSelector((state: RootState) => state.post);
   const [content, onChangeContent, setContent] = useInput<string>('');
   const { location, getLocation, setLocation, loading } = useLocation();
-  const [images, setImages] = useState<File[]>([]);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [EmojiPicker, setEmojiPicker] =
+    useState<React.ComponentType<{ onEmojiClick: (event: MouseEvent, emojiObject: IEmojiData) => void }>>();
 
   const setInitialLocation = useCallback(() => {
     setLocation(null);
@@ -42,21 +44,30 @@ const PostingForm = () => {
   }, []);
 
   const onFileChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
+    const files = event.target.files as FileList;
+    const imageFormData = new FormData();
 
-    if (files && files.length > 0) {
-      const file = files[0];
-      setImages(prevImages => [...prevImages, file]);
-    }
+    Array.from(files).forEach((file: File) => {
+      imageFormData.append('image', file);
+    });
+
+    dispatch(uploadImagesRequest(imageFormData));
   }, []);
 
   const onSubmitForm = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
 
-      dispatch(addPostRequest({ content, location }));
+      const formData = new FormData();
+      imagePaths.forEach(image => {
+        formData.append('image', image);
+      });
+      if (content) formData.append('content', content);
+      if (location) formData.append('location', location);
+
+      dispatch(addPostRequest(formData));
     },
-    [content, images, location]
+    [content, location, imagePaths]
   );
 
   useEffect(() => {
@@ -80,7 +91,7 @@ const PostingForm = () => {
       <div>
         <div>
           <PaperClipOutlined onClick={onClickImageUpload} />
-          <input type="file" ref={fileInputRef} onChange={onFileChange} />
+          <input type="file" name="image" multiple ref={fileInputRef} onChange={onFileChange} />
 
           <SmileOutlined onClick={toggleEmojiPicker} />
           {location ? (

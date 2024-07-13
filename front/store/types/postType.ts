@@ -8,6 +8,10 @@ export const ADD_POST_REQUEST = 'ADD_POST_REQUEST' as const;
 export const ADD_POST_SUCCESS = 'ADD_POST_SUCCESS' as const;
 export const ADD_POST_FAILURE = 'ADD_POST_FAILURE' as const;
 
+export const UPLOAD_IMAGES_REQUEST = 'UPLOAD_IMAGES_REQUEST' as const;
+export const UPLOAD_IMAGES_SUCCESS = 'UPLOAD_IMAGES_SUCCESS' as const;
+export const UPLOAD_IMAGES_FAILURE = 'UPLOAD_IMAGES_FAILURE' as const;
+
 export const SHOW_COMMENT_LIST = 'SHOW_COMMENT_LIST' as const;
 export const HIDE_COMMENT_LIST = 'HIDE_COMMENT_LIST' as const;
 
@@ -18,7 +22,8 @@ export const SHOW_POST_CAROUSEL = 'SHOW_POST_CAROUSEL' as const;
 export const HIDE_POST_CAROUSEL = 'HIDE_POST_CAROUSEL' as const;
 
 export type PostState = {
-  mainPosts: any[];
+  mainPosts: Post[];
+  imagePaths: string[];
   hasMorePosts: boolean;
   loadPostsLoading: boolean;
   loadPostsDone: boolean;
@@ -26,15 +31,13 @@ export type PostState = {
   addPostLoading: boolean;
   addPostDone: boolean;
   addPostError: null | string;
+  uploadImagesLoading: boolean;
+  uploadImagesDone: boolean;
+  uploadImagesError: null | string;
   isCommentListVisible: boolean;
   isPostModalVisible: boolean;
   isCarouselVisible: boolean;
 };
-
-export interface PostResponse {
-  content: string;
-  location: string | null;
-}
 
 export interface Post {
   id: number;
@@ -61,7 +64,7 @@ export interface loadPostsFailureAction {
 
 export interface addPostRequestAction {
   type: typeof ADD_POST_REQUEST;
-  data: PostResponse;
+  data: FormData;
 }
 
 export interface addPostSuccessAction {
@@ -71,6 +74,21 @@ export interface addPostSuccessAction {
 
 export interface addPostFailureAction {
   type: typeof ADD_POST_FAILURE;
+  error: string;
+}
+
+export interface uploadImagesRequestAction {
+  type: typeof UPLOAD_IMAGES_REQUEST;
+  data: FormData;
+}
+
+export interface uploadImagesSuccessAction {
+  type: typeof UPLOAD_IMAGES_SUCCESS;
+  data: string[];
+}
+
+export interface uploadImagesFailureAction {
+  type: typeof UPLOAD_IMAGES_FAILURE;
   error: string;
 }
 
@@ -110,4 +128,7 @@ export type PostAction =
   | loadPostsFailureAction
   | addPostRequestAction
   | addPostSuccessAction
-  | addPostFailureAction;
+  | addPostFailureAction
+  | uploadImagesRequestAction
+  | uploadImagesSuccessAction
+  | uploadImagesFailureAction;

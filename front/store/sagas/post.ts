@@ -10,8 +10,11 @@ import {
   LOAD_POSTS_SUCCESS,
   Post,
   PostAction,
-  PostResponse,
-  addPostRequestAction
+  UPLOAD_IMAGES_FAILURE,
+  UPLOAD_IMAGES_REQUEST,
+  UPLOAD_IMAGES_SUCCESS,
+  addPostRequestAction,
+  uploadImagesRequestAction
 } from 'store/types/postType';
 import { generateDummyPosts } from 'store/reducers/postReducer';
 
@@ -35,7 +38,7 @@ function* loadPosts(action: PostAction) {
   }
 }
 
-function addPostAPI(data: PostResponse) {
+function addPostAPI(data: FormData) {
   return axios.post('/post', data);
 }
 
@@ -55,6 +58,26 @@ function* addPost(action: addPostRequestAction) {
   }
 }
 
+function uploadImagesAPI(data: FormData) {
+  return axios.post('/post/images', data);
+}
+
+function* uploadImages(action: uploadImagesRequestAction) {
+  try {
+    const result: AxiosResponse<string[]> = yield call(uploadImagesAPI, action.data);
+
+    yield put({
+      type: UPLOAD_IMAGES_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: UPLOAD_IMAGES_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
 function* watchLoadPosts() {
   yield takeLatest(LOAD_POSTS_REQUEST, loadPosts);
 }
@@ -63,6 +86,10 @@ function* watchAddPost() {
   yield takeLatest(ADD_POST_REQUEST, addPost);
 }
 
+function* watchUploadImages() {
+  yield takeLatest(UPLOAD_IMAGES_REQUEST, uploadImages);
+}
+
 export default function* postSaga() {
-  yield all([fork(watchLoadPosts), fork(watchAddPost)]);
+  yield all([fork(watchLoadPosts), fork(watchAddPost), fork(watchUploadImages)]);
 }

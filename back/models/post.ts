@@ -1,4 +1,11 @@
-import Sequelize, { CreationOptional, InferAttributes, InferCreationAttributes, Model } from 'sequelize';
+import Sequelize, {
+  CreationOptional,
+  HasManyAddAssociationMixin,
+  HasManyAddAssociationsMixin,
+  InferAttributes,
+  InferCreationAttributes,
+  Model
+} from 'sequelize';
 import Image from './image';
 import Comment from './comment';
 import Alert from './alert';
@@ -12,6 +19,9 @@ class Post extends Model<InferAttributes<Post>, InferCreationAttributes<Post>> {
   declare UserId: number;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
+
+  public addImages!: HasManyAddAssociationsMixin<Image, number>;
+  public addImage!: HasManyAddAssociationMixin<Image, number>;
 
   static initiate(sequelize: Sequelize.Sequelize) {
     Post.init(

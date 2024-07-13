@@ -3,6 +3,7 @@ import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import passport from 'passport';
 import dotenv from 'dotenv';
+import path from 'path';
 import cors from 'cors';
 
 import userRouter from './routes/user';
@@ -44,6 +45,7 @@ app.use(
     credentials: true
   })
 );
+app.use('/', express.static(path.join(__dirname, 'uploads')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

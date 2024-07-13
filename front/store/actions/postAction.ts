@@ -7,15 +7,20 @@ import {
   SHOW_POST_CAROUSEL,
   SHOW_POST_MODAL,
   LOAD_POSTS_REQUEST,
-  PostResponse
+  UPLOAD_IMAGES_REQUEST
 } from 'store/types/postType';
 
 export const loadPostsRequest = () => ({
   type: LOAD_POSTS_REQUEST
 });
 
-export const addPostRequest = (data: PostResponse) => ({
+export const addPostRequest = (data: FormData) => ({
   type: ADD_POST_REQUEST,
+  data
+});
+
+export const uploadImagesRequest = (data: FormData) => ({
+  type: UPLOAD_IMAGES_REQUEST,
   data
 });
 

@@ -5,12 +5,21 @@ import { HoverStyle } from 'styles/Common/hover';
 import media from 'styles/media';
 
 export const ImageCarouselWrapper = styled.div`
+  width: 74%;
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 10;
   border-radius: 5px;
+
+  ${media.tablet} {
+    width: 90%;
+  }
+
+  ${media.mobile} {
+    width: 100%;
+  }
 `;
 
 export const BackgroundImageContainer = styled.div<{ $background: string }>`
