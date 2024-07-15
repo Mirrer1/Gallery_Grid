@@ -71,7 +71,7 @@ export const PostHeader = styled.div`
     & > div > h1 {
       font-size: 0.9rem;
       font-weight: 500;
-      margin-bottom: 0.3em;
+      margin-bottom: 0.4em;
       cursor: pointer;
 
       @media (min-width: 992px) {
@@ -83,7 +83,7 @@ export const PostHeader = styled.div`
     }
 
     & > div > p {
-      font-size: 0.6rem;
+      font-size: 0.65rem;
       opacity: 40%;
     }
   }

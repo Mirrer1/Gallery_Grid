@@ -8,11 +8,14 @@ import { useLocation } from 'utils/useLocation';
 import { RootState } from 'store/reducers';
 import { addPostRequest, uploadImagesRequest } from 'store/actions/postAction';
 import { PostingBtn, PostingEmojiPicker, PostingWrapper } from 'styles/Timeline/postingForm';
+import { toast } from 'react-toastify';
 
 const PostingForm = () => {
   const dispatch = useDispatch();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { imagePaths } = useSelector((state: RootState) => state.post);
+  const { imagePaths, uploadImagesLoading, addPostLoading, addPostDone } = useSelector(
+    (state: RootState) => state.post
+  );
   const [content, onChangeContent, setContent] = useInput<string>('');
   const { location, getLocation, setLocation, loading } = useLocation();
 
@@ -43,20 +46,32 @@ const PostingForm = () => {
     if (fileInputRef.current) fileInputRef.current.click();
   }, []);
 
-  const onFileChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files as FileList;
-    const imageFormData = new FormData();
+  const onFileChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const files = event.target.files as FileList;
+      if (imagePaths.length + files.length > 5) {
+        toast.warning('이미지는 최대 5개까지 업로드할 수 있습니다.');
+        return;
+      }
 
-    Array.from(files).forEach((file: File) => {
-      imageFormData.append('image', file);
-    });
+      const imageFormData = new FormData();
+      Array.from(files).forEach((file: File) => {
+        imageFormData.append('image', file);
+      });
 
-    dispatch(uploadImagesRequest(imageFormData));
-  }, []);
+      dispatch(uploadImagesRequest(imageFormData));
+    },
+    [imagePaths]
+  );
 
   const onSubmitForm = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
+
+      if (imagePaths.length === 0) {
+        toast.warning('게시글에 이미지를 첨부해주세요.');
+        return;
+      }
 
       const formData = new FormData();
       imagePaths.forEach(image => {
@@ -69,6 +84,10 @@ const PostingForm = () => {
     },
     [content, location, imagePaths]
   );
+
+  useEffect(() => {
+    if (addPostDone) setContent('');
+  }, [addPostDone]);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -90,7 +109,7 @@ const PostingForm = () => {
 
       <div>
         <div>
-          <PaperClipOutlined onClick={onClickImageUpload} />
+          {uploadImagesLoading ? <LoadingOutlined /> : <PaperClipOutlined onClick={onClickImageUpload} />}
           <input type="file" name="image" multiple ref={fileInputRef} onChange={onFileChange} />
 
           <SmileOutlined onClick={toggleEmojiPicker} />
@@ -120,7 +139,7 @@ const PostingForm = () => {
           <p>{content.length} / 2000</p>
 
           <PostingBtn type="submit" $active={content.length !== 0}>
-            Post
+            {addPostLoading ? <LoadingOutlined /> : <p>Post</p>}
           </PostingBtn>
         </div>
       </div>

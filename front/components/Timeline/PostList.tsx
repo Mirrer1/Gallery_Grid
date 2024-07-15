@@ -1,17 +1,22 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
+  AlertOutlined,
   ArrowsAltOutlined,
   CommentOutlined,
   DeleteOutlined,
   EditOutlined,
   LikeOutlined,
-  MoreOutlined
+  MoreOutlined,
+  ShareAltOutlined
 } from '@ant-design/icons';
 
 import PostImageCarousel from './PostImageCarousel';
+import useScroll from 'utils/useScroll';
+import { formatDate } from 'utils/formatDate';
 import { RootState } from 'store/reducers';
-import { hideCommentList, loadPostsRequest, showCommentList, showPostCarousel } from 'store/actions/postAction';
+import { Image, Post } from 'store/types/postType';
+import { hideCommentList, showCommentList, showPostCarousel } from 'store/actions/postAction';
 import { Tooltip, TooltipBtn, TooltipOutsideArea } from 'styles/Common/tooltip';
 import {
   PostWrapper,
@@ -28,25 +33,25 @@ const PostList = () => {
   const dispatch = useDispatch();
   const firstPostRef = useRef<HTMLDivElement>(null);
   const postContainerRef = useRef<HTMLDivElement>(null);
-  const { mainPosts, hasMorePosts, loadPostsLoading, isCommentListVisible, isCarouselVisible } = useSelector(
-    (state: RootState) => state.post
-  );
+  const { me } = useSelector((state: RootState) => state.user);
+  const { mainPosts, isCommentListVisible, isCarouselVisible } = useSelector((state: RootState) => state.post);
+  useScroll({ type: 'timeline', ref: postContainerRef });
 
   const [category, setCategory] = useState('best');
-  const [modalImages, setModalImages] = useState<string[]>([]);
-  const [isTooltipVisible, setIsTooltipVisible] = useState<string | null>(null);
+  const [modalImages, setModalImages] = useState<Image[]>([]);
+  const [isTooltipVisible, setIsTooltipVisible] = useState<number | null>(null);
 
   const onClickCategory = useCallback((category: string) => {
     setCategory(category);
   }, []);
 
-  const showCarousel = useCallback((images: string[]) => {
+  const showCarousel = useCallback((images: Image[]) => {
     setModalImages(images);
     dispatch(showPostCarousel());
   }, []);
 
   const handleTooltip = useCallback(
-    (postId: string) => {
+    (postId: number) => {
       setIsTooltipVisible(isTooltipVisible === postId ? null : postId);
     },
     [isTooltipVisible]
@@ -70,25 +75,6 @@ const PostList = () => {
     }
   }, [category]);
 
-  useEffect(() => {
-    const onScroll = () => {
-      if (
-        postContainerRef.current &&
-        postContainerRef.current.scrollTop + postContainerRef.current.clientHeight >
-          postContainerRef.current.scrollHeight - 300
-      ) {
-        if (hasMorePosts && !loadPostsLoading) dispatch(loadPostsRequest());
-      }
-    };
-
-    const postContainer = postContainerRef.current;
-    if (postContainer) postContainer.addEventListener('scroll', onScroll);
-
-    return () => {
-      if (postContainer) postContainer.removeEventListener('scroll', onScroll);
-    };
-  }, [hasMorePosts, loadPostsLoading]);
-
   return (
     <PostContainer ref={postContainerRef}>
       <div ref={firstPostRef} />
@@ -107,15 +93,18 @@ const PostList = () => {
         </CategoryItem>
       </PostCategory>
 
-      {mainPosts.map((post, i) => (
+      {mainPosts.map((post: Post) => (
         <PostWrapper key={post.id}>
           <PostHeader>
             <div>
-              <img src={post.profile} alt="author profile image" />
+              <img src={post.User.ProfileImage ? post.User.ProfileImage.src : '/user.jpg'} alt="author profile image" />
 
               <div>
-                <h1>{post.user}</h1>
-                <p>{post.createdAt}</p>
+                <h1>{post.User.nickname}</h1>
+                <p>
+                  {formatDate(post.createdAt)}
+                  {post.location && ` - ${post.location}`}
+                </p>
               </div>
             </div>
 
@@ -126,35 +115,52 @@ const PostList = () => {
                 {isTooltipVisible && <TooltipOutsideArea onClick={hideTooltip} />}
 
                 <MoreOutlined onClick={() => handleTooltip(post.id)} />
-                <TooltipBtn $visible={isTooltipVisible === post.id}>
-                  <button type="button">
-                    <EditOutlined />
-                    수정
-                  </button>
-                  <button type="button">
-                    <DeleteOutlined />
-                    삭제
-                  </button>
-                </TooltipBtn>
+                {me?.id === post.UserId ? (
+                  <TooltipBtn $visible={isTooltipVisible === post.id}>
+                    <button type="button">
+                      <EditOutlined />
+                      수정
+                    </button>
+                    <button type="button">
+                      <DeleteOutlined />
+                      삭제
+                    </button>
+                  </TooltipBtn>
+                ) : (
+                  <TooltipBtn $visible={isTooltipVisible === post.id}>
+                    <button type="button">
+                      <ShareAltOutlined />
+                      공유
+                    </button>
+                    <button type="button">
+                      <AlertOutlined />
+                      신고
+                    </button>
+                  </TooltipBtn>
+                )}
               </Tooltip>
             </div>
           </PostHeader>
 
           <PostContents>
             <div>
-              <img src={post.img[0]} alt="post image" onClick={() => showCarousel(post.img)} />
+              <img
+                src={`http://localhost:3065/${post.Images[0].src}`}
+                alt="post image"
+                onClick={() => showCarousel(post.Images)}
+              />
 
               <div>
-                {post.img.map((_, i) => (
+                {post.Images.map((_: Image, i: number) => (
                   <div key={i} />
                 ))}
               </div>
 
-              <ArrowsAltOutlined onClick={() => showCarousel(post.img)} />
+              <ArrowsAltOutlined onClick={() => showCarousel(post.Images)} />
             </div>
 
             <div>
-              <p>{post.desc}</p>
+              <p>{post.content}</p>
 
               <PostOptions $isCommentListVisible={isCommentListVisible}>
                 <div>

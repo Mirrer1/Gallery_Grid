@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import media from 'styles/media';
-import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
+import { HoverStyle } from 'styles/Common/hover';
 
 export const PostingWrapper = styled.form`
   background-color: ${({ theme }) => theme.colors.darkBg};
@@ -146,6 +146,10 @@ export const PostingBtn = styled.button<{ $active: boolean }>`
   font-weight: 500;
   padding: 0.7em 2em;
   border-radius: 5px;
+
+  span {
+    padding: 0em 0.54em;
+  }
 
   ${media.mobile} {
     font-size: 0.75rem;

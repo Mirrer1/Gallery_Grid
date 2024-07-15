@@ -1,4 +1,4 @@
-import { all, call, delay, fork, put, takeLatest } from 'redux-saga/effects';
+import { all, call, fork, put, takeLatest } from 'redux-saga/effects';
 import axios, { AxiosResponse } from 'axios';
 
 import {
@@ -9,31 +9,30 @@ import {
   LOAD_POSTS_REQUEST,
   LOAD_POSTS_SUCCESS,
   Post,
-  PostAction,
   UPLOAD_IMAGES_FAILURE,
   UPLOAD_IMAGES_REQUEST,
   UPLOAD_IMAGES_SUCCESS,
   addPostRequestAction,
+  loadPostsRequestAction,
   uploadImagesRequestAction
 } from 'store/types/postType';
-import { generateDummyPosts } from 'store/reducers/postReducer';
 
-function loadPostsAPI() {
-  return axios.get('/api/addPost');
+function loadPostsAPI(lastId?: number) {
+  return axios.get(`/posts?lastId=${lastId || 0}`);
 }
 
-function* loadPosts(action: PostAction) {
+function* loadPosts(action: loadPostsRequestAction) {
   try {
-    // const result = yield call(addPostAPI, action.data);
-    yield delay(1000);
+    const result: AxiosResponse<Post[]> = yield call(() => loadPostsAPI(action.lastId));
+
     yield put({
       type: LOAD_POSTS_SUCCESS,
-      data: generateDummyPosts
+      data: result.data
     });
   } catch (error: any) {
     yield put({
       type: LOAD_POSTS_FAILURE,
-      error: error.response.data
+      error: error.response.data.message
     });
   }
 }

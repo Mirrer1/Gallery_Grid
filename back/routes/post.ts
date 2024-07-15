@@ -6,6 +6,7 @@ import fs from 'fs';
 import Post from '../models/post';
 import User from '../models/user';
 import Image from '../models/image';
+import Comment from '../models/comment';
 import { isLoggedIn } from './middleware';
 
 const router = express.Router();
@@ -53,12 +54,36 @@ router.post('/', isLoggedIn, upload.none(), async (req, res, next) => {
       where: { id: post.id },
       include: [
         {
+          model: User,
+          attributes: ['id', 'nickname'],
+          include: [
+            {
+              model: Image,
+              as: 'ProfileImage',
+              where: { type: 'user' },
+              attributes: ['id', 'src'],
+              required: false
+            }
+          ]
+        },
+        {
           model: Image,
-          where: { type: 'post' }
+          where: { type: 'post' },
+          attributes: ['id', 'src']
         },
         {
           model: User,
-          attributes: ['id', 'nickname']
+          as: 'Likers',
+          attributes: ['id']
+        },
+        {
+          model: Comment,
+          include: [
+            {
+              model: User,
+              attributes: ['id', 'nickname']
+            }
+          ]
         }
       ]
     });

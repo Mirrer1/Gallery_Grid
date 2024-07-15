@@ -39,6 +39,21 @@ export type PostState = {
   isCarouselVisible: boolean;
 };
 
+export interface Image {
+  id: number;
+  src: string;
+}
+
+export interface Comment {
+  id: number;
+  content: string;
+  createdAt: string;
+  updatedAt: string;
+  UserId: number;
+  PostId: number;
+  parentId: number | null;
+}
+
 export interface Post {
   id: number;
   content: string;
@@ -47,14 +62,18 @@ export interface Post {
   createdAt: string;
   updatedAt: string;
   User: User;
+  Images: Image[];
+  Comments: Comment[];
 }
 
 export interface loadPostsRequestAction {
   type: typeof LOAD_POSTS_REQUEST;
+  lastId?: number;
 }
 
 export interface loadPostsSuccessAction {
   type: typeof LOAD_POSTS_SUCCESS;
+  data: Post[];
 }
 
 export interface loadPostsFailureAction {

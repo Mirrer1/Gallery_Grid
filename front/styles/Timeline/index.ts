@@ -54,13 +54,15 @@ export const MobileSuggestedBtn = styled.div<{ $listvisible: boolean }>`
   ${media.tablet} {
     display: ${props => (props.$listvisible ? 'none' : 'block')};
     position: fixed;
-    bottom: -1.5%;
-    right: -1.5%;
+    bottom: 2%;
+    right: 3%;
     transform: translate(-50%, -50%);
     border: 1px solid ${({ theme }) => theme.colors.darkBg};
+    background-color: ${({ theme }) => theme.colors.lightBg};
     padding: 0.8em;
     border-radius: 50%;
     z-index: 48;
+    transform: scale(1.2);
     ${ShadowStyle};
 
     & > span {
@@ -70,9 +72,8 @@ export const MobileSuggestedBtn = styled.div<{ $listvisible: boolean }>`
   }
 
   ${media.mobile} {
-    bottom: 6%;
-    right: -3%;
-    border: 1px solid ${({ theme }) => theme.colors.darkBg};
-    background-color: ${({ theme }) => theme.colors.lightBg};
+    bottom: 8%;
+    right: 3%;
+    transform: scale(1.1);
   }
 `;

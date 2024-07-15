@@ -10,8 +10,9 @@ import {
   UPLOAD_IMAGES_REQUEST
 } from 'store/types/postType';
 
-export const loadPostsRequest = () => ({
-  type: LOAD_POSTS_REQUEST
+export const loadPostsRequest = (lastId?: number) => ({
+  type: LOAD_POSTS_REQUEST,
+  lastId
 });
 
 export const addPostRequest = (data: FormData) => ({

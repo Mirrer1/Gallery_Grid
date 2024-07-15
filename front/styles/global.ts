@@ -81,6 +81,10 @@ const GlobalStyles = createGlobalStyle`
     font-size: 14px;
   }
 
+  .Toastify__toast-container {
+    width: 400px !important;
+  }
+
   .Toastify__toast--success {    
     background-color: white;
     color: #222222;
@@ -221,9 +225,10 @@ const GlobalStyles = createGlobalStyle`
       align-items: end;
     }
 
-    .Toastify__toast {    
-      width: 70% !important;
-      font-size: 11px !important;    
+    .Toastify__toast {          
+      font-size: 11px !important;
+      width: 305px !important;
+      margin-bottom: 0.5em;
     }
 
     .swiper-button-prev, .swiper-button-next {       

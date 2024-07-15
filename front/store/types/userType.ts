@@ -55,16 +55,15 @@ export interface AuthResponse {
 
 export interface User {
   id: number;
-  snsId?: string | null;
-  provider?: string | null;
   email: string;
-  password?: string | null;
   nickname: string;
   desc?: string;
-  isRecommended: boolean;
   createdAt: string;
   updatedAt: string;
-  ProfileImageId: string | null;
+  Posts: number[];
+  Followings: number[];
+  Followers: number[];
+  ProfileImage: { id: number; src: string } | null;
 }
 
 export interface loginRequestAction {

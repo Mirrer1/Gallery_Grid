@@ -15,11 +15,11 @@ export const SuggestedWrapper = styled.div<{ $listvisible: boolean }>`
   ${media.tablet} {
     display: ${props => (props.$listvisible ? 'block' : 'none')};
     position: fixed;
-    bottom: -17%;
+    bottom: -12%;
     right: -25%;
     transform: translate(-50%, -50%);
     width: 55%;
-    height: 300px;
+    height: auto;
     border: 1px solid ${({ theme }) => theme.colors.darkBg};
     z-index: 50;
   }
@@ -116,5 +116,41 @@ export const SuggestedInfo = styled.div<{ $islast: boolean }>`
     font-size: 0.8rem;
     opacity: 60%;
     line-height: 1.5;
+  }
+
+  ${media.tablet} {
+    & > img {
+      height: 60px;
+    }
+
+    & > div > div > h2 {
+      font-size: 1rem;
+    }
+
+    & > div > div > span {
+      font-size: 0.9rem;
+    }
+
+    & > div > p {
+      font-size: 0.9rem;
+    }
+  }
+
+  ${media.mobile} {
+    & > img {
+      height: 50px;
+    }
+
+    & > div > div > h2 {
+      font-size: 0.9rem;
+    }
+
+    & > div > div > span {
+      font-size: 0.8rem;
+    }
+
+    & > div > p {
+      font-size: 0.8rem;
+    }
   }
 `;
