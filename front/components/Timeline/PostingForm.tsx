@@ -74,7 +74,7 @@ const PostingForm = () => {
       }
 
       const formData = new FormData();
-      imagePaths.forEach(image => {
+      imagePaths.forEach((image: string) => {
         formData.append('image', image);
       });
       if (content) formData.append('content', content);
