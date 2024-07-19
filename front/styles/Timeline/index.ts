@@ -48,15 +48,14 @@ export const CommunitySection = styled(motion.article)`
   }
 `;
 
-export const MobileSuggestedBtn = styled.div<{ $listvisible: boolean }>`
+export const MobileSuggestedBtn = styled.div`
   display: none;
 
   ${media.tablet} {
-    display: ${props => (props.$listvisible ? 'none' : 'block')};
+    display: block;
     position: fixed;
     bottom: 2%;
     right: 3%;
-    transform: translate(-50%, -50%);
     border: 1px solid ${({ theme }) => theme.colors.darkBg};
     background-color: ${({ theme }) => theme.colors.lightBg};
     padding: 0.8em;

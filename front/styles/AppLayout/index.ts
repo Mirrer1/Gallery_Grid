@@ -41,7 +41,7 @@ export const LayoutWrapper = styled.div`
       top: 0%;
       left: 0%;
       width: 25%;
-      padding: 1.5em 1.8em 2em 1.8em;
+      padding: 1.5em 1.2em 2em 1.2em;
     }
 
     & > div {
@@ -97,7 +97,8 @@ export const NavbarProfile = styled.div`
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: normal;
-    font-size: 0.7rem;
+    font-size: 0.75rem;
+    line-height: 1.3;
     opacity: 40%;
   }
 
@@ -114,6 +115,10 @@ export const NavbarProfile = styled.div`
       font-size: 1.2rem;
       margin-bottom: 0.3em;
     }
+
+    & > p {
+      font-size: 0.7rem;
+    }
   }
 `;
 
@@ -127,7 +132,6 @@ export const NavbarItem = styled(Link)<{ $selected: boolean }>`
   ${({ theme }) => theme.flexSet('start')};
   opacity: ${props => (props.$selected ? '100%' : '40%')};
   color: ${props => props.$selected && '#6BA2E6'};
-  transform: ${props => props.$selected && 'scale(1.03)'};
   font-weight: ${props => (props.$selected ? '700' : '500')};
   font-size: 0.9rem;
   margin-bottom: 1.8em;

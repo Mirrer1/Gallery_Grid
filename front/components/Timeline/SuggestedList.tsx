@@ -1,6 +1,8 @@
 import React, { useCallback } from 'react';
 import { CaretDownOutlined, UserAddOutlined } from '@ant-design/icons';
+import { useSelector } from 'react-redux';
 
+import { RootState } from 'store/reducers';
 import { SuggestedHeader, SuggestedInfo, SuggestedOutsideArea, SuggestedWrapper } from 'styles/Timeline/suggestedList';
 
 type SuggestedProps = {
@@ -26,6 +28,7 @@ const SuggestedList = ({ suggestedListVisible, setSuggestedListVisible }: Sugges
       desc: 'Minus esse quis ex corporis eligendi ad et adipisciomnis dolores nemo repudiandae beatae expedita nesciunt autem est enim sunt quam praesentium libero, modimaiores consequatur? Repudiandae perspiciatis explicabo laboriosam cum ad.'
     }
   ];
+  const { isCommentListVisible } = useSelector((state: RootState) => state.post);
 
   const hideSuggestedList = useCallback(() => {
     setSuggestedListVisible(false);
@@ -35,7 +38,7 @@ const SuggestedList = ({ suggestedListVisible, setSuggestedListVisible }: Sugges
     <>
       <SuggestedOutsideArea onClick={hideSuggestedList} $listvisible={suggestedListVisible} />
 
-      <SuggestedWrapper $listvisible={suggestedListVisible}>
+      <SuggestedWrapper $listvisible={suggestedListVisible} $commentvisible={isCommentListVisible}>
         <SuggestedHeader>
           <h1>Suggested people</h1>
           <CaretDownOutlined onClick={hideSuggestedList} />

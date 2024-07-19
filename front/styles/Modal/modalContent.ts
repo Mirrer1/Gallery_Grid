@@ -4,20 +4,14 @@ import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
 import media from 'styles/media';
 
 export const ModalContentWrapper = styled.div`
-  width: 25%;
-  height: 70%;
+  width: 45%;
+  height: 100%;
   background-color: white;
   border-radius: 0 5px 5px 0;
   z-index: 30;
 
-  ${media.tablet} {
-    width: 45%;
-    height: 60%;
-  }
-
   ${media.mobile} {
-    width: 90%;
-    height: 45%;
+    width: 100%;
     border-radius: 0 0 5px 5px;
   }
 `;
@@ -74,7 +68,7 @@ export const ModalContentHeader = styled.div`
   }
 
   ${media.tablet} {
-    height: 13%;
+    height: 8%;
     padding: 0.6em;
 
     & > div:first-child {
@@ -114,7 +108,7 @@ export const ModalContentText = styled.div`
   overflow-y: scroll;
 
   ${media.tablet} {
-    height: 66%;
+    height: 77%;
     font-size: 0.75rem;
   }
 
@@ -157,7 +151,7 @@ export const ModalContentOptions = styled.div<{ $isCommentListVisible: boolean }
   }
 
   ${media.tablet} {
-    height: 12%;
+    height: 9%;
 
     & > div:first-child {
       & > span {
@@ -235,7 +229,7 @@ export const ModalCommentInput = styled.div<{ $active: boolean }>`
   }
 
   ${media.tablet} {
-    height: 9%;
+    height: 6%;
 
     & > div:first-child {
       & > span {

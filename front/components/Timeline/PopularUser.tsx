@@ -1,6 +1,8 @@
 import React, { useCallback, useState } from 'react';
 import { CaretLeftOutlined, CaretRightOutlined, CommentOutlined, LikeOutlined } from '@ant-design/icons';
+import { useSelector } from 'react-redux';
 
+import { RootState } from 'store/reducers';
 import { PopularBtn, PopularOptions, PopularUserContents, PopularUserWrapper } from 'styles/Timeline/popularUser';
 
 const PopularUser = () => {
@@ -30,6 +32,7 @@ const PopularUser = () => {
 
   const [curr, setCurr] = useState(0);
   const [touchStartX, setTouchStartX] = useState<number | null>(null);
+  const { isCommentListVisible } = useSelector((state: RootState) => state.post);
 
   const next = useCallback(() => {
     const newCurr = curr === popularUsers.length - 1 ? 0 : curr + 1;
@@ -57,7 +60,11 @@ const PopularUser = () => {
   };
 
   return (
-    <PopularUserWrapper onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+    <PopularUserWrapper
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+      $commentvisible={isCommentListVisible}
+    >
       <div style={{ transform: `translateX(-${curr * 100}%)` }}>
         {popularUsers.map((user, i) => (
           <div key={i}>

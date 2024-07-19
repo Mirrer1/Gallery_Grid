@@ -4,20 +4,23 @@ import media from 'styles/media';
 import { ReverseHoverStyle } from 'styles/Common/hover';
 import { ShadowStyle } from 'styles/Common/shadow';
 
-export const SuggestedWrapper = styled.div<{ $listvisible: boolean }>`
+export const SuggestedWrapper = styled.div<{ $listvisible: boolean; $commentvisible: boolean }>`
   ${({ theme }) => theme.flexColumnSet('center', 'start')}
+  visibility: ${props => (props.$commentvisible ? 'hidden' : 'visible')};
+  opacity: ${props => (props.$commentvisible ? '0' : '1')};
   height: 38%;
   background-color: white;
   padding: 2em 1.5em;
   border-radius: 5px;
+  transition: opacity 0.3s;
   ${ShadowStyle}
 
   ${media.tablet} {
-    display: ${props => (props.$listvisible ? 'block' : 'none')};
+    visibility: ${props => (props.$listvisible ? 'visible' : 'hidden')};
+    opacity: ${props => (props.$listvisible ? '1' : '0')};
     position: fixed;
-    bottom: -12%;
-    right: -25%;
-    transform: translate(-50%, -50%);
+    bottom: 1.5%;
+    right: 2%;
     width: 55%;
     height: auto;
     border: 1px solid ${({ theme }) => theme.colors.darkBg};
@@ -25,8 +28,8 @@ export const SuggestedWrapper = styled.div<{ $listvisible: boolean }>`
   }
 
   ${media.mobile} {
-    bottom: -10%;
-    right: -37%;
+    bottom: 7.5%;
+    right: 2%;
     width: 85%;
   }
 `;

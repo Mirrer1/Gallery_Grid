@@ -9,6 +9,7 @@ import 'swiper/css/navigation';
 
 import { Image } from 'store/types/postType';
 import { hidePostCarousel } from 'store/actions/postAction';
+import { modalAnimation } from 'styles/Common/animation';
 import {
   BackgroundImageContainer,
   CarouselOutsideArea,
@@ -45,7 +46,11 @@ const PostImageCarousel = ({ images }: CarouselProps) => {
         <HideSwiperBtn onClick={hideCarousel} />
       </CarouselOutsideArea>
 
-      <ImageCarouselWrapper>
+      <ImageCarouselWrapper
+        initial={modalAnimation.initial}
+        animate={modalAnimation.animate}
+        exit={modalAnimation.exit}
+      >
         <BackgroundImageContainer $background={`http://localhost:3065/${images[activeIndex].src}`} />
 
         <Swiper

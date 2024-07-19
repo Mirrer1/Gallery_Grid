@@ -28,8 +28,8 @@ export const ModalCarouselBtn = styled.div<{ $alignleft: string }>`
 
 export const ModalCarouselWrapper = styled.div`
   position: relative;
-  width: 30%;
-  height: 70%;
+  width: 55%;
+  height: 100%;
   background-color: ${({ theme }) => theme.colors.lightBg};
   border-radius: 5px 0 0 5px;
   overflow: hidden;
@@ -60,14 +60,8 @@ export const ModalCarouselWrapper = styled.div`
     }
   }
 
-  ${media.tablet} {
-    width: 50%;
-    height: 60%;
-  }
-
   ${media.mobile} {
-    width: 90%;
-    height: 40%;
+    width: 100%;
     border-radius: 5px 5px 0 0;
   }
 `;

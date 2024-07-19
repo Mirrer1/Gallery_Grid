@@ -20,7 +20,7 @@ import { slideInFromBottom } from 'styles/Common/animation';
 import { CommunitySection, MobileSuggestedBtn, PostsSection, TimelineWrapper } from 'styles/Timeline';
 
 const Timeline = () => {
-  const { isCommentListVisible, isCarouselVisible } = useSelector((state: RootState) => state.post);
+  const { isCommentListVisible } = useSelector((state: RootState) => state.post);
   const [suggestedListVisible, setSuggestedListVisible] = useState(false);
 
   const showSuggestedList = useCallback(() => {
@@ -50,7 +50,7 @@ const Timeline = () => {
             {isCommentListVisible && <CommentList />}
           </CommunitySection>
 
-          <MobileSuggestedBtn $listvisible={suggestedListVisible || isCarouselVisible}>
+          <MobileSuggestedBtn>
             <UsergroupAddOutlined onClick={showSuggestedList} />
           </MobileSuggestedBtn>
         </TimelineWrapper>

@@ -1,13 +1,28 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { CloseOutlined, CompassOutlined, LoadingOutlined, PaperClipOutlined, SmileOutlined } from '@ant-design/icons';
+import {
+  CloseOutlined,
+  CompassOutlined,
+  DeleteOutlined,
+  LoadingOutlined,
+  PaperClipOutlined,
+  SmileOutlined
+} from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { IEmojiData } from 'emoji-picker-react';
 
 import useInput from 'utils/useInput';
 import { useLocation } from 'utils/useLocation';
 import { RootState } from 'store/reducers';
-import { addPostRequest, uploadImagesRequest } from 'store/actions/postAction';
-import { PostingBtn, PostingEmojiPicker, PostingWrapper } from 'styles/Timeline/postingForm';
+import { addPostRequest, removeUploadedImage, uploadImagesRequest } from 'store/actions/postAction';
+import { modalAnimation } from 'styles/Common/animation';
+import {
+  PostingBtn,
+  PostingEmojiPicker,
+  PostingWrapper,
+  UploadImage,
+  UploadImagePreview,
+  UploadImages
+} from 'styles/Timeline/postingForm';
 import { toast } from 'react-toastify';
 
 const PostingForm = () => {
@@ -16,8 +31,9 @@ const PostingForm = () => {
   const { imagePaths, uploadImagesLoading, addPostLoading, addPostDone } = useSelector(
     (state: RootState) => state.post
   );
-  const [content, onChangeContent, setContent] = useInput<string>('');
   const { location, getLocation, setLocation, loading } = useLocation();
+  const [content, onChangeContent, setContent] = useInput<string>('');
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [EmojiPicker, setEmojiPicker] =
@@ -85,6 +101,18 @@ const PostingForm = () => {
     [content, location, imagePaths]
   );
 
+  const showImagePreview = useCallback((image: string) => {
+    setImagePreview(image);
+  }, []);
+
+  const hideImagePreview = useCallback(() => {
+    setImagePreview(null);
+  }, []);
+
+  const handleRemoveImage = useCallback((image: string) => {
+    dispatch(removeUploadedImage(image));
+  }, []);
+
   useEffect(() => {
     if (addPostDone) setContent('');
   }, [addPostDone]);
@@ -98,7 +126,7 @@ const PostingForm = () => {
   }, []);
 
   return (
-    <PostingWrapper encType="multipart/form-data" onSubmit={onSubmitForm}>
+    <PostingWrapper $uploading={imagePaths.length > 0} encType="multipart/form-data" onSubmit={onSubmitForm}>
       <textarea
         rows={6}
         maxLength={2000}
@@ -106,6 +134,21 @@ const PostingForm = () => {
         value={content}
         onChange={onChangeContent}
       />
+
+      {imagePaths.length > 0 && (
+        <UploadImages>
+          {imagePaths.map((path: string, i: number) => (
+            <div key={i}>
+              <img
+                src={`http://localhost:3065/${path}`}
+                alt={`${i} Uploaded Image`}
+                onClick={() => showImagePreview(`http://localhost:3065/${path}`)}
+              />
+              <DeleteOutlined onClick={() => handleRemoveImage(path)} />
+            </div>
+          ))}
+        </UploadImages>
+      )}
 
       <div>
         <div>
@@ -143,6 +186,18 @@ const PostingForm = () => {
           </PostingBtn>
         </div>
       </div>
+
+      {imagePreview && (
+        <UploadImagePreview>
+          <div onClick={hideImagePreview}>
+            <CloseOutlined onClick={hideImagePreview} />
+          </div>
+
+          <UploadImage initial={modalAnimation.initial} animate={modalAnimation.animate} exit={modalAnimation.exit}>
+            <img src={imagePreview} alt="Uploaded Image Preview" />
+          </UploadImage>
+        </UploadImagePreview>
+      )}
     </PostingWrapper>
   );
 };

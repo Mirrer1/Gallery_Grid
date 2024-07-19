@@ -12,6 +12,8 @@ export const UPLOAD_IMAGES_REQUEST = 'UPLOAD_IMAGES_REQUEST' as const;
 export const UPLOAD_IMAGES_SUCCESS = 'UPLOAD_IMAGES_SUCCESS' as const;
 export const UPLOAD_IMAGES_FAILURE = 'UPLOAD_IMAGES_FAILURE' as const;
 
+export const REMOVE_UPLOADED_IMAGE = 'REMOVE_UPLOADED_IMAGE' as const;
+
 export const SHOW_COMMENT_LIST = 'SHOW_COMMENT_LIST' as const;
 export const HIDE_COMMENT_LIST = 'HIDE_COMMENT_LIST' as const;
 
@@ -111,6 +113,20 @@ export interface uploadImagesFailureAction {
   error: string;
 }
 
+export interface showImagePreviewAction {
+  type: typeof REMOVE_UPLOADED_IMAGE;
+  data: string;
+}
+
+export interface hideImagePreviewAction {
+  type: typeof REMOVE_UPLOADED_IMAGE;
+}
+
+export interface removeUploadedImageAction {
+  type: typeof REMOVE_UPLOADED_IMAGE;
+  data: string;
+}
+
 export interface ShowCommentListAction {
   type: typeof SHOW_COMMENT_LIST;
 }
@@ -145,6 +161,7 @@ export type PostAction =
   | loadPostsRequestAction
   | loadPostsSuccessAction
   | loadPostsFailureAction
+  | removeUploadedImageAction
   | addPostRequestAction
   | addPostSuccessAction
   | addPostFailureAction

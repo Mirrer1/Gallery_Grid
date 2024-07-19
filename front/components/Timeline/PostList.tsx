@@ -34,7 +34,9 @@ const PostList = () => {
   const firstPostRef = useRef<HTMLDivElement>(null);
   const postContainerRef = useRef<HTMLDivElement>(null);
   const { me } = useSelector((state: RootState) => state.user);
-  const { mainPosts, isCommentListVisible, isCarouselVisible } = useSelector((state: RootState) => state.post);
+  const { mainPosts, imagePaths, isCommentListVisible, isCarouselVisible, addPostDone } = useSelector(
+    (state: RootState) => state.post
+  );
   useScroll({ type: 'timeline', ref: postContainerRef });
 
   const [category, setCategory] = useState('best');
@@ -73,10 +75,10 @@ const PostList = () => {
         block: 'start'
       });
     }
-  }, [category]);
+  }, [category, addPostDone]);
 
   return (
-    <PostContainer ref={postContainerRef}>
+    <PostContainer ref={postContainerRef} $uploading={imagePaths.length > 0}>
       <div ref={firstPostRef} />
 
       <PostCategory>

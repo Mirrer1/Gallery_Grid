@@ -17,7 +17,8 @@ import {
   ADD_POST_FAILURE,
   UPLOAD_IMAGES_REQUEST,
   UPLOAD_IMAGES_SUCCESS,
-  UPLOAD_IMAGES_FAILURE
+  UPLOAD_IMAGES_FAILURE,
+  REMOVE_UPLOADED_IMAGE
 } from 'store/types/postType';
 
 export const initialState: PostState = {
@@ -85,6 +86,9 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
       case UPLOAD_IMAGES_FAILURE:
         draft.uploadImagesLoading = false;
         draft.uploadImagesError = action.error;
+        break;
+      case REMOVE_UPLOADED_IMAGE:
+        draft.imagePaths = draft.imagePaths.filter(path => path !== action.data);
         break;
       case SHOW_COMMENT_LIST:
         draft.isCommentListVisible = true;

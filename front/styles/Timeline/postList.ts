@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import media from 'styles/media';
 import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
 
-export const PostContainer = styled.div`
-  height: 69%;
+export const PostContainer = styled.div<{ $uploading: boolean }>`
+  height: ${props => (props.$uploading ? '60%' : '69%')};
   overflow-y: scroll;
 
   ${media.tablet} {
@@ -24,7 +24,7 @@ export const PostCategory = styled.div`
 export const CategoryItem = styled.p<{ $selected: boolean }>`
   ${ReverseHoverStyle('&')};
   font-weight: 500;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   cursor: pointer;
   opacity: ${props => (props.$selected ? '100%' : '40%')};
   margin-right: 1em;
@@ -182,7 +182,7 @@ export const PostContents = styled.div`
   }
 
   & > div > p {
-    font-size: 0.7rem;
+    font-size: 0.8rem;
     opacity: 60%;
     line-height: 1.5;
     margin-bottom: 1em;
