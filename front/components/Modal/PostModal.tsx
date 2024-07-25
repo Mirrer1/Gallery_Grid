@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import ModalCarousel from './ModalCarousel';
 import ModalContent from './ModalContent';
 import { hidePostModal } from 'store/actions/postAction';
-import { modalAnimation } from 'styles/Common/animation';
+import { slideInModal } from 'styles/Common/animation';
 import { ModalOutsideArea, PostModalContentsWrapper, PostModalBtn, PostModalWrapper } from 'styles/Modal/postModal';
 
 const PostModal = () => {
@@ -20,11 +20,7 @@ const PostModal = () => {
         <PostModalBtn onClick={hideModal} />
       </ModalOutsideArea>
 
-      <PostModalContentsWrapper
-        initial={modalAnimation.initial}
-        animate={modalAnimation.animate}
-        exit={modalAnimation.exit}
-      >
+      <PostModalContentsWrapper {...slideInModal}>
         <ModalCarousel />
         <ModalContent />
       </PostModalContentsWrapper>

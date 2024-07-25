@@ -1,14 +1,13 @@
 import styled from 'styled-components';
+import { motion } from 'framer-motion';
 
 import media from 'styles/media';
 import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
-import { motion } from 'framer-motion';
 
 export const PostingWrapper = styled.form<{ $uploading: boolean }>`
   background-color: ${({ theme }) => theme.colors.darkBg};
   height: ${props => (props.$uploading ? '40%' : '31%')};
   border-radius: 5px 5px 0 0;
-  transition: height 400ms ease-in-out;
 
   & > textarea {
     width: 100%;

@@ -9,12 +9,14 @@ import {
 } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { IEmojiData } from 'emoji-picker-react';
+import { motion } from 'framer-motion';
+import { toast } from 'react-toastify';
 
 import useInput from 'utils/useInput';
 import { useLocation } from 'utils/useLocation';
 import { RootState } from 'store/reducers';
 import { addPostRequest, removeUploadedImage, uploadImagesRequest } from 'store/actions/postAction';
-import { modalAnimation } from 'styles/Common/animation';
+import { slideInModal, slideInUploadImage } from 'styles/Common/animation';
 import {
   PostingBtn,
   PostingEmojiPicker,
@@ -23,7 +25,6 @@ import {
   UploadImagePreview,
   UploadImages
 } from 'styles/Timeline/postingForm';
-import { toast } from 'react-toastify';
 
 const PostingForm = () => {
   const dispatch = useDispatch();
@@ -76,6 +77,8 @@ const PostingForm = () => {
       });
 
       dispatch(uploadImagesRequest(imageFormData));
+
+      if (fileInputRef.current) fileInputRef.current.value = '';
     },
     [imagePaths]
   );
@@ -138,14 +141,14 @@ const PostingForm = () => {
       {imagePaths.length > 0 && (
         <UploadImages>
           {imagePaths.map((path: string, i: number) => (
-            <div key={i}>
+            <motion.div key={path} {...slideInUploadImage}>
               <img
                 src={`http://localhost:3065/${path}`}
                 alt={`${i} Uploaded Image`}
                 onClick={() => showImagePreview(`http://localhost:3065/${path}`)}
               />
               <DeleteOutlined onClick={() => handleRemoveImage(path)} />
-            </div>
+            </motion.div>
           ))}
         </UploadImages>
       )}
@@ -193,7 +196,7 @@ const PostingForm = () => {
             <CloseOutlined onClick={hideImagePreview} />
           </div>
 
-          <UploadImage initial={modalAnimation.initial} animate={modalAnimation.animate} exit={modalAnimation.exit}>
+          <UploadImage {...slideInModal}>
             <img src={imagePreview} alt="Uploaded Image Preview" />
           </UploadImage>
         </UploadImagePreview>

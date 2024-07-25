@@ -17,6 +17,7 @@ import { formatDate } from 'utils/formatDate';
 import { RootState } from 'store/reducers';
 import { Image, Post } from 'store/types/postType';
 import { hideCommentList, showCommentList, showPostCarousel } from 'store/actions/postAction';
+import { slideInList } from 'styles/Common/animation';
 import { Tooltip, TooltipBtn, TooltipOutsideArea } from 'styles/Common/tooltip';
 import {
   PostWrapper,
@@ -96,7 +97,7 @@ const PostList = () => {
       </PostCategory>
 
       {mainPosts.map((post: Post) => (
-        <PostWrapper key={post.id}>
+        <PostWrapper key={post.id} {...slideInList}>
           <PostHeader>
             <div>
               <img src={post.User.ProfileImage ? post.User.ProfileImage.src : '/user.jpg'} alt="author profile image" />

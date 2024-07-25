@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { motion } from 'framer-motion';
 
 import media from 'styles/media';
 import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
@@ -6,6 +7,7 @@ import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
 export const PostContainer = styled.div<{ $uploading: boolean }>`
   height: ${props => (props.$uploading ? '60%' : '69%')};
   overflow-y: scroll;
+  background-color: white;
 
   ${media.tablet} {
     overflow-y: visible;
@@ -39,7 +41,7 @@ export const CategoryItem = styled.p<{ $selected: boolean }>`
   }
 `;
 
-export const PostWrapper = styled.article`
+export const PostWrapper = styled(motion.article)`
   background-color: white;
   padding: 1em 1.5em;
 
