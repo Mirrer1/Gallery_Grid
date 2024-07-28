@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
+import { END } from 'redux-saga';
+import axios from 'axios';
 import Head from 'next/head';
 
 import AppLayout from 'components/AppLayout';
@@ -8,7 +10,9 @@ import UserPosts from 'components/User/UserPosts';
 import UserFollowList from 'components/User/UserFollowList';
 import PostModal from 'components/Modal/PostModal';
 
+import wrapper from 'store/configureStore';
 import { RootState } from 'store/reducers';
+import { loadMyInfoRequest } from 'store/actions/userAction';
 import { UserWrapper } from 'styles/User';
 
 const user = () => {
@@ -34,5 +38,30 @@ const user = () => {
     </>
   );
 };
+
+export const getServerSideProps = wrapper.getServerSideProps(async context => {
+  const cookie = context.req ? context.req.headers.cookie : '';
+  axios.defaults.headers.Cookie = '';
+
+  if (context.req && cookie) axios.defaults.headers.Cookie = cookie;
+
+  context.store.dispatch(loadMyInfoRequest());
+  // context.store.dispatch(loadPostsRequest());
+
+  context.store.dispatch(END);
+  await context.store.sagaTask?.toPromise();
+
+  const state = context.store.getState();
+  const { me } = state.user;
+
+  if (!me) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false
+      }
+    };
+  }
+});
 
 export default user;

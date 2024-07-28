@@ -22,6 +22,9 @@ import { CommunitySection, MobileSuggestedBtn, PostsSection, TimelineWrapper } f
 const Timeline = () => {
   const { isCommentListVisible } = useSelector((state: RootState) => state.post);
   const [suggestedListVisible, setSuggestedListVisible] = useState(false);
+  const isMobileOrTablet = typeof window !== 'undefined' && window.innerWidth <= 992;
+  const delay1 = isMobileOrTablet ? 0.3 : 0;
+  const delay2 = isMobileOrTablet ? 0 : 0.3;
 
   const showSuggestedList = useCallback(() => {
     setSuggestedListVisible(true);
@@ -35,12 +38,12 @@ const Timeline = () => {
 
       <AppLayout>
         <TimelineWrapper>
-          <PostsSection {...slideInFromBottom()}>
+          <PostsSection {...slideInFromBottom(delay1)}>
             <PostingForm />
             <PostList />
           </PostsSection>
 
-          <CommunitySection {...slideInFromBottom(0.3)}>
+          <CommunitySection {...slideInFromBottom(delay2)}>
             <PopularUser />
             <SuggestedList
               suggestedListVisible={suggestedListVisible}
@@ -70,6 +73,18 @@ export const getServerSideProps = wrapper.getServerSideProps(async context => {
 
   context.store.dispatch(END);
   await context.store.sagaTask?.toPromise();
+
+  const state = context.store.getState();
+  const { me } = state.user;
+
+  if (!me) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false
+      }
+    };
+  }
 });
 
 export default Timeline;

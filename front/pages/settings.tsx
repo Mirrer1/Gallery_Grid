@@ -1,9 +1,13 @@
 import React from 'react';
 import { CameraOutlined } from '@ant-design/icons';
+import { END } from 'redux-saga';
+import axios from 'axios';
 import Head from 'next/head';
 
 import AppLayout from 'components/AppLayout';
 import SettingForm from 'components/Settings/SettingForm';
+import wrapper from 'store/configureStore';
+import { loadMyInfoRequest } from 'store/actions/userAction';
 import { slideInFromBottom } from 'styles/Common/animation';
 import { MobileImageBtn, SettingProfile, SettingWrapper } from 'styles/Settings';
 
@@ -50,5 +54,30 @@ const Settings = () => {
     </>
   );
 };
+
+export const getServerSideProps = wrapper.getServerSideProps(async context => {
+  const cookie = context.req ? context.req.headers.cookie : '';
+  axios.defaults.headers.Cookie = '';
+
+  if (context.req && cookie) axios.defaults.headers.Cookie = cookie;
+
+  context.store.dispatch(loadMyInfoRequest());
+  // context.store.dispatch(loadPostsRequest());
+
+  context.store.dispatch(END);
+  await context.store.sagaTask?.toPromise();
+
+  const state = context.store.getState();
+  const { me } = state.user;
+
+  if (!me) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false
+      }
+    };
+  }
+});
 
 export default Settings;

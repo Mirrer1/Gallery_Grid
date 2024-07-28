@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import LandingCarousel from './LandingCarousel';
 import LoginForm from './LoginForm';
 import SignUpForm from './SignUpForm';
-import { slideInFromLeft } from 'styles/Common/animation';
+import { slideInFromBottom } from 'styles/Common/animation';
 import { ContentsText, ContentsWrapper, HeaderBreak } from 'styles/Landing/menuContents';
 
 export type IMenuProps = {
@@ -20,7 +20,7 @@ const MenuContents = ({ selectMenu, onClickMenu }: IMenuProps) => {
 
   return (
     <ContentsWrapper $selected={selectMenu}>
-      <ContentsText key={selectMenu} {...slideInFromLeft} $selected={selectMenu}>
+      <ContentsText key={selectMenu} {...slideInFromBottom()} $selected={selectMenu}>
         {selectMenu === 'home' ? (
           <div>
             <p>Work</p>

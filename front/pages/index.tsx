@@ -1,9 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { END } from 'redux-saga';
 import Router from 'next/router';
+import axios from 'axios';
 
 import MenuContents from 'components/Landing/MenuContents';
+import wrapper from 'store/configureStore';
 import { RootState } from 'store/reducers';
+import { loadMyInfoRequest } from 'store/actions/userAction';
 import { ContactIcon, HeaderWrapper, MenuButton } from 'styles/Landing/header';
 
 const Landing = () => {
@@ -21,8 +25,6 @@ const Landing = () => {
   useEffect(() => {
     if (me) Router.replace('/timeline');
   }, [me]);
-
-  // if (me) return null;
 
   return (
     <>
@@ -50,5 +52,31 @@ const Landing = () => {
     </>
   );
 };
+
+export const getServerSideProps = wrapper.getServerSideProps(async context => {
+  const cookie = context.req ? context.req.headers.cookie : '';
+  axios.defaults.headers.Cookie = '';
+
+  if (context.req && cookie) {
+    axios.defaults.headers.Cookie = cookie;
+  }
+
+  context.store.dispatch(loadMyInfoRequest());
+
+  context.store.dispatch(END);
+  await context.store.sagaTask?.toPromise();
+
+  const state = context.store.getState();
+  const { me } = state.user;
+
+  if (me) {
+    return {
+      redirect: {
+        destination: '/timeline',
+        permanent: false
+      }
+    };
+  }
+});
 
 export default Landing;

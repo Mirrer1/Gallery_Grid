@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { END } from 'redux-saga';
 import { LoadingOutlined } from '@ant-design/icons';
 import Router from 'next/router';
+import axios from 'axios';
 
+import wrapper from 'store/configureStore';
 import { RootState } from 'store/reducers';
 import { loadMyInfoRequest } from 'store/actions/userAction';
 import { AuthLoader, AuthLoaderWrapper } from 'styles/Auth';
@@ -46,5 +49,31 @@ const Auth = () => {
     </AuthLoaderWrapper>
   );
 };
+
+export const getServerSideProps = wrapper.getServerSideProps(async context => {
+  const cookie = context.req ? context.req.headers.cookie : '';
+  axios.defaults.headers.Cookie = '';
+
+  if (context.req && cookie) {
+    axios.defaults.headers.Cookie = cookie;
+  }
+
+  context.store.dispatch(loadMyInfoRequest());
+
+  context.store.dispatch(END);
+  await context.store.sagaTask?.toPromise();
+
+  const state = context.store.getState();
+  const { me } = state.user;
+
+  if (me) {
+    return {
+      redirect: {
+        destination: '/timeline',
+        permanent: false
+      }
+    };
+  }
+});
 
 export default Auth;

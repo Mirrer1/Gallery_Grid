@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 
 import media from 'styles/media';
 import { HoverStyle } from 'styles/Common/hover';
-import { ImageShadowStyle, ShadowStyle } from 'styles/Common/shadow';
+import { ImageShadowStyle } from 'styles/Common/shadow';
 
 export const CarouselWrapper = styled(motion.section)`
   flex-grow: 1;
@@ -16,7 +16,7 @@ export const CarouselWrapper = styled(motion.section)`
 
 export const CarouselImage = styled.div`
   position: relative;
-  ${({ theme }) => theme.flexSet('center', 'end')};
+  ${({ theme }) => theme.flexSet('end', 'end')};
   margin-bottom: 4em;
   width: 100%;
 
@@ -31,14 +31,14 @@ export const CarouselImage = styled.div`
     height: 500px;
     position: absolute;
     top: 50%;
-    left: 35%;
+    left: 40%;
     transform: translate(-50%, -50%);
     ${ImageShadowStyle}
   }
 
   & > p {
     position: absolute;
-    right: 13%;
+    right: 3%;
     bottom: 3%;
     color: #fffafa;
     font-weight: 500;
@@ -91,7 +91,7 @@ export const CarouselImage = styled.div`
 export const CarouselBtn = styled.div`
   ${HoverStyle('& > button')}
   ${({ theme }) => theme.flexSet('space-between')};
-  padding: 0 6em;
+  padding-left: 6em;
 
   & > button > span {
     font-size: 0.9rem;
