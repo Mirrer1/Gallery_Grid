@@ -14,7 +14,7 @@ import {
 import PostImageCarousel from './PostImageCarousel';
 import DeleteModal from 'components/Modal/DeleteModal';
 import useScroll from 'utils/useScroll';
-import { formatDate } from 'utils/formatDate';
+import useListTimes from 'utils/useListTimes';
 import { RootState } from 'store/reducers';
 import { Image, Post } from 'store/types/postType';
 import { hideCommentList, showCommentList, showPostCarousel } from 'store/actions/postAction';
@@ -36,15 +36,17 @@ const PostList = () => {
   const firstPostRef = useRef<HTMLDivElement>(null);
   const postContainerRef = useRef<HTMLDivElement>(null);
   const { me } = useSelector((state: RootState) => state.user);
-  const { mainPosts, imagePaths, isCommentListVisible, isCarouselVisible, addPostDone } = useSelector(
+  const { mainPosts, imagePaths, isCommentListVisible, isCarouselVisible } = useSelector(
     (state: RootState) => state.post
   );
+  const postTimes = useListTimes(mainPosts);
   useScroll({ type: 'timeline', ref: postContainerRef });
 
   const [category, setCategory] = useState('best');
   const [modalImages, setModalImages] = useState<Image[]>([]);
   const [isTooltipVisible, setIsTooltipVisible] = useState<number | boolean | null>(null);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
+  const [deletePostId, setDeletePostId] = useState<number | null>(null);
 
   const onClickCategory = useCallback((category: string) => {
     setCategory(category);
@@ -55,7 +57,8 @@ const PostList = () => {
     dispatch(showPostCarousel());
   }, []);
 
-  const showDeleteModal = useCallback(() => {
+  const showDeleteModal = useCallback((postId: number) => {
+    setDeletePostId(postId);
     setIsDeleteModalVisible(true);
   }, []);
 
@@ -87,7 +90,7 @@ const PostList = () => {
         block: 'start'
       });
     }
-  }, [category, addPostDone]);
+  }, [category]);
 
   return (
     <PostContainer ref={postContainerRef} $uploading={imagePaths.length > 0}>
@@ -107,7 +110,7 @@ const PostList = () => {
         </CategoryItem>
       </PostCategory>
 
-      {mainPosts.map((post: Post) => (
+      {mainPosts.map((post: Post, i: number) => (
         <PostWrapper key={post.id} {...slideInList}>
           <PostHeader>
             <div>
@@ -116,7 +119,7 @@ const PostList = () => {
               <div>
                 <h1>{post.User.nickname}</h1>
                 <p>
-                  {formatDate(post.createdAt)}
+                  {postTimes[i]}
                   {post.location && ` - ${post.location}`}
                 </p>
               </div>
@@ -135,7 +138,7 @@ const PostList = () => {
                       <EditOutlined />
                       수정
                     </button>
-                    <button type="button" onClick={showDeleteModal}>
+                    <button type="button" onClick={() => showDeleteModal(post.id)}>
                       <DeleteOutlined />
                       삭제
                     </button>
@@ -189,11 +192,13 @@ const PostList = () => {
               </PostOptions>
             </div>
           </PostContents>
-
-          {isCarouselVisible && <PostImageCarousel images={modalImages} />}
-          {isDeleteModalVisible && <DeleteModal type="게시글" deleteId={post.id} hideDeleteModal={hideDeleteModal} />}
         </PostWrapper>
       ))}
+
+      {isCarouselVisible && <PostImageCarousel images={modalImages} />}
+      {isDeleteModalVisible && deletePostId && (
+        <DeleteModal type="게시글" deleteId={deletePostId} hideDeleteModal={hideDeleteModal} />
+      )}
     </PostContainer>
   );
 };

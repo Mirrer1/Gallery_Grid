@@ -117,7 +117,10 @@ const PostingForm = () => {
   }, []);
 
   useEffect(() => {
-    if (addPostDone) setContent('');
+    if (addPostDone) {
+      setContent('');
+      setLocation(null);
+    }
   }, [addPostDone]);
 
   useEffect(() => {

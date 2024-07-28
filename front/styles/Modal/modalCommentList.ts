@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { motion } from 'framer-motion';
 
 import media from 'styles/media';
 import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
@@ -28,7 +29,7 @@ export const ModalCommentListHeader = styled.div`
   }
 `;
 
-export const ModalCommentListItemWrapper = styled.div`
+export const ModalCommentListItemWrapper = styled(motion.div)`
   height: 97%;
 
   & > div > div {

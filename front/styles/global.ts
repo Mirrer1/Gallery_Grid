@@ -33,7 +33,7 @@ const GlobalStyles = createGlobalStyle`
   body,
   #__next {
     height: 100%;    
-    font-family: 'Noto Sans KR', sans-serif;
+    font-family: 'Roboto', 'Noto Sans KR', sans-serif;
   }
 
   img,
@@ -219,6 +219,7 @@ const GlobalStyles = createGlobalStyle`
 
   @media only screen and (max-width: 576px) {
     .Toastify__toast-container {
+      width: 385px !important;
       top: 1%;
       display: flex;
       flex-direction: column;

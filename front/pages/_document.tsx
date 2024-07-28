@@ -27,6 +27,10 @@ export default class MyDocument extends Document {
       <Html>
         <Head>
           <link
+            href="https://fonts.googleapis.com/css2?family=Karla:wght@200;300;400;500;600;700;800&family=Noto+Sans+KR:wght@100;200;300;400;500;600;700&family=Roboto:wght@100;300;400;500;700;900&display=swap"
+            rel="stylesheet"
+          />
+          <link
             href="https://fonts.googleapis.com/css2?family=Karla:wght@200;300;400;500;600;700;800&family=Noto+Sans+KR:wght@100;200;300;400;500;600;700&display=swap"
             rel="stylesheet"
           />

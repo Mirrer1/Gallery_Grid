@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 
+import media from 'styles/media';
 import { HoverStyle } from 'styles/Common/hover';
 import { DarkShadowStyle } from 'styles/Common/shadow';
 
@@ -86,5 +87,9 @@ export const DeleteModalContent = styled(motion.div)`
         border: 1px solid ${({ theme }) => theme.colors.darkBg};
       }
     }
+  }
+
+  ${media.mobile} {
+    width: 350px;
   }
 `;

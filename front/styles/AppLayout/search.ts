@@ -34,6 +34,7 @@ export const SearchWrapper = styled.div`
     }
 
     & > input {
+      width: 100%;
       font-size: 0.8rem;
       border: none;
     }

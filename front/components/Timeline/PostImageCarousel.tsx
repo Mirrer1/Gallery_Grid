@@ -36,10 +36,6 @@ const PostImageCarousel = ({ images }: CarouselProps) => {
     [images]
   );
 
-  useEffect(() => {
-    console.log(`images: ${JSON.stringify(images)}`);
-  }, []);
-
   return (
     <>
       <CarouselOutsideArea onClick={hideCarousel}>

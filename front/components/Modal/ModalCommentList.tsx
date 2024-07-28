@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 
 import ModalReplyComment from './ModalReplyComment';
 import { hideCommentList } from 'store/actions/postAction';
+import { slideInFromBottom } from 'styles/Common/animation';
 import {
   ModalCommentListHeader,
   ModalCommentListItem,
@@ -91,7 +92,7 @@ const ModalCommentList = () => {
         <CaretDownOutlined onClick={onHideComment} />
       </ModalCommentListHeader>
 
-      <ModalCommentListItemWrapper>
+      <ModalCommentListItemWrapper {...slideInFromBottom()}>
         {contentList.map(comment => (
           <div key={comment.id}>
             <ModalCommentListItem $reply={false}>
