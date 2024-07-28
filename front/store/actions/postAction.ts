@@ -8,7 +8,8 @@ import {
   SHOW_POST_MODAL,
   LOAD_POSTS_REQUEST,
   UPLOAD_IMAGES_REQUEST,
-  REMOVE_UPLOADED_IMAGE
+  REMOVE_UPLOADED_IMAGE,
+  DELETE_POST_REQUEST
 } from 'store/types/postType';
 
 export const loadPostsRequest = (lastId?: number) => ({
@@ -18,6 +19,11 @@ export const loadPostsRequest = (lastId?: number) => ({
 
 export const addPostRequest = (data: FormData) => ({
   type: ADD_POST_REQUEST,
+  data
+});
+
+export const deletePostRequest = (data: number) => ({
+  type: DELETE_POST_REQUEST,
   data
 });
 

@@ -13,6 +13,7 @@ import SuggestedList from 'components/Timeline/SuggestedList';
 import CommentList from 'components/Timeline/CommentList';
 
 import wrapper from 'store/configureStore';
+import useToastStatus from 'utils/useToast';
 import { RootState } from 'store/reducers';
 import { loadPostsRequest } from 'store/actions/postAction';
 import { loadMyInfoRequest } from 'store/actions/userAction';
@@ -25,6 +26,7 @@ const Timeline = () => {
   const isMobileOrTablet = typeof window !== 'undefined' && window.innerWidth <= 992;
   const delay1 = isMobileOrTablet ? 0.3 : 0;
   const delay2 = isMobileOrTablet ? 0 : 0.3;
+  useToastStatus();
 
   const showSuggestedList = useCallback(() => {
     setSuggestedListVisible(true);

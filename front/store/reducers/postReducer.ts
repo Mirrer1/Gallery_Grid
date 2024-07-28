@@ -18,7 +18,10 @@ import {
   UPLOAD_IMAGES_REQUEST,
   UPLOAD_IMAGES_SUCCESS,
   UPLOAD_IMAGES_FAILURE,
-  REMOVE_UPLOADED_IMAGE
+  REMOVE_UPLOADED_IMAGE,
+  DELETE_POST_FAILURE,
+  DELETE_POST_SUCCESS,
+  DELETE_POST_REQUEST
 } from 'store/types/postType';
 
 export const initialState: PostState = {
@@ -31,6 +34,9 @@ export const initialState: PostState = {
   addPostLoading: false,
   addPostDone: false,
   addPostError: null,
+  deletePostLoading: false,
+  deletePostDone: false,
+  deletePostError: null,
   uploadImagesLoading: false,
   uploadImagesDone: false,
   uploadImagesError: null,
@@ -71,6 +77,21 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
       case ADD_POST_FAILURE:
         draft.addPostLoading = false;
         draft.addPostError = action.error;
+        break;
+      case DELETE_POST_REQUEST:
+        draft.deletePostLoading = true;
+        draft.deletePostDone = false;
+        draft.deletePostError = null;
+        break;
+      case DELETE_POST_SUCCESS:
+        draft.deletePostLoading = false;
+        draft.deletePostDone = true;
+        const index = draft.mainPosts.findIndex(post => post.id === action.data);
+        if (index !== -1) draft.mainPosts.splice(index, 1);
+        break;
+      case DELETE_POST_FAILURE:
+        draft.deletePostLoading = false;
+        draft.deletePostError = action.error;
         break;
       case UPLOAD_IMAGES_REQUEST:
         draft.uploadImagesLoading = true;

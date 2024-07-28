@@ -12,6 +12,7 @@ import {
 } from '@ant-design/icons';
 
 import PostImageCarousel from './PostImageCarousel';
+import DeleteModal from 'components/Modal/DeleteModal';
 import useScroll from 'utils/useScroll';
 import { formatDate } from 'utils/formatDate';
 import { RootState } from 'store/reducers';
@@ -42,7 +43,8 @@ const PostList = () => {
 
   const [category, setCategory] = useState('best');
   const [modalImages, setModalImages] = useState<Image[]>([]);
-  const [isTooltipVisible, setIsTooltipVisible] = useState<number | null>(null);
+  const [isTooltipVisible, setIsTooltipVisible] = useState<number | boolean | null>(null);
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
 
   const onClickCategory = useCallback((category: string) => {
     setCategory(category);
@@ -51,6 +53,15 @@ const PostList = () => {
   const showCarousel = useCallback((images: Image[]) => {
     setModalImages(images);
     dispatch(showPostCarousel());
+  }, []);
+
+  const showDeleteModal = useCallback(() => {
+    setIsDeleteModalVisible(true);
+  }, []);
+
+  const hideDeleteModal = useCallback(() => {
+    setIsDeleteModalVisible(false);
+    setIsTooltipVisible(false);
   }, []);
 
   const handleTooltip = useCallback(
@@ -124,7 +135,7 @@ const PostList = () => {
                       <EditOutlined />
                       수정
                     </button>
-                    <button type="button">
+                    <button type="button" onClick={showDeleteModal}>
                       <DeleteOutlined />
                       삭제
                     </button>
@@ -178,10 +189,11 @@ const PostList = () => {
               </PostOptions>
             </div>
           </PostContents>
+
+          {isCarouselVisible && <PostImageCarousel images={modalImages} />}
+          {isDeleteModalVisible && <DeleteModal type="게시글" deleteId={post.id} hideDeleteModal={hideDeleteModal} />}
         </PostWrapper>
       ))}
-
-      {isCarouselVisible && <PostImageCarousel images={modalImages} />}
     </PostContainer>
   );
 };

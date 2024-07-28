@@ -5,6 +5,9 @@ import {
   ADD_POST_FAILURE,
   ADD_POST_REQUEST,
   ADD_POST_SUCCESS,
+  DELETE_POST_FAILURE,
+  DELETE_POST_REQUEST,
+  DELETE_POST_SUCCESS,
   LOAD_POSTS_FAILURE,
   LOAD_POSTS_REQUEST,
   LOAD_POSTS_SUCCESS,
@@ -13,6 +16,7 @@ import {
   UPLOAD_IMAGES_REQUEST,
   UPLOAD_IMAGES_SUCCESS,
   addPostRequestAction,
+  deletePostRequestAction,
   loadPostsRequestAction,
   uploadImagesRequestAction
 } from 'store/types/postType';
@@ -57,6 +61,26 @@ function* addPost(action: addPostRequestAction) {
   }
 }
 
+function deletePostAPI(data: number) {
+  return axios.delete(`/post/${data}`);
+}
+
+function* deletePost(action: deletePostRequestAction) {
+  try {
+    const result: AxiosResponse<number> = yield call(deletePostAPI, action.data);
+
+    yield put({
+      type: DELETE_POST_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: DELETE_POST_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
 function uploadImagesAPI(data: FormData) {
   return axios.post('/post/images', data);
 }
@@ -85,10 +109,14 @@ function* watchAddPost() {
   yield takeLatest(ADD_POST_REQUEST, addPost);
 }
 
+function* watchDeletePost() {
+  yield takeLatest(DELETE_POST_REQUEST, deletePost);
+}
+
 function* watchUploadImages() {
   yield takeLatest(UPLOAD_IMAGES_REQUEST, uploadImages);
 }
 
 export default function* postSaga() {
-  yield all([fork(watchLoadPosts), fork(watchAddPost), fork(watchUploadImages)]);
+  yield all([fork(watchLoadPosts), fork(watchAddPost), fork(watchDeletePost), fork(watchUploadImages)]);
 }

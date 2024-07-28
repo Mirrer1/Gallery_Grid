@@ -106,4 +106,31 @@ router.post('/images', isLoggedIn, upload.array('image'), async (req, res, next)
   }
 });
 
+router.delete('/:postId', isLoggedIn, async (req, res, next) => {
+  try {
+    const postId = req.params.postId;
+    const userId = req.user!.id;
+
+    const post = await Post.findOne({
+      where: { id: postId, UserId: userId }
+    });
+
+    if (!post) {
+      return res.status(404).json({ message: '게시글이 존재하지 않습니다.' });
+    }
+
+    await Post.destroy({
+      where: {
+        id: req.params.postId,
+        UserId: req.user!.id
+      }
+    });
+
+    res.status(200).json(parseInt(req.params.postId, 10));
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
 export default router;

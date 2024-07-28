@@ -8,10 +8,13 @@ export const ADD_POST_REQUEST = 'ADD_POST_REQUEST' as const;
 export const ADD_POST_SUCCESS = 'ADD_POST_SUCCESS' as const;
 export const ADD_POST_FAILURE = 'ADD_POST_FAILURE' as const;
 
+export const DELETE_POST_REQUEST = 'DELETE_POST_REQUEST' as const;
+export const DELETE_POST_SUCCESS = 'DELETE_POST_SUCCESS' as const;
+export const DELETE_POST_FAILURE = 'DELETE_POST_FAILURE' as const;
+
 export const UPLOAD_IMAGES_REQUEST = 'UPLOAD_IMAGES_REQUEST' as const;
 export const UPLOAD_IMAGES_SUCCESS = 'UPLOAD_IMAGES_SUCCESS' as const;
 export const UPLOAD_IMAGES_FAILURE = 'UPLOAD_IMAGES_FAILURE' as const;
-
 export const REMOVE_UPLOADED_IMAGE = 'REMOVE_UPLOADED_IMAGE' as const;
 
 export const SHOW_COMMENT_LIST = 'SHOW_COMMENT_LIST' as const;
@@ -33,6 +36,9 @@ export type PostState = {
   addPostLoading: boolean;
   addPostDone: boolean;
   addPostError: null | string;
+  deletePostLoading: boolean;
+  deletePostDone: boolean;
+  deletePostError: null | string;
   uploadImagesLoading: boolean;
   uploadImagesDone: boolean;
   uploadImagesError: null | string;
@@ -95,6 +101,21 @@ export interface addPostSuccessAction {
 
 export interface addPostFailureAction {
   type: typeof ADD_POST_FAILURE;
+  error: string;
+}
+
+export interface deletePostRequestAction {
+  type: typeof DELETE_POST_REQUEST;
+  data: number;
+}
+
+export interface deletePostSuccessAction {
+  type: typeof DELETE_POST_SUCCESS;
+  data: number;
+}
+
+export interface deletePostFailureAction {
+  type: typeof DELETE_POST_FAILURE;
   error: string;
 }
 
@@ -165,6 +186,9 @@ export type PostAction =
   | addPostRequestAction
   | addPostSuccessAction
   | addPostFailureAction
+  | deletePostRequestAction
+  | deletePostSuccessAction
+  | deletePostFailureAction
   | uploadImagesRequestAction
   | uploadImagesSuccessAction
   | uploadImagesFailureAction;

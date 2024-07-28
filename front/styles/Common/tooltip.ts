@@ -33,6 +33,15 @@ export const TooltipBtn = styled.div<{ $visible: boolean }>`
     font-size: 0.7rem;
     font-weight: 500;
     padding: 0.7em 1em;
+
+    & > span {
+      margin-right: 0.5em;
+    }
+
+    .anticon-loading {
+      margin-right: 0;
+      width: 37.4px;
+    }
   }
 
   & > button:first-child {
@@ -44,10 +53,6 @@ export const TooltipBtn = styled.div<{ $visible: boolean }>`
   & > button:last-child {
     color: ${({ theme }) => theme.colors.red};
     border: 1px ${({ theme }) => theme.colors.red} solid;
-  }
-
-  & > button > span {
-    margin-right: 0.5em;
   }
 `;
 
