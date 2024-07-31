@@ -20,15 +20,19 @@ export const REMOVE_UPLOADED_IMAGE = 'REMOVE_UPLOADED_IMAGE' as const;
 export const SHOW_COMMENT_LIST = 'SHOW_COMMENT_LIST' as const;
 export const HIDE_COMMENT_LIST = 'HIDE_COMMENT_LIST' as const;
 
+export const SHOW_POST_CAROUSEL = 'SHOW_POST_CAROUSEL' as const;
+export const HIDE_POST_CAROUSEL = 'HIDE_POST_CAROUSEL' as const;
+
 export const SHOW_POST_MODAL = 'SHOW_POST_MODAL' as const;
 export const HIDE_POST_MODAL = 'HIDE_POST_MODAL' as const;
 
-export const SHOW_POST_CAROUSEL = 'SHOW_POST_CAROUSEL' as const;
-export const HIDE_POST_CAROUSEL = 'HIDE_POST_CAROUSEL' as const;
+export const SHOW_DELETE_MODAL = 'SHOW_DELETE_MODAL' as const;
+export const HIDE_DELETE_MODAL = 'HIDE_DELETE_MODAL' as const;
 
 export type PostState = {
   mainPosts: Post[];
   imagePaths: string[];
+  deleteId: number | null;
   hasMorePosts: boolean;
   loadPostsLoading: boolean;
   loadPostsDone: boolean;
@@ -43,8 +47,9 @@ export type PostState = {
   uploadImagesDone: boolean;
   uploadImagesError: null | string;
   isCommentListVisible: boolean;
-  isPostModalVisible: boolean;
   isCarouselVisible: boolean;
+  isPostModalVisible: boolean;
+  isDeleteModalVisible: boolean;
 };
 
 export interface Image {
@@ -156,6 +161,14 @@ export interface HideCommentListAction {
   type: typeof HIDE_COMMENT_LIST;
 }
 
+export interface ShowPostCarouselAction {
+  type: typeof SHOW_POST_CAROUSEL;
+}
+
+export interface HidePostCarouselAction {
+  type: typeof HIDE_POST_CAROUSEL;
+}
+
 export interface ShowPostModalAction {
   type: typeof SHOW_POST_MODAL;
 }
@@ -164,12 +177,13 @@ export interface HidePostModalAction {
   type: typeof HIDE_POST_MODAL;
 }
 
-export interface ShowPostCarouselAction {
-  type: typeof SHOW_POST_CAROUSEL;
+export interface ShowDeleteModalAction {
+  type: typeof SHOW_DELETE_MODAL;
+  data: number;
 }
 
-export interface HidePostCarouselAction {
-  type: typeof HIDE_POST_CAROUSEL;
+export interface HideDeleteModalAction {
+  type: typeof HIDE_DELETE_MODAL;
 }
 
 export type PostAction =
@@ -191,4 +205,6 @@ export type PostAction =
   | deletePostFailureAction
   | uploadImagesRequestAction
   | uploadImagesSuccessAction
-  | uploadImagesFailureAction;
+  | uploadImagesFailureAction
+  | ShowDeleteModalAction
+  | HideDeleteModalAction;

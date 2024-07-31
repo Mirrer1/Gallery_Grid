@@ -3,26 +3,25 @@ import { useSelector, useDispatch } from 'react-redux';
 import { DeleteOutlined, LoadingOutlined } from '@ant-design/icons';
 
 import { RootState } from 'store/reducers';
-import { deletePostRequest } from 'store/actions/postAction';
+import { deletePostRequest, hideDeleteModal } from 'store/actions/postAction';
 import { slideInModal } from 'styles/Common/animation';
 import { DeleteModalContent, DeleteModalOutsideArea, DeleteModalWrapper } from 'styles/Modal/deleteModal';
 
 type DeleteProps = {
   type: string;
-  deleteId: number;
-  hideDeleteModal: () => void;
 };
 
-const DeleteModal = ({ type, deleteId, hideDeleteModal }: DeleteProps) => {
+const DeleteModal = ({ type }: DeleteProps) => {
   const dispatch = useDispatch();
-  const { deletePostLoading } = useSelector((state: RootState) => state.post);
+  const { deletePostLoading, deleteId } = useSelector((state: RootState) => state.post);
+
   const hideModal = useCallback(() => {
-    hideDeleteModal();
+    dispatch(hideDeleteModal());
   }, []);
 
   const onDeletePost = useCallback(() => {
     dispatch(deletePostRequest(deleteId));
-    hideDeleteModal();
+    dispatch(hideDeleteModal());
   }, []);
 
   return (

@@ -9,7 +9,9 @@ import {
   LOAD_POSTS_REQUEST,
   UPLOAD_IMAGES_REQUEST,
   REMOVE_UPLOADED_IMAGE,
-  DELETE_POST_REQUEST
+  DELETE_POST_REQUEST,
+  SHOW_DELETE_MODAL,
+  HIDE_DELETE_MODAL
 } from 'store/types/postType';
 
 export const loadPostsRequest = (lastId?: number) => ({
@@ -45,6 +47,14 @@ export const hideCommentList = () => ({
   type: HIDE_COMMENT_LIST
 });
 
+export const showPostCarousel = () => ({
+  type: SHOW_POST_CAROUSEL
+});
+
+export const hidePostCarousel = () => ({
+  type: HIDE_POST_CAROUSEL
+});
+
 export const showPostModal = () => ({
   type: SHOW_POST_MODAL
 });
@@ -53,10 +63,11 @@ export const hidePostModal = () => ({
   type: HIDE_POST_MODAL
 });
 
-export const showPostCarousel = () => ({
-  type: SHOW_POST_CAROUSEL
+export const showDeleteModal = (data: number) => ({
+  type: SHOW_DELETE_MODAL,
+  data
 });
 
-export const hidePostCarousel = () => ({
-  type: HIDE_POST_CAROUSEL
+export const hideDeleteModal = () => ({
+  type: HIDE_DELETE_MODAL
 });

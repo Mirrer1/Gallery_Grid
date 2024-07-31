@@ -17,8 +17,8 @@ import useScroll from 'utils/useScroll';
 import useListTimes from 'utils/useListTimes';
 import { RootState } from 'store/reducers';
 import { Image, Post } from 'store/types/postType';
-import { hideCommentList, showCommentList, showPostCarousel } from 'store/actions/postAction';
-import { slideInList } from 'styles/Common/animation';
+import { hideCommentList, showCommentList, showPostCarousel, showDeleteModal } from 'store/actions/postAction';
+import { slideInList, slideInTooltip } from 'styles/Common/animation';
 import { Tooltip, TooltipBtn, TooltipOutsideArea } from 'styles/Common/tooltip';
 import {
   PostWrapper,
@@ -36,17 +36,15 @@ const PostList = () => {
   const firstPostRef = useRef<HTMLDivElement>(null);
   const postContainerRef = useRef<HTMLDivElement>(null);
   const { me } = useSelector((state: RootState) => state.user);
-  const { mainPosts, imagePaths, isCommentListVisible, isCarouselVisible } = useSelector(
+  const { mainPosts, imagePaths, isCommentListVisible, isCarouselVisible, isDeleteModalVisible } = useSelector(
     (state: RootState) => state.post
   );
-  const postTimes = useListTimes(mainPosts);
-  useScroll({ type: 'timeline', ref: postContainerRef });
 
+  const postTimes = useListTimes(mainPosts);
   const [category, setCategory] = useState('best');
   const [modalImages, setModalImages] = useState<Image[]>([]);
-  const [isTooltipVisible, setIsTooltipVisible] = useState<number | boolean | null>(null);
-  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
-  const [deletePostId, setDeletePostId] = useState<number | null>(null);
+  const [isTooltipVisible, setIsTooltipVisible] = useState<number | null>(null);
+  useScroll({ type: 'timeline', ref: postContainerRef });
 
   const onClickCategory = useCallback((category: string) => {
     setCategory(category);
@@ -57,14 +55,8 @@ const PostList = () => {
     dispatch(showPostCarousel());
   }, []);
 
-  const showDeleteModal = useCallback((postId: number) => {
-    setDeletePostId(postId);
-    setIsDeleteModalVisible(true);
-  }, []);
-
-  const hideDeleteModal = useCallback(() => {
-    setIsDeleteModalVisible(false);
-    setIsTooltipVisible(false);
+  const openDeleteModal = useCallback((postId: number) => {
+    dispatch(showDeleteModal(postId));
   }, []);
 
   const handleTooltip = useCallback(
@@ -127,35 +119,37 @@ const PostList = () => {
 
             <div>
               <PostFollowBtn type="button">Follow</PostFollowBtn>
+              <MoreOutlined onClick={() => handleTooltip(post.id)} />
 
-              <Tooltip>
-                {isTooltipVisible && <TooltipOutsideArea onClick={hideTooltip} />}
+              {isTooltipVisible && (
+                <Tooltip key={isTooltipVisible} {...slideInTooltip} $visible={isTooltipVisible === post.id}>
+                  <TooltipOutsideArea onClick={hideTooltip} />
 
-                <MoreOutlined onClick={() => handleTooltip(post.id)} />
-                {me?.id === post.UserId ? (
-                  <TooltipBtn $visible={isTooltipVisible === post.id}>
-                    <button type="button">
-                      <EditOutlined />
-                      수정
-                    </button>
-                    <button type="button" onClick={() => showDeleteModal(post.id)}>
-                      <DeleteOutlined />
-                      삭제
-                    </button>
-                  </TooltipBtn>
-                ) : (
-                  <TooltipBtn $visible={isTooltipVisible === post.id}>
-                    <button type="button">
-                      <ShareAltOutlined />
-                      공유
-                    </button>
-                    <button type="button">
-                      <AlertOutlined />
-                      신고
-                    </button>
-                  </TooltipBtn>
-                )}
-              </Tooltip>
+                  {me?.id === post.UserId ? (
+                    <TooltipBtn>
+                      <button type="button">
+                        <EditOutlined />
+                        수정
+                      </button>
+                      <button type="button" onClick={() => openDeleteModal(post.id)}>
+                        <DeleteOutlined />
+                        삭제
+                      </button>
+                    </TooltipBtn>
+                  ) : (
+                    <TooltipBtn>
+                      <button type="button">
+                        <ShareAltOutlined />
+                        공유
+                      </button>
+                      <button type="button">
+                        <AlertOutlined />
+                        신고
+                      </button>
+                    </TooltipBtn>
+                  )}
+                </Tooltip>
+              )}
             </div>
           </PostHeader>
 
@@ -196,9 +190,7 @@ const PostList = () => {
       ))}
 
       {isCarouselVisible && <PostImageCarousel images={modalImages} />}
-      {isDeleteModalVisible && deletePostId && (
-        <DeleteModal type="게시글" deleteId={deletePostId} hideDeleteModal={hideDeleteModal} />
-      )}
+      {isDeleteModalVisible && <DeleteModal type="게시글" />}
     </PostContainer>
   );
 };

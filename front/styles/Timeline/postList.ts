@@ -111,6 +111,7 @@ export const PostFollowBtn = styled.button`
   font-weight: 500;
   padding: 0.7em 1.5em;
   border-radius: 5px;
+  margin-right: 0.5em;
 
   ${media.mobile} {
     font-size: 0.6rem;

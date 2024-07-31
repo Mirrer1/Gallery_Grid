@@ -21,12 +21,15 @@ import {
   REMOVE_UPLOADED_IMAGE,
   DELETE_POST_FAILURE,
   DELETE_POST_SUCCESS,
-  DELETE_POST_REQUEST
+  DELETE_POST_REQUEST,
+  SHOW_DELETE_MODAL,
+  HIDE_DELETE_MODAL
 } from 'store/types/postType';
 
 export const initialState: PostState = {
   mainPosts: [],
   imagePaths: [],
+  deleteId: null,
   hasMorePosts: true,
   loadPostsLoading: false,
   loadPostsDone: false,
@@ -41,8 +44,9 @@ export const initialState: PostState = {
   uploadImagesDone: false,
   uploadImagesError: null,
   isCommentListVisible: false,
+  isCarouselVisible: false,
   isPostModalVisible: false,
-  isCarouselVisible: false
+  isDeleteModalVisible: false
 };
 
 const reducer = (state: PostState = initialState, action: PostAction): PostState => {
@@ -117,6 +121,12 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
       case HIDE_COMMENT_LIST:
         draft.isCommentListVisible = false;
         break;
+      case SHOW_POST_CAROUSEL:
+        draft.isCarouselVisible = true;
+        break;
+      case HIDE_POST_CAROUSEL:
+        draft.isCarouselVisible = false;
+        break;
       case SHOW_POST_MODAL:
         draft.isPostModalVisible = true;
         break;
@@ -124,11 +134,12 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
         draft.isPostModalVisible = false;
         draft.isCommentListVisible = false;
         break;
-      case SHOW_POST_CAROUSEL:
-        draft.isCarouselVisible = true;
+      case SHOW_DELETE_MODAL:
+        draft.isDeleteModalVisible = true;
+        draft.deleteId = action.data;
         break;
-      case HIDE_POST_CAROUSEL:
-        draft.isCarouselVisible = false;
+      case HIDE_DELETE_MODAL:
+        draft.isDeleteModalVisible = false;
         break;
       default:
         return state;
