@@ -18,7 +18,7 @@ export const ModalContentWrapper = styled.div`
 
 export const ModalContentHeader = styled.div`
   ${({ theme }) => theme.flexSet('space-between')};
-  height: 11%;
+  height: 10%;
   padding: 0.8em;
   border-bottom: 1px solid ${({ theme }) => theme.colors.darkBg};
 
@@ -63,12 +63,12 @@ export const ModalContentHeader = styled.div`
       font-weight: 500;
       padding: 0.7em 1.5em;
       border-radius: 5px;
+      margin-right: 0.5em;
       ${HoverStyle('&')}
     }
   }
 
   ${media.tablet} {
-    height: 8%;
     padding: 0.6em;
 
     & > div:first-child {
@@ -95,12 +95,13 @@ export const ModalContentHeader = styled.div`
   }
 
   ${media.mobile} {
-    height: 17%;
+    height: 20%;
+    padding: 0.5em;
   }
 `;
 
 export const ModalContentText = styled.div`
-  height: 73%;
+  height: 80%;
   font-size: 0.85rem;
   line-height: 1.5;
   padding: 0.7em 1.2em;
@@ -108,20 +109,21 @@ export const ModalContentText = styled.div`
   overflow-y: scroll;
 
   ${media.tablet} {
-    height: 77%;
+    height: 79%;
     font-size: 0.75rem;
   }
 
   ${media.mobile} {
-    height: 61%;
+    height: 66%;
     font-size: 0.7rem;
   }
 `;
 
 export const ModalContentOptions = styled.div<{ $isCommentListVisible: boolean }>`
-  height: 9%;
-  padding: 0.7em 0.9em;
+  height: 10%;
+  padding: 0.8em;
   border-bottom: 1px solid ${({ theme }) => theme.colors.darkBg};
+  border-radius: ${props => (props.$isCommentListVisible ? '0 0 0 0' : '0 0 5px 0')};
 
   & > div:first-child {
     margin-bottom: 0.5em;
@@ -151,7 +153,7 @@ export const ModalContentOptions = styled.div<{ $isCommentListVisible: boolean }
   }
 
   ${media.tablet} {
-    height: 9%;
+    height: 11%;
 
     & > div:first-child {
       & > span {
@@ -170,7 +172,9 @@ export const ModalContentOptions = styled.div<{ $isCommentListVisible: boolean }
 
   ${media.mobile} {
     ${({ theme }) => theme.flexSet('space-between')};
-    height: 10%;
+    height: 14%;
+    padding: 0.6em;
+    border-radius: ${props => (props.$isCommentListVisible ? '0 0 0 0' : '0 0 5px 5px')};
 
     & > div:first-child {
       margin-bottom: 0;

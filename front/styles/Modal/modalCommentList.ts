@@ -11,7 +11,7 @@ export const ModalCommentListWrapper = styled.div`
   overflow-y: scroll;
 
   ${media.tablet} {
-    height: 66%;
+    height: 73%;
     padding: 0.6em;
   }
 

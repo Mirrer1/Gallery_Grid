@@ -36,9 +36,8 @@ const PostList = () => {
   const firstPostRef = useRef<HTMLDivElement>(null);
   const postContainerRef = useRef<HTMLDivElement>(null);
   const { me } = useSelector((state: RootState) => state.user);
-  const { mainPosts, imagePaths, isCommentListVisible, isCarouselVisible, isDeleteModalVisible } = useSelector(
-    (state: RootState) => state.post
-  );
+  const { mainPosts, imagePaths, isCommentListVisible, isCarouselVisible, isDeleteModalVisible, addPostDone } =
+    useSelector((state: RootState) => state.post);
 
   const postTimes = useListTimes(mainPosts);
   const [category, setCategory] = useState('best');
@@ -82,7 +81,7 @@ const PostList = () => {
         block: 'start'
       });
     }
-  }, [category]);
+  }, [category, addPostDone]);
 
   return (
     <PostContainer ref={postContainerRef} $uploading={imagePaths.length > 0}>
