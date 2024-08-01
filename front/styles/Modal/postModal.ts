@@ -58,6 +58,7 @@ export const PostModalContentsWrapper = styled(motion.div)`
 
   ${media.tablet} {
     width: 90%;
+    height: 58%;
   }
 
   ${media.mobile} {

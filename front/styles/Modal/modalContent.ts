@@ -95,7 +95,7 @@ export const ModalContentHeader = styled.div`
   }
 
   ${media.mobile} {
-    height: 20%;
+    height: 17%;
     padding: 0.5em;
   }
 `;
@@ -106,15 +106,15 @@ export const ModalContentText = styled.div`
   line-height: 1.5;
   padding: 0.7em 1.2em;
   border-bottom: 1px solid ${({ theme }) => theme.colors.darkBg};
-  overflow-y: scroll;
+  overflow-y: auto;
 
   ${media.tablet} {
-    height: 79%;
+    height: 81%;
     font-size: 0.75rem;
   }
 
   ${media.mobile} {
-    height: 66%;
+    height: 69%;
     font-size: 0.7rem;
   }
 `;
@@ -153,7 +153,7 @@ export const ModalContentOptions = styled.div<{ $isCommentListVisible: boolean }
   }
 
   ${media.tablet} {
-    height: 11%;
+    height: 9%;
 
     & > div:first-child {
       & > span {
@@ -186,7 +186,7 @@ export const ModalCommentInput = styled.div<{ $active: boolean }>`
   height: 7%;
   ${({ theme }) => theme.flexSet('space-between')}
   background-color: white;
-  border-radius: 5px;
+  border-radius: 0 0 5px 0;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   padding: 0.7em;
 
@@ -248,5 +248,6 @@ export const ModalCommentInput = styled.div<{ $active: boolean }>`
 
   ${media.mobile} {
     height: 12%;
+    border-radius: 0 0 5px 5px;
   }
 `;

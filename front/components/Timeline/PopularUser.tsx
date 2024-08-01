@@ -32,7 +32,7 @@ const PopularUser = () => {
 
   const [curr, setCurr] = useState(0);
   const [touchStartX, setTouchStartX] = useState<number | null>(null);
-  const { isCommentListVisible } = useSelector((state: RootState) => state.post);
+  const { isCommentListVisible, isPostModalVisible } = useSelector((state: RootState) => state.post);
 
   const next = useCallback(() => {
     const newCurr = curr === popularUsers.length - 1 ? 0 : curr + 1;
@@ -63,7 +63,7 @@ const PopularUser = () => {
     <PopularUserWrapper
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
-      $commentvisible={isCommentListVisible}
+      $commentvisible={isCommentListVisible && !isPostModalVisible}
     >
       <div style={{ transform: `translateX(-${curr * 100}%)` }}>
         {popularUsers.map((user, i) => (

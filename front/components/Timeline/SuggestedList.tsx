@@ -28,7 +28,7 @@ const SuggestedList = ({ suggestedListVisible, setSuggestedListVisible }: Sugges
       desc: 'Minus esse quis ex corporis eligendi ad et adipisciomnis dolores nemo repudiandae beatae expedita nesciunt autem est enim sunt quam praesentium libero, modimaiores consequatur? Repudiandae perspiciatis explicabo laboriosam cum ad.'
     }
   ];
-  const { isCommentListVisible } = useSelector((state: RootState) => state.post);
+  const { isCommentListVisible, isPostModalVisible } = useSelector((state: RootState) => state.post);
 
   const hideSuggestedList = useCallback(() => {
     setSuggestedListVisible(false);
@@ -38,7 +38,10 @@ const SuggestedList = ({ suggestedListVisible, setSuggestedListVisible }: Sugges
     <>
       <SuggestedOutsideArea onClick={hideSuggestedList} $listvisible={suggestedListVisible} />
 
-      <SuggestedWrapper $listvisible={suggestedListVisible} $commentvisible={isCommentListVisible}>
+      <SuggestedWrapper
+        $listvisible={suggestedListVisible}
+        $commentvisible={isCommentListVisible && !isPostModalVisible}
+      >
         <SuggestedHeader>
           <h1>Suggested people</h1>
           <CaretDownOutlined onClick={hideSuggestedList} />

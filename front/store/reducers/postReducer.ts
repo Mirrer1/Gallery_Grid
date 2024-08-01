@@ -23,12 +23,17 @@ import {
   DELETE_POST_SUCCESS,
   DELETE_POST_REQUEST,
   SHOW_DELETE_MODAL,
-  HIDE_DELETE_MODAL
+  HIDE_DELETE_MODAL,
+  EXECUTE_POST_EDIT,
+  CANCEL_POST_EDIT
 } from 'store/types/postType';
 
 export const initialState: PostState = {
   mainPosts: [],
+  singlePost: null,
   imagePaths: [],
+  editImagePaths: [],
+  postEditMode: false,
   deleteId: null,
   hasMorePosts: true,
   loadPostsLoading: false,
@@ -129,10 +134,20 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
         break;
       case SHOW_POST_MODAL:
         draft.isPostModalVisible = true;
+        draft.singlePost = action.data;
         break;
       case HIDE_POST_MODAL:
         draft.isPostModalVisible = false;
         draft.isCommentListVisible = false;
+        draft.postEditMode = false;
+        draft.singlePost = null;
+        break;
+      case EXECUTE_POST_EDIT:
+        draft.postEditMode = true;
+        draft.editImagePaths = draft.singlePost?.Images?.map(v => v.src) || [];
+        break;
+      case CANCEL_POST_EDIT:
+        draft.postEditMode = false;
         break;
       case SHOW_DELETE_MODAL:
         draft.isDeleteModalVisible = true;

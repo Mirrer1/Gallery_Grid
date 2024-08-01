@@ -13,6 +13,7 @@ export const PostingWrapper = styled.form<{ $uploading: boolean }>`
     width: 100%;
     height: ${props => (props.$uploading ? '42%' : '70%')};
     font-size: 0.8rem;
+    line-height: 1.5;
     background-color: ${({ theme }) => theme.colors.darkBg};
     padding: 1.5em;
     border-radius: 5px 5px 0 0;

@@ -26,12 +26,18 @@ export const HIDE_POST_CAROUSEL = 'HIDE_POST_CAROUSEL' as const;
 export const SHOW_POST_MODAL = 'SHOW_POST_MODAL' as const;
 export const HIDE_POST_MODAL = 'HIDE_POST_MODAL' as const;
 
+export const EXECUTE_POST_EDIT = 'EXECUTE_POST_EDIT' as const;
+export const CANCEL_POST_EDIT = 'CANCEL_POST_EDIT' as const;
+
 export const SHOW_DELETE_MODAL = 'SHOW_DELETE_MODAL' as const;
 export const HIDE_DELETE_MODAL = 'HIDE_DELETE_MODAL' as const;
 
 export type PostState = {
   mainPosts: Post[];
+  singlePost: Post | null;
   imagePaths: string[];
+  editImagePaths: string[];
+  postEditMode: boolean;
   deleteId: number | null;
   hasMorePosts: boolean;
   loadPostsLoading: boolean;
@@ -171,10 +177,19 @@ export interface HidePostCarouselAction {
 
 export interface ShowPostModalAction {
   type: typeof SHOW_POST_MODAL;
+  data: Post;
 }
 
 export interface HidePostModalAction {
   type: typeof HIDE_POST_MODAL;
+}
+
+export interface executePostEditAction {
+  type: typeof EXECUTE_POST_EDIT;
+}
+
+export interface cancelPostEditAction {
+  type: typeof CANCEL_POST_EDIT;
 }
 
 export interface ShowDeleteModalAction {
@@ -207,4 +222,6 @@ export type PostAction =
   | uploadImagesSuccessAction
   | uploadImagesFailureAction
   | ShowDeleteModalAction
-  | HideDeleteModalAction;
+  | HideDeleteModalAction
+  | executePostEditAction
+  | cancelPostEditAction;

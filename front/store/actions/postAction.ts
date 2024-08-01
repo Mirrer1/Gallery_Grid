@@ -11,7 +11,10 @@ import {
   REMOVE_UPLOADED_IMAGE,
   DELETE_POST_REQUEST,
   SHOW_DELETE_MODAL,
-  HIDE_DELETE_MODAL
+  HIDE_DELETE_MODAL,
+  Post,
+  EXECUTE_POST_EDIT,
+  CANCEL_POST_EDIT
 } from 'store/types/postType';
 
 export const loadPostsRequest = (lastId?: number) => ({
@@ -55,12 +58,21 @@ export const hidePostCarousel = () => ({
   type: HIDE_POST_CAROUSEL
 });
 
-export const showPostModal = () => ({
-  type: SHOW_POST_MODAL
+export const showPostModal = (data: Post) => ({
+  type: SHOW_POST_MODAL,
+  data
 });
 
 export const hidePostModal = () => ({
   type: HIDE_POST_MODAL
+});
+
+export const executePostEdit = () => ({
+  type: EXECUTE_POST_EDIT
+});
+
+export const cancelPostEdit = () => ({
+  type: CANCEL_POST_EDIT
 });
 
 export const showDeleteModal = (data: number) => ({

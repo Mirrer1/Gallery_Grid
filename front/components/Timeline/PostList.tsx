@@ -13,11 +13,20 @@ import {
 
 import PostImageCarousel from './PostImageCarousel';
 import DeleteModal from 'components/Modal/DeleteModal';
+import PostModal from 'components/Modal/PostModal';
+
 import useScroll from 'utils/useScroll';
 import useListTimes from 'utils/useListTimes';
 import { RootState } from 'store/reducers';
 import { Image, Post } from 'store/types/postType';
-import { hideCommentList, showCommentList, showPostCarousel, showDeleteModal } from 'store/actions/postAction';
+import {
+  hideCommentList,
+  showCommentList,
+  showPostCarousel,
+  showDeleteModal,
+  showPostModal,
+  executePostEdit
+} from 'store/actions/postAction';
 import { slideInList, slideInTooltip } from 'styles/Common/animation';
 import { Tooltip, TooltipBtn, TooltipOutsideArea } from 'styles/Common/tooltip';
 import {
@@ -36,8 +45,15 @@ const PostList = () => {
   const firstPostRef = useRef<HTMLDivElement>(null);
   const postContainerRef = useRef<HTMLDivElement>(null);
   const { me } = useSelector((state: RootState) => state.user);
-  const { mainPosts, imagePaths, isCommentListVisible, isCarouselVisible, isDeleteModalVisible, addPostDone } =
-    useSelector((state: RootState) => state.post);
+  const {
+    mainPosts,
+    imagePaths,
+    isCommentListVisible,
+    isCarouselVisible,
+    isDeleteModalVisible,
+    addPostDone,
+    isPostModalVisible
+  } = useSelector((state: RootState) => state.post);
 
   const postTimes = useListTimes(mainPosts);
   const [category, setCategory] = useState('best');
@@ -56,6 +72,13 @@ const PostList = () => {
 
   const openDeleteModal = useCallback((postId: number) => {
     dispatch(showDeleteModal(postId));
+    setIsTooltipVisible(null);
+  }, []);
+
+  const openEditModal = useCallback((post: Post) => {
+    setIsTooltipVisible(null);
+    dispatch(showPostModal(post));
+    dispatch(executePostEdit());
   }, []);
 
   const handleTooltip = useCallback(
@@ -105,7 +128,10 @@ const PostList = () => {
         <PostWrapper key={post.id} {...slideInList}>
           <PostHeader>
             <div>
-              <img src={post.User.ProfileImage ? post.User.ProfileImage.src : '/user.jpg'} alt="author profile image" />
+              <img
+                src={post.User.ProfileImage ? `http://localhost:3065/${post.User.ProfileImage.src}` : '/user.jpg'}
+                alt="author profile image"
+              />
 
               <div>
                 <h1>{post.User.nickname}</h1>
@@ -126,7 +152,7 @@ const PostList = () => {
 
                   {me?.id === post.UserId ? (
                     <TooltipBtn>
-                      <button type="button">
+                      <button type="button" onClick={() => openEditModal(post)}>
                         <EditOutlined />
                         수정
                       </button>
@@ -161,8 +187,8 @@ const PostList = () => {
               />
 
               <div>
-                {post.Images.map((_: Image, i: number) => (
-                  <div key={i} />
+                {post.Images.map((image: Image) => (
+                  <div key={image.id} />
                 ))}
               </div>
 
@@ -189,6 +215,7 @@ const PostList = () => {
       ))}
 
       {isCarouselVisible && <PostImageCarousel images={modalImages} />}
+      {isPostModalVisible && <PostModal />}
       {isDeleteModalVisible && <DeleteModal type="게시글" />}
     </PostContainer>
   );
