@@ -25,7 +25,10 @@ import {
   SHOW_DELETE_MODAL,
   HIDE_DELETE_MODAL,
   EXECUTE_POST_EDIT,
-  CANCEL_POST_EDIT
+  CANCEL_POST_EDIT,
+  EDIT_POST_REQUEST,
+  EDIT_POST_SUCCESS,
+  EDIT_POST_FAILURE
 } from 'store/types/postType';
 
 export const initialState: PostState = {
@@ -42,6 +45,9 @@ export const initialState: PostState = {
   addPostLoading: false,
   addPostDone: false,
   addPostError: null,
+  editPostLoading: false,
+  editPostDone: false,
+  editPostError: null,
   deletePostLoading: false,
   deletePostDone: false,
   deletePostError: null,
@@ -86,6 +92,24 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
       case ADD_POST_FAILURE:
         draft.addPostLoading = false;
         draft.addPostError = action.error;
+        break;
+      case EDIT_POST_REQUEST:
+        draft.editPostLoading = true;
+        draft.editPostDone = false;
+        draft.editPostError = null;
+        break;
+      case EDIT_POST_SUCCESS:
+        draft.editPostLoading = false;
+        draft.editPostDone = true;
+        draft.imagePaths = [];
+        draft.postEditMode = false;
+        draft.singlePost = action.data;
+        const postIndex = draft.mainPosts.findIndex(post => post.id === action.data.id);
+        if (postIndex !== -1) draft.mainPosts[postIndex] = action.data;
+        break;
+      case EDIT_POST_FAILURE:
+        draft.editPostLoading = false;
+        draft.editPostError = action.error;
         break;
       case DELETE_POST_REQUEST:
         draft.deletePostLoading = true;
@@ -141,13 +165,15 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
         draft.isCommentListVisible = false;
         draft.postEditMode = false;
         draft.singlePost = null;
+        draft.imagePaths = [];
         break;
       case EXECUTE_POST_EDIT:
         draft.postEditMode = true;
-        draft.editImagePaths = draft.singlePost?.Images?.map(v => v.src) || [];
+        draft.imagePaths = draft.singlePost?.Images?.map(v => v.src) || [];
         break;
       case CANCEL_POST_EDIT:
         draft.postEditMode = false;
+        draft.imagePaths = [];
         break;
       case SHOW_DELETE_MODAL:
         draft.isDeleteModalVisible = true;

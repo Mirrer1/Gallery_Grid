@@ -135,7 +135,7 @@ export const EditModalForm = styled.form`
   }
 `;
 
-export const EditModalBtn = styled.div`
+export const EditModalBtn = styled.div<{ $active: boolean; $edit: boolean }>`
   ${({ theme }) => theme.flexSet('space-between')};
   height: 8%;
   padding: 0.8em;
@@ -175,22 +175,25 @@ export const EditModalBtn = styled.div`
 
   & > div:last-child {
     & > button {
-      ${HoverStyle('&')}
       font-size: 0.7rem;
       font-weight: 500;
-      padding: 0.7em 1.5em;
       border-radius: 5px;
-      margin-right: 0.5em;
+      ${HoverStyle('&')}
     }
 
     & > button:first-child {
+      ${props => (props.$active ? HoverStyle('&') : '')};
+      opacity: ${props => (props.$active ? '100%' : '40%')};
       border: 1px solid ${({ theme }) => theme.colors.primary};
       color: ${({ theme }) => theme.colors.primary};
+      padding: ${props => (props.$edit ? '0.66em 1.92em' : '0.7em 1.5em')};
+      margin-right: 0.5em;
     }
 
     & > button:last-child {
       border: 1px solid ${({ theme }) => theme.colors.red};
       color: ${({ theme }) => theme.colors.red};
+      padding: 0.7em 1.5em;
     }
   }
 

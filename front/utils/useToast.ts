@@ -5,7 +5,9 @@ import { toast } from 'react-toastify';
 import { RootState } from 'store/reducers';
 
 const useToastStatus = () => {
-  const { addPostDone, addPostError, deletePostDone, deletePostError } = useSelector((state: RootState) => state.post);
+  const { addPostDone, addPostError, deletePostDone, deletePostError, editPostDone, editPostError } = useSelector(
+    (state: RootState) => state.post
+  );
   const {} = useSelector((state: RootState) => state.user);
 
   const postStatusList = [
@@ -20,6 +22,12 @@ const useToastStatus = () => {
       error: deletePostError,
       successMessage: '작업물이 삭제되었습니다.',
       errorMessage: deletePostError
+    },
+    {
+      done: editPostDone,
+      error: editPostError,
+      successMessage: '작업물이 수정되었습니다.',
+      errorMessage: editPostError
     }
   ];
   // const userStatusList = [];

@@ -46,16 +46,106 @@ router.post('/', isLoggedIn, upload.none(), async (req, res, next) => {
 
     if (Array.isArray(req.body.image)) {
       const images = await Promise.all(
-        req.body.image.map((image: string) => Image.create({ type: 'post', src: image }))
+        req.body.image.map((image: string) => Image.create({ type: 'post', src: image, PostId: post.id }))
       );
       await post.addImages(images);
     } else {
-      const image = await Image.create({ type: 'post', src: req.body.image });
+      const image = await Image.create({ type: 'post', src: req.body.image, PostId: post.id });
       await post.addImages([image]);
     }
 
     const fullPost = await Post.findOne({
       where: { id: post.id },
+      include: [
+        {
+          model: User,
+          attributes: ['id', 'nickname'],
+          include: [
+            {
+              model: Image,
+              as: 'ProfileImage',
+              where: { type: 'user' },
+              attributes: ['id', 'src'],
+              required: false
+            }
+          ]
+        },
+        {
+          model: Image,
+          where: { type: 'post' },
+          attributes: ['id', 'src']
+        },
+        {
+          model: User,
+          as: 'Likers',
+          attributes: ['id']
+        },
+        {
+          model: Comment,
+          include: [
+            {
+              model: User,
+              attributes: ['id', 'nickname']
+            }
+          ]
+        }
+      ]
+    });
+
+    res.status(200).json(fullPost);
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+});
+
+router.patch('/:postId', isLoggedIn, upload.none(), async (req, res, next) => {
+  try {
+    const { postId } = req.params;
+    const { content, location, image: images } = req.body;
+
+    const post = await Post.findOne({ where: { id: postId, UserId: req.user!.id } });
+    if (!post) {
+      return res.status(404).json({ message: '게시글이 존재하지 않습니다.' });
+    }
+
+    await Post.update(
+      {
+        content,
+        location: location || null
+      },
+      {
+        where: { id: postId }
+      }
+    );
+
+    const currentImages = await Image.findAll({ where: { PostId: postId } });
+    const currentImageSrcs = currentImages.map(img => img.src);
+    const incomingImageSrcs = images ? (Array.isArray(images) ? images : [images]) : [];
+
+    const imagesToAdd = incomingImageSrcs.filter(src => !currentImageSrcs.includes(src));
+    const imagesToRemove = currentImageSrcs.filter(src => !incomingImageSrcs.includes(src));
+
+    if (imagesToRemove.length > 0) {
+      await Promise.all(
+        imagesToRemove.map(async (src: string) => {
+          const image = await Image.findOne({ where: { src, PostId: postId } });
+
+          if (image) {
+            await image.update({ PostId: null });
+          }
+        })
+      );
+    }
+
+    if (imagesToAdd.length > 0) {
+      await Promise.all(
+        imagesToAdd.map((src: string) => Image.create({ type: 'post', src, PostId: parseInt(postId, 10) }))
+      );
+    }
+
+    const fullPost = await Post.findOne({
+      where: { id: postId },
       include: [
         {
           model: User,

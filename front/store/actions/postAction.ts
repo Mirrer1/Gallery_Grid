@@ -14,7 +14,8 @@ import {
   HIDE_DELETE_MODAL,
   Post,
   EXECUTE_POST_EDIT,
-  CANCEL_POST_EDIT
+  CANCEL_POST_EDIT,
+  EDIT_POST_REQUEST
 } from 'store/types/postType';
 
 export const loadPostsRequest = (lastId?: number) => ({
@@ -24,6 +25,11 @@ export const loadPostsRequest = (lastId?: number) => ({
 
 export const addPostRequest = (data: FormData) => ({
   type: ADD_POST_REQUEST,
+  data
+});
+
+export const editPostRequest = (data: FormData) => ({
+  type: EDIT_POST_REQUEST,
   data
 });
 

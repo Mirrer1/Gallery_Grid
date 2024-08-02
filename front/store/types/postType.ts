@@ -8,6 +8,10 @@ export const ADD_POST_REQUEST = 'ADD_POST_REQUEST' as const;
 export const ADD_POST_SUCCESS = 'ADD_POST_SUCCESS' as const;
 export const ADD_POST_FAILURE = 'ADD_POST_FAILURE' as const;
 
+export const EDIT_POST_REQUEST = 'EDIT_POST_REQUEST' as const;
+export const EDIT_POST_SUCCESS = 'EDIT_POST_SUCCESS' as const;
+export const EDIT_POST_FAILURE = 'EDIT_POST_FAILURE' as const;
+
 export const DELETE_POST_REQUEST = 'DELETE_POST_REQUEST' as const;
 export const DELETE_POST_SUCCESS = 'DELETE_POST_SUCCESS' as const;
 export const DELETE_POST_FAILURE = 'DELETE_POST_FAILURE' as const;
@@ -46,6 +50,9 @@ export type PostState = {
   addPostLoading: boolean;
   addPostDone: boolean;
   addPostError: null | string;
+  editPostLoading: boolean;
+  editPostDone: boolean;
+  editPostError: null | string;
   deletePostLoading: boolean;
   deletePostDone: boolean;
   deletePostError: null | string;
@@ -112,6 +119,21 @@ export interface addPostSuccessAction {
 
 export interface addPostFailureAction {
   type: typeof ADD_POST_FAILURE;
+  error: string;
+}
+
+export interface editPostRequestAction {
+  type: typeof EDIT_POST_REQUEST;
+  data: FormData;
+}
+
+export interface editPostSuccessAction {
+  type: typeof EDIT_POST_SUCCESS;
+  data: Post;
+}
+
+export interface editPostFailureAction {
+  type: typeof EDIT_POST_FAILURE;
   error: string;
 }
 
@@ -215,6 +237,9 @@ export type PostAction =
   | addPostRequestAction
   | addPostSuccessAction
   | addPostFailureAction
+  | editPostRequestAction
+  | editPostSuccessAction
+  | editPostFailureAction
   | deletePostRequestAction
   | deletePostSuccessAction
   | deletePostFailureAction

@@ -16,7 +16,7 @@ import useInput from 'utils/useInput';
 import ModalCommentList from './ModalCommentList';
 import { RootState } from 'store/reducers';
 import { formatDate } from 'utils/useListTimes';
-import { hideCommentList, showCommentList, showDeleteModal } from 'store/actions/postAction';
+import { executePostEdit, hideCommentList, showCommentList, showDeleteModal } from 'store/actions/postAction';
 import { slideInTooltip } from 'styles/Common/animation';
 import { Tooltip, TooltipBtn, TooltipOutsideArea } from 'styles/Common/tooltip';
 import {
@@ -50,6 +50,12 @@ const ModalContent = () => {
     if (isCommentListVisible) dispatch(hideCommentList());
     else dispatch(showCommentList());
   }, [isCommentListVisible]);
+
+  const openEditModal = useCallback(() => {
+    setIsTooltipVisible(false);
+    // dispatch(showPostModal(post));
+    dispatch(executePostEdit());
+  }, []);
 
   const handleKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -90,7 +96,7 @@ const ModalContent = () => {
 
               {me?.id === singlePost.User.id ? (
                 <TooltipBtn>
-                  <button type="button">
+                  <button type="button" onClick={openEditModal}>
                     <EditOutlined />
                     수정
                   </button>

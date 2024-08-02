@@ -29,7 +29,7 @@ import {
 const PostingForm = () => {
   const dispatch = useDispatch();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { imagePaths, uploadImagesLoading, addPostLoading, addPostDone } = useSelector(
+  const { imagePaths, uploadImagesLoading, addPostLoading, addPostDone, isPostModalVisible } = useSelector(
     (state: RootState) => state.post
   );
   const { location, getLocation, setLocation, loading } = useLocation();
@@ -132,7 +132,11 @@ const PostingForm = () => {
   }, []);
 
   return (
-    <PostingWrapper $uploading={imagePaths.length > 0} encType="multipart/form-data" onSubmit={onSubmitForm}>
+    <PostingWrapper
+      $uploading={imagePaths.length > 0 && !isPostModalVisible}
+      encType="multipart/form-data"
+      onSubmit={onSubmitForm}
+    >
       <textarea
         rows={6}
         maxLength={2000}
@@ -141,7 +145,7 @@ const PostingForm = () => {
         onChange={onChangeContent}
       />
 
-      {imagePaths.length > 0 && (
+      {imagePaths.length > 0 && !isPostModalVisible && (
         <UploadImages>
           {imagePaths.map((path: string, i: number) => (
             <motion.div key={path} {...slideInUploadImage}>
