@@ -28,14 +28,14 @@ export const ModalCarouselBtn = styled.div<{ $alignleft: string }>`
 
 export const ModalCarouselWrapper = styled.div`
   position: relative;
-  width: 30%;
-  height: 70%;
+  width: 55%;
+  height: 100%;
   background-color: ${({ theme }) => theme.colors.lightBg};
   border-radius: 5px 0 0 5px;
   overflow: hidden;
   z-index: 30;
 
-  & > div {
+  & > div:first-child {
     position: relative;
     display: flex;
     flex-wrap: nowrap;
@@ -60,14 +60,28 @@ export const ModalCarouselWrapper = styled.div`
     }
   }
 
-  ${media.tablet} {
-    width: 50%;
-    height: 60%;
-  }
-
   ${media.mobile} {
-    width: 90%;
-    height: 40%;
+    width: 100%;
     border-radius: 5px 5px 0 0;
+  }
+`;
+
+export const ModalActiveIndicator = styled.div`
+  ${({ theme }) => theme.flexSet()};
+  position: absolute;
+  bottom: 10px;
+  right: 50%;
+  transform: translateX(50%);
+`;
+
+export const ModalActiveIndicatorItem = styled.div<{ $active: boolean }>`
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  margin-right: 4px;
+  background-color: ${props => (props.$active ? '#6BA2E6' : '#b5b5b5')};
+
+  &:last-child {
+    margin-right: 0;
   }
 `;

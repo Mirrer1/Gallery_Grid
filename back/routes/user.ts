@@ -6,6 +6,7 @@ import User from '../models/user';
 import passport from 'passport';
 import Image from '../models/image';
 import { isLoggedIn, isNotLoggedIn } from './middleware';
+import Post from '../models/post';
 
 const router = express.Router();
 
@@ -94,6 +95,7 @@ router.get('/', async (req, res, next) => {
       const user = await User.findOne({
         where: { id: req.user.id },
         include: [
+          { model: Post, attributes: ['id'] },
           {
             model: User,
             as: 'Followings',

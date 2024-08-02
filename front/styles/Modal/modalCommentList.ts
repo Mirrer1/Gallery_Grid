@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { motion } from 'framer-motion';
 
 import media from 'styles/media';
 import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
@@ -10,7 +11,7 @@ export const ModalCommentListWrapper = styled.div`
   overflow-y: scroll;
 
   ${media.tablet} {
-    height: 66%;
+    height: 75%;
     padding: 0.6em;
   }
 
@@ -28,7 +29,7 @@ export const ModalCommentListHeader = styled.div`
   }
 `;
 
-export const ModalCommentListItemWrapper = styled.div`
+export const ModalCommentListItemWrapper = styled(motion.div)`
   height: 97%;
 
   & > div > div {

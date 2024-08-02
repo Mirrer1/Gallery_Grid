@@ -2,11 +2,13 @@ import React, { ReactNode, useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import Router from 'next/router';
+import Link from 'next/link';
 import {
   AreaChartOutlined,
   FieldTimeOutlined,
   LogoutOutlined,
   MessageOutlined,
+  NotificationOutlined,
   PictureOutlined,
   SettingOutlined
 } from '@ant-design/icons';
@@ -52,8 +54,6 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
     window.scrollTo(0, 0);
   }, []);
 
-  // if (!me) return null;
-
   return (
     <LayoutWrapper>
       <aside>
@@ -62,13 +62,17 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
 
           <NavbarProfile>
             <img
-              src="https://t3.ftcdn.net/jpg/05/16/27/58/360_F_516275801_f3Fsp17x6HQK0xQgDQEELoTuERO4SsWV.jpg"
-              alt="user profile image"
+              src={me?.ProfileImage ? `http://localhost:3065/${me.ProfileImage}` : '/user.jpg'}
+              alt="User Profile Image"
             />
-            <h1>Tanya Shah</h1>
+
+            <h1>{me?.nickname}</h1>
             <p>
-              IntroText blah blah. IntroText blah blah. IntroText blah blah. IntroText blah blah. IntroText blah blah.
-              IntroText blah blah. IntroText blah blah.
+              {me?.desc ? (
+                me.desc
+              ) : (
+                <Link href="/settings">더 많은 사람들이 당신을 알 수 있도록, 소개글을 작성해보세요.</Link>
+              )}
             </p>
           </NavbarProfile>
 
@@ -79,7 +83,7 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
             </NavbarItem>
 
             <NavbarItem href="/activity" $selected={pathname === '/activity'}>
-              <AreaChartOutlined />
+              <NotificationOutlined />
               <p>Activity</p>
             </NavbarItem>
 
@@ -99,6 +103,11 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
             <NavbarItem href="/gallery" $selected={pathname === '/gallery'}>
               <PictureOutlined />
               <p>Gallery</p>
+            </NavbarItem>
+
+            <NavbarItem href="/user" $selected={pathname === '/user'}>
+              <AreaChartOutlined />
+              <p>Profile</p>
             </NavbarItem>
           </NavbarItems>
         </div>

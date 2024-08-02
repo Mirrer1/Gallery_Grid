@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import {
   AreaChartOutlined,
   FieldTimeOutlined,
@@ -9,11 +8,9 @@ import {
 } from '@ant-design/icons';
 import Router from 'next/router';
 
-import { RootState } from 'store/reducers';
 import { MobileFooterItem, MobileFooterWrapper } from 'styles/AppLayout/mobileFooter';
 
 const MobileFooter = () => {
-  const { isCarouselVisible, isPostModalVisible } = useSelector((state: RootState) => state.post);
   const [pathname, setPathname] = useState<string | null>(null);
 
   const navigateTo = (path: string) => {
@@ -25,7 +22,7 @@ const MobileFooter = () => {
   }, []);
 
   return (
-    <MobileFooterWrapper $visible={isCarouselVisible || isPostModalVisible}>
+    <MobileFooterWrapper>
       <MobileFooterItem
         as={AreaChartOutlined}
         $selected={pathname === '/activity'}

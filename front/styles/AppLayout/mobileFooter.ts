@@ -3,13 +3,13 @@ import styled from 'styled-components';
 import media from 'styles/media';
 import { ReverseHoverStyle } from 'styles/Common/hover';
 
-export const MobileFooterWrapper = styled.footer<{ $visible: boolean }>`
+export const MobileFooterWrapper = styled.footer`
   display: none;
 
   ${media.mobile} {
     display: block;
     position: fixed;
-    bottom: ${props => (props.$visible ? '-100%' : '0%')};
+    bottom: 0;
     width: 100%;
     height: 60px;
     ${({ theme }) => theme.flexSet('space-around')}

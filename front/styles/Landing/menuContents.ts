@@ -4,17 +4,17 @@ import { HoverStyle } from 'styles/Common/hover';
 import media from 'styles/media';
 import { motion } from 'framer-motion';
 
-export const ContentsWrapper = styled.main`
+export const ContentsWrapper = styled.main<{ $selected: string }>`
   ${({ theme }) => theme.flexSet('space-between', 'start')};
   padding: 2em 10em 0 10em;
 
   ${media.tablet} {
     ${({ theme }) => theme.flexColumnSet('center', 'center')};
-    padding: 2em 2.5em;
+    padding: ${props => (props.$selected === 'home' ? '2em 2.5em' : '2em 0')};
   }
 
   ${media.mobile} {
-    padding: 1em;
+    padding: ${props => (props.$selected === 'home' ? '1em' : '1em 0')};
   }
 `;
 

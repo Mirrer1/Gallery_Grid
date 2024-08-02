@@ -32,7 +32,7 @@ const MobileHeader = ({ showInput, showSearch, hideSearch }: ISearch) => {
   );
 
   const onClickProfile = useCallback(() => {
-    Router.push('/settings');
+    Router.push('/user');
   }, []);
 
   const onClickLogout = useCallback(() => {

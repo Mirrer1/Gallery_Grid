@@ -79,7 +79,7 @@ export const FollowTableHeader = styled.thead<{ $visible: boolean }>`
   display: block;
   max-height: ${props => (props.$visible ? '34px' : '0')};
   overflow: hidden;
-  transition: max-height 300ms ease-in-out;
+  transition: max-height 300ms ease;
 
   & > tr {
     display: table;

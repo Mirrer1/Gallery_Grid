@@ -1,25 +1,28 @@
 import React, { useCallback, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { CaretLeftOutlined, CaretRightOutlined } from '@ant-design/icons';
 
-import { ModalCarouselBtn, ModalCarouselWrapper } from 'styles/Modal/modalCarousel';
+import { RootState } from 'store/reducers';
+import { Image } from 'store/types/postType';
+import {
+  ModalActiveIndicator,
+  ModalActiveIndicatorItem,
+  ModalCarouselBtn,
+  ModalCarouselWrapper
+} from 'styles/Modal/modalCarousel';
 
 const ModalCarousel = () => {
-  const postImages = [
-    'https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg',
-    'https://i.pinimg.com/564x/b1/bc/32/b1bc32636df7757cc51cf52a71a2a78f.jpg',
-    'https://i.pinimg.com/564x/e7/5b/41/e75b41ec9be4ff5303804a35466544e3.jpg'
-  ];
-
   const [curr, setCurr] = useState(0);
   const [touchStartX, setTouchStartX] = useState<number | null>(null);
+  const { singlePost } = useSelector((state: RootState) => state.post);
 
   const next = useCallback(() => {
-    const newCurr = curr === postImages.length - 1 ? 0 : curr + 1;
+    const newCurr = curr === singlePost.length - 1 ? 0 : curr + 1;
     setCurr(newCurr);
   }, [curr]);
 
   const prev = useCallback(() => {
-    const newCurr = curr === 0 ? postImages.length - 1 : curr - 1;
+    const newCurr = curr === 0 ? singlePost.length - 1 : curr - 1;
     setCurr(newCurr);
   }, [curr]);
 
@@ -41,9 +44,9 @@ const ModalCarousel = () => {
   return (
     <ModalCarouselWrapper onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
       <div style={{ transform: `translateX(-${curr * 100}%)` }}>
-        {postImages.map((post, i) => (
+        {singlePost.Images.map((image: Image, i: number) => (
           <div key={i}>
-            <img src={post} alt={`${post} 이미지 ${i}`} />
+            <img src={`http://localhost:3065/${image.src}`} alt={`게시글의 ${i}번째 이미지`} />
 
             <ModalCarouselBtn $alignleft="true" onClick={prev}>
               <CaretLeftOutlined />
@@ -55,6 +58,12 @@ const ModalCarousel = () => {
           </div>
         ))}
       </div>
+
+      <ModalActiveIndicator>
+        {singlePost.Images.map((image: Image, i: number) => (
+          <ModalActiveIndicatorItem key={image.id} $active={i === curr} />
+        ))}
+      </ModalActiveIndicator>
     </ModalCarouselWrapper>
   );
 };

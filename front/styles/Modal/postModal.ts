@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 import { CloseOutlined } from '@ant-design/icons';
-
-import { HoverStyle } from 'styles/Common/hover';
+import { motion } from 'framer-motion';
 
 import media from 'styles/media';
+import { HoverStyle } from 'styles/Common/hover';
 
 export const PostModalWrapper = styled.section`
   position: fixed;
@@ -42,5 +42,27 @@ export const PostModalBtn = styled(CloseOutlined)`
     top: 10px;
     right: 10px;
     font-size: 1.1rem;
+  }
+`;
+
+export const PostModalContentsWrapper = styled(motion.div)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) !important;
+  width: 55%;
+  height: 70%;
+
+  ${media.tablet} {
+    width: 90%;
+    height: 58%;
+  }
+
+  ${media.mobile} {
+    flex-direction: column;
+    height: 40%;
   }
 `;

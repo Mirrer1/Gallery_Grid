@@ -1,17 +1,19 @@
 import styled from 'styled-components';
+import { motion } from 'framer-motion';
 
 import media from 'styles/media';
 import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
 
-export const PostingWrapper = styled.form`
+export const PostingWrapper = styled.form<{ $uploading: boolean }>`
   background-color: ${({ theme }) => theme.colors.darkBg};
-  height: 31%;
+  height: ${props => (props.$uploading ? '40%' : '31%')};
   border-radius: 5px 5px 0 0;
 
   & > textarea {
     width: 100%;
-    height: 70%;
+    height: ${props => (props.$uploading ? '42%' : '70%')};
     font-size: 0.8rem;
+    line-height: 1.5;
     background-color: ${({ theme }) => theme.colors.darkBg};
     padding: 1.5em;
     border-radius: 5px 5px 0 0;
@@ -29,7 +31,7 @@ export const PostingWrapper = styled.form`
     position: relative;
     ${({ theme }) => theme.flexSet('space-between')};
     width: 100%;
-    height: 30%;
+    height: ${props => (props.$uploading ? '15%' : '30%')};
     background-color: ${({ theme }) => theme.colors.darkBg};
     padding: 0 1.2em;
 
@@ -80,11 +82,11 @@ export const PostingWrapper = styled.form`
   }
 
   ${media.tablet} {
-    height: 230px;
+    height: ${props => (props.$uploading ? '315px' : '230px')};
   }
 
   ${media.mobile} {
-    height: 210px;
+    height: ${props => (props.$uploading ? '275px' : '210px')};
 
     & > textarea {
       padding: 1em;
@@ -119,6 +121,106 @@ export const PostingWrapper = styled.form`
   }
 `;
 
+export const UploadImages = styled.section`
+  ${({ theme }) => theme.flexSet('start')};
+  height: 42%;
+  padding: 0 1em;
+
+  & > div {
+    width: 100px;
+    height: 100px;
+    margin-right: 0.5em;
+    cursor: pointer;
+    position: relative;
+
+    & > img {
+      width: 100%;
+      height: 100%;
+      border-radius: 5px;
+    }
+
+    & > span {
+      position: absolute;
+      top: 2%;
+      right: 2%;
+      font-size: 0.9rem;
+      opacity: 40%;
+      cursor: pointer;
+      ${ReverseHoverStyle('&')}
+    }
+  }
+
+  & > div:last-child {
+    margin-right: 0;
+  }
+
+  ${media.tablet} {
+    & > div {
+      width: 85px;
+      height: 85px;
+
+      & > span {
+        top: 1%;
+        right: 1%;
+        opacity: 70%;
+      }
+    }
+  }
+
+  ${media.mobile} {
+    padding: 0 0.5em;
+
+    & > div {
+      width: 65px;
+      height: 65px;
+      margin-right: 0.4em;
+
+      & > span {
+        font-size: 0.8rem;
+        top: -5%;
+        right: -5%;
+      }
+    }
+  }
+`;
+
+export const UploadImagePreview = styled.div`
+  & > div:first-child {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 99;
+
+    & > span {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      color: white;
+      font-size: 1.2rem;
+      opacity: 85%;
+      z-index: 100;
+      margin-right: 0 !important;
+      cursor: pointer;
+      ${HoverStyle('&')};
+    }
+  }
+`;
+
+export const UploadImage = styled(motion.div)`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) !important;
+  z-index: 100;
+
+  & > img {
+    border-radius: 5px;
+  }
+`;
+
 export const PostingEmojiPicker = styled.div`
   & > div:first-child {
     position: fixed;
@@ -146,6 +248,10 @@ export const PostingBtn = styled.button<{ $active: boolean }>`
   font-weight: 500;
   padding: 0.7em 2em;
   border-radius: 5px;
+
+  span {
+    padding: 0em 0.54em;
+  }
 
   ${media.mobile} {
     font-size: 0.75rem;

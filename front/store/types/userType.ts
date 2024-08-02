@@ -47,7 +47,7 @@ export interface ResponseMessage {
   message: string;
 }
 
-export interface AuthData {
+export interface AuthResponse {
   email: string;
   password: string;
   nickname?: string;
@@ -55,21 +55,20 @@ export interface AuthData {
 
 export interface User {
   id: number;
-  snsId?: string | null;
-  provider?: string | null;
   email: string;
-  password?: string | null;
   nickname: string;
   desc?: string;
-  isRecommended: boolean;
   createdAt: string;
   updatedAt: string;
-  ProfileImageId: string | null;
+  Posts: number[];
+  Followings: number[];
+  Followers: number[];
+  ProfileImage: { id: number; src: string } | null;
 }
 
 export interface loginRequestAction {
   type: typeof LOGIN_REQUEST;
-  data: AuthData;
+  data: AuthResponse;
 }
 
 export interface loginSuccessAction {
@@ -129,7 +128,7 @@ export interface logoutFailureAction {
 
 export interface signUpRequestAction {
   type: typeof SIGNUP_REQUEST;
-  data: AuthData;
+  data: AuthResponse;
 }
 
 export interface signUpSuccessAction {

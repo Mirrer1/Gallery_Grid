@@ -4,29 +4,32 @@ import media from 'styles/media';
 import { ReverseHoverStyle } from 'styles/Common/hover';
 import { ShadowStyle } from 'styles/Common/shadow';
 
-export const SuggestedWrapper = styled.div<{ $listvisible: boolean }>`
+export const SuggestedWrapper = styled.div<{ $listvisible: boolean; $commentvisible: boolean }>`
   ${({ theme }) => theme.flexColumnSet('center', 'start')}
+  visibility: ${props => (props.$commentvisible ? 'hidden' : 'visible')};
+  opacity: ${props => (props.$commentvisible ? '0' : '1')};
   height: 38%;
   background-color: white;
   padding: 2em 1.5em;
   border-radius: 5px;
+  transition: opacity 0.3s;
   ${ShadowStyle}
 
   ${media.tablet} {
-    display: ${props => (props.$listvisible ? 'block' : 'none')};
+    visibility: ${props => (props.$listvisible ? 'visible' : 'hidden')};
+    opacity: ${props => (props.$listvisible ? '1' : '0')};
     position: fixed;
-    bottom: -17%;
-    right: -25%;
-    transform: translate(-50%, -50%);
+    bottom: 1.5%;
+    right: 2%;
     width: 55%;
-    height: 300px;
+    height: auto;
     border: 1px solid ${({ theme }) => theme.colors.darkBg};
     z-index: 50;
   }
 
   ${media.mobile} {
-    bottom: -10%;
-    right: -37%;
+    bottom: 7.5%;
+    right: 2%;
     width: 85%;
   }
 `;
@@ -116,5 +119,41 @@ export const SuggestedInfo = styled.div<{ $islast: boolean }>`
     font-size: 0.8rem;
     opacity: 60%;
     line-height: 1.5;
+  }
+
+  ${media.tablet} {
+    & > img {
+      height: 60px;
+    }
+
+    & > div > div > h2 {
+      font-size: 1rem;
+    }
+
+    & > div > div > span {
+      font-size: 0.9rem;
+    }
+
+    & > div > p {
+      font-size: 0.9rem;
+    }
+  }
+
+  ${media.mobile} {
+    & > img {
+      height: 50px;
+    }
+
+    & > div > div > h2 {
+      font-size: 0.9rem;
+    }
+
+    & > div > div > span {
+      font-size: 0.8rem;
+    }
+
+    & > div > p {
+      font-size: 0.8rem;
+    }
   }
 `;

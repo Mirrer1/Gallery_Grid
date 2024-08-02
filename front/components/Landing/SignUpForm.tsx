@@ -87,7 +87,7 @@ const SignUpForm = ({ selectMenu, onClickMenu }: IMenuProps) => {
   }, [signUpMessage]);
 
   return (
-    <AccountWrapper {...slideInFromBottom()}>
+    <AccountWrapper {...slideInFromBottom(0.3)}>
       <AccountGoogle onClick={onClickGoogleLogin}>
         {!loginGoogleLoading && <GoogleOutlined />}
         <button type="button">{loginGoogleLoading ? <LoadingOutlined /> : <>Continue with Google</>}</button>

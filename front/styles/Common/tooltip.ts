@@ -1,10 +1,12 @@
 import styled from 'styled-components';
+import { motion } from 'framer-motion';
+
 import { HoverStyle } from 'styles/Common/hover';
 import { DarkShadowStyle } from 'styles/Common/shadow';
 
-export const Tooltip = styled.div`
+export const Tooltip = styled(motion.div)<{ $visible: boolean }>`
   position: relative;
-  display: inline-block;
+  display: ${props => (props.$visible ? 'inline-block' : 'none')};
   cursor: pointer;
 
   & > span:first-child {
@@ -12,18 +14,15 @@ export const Tooltip = styled.div`
   }
 `;
 
-export const TooltipBtn = styled.div<{ $visible: boolean }>`
-  visibility: ${props => (props.$visible ? 'visible' : 'hidden')};
-  opacity: ${props => (props.$visible ? '1' : '0')};
+export const TooltipBtn = styled.div`
   position: absolute;
-  top: -75%;
-  right: 100%;
+  top: -22px;
+  right: 18px;
   width: 145px;
   text-align: center;
   border-radius: 6px;
   padding: 7px 0;
   margin-left: -60px;
-  transition: opacity 0.3s;
   z-index: 30;
   background-color: #fff;
   ${DarkShadowStyle}
@@ -33,6 +32,15 @@ export const TooltipBtn = styled.div<{ $visible: boolean }>`
     font-size: 0.7rem;
     font-weight: 500;
     padding: 0.7em 1em;
+
+    & > span {
+      margin-right: 0.5em;
+    }
+
+    .anticon-loading {
+      margin-right: 0;
+      width: 37.4px;
+    }
   }
 
   & > button:first-child {
@@ -44,10 +52,6 @@ export const TooltipBtn = styled.div<{ $visible: boolean }>`
   & > button:last-child {
     color: ${({ theme }) => theme.colors.red};
     border: 1px ${({ theme }) => theme.colors.red} solid;
-  }
-
-  & > button > span {
-    margin-right: 0.5em;
   }
 `;
 

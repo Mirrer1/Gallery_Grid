@@ -1,17 +1,33 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
+  AlertOutlined,
   ArrowsAltOutlined,
   CommentOutlined,
   DeleteOutlined,
   EditOutlined,
   LikeOutlined,
-  MoreOutlined
+  MoreOutlined,
+  ShareAltOutlined
 } from '@ant-design/icons';
 
 import PostImageCarousel from './PostImageCarousel';
+import DeleteModal from 'components/Modal/DeleteModal';
+import PostModal from 'components/Modal/PostModal';
+
+import useScroll from 'utils/useScroll';
+import useListTimes from 'utils/useListTimes';
 import { RootState } from 'store/reducers';
-import { hideCommentList, loadPostsRequest, showCommentList, showPostCarousel } from 'store/actions/postAction';
+import { Image, Post } from 'store/types/postType';
+import {
+  hideCommentList,
+  showCommentList,
+  showPostCarousel,
+  showDeleteModal,
+  showPostModal,
+  executePostEdit
+} from 'store/actions/postAction';
+import { slideInList, slideInTooltip } from 'styles/Common/animation';
 import { Tooltip, TooltipBtn, TooltipOutsideArea } from 'styles/Common/tooltip';
 import {
   PostWrapper,
@@ -28,25 +44,45 @@ const PostList = () => {
   const dispatch = useDispatch();
   const firstPostRef = useRef<HTMLDivElement>(null);
   const postContainerRef = useRef<HTMLDivElement>(null);
-  const { mainPosts, hasMorePosts, loadPostsLoading, isCommentListVisible, isCarouselVisible } = useSelector(
-    (state: RootState) => state.post
-  );
+  const { me } = useSelector((state: RootState) => state.user);
+  const {
+    mainPosts,
+    imagePaths,
+    isCommentListVisible,
+    isCarouselVisible,
+    isDeleteModalVisible,
+    addPostDone,
+    isPostModalVisible
+  } = useSelector((state: RootState) => state.post);
 
+  const postTimes = useListTimes(mainPosts);
   const [category, setCategory] = useState('best');
-  const [modalImages, setModalImages] = useState<string[]>([]);
-  const [isTooltipVisible, setIsTooltipVisible] = useState<string | null>(null);
+  const [modalImages, setModalImages] = useState<Image[]>([]);
+  const [isTooltipVisible, setIsTooltipVisible] = useState<number | null>(null);
+  useScroll({ type: 'timeline', ref: postContainerRef });
 
   const onClickCategory = useCallback((category: string) => {
     setCategory(category);
   }, []);
 
-  const showCarousel = useCallback((images: string[]) => {
+  const showCarousel = useCallback((images: Image[]) => {
     setModalImages(images);
     dispatch(showPostCarousel());
   }, []);
 
+  const openDeleteModal = useCallback((postId: number) => {
+    dispatch(showDeleteModal(postId));
+    setIsTooltipVisible(null);
+  }, []);
+
+  const openEditModal = useCallback((post: Post) => {
+    setIsTooltipVisible(null);
+    dispatch(showPostModal(post));
+    dispatch(executePostEdit());
+  }, []);
+
   const handleTooltip = useCallback(
-    (postId: string) => {
+    (postId: number) => {
       setIsTooltipVisible(isTooltipVisible === postId ? null : postId);
     },
     [isTooltipVisible]
@@ -68,29 +104,10 @@ const PostList = () => {
         block: 'start'
       });
     }
-  }, [category]);
-
-  useEffect(() => {
-    const onScroll = () => {
-      if (
-        postContainerRef.current &&
-        postContainerRef.current.scrollTop + postContainerRef.current.clientHeight >
-          postContainerRef.current.scrollHeight - 300
-      ) {
-        if (hasMorePosts && !loadPostsLoading) dispatch(loadPostsRequest());
-      }
-    };
-
-    const postContainer = postContainerRef.current;
-    if (postContainer) postContainer.addEventListener('scroll', onScroll);
-
-    return () => {
-      if (postContainer) postContainer.removeEventListener('scroll', onScroll);
-    };
-  }, [hasMorePosts, loadPostsLoading]);
+  }, [category, addPostDone]);
 
   return (
-    <PostContainer ref={postContainerRef}>
+    <PostContainer ref={postContainerRef} $uploading={imagePaths.length > 0}>
       <div ref={firstPostRef} />
 
       <PostCategory>
@@ -107,54 +124,79 @@ const PostList = () => {
         </CategoryItem>
       </PostCategory>
 
-      {mainPosts.map((post, i) => (
-        <PostWrapper key={post.id}>
+      {mainPosts.map((post: Post, i: number) => (
+        <PostWrapper key={post.id} {...slideInList}>
           <PostHeader>
             <div>
-              <img src={post.profile} alt="author profile image" />
+              <img
+                src={post.User.ProfileImage ? `http://localhost:3065/${post.User.ProfileImage.src}` : '/user.jpg'}
+                alt="author profile image"
+              />
 
               <div>
-                <h1>{post.user}</h1>
-                <p>{post.createdAt}</p>
+                <h1>{post.User.nickname}</h1>
+                <p>
+                  {postTimes[i]}
+                  {post.location && ` - ${post.location}`}
+                </p>
               </div>
             </div>
 
             <div>
               <PostFollowBtn type="button">Follow</PostFollowBtn>
+              <MoreOutlined onClick={() => handleTooltip(post.id)} />
 
-              <Tooltip>
-                {isTooltipVisible && <TooltipOutsideArea onClick={hideTooltip} />}
+              {isTooltipVisible && (
+                <Tooltip key={isTooltipVisible} {...slideInTooltip} $visible={isTooltipVisible === post.id}>
+                  <TooltipOutsideArea onClick={hideTooltip} />
 
-                <MoreOutlined onClick={() => handleTooltip(post.id)} />
-                <TooltipBtn $visible={isTooltipVisible === post.id}>
-                  <button type="button">
-                    <EditOutlined />
-                    수정
-                  </button>
-                  <button type="button">
-                    <DeleteOutlined />
-                    삭제
-                  </button>
-                </TooltipBtn>
-              </Tooltip>
+                  {me?.id === post.UserId ? (
+                    <TooltipBtn>
+                      <button type="button" onClick={() => openEditModal(post)}>
+                        <EditOutlined />
+                        수정
+                      </button>
+                      <button type="button" onClick={() => openDeleteModal(post.id)}>
+                        <DeleteOutlined />
+                        삭제
+                      </button>
+                    </TooltipBtn>
+                  ) : (
+                    <TooltipBtn>
+                      <button type="button">
+                        <ShareAltOutlined />
+                        공유
+                      </button>
+                      <button type="button">
+                        <AlertOutlined />
+                        신고
+                      </button>
+                    </TooltipBtn>
+                  )}
+                </Tooltip>
+              )}
             </div>
           </PostHeader>
 
           <PostContents>
             <div>
-              <img src={post.img[0]} alt="post image" onClick={() => showCarousel(post.img)} />
+              <img
+                src={`http://localhost:3065/${post.Images[0].src}`}
+                alt="post image"
+                onClick={() => showCarousel(post.Images)}
+              />
 
               <div>
-                {post.img.map((_, i) => (
-                  <div key={i} />
+                {post.Images.map((image: Image) => (
+                  <div key={image.id} />
                 ))}
               </div>
 
-              <ArrowsAltOutlined onClick={() => showCarousel(post.img)} />
+              <ArrowsAltOutlined onClick={() => showCarousel(post.Images)} />
             </div>
 
             <div>
-              <p>{post.desc}</p>
+              <p>{post.content}</p>
 
               <PostOptions $isCommentListVisible={isCommentListVisible}>
                 <div>
@@ -173,6 +215,8 @@ const PostList = () => {
       ))}
 
       {isCarouselVisible && <PostImageCarousel images={modalImages} />}
+      {isPostModalVisible && <PostModal />}
+      {isDeleteModalVisible && <DeleteModal type="게시글" />}
     </PostContainer>
   );
 };

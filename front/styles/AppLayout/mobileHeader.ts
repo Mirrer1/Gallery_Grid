@@ -73,9 +73,8 @@ export const MobileHeaderInput = styled.div`
   height: 56px;
 
   & > input {
-    width: 100%;
+    width: 90%;
     font-size: 0.9rem;
-    background-color: #f5f5f5;
     color: #242424;
     padding: 0.4em 1em;
     min-height: 40px;
@@ -84,15 +83,6 @@ export const MobileHeaderInput = styled.div`
     line-height: 1.15;
     box-shadow: 0px 10px 20px -18px;
     transition: all 200ms;
-  }
-
-  & > input:focus {
-    border-bottom: 2px solid #e4e5ec;
-    border-radius: 4px 4px 2px 2px;
-  }
-
-  & > input:hover {
-    box-shadow: 0px 5px 15px -13px;
   }
 
   & > span {

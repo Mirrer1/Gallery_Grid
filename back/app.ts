@@ -3,10 +3,13 @@ import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import passport from 'passport';
 import dotenv from 'dotenv';
+import morgan from 'morgan';
+import path from 'path';
 import cors from 'cors';
 
 import userRouter from './routes/user';
 import postRouter from './routes/post';
+import postsRouter from './routes/posts';
 import passportConfig from './passport';
 import { sequelize } from './models';
 
@@ -23,6 +26,7 @@ sequelize
     console.error(err);
   });
 
+app.use(morgan('dev'));
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(
   session({
@@ -44,11 +48,13 @@ app.use(
     credentials: true
   })
 );
+app.use('/', express.static(path.join(__dirname, 'uploads')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/user', userRouter);
 app.use('/post', postRouter);
+app.use('/posts', postsRouter);
 
 app.get('/', (req, res, next) => {
   res.send('Gallery Grid server is functioning correctly!');

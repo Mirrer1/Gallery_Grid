@@ -28,13 +28,16 @@ export const PopularBtn = styled.div<{ $alignleft: string }>`
   }
 `;
 
-export const PopularUserWrapper = styled.div`
+export const PopularUserWrapper = styled.div<{ $commentvisible: boolean }>`
+  visibility: ${props => (props.$commentvisible ? 'hidden' : 'visible')};
+  opacity: ${props => (props.$commentvisible ? '0' : '1')};
   position: relative;
   background-color: ${({ theme }) => theme.colors.lightBg};
   border-radius: 5px;
   margin-bottom: 1em;
   overflow: hidden;
   height: 60%;
+  transition: opacity 0.3s;
   ${ShadowStyle}
 
   & > div {

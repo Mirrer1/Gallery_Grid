@@ -7,7 +7,9 @@ import 'swiper/css/effect-coverflow';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 
+import { Image } from 'store/types/postType';
 import { hidePostCarousel } from 'store/actions/postAction';
+import { slideInModal } from 'styles/Common/animation';
 import {
   BackgroundImageContainer,
   CarouselOutsideArea,
@@ -16,7 +18,7 @@ import {
 } from 'styles/Timeline/imageCarousel';
 
 type CarouselProps = {
-  images: string[];
+  images: Image[];
 };
 
 const PostImageCarousel = ({ images }: CarouselProps) => {
@@ -40,8 +42,8 @@ const PostImageCarousel = ({ images }: CarouselProps) => {
         <HideSwiperBtn onClick={hideCarousel} />
       </CarouselOutsideArea>
 
-      <ImageCarouselWrapper>
-        <BackgroundImageContainer $background={images[activeIndex]} />
+      <ImageCarouselWrapper {...slideInModal}>
+        <BackgroundImageContainer $background={`http://localhost:3065/${images[activeIndex].src}`} />
 
         <Swiper
           effect="coverflow"
@@ -63,9 +65,9 @@ const PostImageCarousel = ({ images }: CarouselProps) => {
           onSlideChange={handleSlideChange}
           className="mySwiper"
         >
-          {images.map((image: string, i: number) => (
+          {images.map((image: Image, i: number) => (
             <SwiperSlide key={i}>
-              <img src={image} alt={`${i}번째 이미지`} />
+              <img src={`http://localhost:3065/${image.src}`} alt={`${i}번째 이미지`} />
             </SwiperSlide>
           ))}
         </Swiper>

@@ -8,7 +8,7 @@ import {
   SIGNUP_FAILURE,
   SIGNUP_REQUEST,
   SIGNUP_SUCCESS,
-  AuthData,
+  AuthResponse,
   ResponseMessage,
   signUpRequestAction,
   loginRequestAction,
@@ -23,7 +23,7 @@ import {
   LOAD_MY_INFO_REQUEST
 } from 'store/types/userType';
 
-function signUpAPI(data: AuthData) {
+function signUpAPI(data: AuthResponse) {
   return axios.post('/user', data);
 }
 
@@ -43,7 +43,7 @@ function* signUp(action: signUpRequestAction) {
   }
 }
 
-function loginAPI(data: AuthData) {
+function loginAPI(data: AuthResponse) {
   return axios.post('/user/login', data);
 }
 

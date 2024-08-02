@@ -7,6 +7,7 @@ class Image extends Model<InferAttributes<Image>, InferCreationAttributes<Image>
   declare id: CreationOptional<number>;
   declare type: 'user' | 'post';
   declare src: string;
+  declare PostId: number | null;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 
@@ -25,6 +26,10 @@ class Image extends Model<InferAttributes<Image>, InferCreationAttributes<Image>
         src: {
           type: Sequelize.STRING(200),
           allowNull: false
+        },
+        PostId: {
+          type: Sequelize.INTEGER,
+          allowNull: true
         },
         createdAt: Sequelize.DATE,
         updatedAt: Sequelize.DATE

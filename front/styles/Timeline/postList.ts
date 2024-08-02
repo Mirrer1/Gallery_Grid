@@ -1,11 +1,13 @@
 import styled from 'styled-components';
+import { motion } from 'framer-motion';
 
 import media from 'styles/media';
 import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
 
-export const PostContainer = styled.div`
-  height: 69%;
+export const PostContainer = styled.div<{ $uploading: boolean }>`
+  height: ${props => (props.$uploading ? '60%' : '69%')};
   overflow-y: scroll;
+  background-color: white;
 
   ${media.tablet} {
     overflow-y: visible;
@@ -24,7 +26,7 @@ export const PostCategory = styled.div`
 export const CategoryItem = styled.p<{ $selected: boolean }>`
   ${ReverseHoverStyle('&')};
   font-weight: 500;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   cursor: pointer;
   opacity: ${props => (props.$selected ? '100%' : '40%')};
   margin-right: 1em;
@@ -39,7 +41,7 @@ export const CategoryItem = styled.p<{ $selected: boolean }>`
   }
 `;
 
-export const PostWrapper = styled.article`
+export const PostWrapper = styled(motion.article)`
   background-color: white;
   padding: 1em 1.5em;
 
@@ -71,7 +73,7 @@ export const PostHeader = styled.div`
     & > div > h1 {
       font-size: 0.9rem;
       font-weight: 500;
-      margin-bottom: 0.3em;
+      margin-bottom: 0.4em;
       cursor: pointer;
 
       @media (min-width: 992px) {
@@ -83,7 +85,7 @@ export const PostHeader = styled.div`
     }
 
     & > div > p {
-      font-size: 0.6rem;
+      font-size: 0.65rem;
       opacity: 40%;
     }
   }
@@ -109,6 +111,7 @@ export const PostFollowBtn = styled.button`
   font-weight: 500;
   padding: 0.7em 1.5em;
   border-radius: 5px;
+  margin-right: 0.5em;
 
   ${media.mobile} {
     font-size: 0.6rem;
@@ -182,7 +185,7 @@ export const PostContents = styled.div`
   }
 
   & > div > p {
-    font-size: 0.7rem;
+    font-size: 0.8rem;
     opacity: 60%;
     line-height: 1.5;
     margin-bottom: 1em;

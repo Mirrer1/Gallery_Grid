@@ -4,27 +4,21 @@ import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
 import media from 'styles/media';
 
 export const ModalContentWrapper = styled.div`
-  width: 25%;
-  height: 70%;
+  width: 45%;
+  height: 100%;
   background-color: white;
   border-radius: 0 5px 5px 0;
   z-index: 30;
 
-  ${media.tablet} {
-    width: 45%;
-    height: 60%;
-  }
-
   ${media.mobile} {
-    width: 90%;
-    height: 45%;
+    width: 100%;
     border-radius: 0 0 5px 5px;
   }
 `;
 
 export const ModalContentHeader = styled.div`
   ${({ theme }) => theme.flexSet('space-between')};
-  height: 11%;
+  height: 10%;
   padding: 0.8em;
   border-bottom: 1px solid ${({ theme }) => theme.colors.darkBg};
 
@@ -69,12 +63,12 @@ export const ModalContentHeader = styled.div`
       font-weight: 500;
       padding: 0.7em 1.5em;
       border-radius: 5px;
+      margin-right: 0.5em;
       ${HoverStyle('&')}
     }
   }
 
   ${media.tablet} {
-    height: 13%;
     padding: 0.6em;
 
     & > div:first-child {
@@ -102,32 +96,34 @@ export const ModalContentHeader = styled.div`
 
   ${media.mobile} {
     height: 17%;
+    padding: 0.5em;
   }
 `;
 
 export const ModalContentText = styled.div`
-  height: 73%;
+  height: 80%;
   font-size: 0.85rem;
   line-height: 1.5;
   padding: 0.7em 1.2em;
   border-bottom: 1px solid ${({ theme }) => theme.colors.darkBg};
-  overflow-y: scroll;
+  overflow-y: auto;
 
   ${media.tablet} {
-    height: 66%;
+    height: 81%;
     font-size: 0.75rem;
   }
 
   ${media.mobile} {
-    height: 61%;
+    height: 69%;
     font-size: 0.7rem;
   }
 `;
 
 export const ModalContentOptions = styled.div<{ $isCommentListVisible: boolean }>`
-  height: 9%;
-  padding: 0.7em 0.9em;
+  height: 10%;
+  padding: 0.8em;
   border-bottom: 1px solid ${({ theme }) => theme.colors.darkBg};
+  border-radius: ${props => (props.$isCommentListVisible ? '0 0 0 0' : '0 0 5px 0')};
 
   & > div:first-child {
     margin-bottom: 0.5em;
@@ -157,7 +153,7 @@ export const ModalContentOptions = styled.div<{ $isCommentListVisible: boolean }
   }
 
   ${media.tablet} {
-    height: 12%;
+    height: 9%;
 
     & > div:first-child {
       & > span {
@@ -176,7 +172,9 @@ export const ModalContentOptions = styled.div<{ $isCommentListVisible: boolean }
 
   ${media.mobile} {
     ${({ theme }) => theme.flexSet('space-between')};
-    height: 10%;
+    height: 14%;
+    padding: 0.6em;
+    border-radius: ${props => (props.$isCommentListVisible ? '0 0 0 0' : '0 0 5px 5px')};
 
     & > div:first-child {
       margin-bottom: 0;
@@ -188,7 +186,7 @@ export const ModalCommentInput = styled.div<{ $active: boolean }>`
   height: 7%;
   ${({ theme }) => theme.flexSet('space-between')}
   background-color: white;
-  border-radius: 5px;
+  border-radius: 0 0 5px 0;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   padding: 0.7em;
 
@@ -235,7 +233,7 @@ export const ModalCommentInput = styled.div<{ $active: boolean }>`
   }
 
   ${media.tablet} {
-    height: 9%;
+    height: 6%;
 
     & > div:first-child {
       & > span {
@@ -250,5 +248,6 @@ export const ModalCommentInput = styled.div<{ $active: boolean }>`
 
   ${media.mobile} {
     height: 12%;
+    border-radius: 0 0 5px 5px;
   }
 `;

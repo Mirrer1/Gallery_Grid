@@ -1,7 +1,9 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useCallback, useState } from 'react';
 import { UsergroupAddOutlined } from '@ant-design/icons';
+import { useSelector } from 'react-redux';
+import { END } from 'redux-saga';
 import Head from 'next/head';
+import axios from 'axios';
 
 import AppLayout from 'components/AppLayout';
 import PostingForm from 'components/Timeline/PostingForm';
@@ -10,22 +12,24 @@ import PopularUser from 'components/Timeline/PopularUser';
 import SuggestedList from 'components/Timeline/SuggestedList';
 import CommentList from 'components/Timeline/CommentList';
 
+import wrapper from 'store/configureStore';
+import useToastStatus from 'utils/useToast';
 import { RootState } from 'store/reducers';
 import { loadPostsRequest } from 'store/actions/postAction';
+import { loadMyInfoRequest } from 'store/actions/userAction';
 import { slideInFromBottom } from 'styles/Common/animation';
 import { CommunitySection, MobileSuggestedBtn, PostsSection, TimelineWrapper } from 'styles/Timeline';
 
 const Timeline = () => {
-  const dispatch = useDispatch();
-  const { isCommentListVisible, isCarouselVisible } = useSelector((state: RootState) => state.post);
+  const { isCommentListVisible, isPostModalVisible } = useSelector((state: RootState) => state.post);
   const [suggestedListVisible, setSuggestedListVisible] = useState(false);
+  const isMobileOrTablet = typeof window !== 'undefined' && window.innerWidth <= 992;
+  const delay1 = isMobileOrTablet ? 0.3 : 0;
+  const delay2 = isMobileOrTablet ? 0 : 0.3;
+  useToastStatus();
 
   const showSuggestedList = useCallback(() => {
     setSuggestedListVisible(true);
-  }, []);
-
-  useEffect(() => {
-    dispatch(loadPostsRequest());
   }, []);
 
   return (
@@ -36,22 +40,22 @@ const Timeline = () => {
 
       <AppLayout>
         <TimelineWrapper>
-          <PostsSection {...slideInFromBottom()}>
+          <PostsSection {...slideInFromBottom(delay1)}>
             <PostingForm />
             <PostList />
           </PostsSection>
 
-          <CommunitySection {...slideInFromBottom(0.3)}>
+          <CommunitySection {...slideInFromBottom(delay2)}>
             <PopularUser />
             <SuggestedList
               suggestedListVisible={suggestedListVisible}
               setSuggestedListVisible={setSuggestedListVisible}
             />
 
-            {isCommentListVisible && <CommentList />}
+            {isCommentListVisible && !isPostModalVisible && <CommentList />}
           </CommunitySection>
 
-          <MobileSuggestedBtn $listvisible={suggestedListVisible || isCarouselVisible}>
+          <MobileSuggestedBtn>
             <UsergroupAddOutlined onClick={showSuggestedList} />
           </MobileSuggestedBtn>
         </TimelineWrapper>
@@ -59,5 +63,30 @@ const Timeline = () => {
     </>
   );
 };
+
+export const getServerSideProps = wrapper.getServerSideProps(async context => {
+  const cookie = context.req ? context.req.headers.cookie : '';
+  axios.defaults.headers.Cookie = '';
+
+  if (context.req && cookie) axios.defaults.headers.Cookie = cookie;
+
+  context.store.dispatch(loadMyInfoRequest());
+  context.store.dispatch(loadPostsRequest());
+
+  context.store.dispatch(END);
+  await context.store.sagaTask?.toPromise();
+
+  const state = context.store.getState();
+  const { me } = state.user;
+
+  if (!me) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false
+      }
+    };
+  }
+});
 
 export default Timeline;

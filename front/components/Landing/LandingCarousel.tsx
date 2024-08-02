@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { motion } from 'framer-motion';
 
-import { CarouselAnimation } from 'styles/Common/animation';
+import { slideInFromBottom } from 'styles/Common/animation';
 import { CarouselBtn, CarouselImage, CarouselWrapper } from 'styles/Landing/carousel';
 
 const LandingCarousel = () => {
@@ -31,7 +31,7 @@ const LandingCarousel = () => {
 
   return (
     <CarouselWrapper>
-      <CarouselImage as={motion.div} key={currentIndex} {...CarouselAnimation}>
+      <CarouselImage as={motion.div} key={currentIndex} {...slideInFromBottom(0.3)}>
         <img src={bestProduct[currentIndex].img} alt={`${bestProduct[currentIndex].user}의 작품 배경 이미지`} />
         <img src={bestProduct[currentIndex].img} alt={`${bestProduct[currentIndex].user}의 작품 이미지`} />
         <p>@Made by {bestProduct[currentIndex].user}</p>

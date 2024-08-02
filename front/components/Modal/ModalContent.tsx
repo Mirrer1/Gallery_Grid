@@ -1,19 +1,23 @@
 import React, { useCallback, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
+  AlertOutlined,
   CommentOutlined,
   DeleteOutlined,
   EditOutlined,
   LikeOutlined,
   MoreOutlined,
   SendOutlined,
+  ShareAltOutlined,
   SmileOutlined
 } from '@ant-design/icons';
 
 import useInput from 'utils/useInput';
 import ModalCommentList from './ModalCommentList';
 import { RootState } from 'store/reducers';
-import { hideCommentList, showCommentList } from 'store/actions/postAction';
+import { formatDate } from 'utils/useListTimes';
+import { executePostEdit, hideCommentList, showCommentList, showDeleteModal } from 'store/actions/postAction';
+import { slideInTooltip } from 'styles/Common/animation';
 import { Tooltip, TooltipBtn, TooltipOutsideArea } from 'styles/Common/tooltip';
 import {
   ModalCommentInput,
@@ -26,8 +30,9 @@ import {
 const ModalContent = () => {
   const dispatch = useDispatch();
   const [comment, onChangeComment] = useInput('');
-  const [isTooltipVisible, setIsTooltipVisible] = useState(false);
-  const { isCommentListVisible } = useSelector((state: RootState) => state.post);
+  const [isTooltipVisible, setIsTooltipVisible] = useState<boolean>(false);
+  const { isCommentListVisible, singlePost, isPostModalVisible } = useSelector((state: RootState) => state.post);
+  const { me } = useSelector((state: RootState) => state.user);
 
   const handleTooltip = useCallback(() => {
     setIsTooltipVisible(true);
@@ -37,10 +42,20 @@ const ModalContent = () => {
     setIsTooltipVisible(false);
   }, []);
 
+  const openDeleteModal = useCallback((postId: number) => {
+    dispatch(showDeleteModal(postId));
+  }, []);
+
   const onToggleComment = useCallback(() => {
     if (isCommentListVisible) dispatch(hideCommentList());
     else dispatch(showCommentList());
   }, [isCommentListVisible]);
+
+  const openEditModal = useCallback(() => {
+    setIsTooltipVisible(false);
+    // dispatch(showPostModal(post));
+    dispatch(executePostEdit());
+  }, []);
 
   const handleKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -56,50 +71,61 @@ const ModalContent = () => {
       <ModalContentHeader>
         <div>
           <img
-            src="https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg"
-            alt="게시글 작성자 프로필 이미지"
+            src={
+              singlePost.User.ProfileImage ? `http://localhost:3065/${singlePost.User.ProfileImage.src}` : '/user.jpg'
+            }
+            alt="author profile image"
           />
 
           <div>
-            <h1>Likemirrer_</h1>
-            <p>2014.4.29</p>
+            <h1>{singlePost.User.nickname}</h1>
+            <p>
+              {formatDate(singlePost.createdAt)}
+              {singlePost.location && ` - ${singlePost.location}`}
+            </p>
           </div>
         </div>
 
         <div>
           <button type="button">Follow</button>
+          <MoreOutlined onClick={handleTooltip} />
 
-          <Tooltip>
-            {isTooltipVisible && <TooltipOutsideArea onClick={hideTooltip} />}
+          {isTooltipVisible && (
+            <Tooltip {...slideInTooltip} $visible={isTooltipVisible}>
+              <TooltipOutsideArea onClick={hideTooltip} />
 
-            <MoreOutlined onClick={handleTooltip} />
-            <TooltipBtn $visible={isTooltipVisible}>
-              <button type="button">
-                <EditOutlined />
-                수정
-              </button>
-              <button type="button">
-                <DeleteOutlined />
-                삭제
-              </button>
-            </TooltipBtn>
-          </Tooltip>
+              {me?.id === singlePost.User.id ? (
+                <TooltipBtn>
+                  <button type="button" onClick={openEditModal}>
+                    <EditOutlined />
+                    수정
+                  </button>
+                  <button type="button" onClick={() => openDeleteModal(singlePost.id)}>
+                    <DeleteOutlined />
+                    삭제
+                  </button>
+                </TooltipBtn>
+              ) : (
+                <TooltipBtn>
+                  <button type="button">
+                    <ShareAltOutlined />
+                    공유
+                  </button>
+                  <button type="button">
+                    <AlertOutlined />
+                    신고
+                  </button>
+                </TooltipBtn>
+              )}
+            </Tooltip>
+          )}
         </div>
       </ModalContentHeader>
 
-      {isCommentListVisible ? (
+      {isCommentListVisible && isPostModalVisible ? (
         <ModalCommentList />
       ) : (
-        <ModalContentText>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab dolorum adipisci sequi aperiam totam dolor
-          ratione, impedit expedita voluptatem animi iusto error. Sed quos sunt molestias ducimus quam, magnam
-          asperiores accusantium omnis error labore inventore! Odit, quidem officiis perspiciatis dolor similique
-          consectetur sint eum error quia voluptas tenetur id distinctio! Lorem ipsum dolor sit amet consectetur
-          adipisicing elit. Ab dolorum adipisci sequi aperiam totam dolor ratione, impedit expedita voluptatem animi
-          iusto error. Sed quos sunt molestias ducimus quam, magnam asperiores accusantium omnis error labore inventore!
-          Odit, quidem officiis perspiciatis dolor similique consectetur sint eum error quia voluptas tenetur id
-          distinctio! Lorem ipsum dolor sit amet consectetur adi
-        </ModalContentText>
+        <ModalContentText>{singlePost.content}</ModalContentText>
       )}
 
       <ModalContentOptions $isCommentListVisible={isCommentListVisible}>
@@ -115,22 +141,24 @@ const ModalContent = () => {
         </div>
       </ModalContentOptions>
 
-      <ModalCommentInput $active={comment.length === 0}>
-        <div>
-          <SmileOutlined />
-          <input
-            type="text"
-            placeholder="Type a Comment..."
-            value={comment}
-            onChange={onChangeComment}
-            onKeyDown={handleKeyDown}
-          />
-        </div>
+      {isCommentListVisible && (
+        <ModalCommentInput $active={comment.length === 0}>
+          <div>
+            <SmileOutlined />
+            <input
+              type="text"
+              placeholder="Type a Comment..."
+              value={comment}
+              onChange={onChangeComment}
+              onKeyDown={handleKeyDown}
+            />
+          </div>
 
-        <div>
-          <SendOutlined />
-        </div>
-      </ModalCommentInput>
+          <div>
+            <SendOutlined />
+          </div>
+        </ModalCommentInput>
+      )}
     </ModalContentWrapper>
   );
 };
