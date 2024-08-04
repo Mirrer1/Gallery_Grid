@@ -25,7 +25,15 @@ import {
   deletePostRequestAction,
   editPostRequestAction,
   loadPostsRequestAction,
-  postUploadImagesRequestAction
+  postUploadImagesRequestAction,
+  COMMENT_UPLOAD_IMAGE_REQUEST,
+  commentUploadImageRequestAction,
+  COMMENT_UPLOAD_IMAGE_SUCCESS,
+  COMMENT_UPLOAD_IMAGE_FAILURE,
+  MODAL_COMMENT_UPLOAD_IMAGE_REQUEST,
+  modalCommentUploadImageRequestAction,
+  MODAL_COMMENT_UPLOAD_IMAGE_SUCCESS,
+  MODAL_COMMENT_UPLOAD_IMAGE_FAILURE
 } from 'store/types/postType';
 
 function loadPostsAPI(lastId?: number) {
@@ -144,6 +152,38 @@ function* uploadEditPostImages(action: postUploadImagesRequestAction) {
   }
 }
 
+function* uploadCommentImage(action: commentUploadImageRequestAction) {
+  try {
+    const result: AxiosResponse<string[]> = yield call(uploadImagesAPI, action.data);
+
+    yield put({
+      type: COMMENT_UPLOAD_IMAGE_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: COMMENT_UPLOAD_IMAGE_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
+function* uploadModalCommentImage(action: modalCommentUploadImageRequestAction) {
+  try {
+    const result: AxiosResponse<string[]> = yield call(uploadImagesAPI, action.data);
+
+    yield put({
+      type: MODAL_COMMENT_UPLOAD_IMAGE_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: MODAL_COMMENT_UPLOAD_IMAGE_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
 function* watchLoadPosts() {
   yield takeLatest(LOAD_POSTS_REQUEST, loadPosts);
 }
@@ -168,6 +208,14 @@ function* watchEditPostUploadImages() {
   yield takeLatest(EDIT_POST_UPLOAD_IMAGES_REQUEST, uploadEditPostImages);
 }
 
+function* watchCommentUploadImage() {
+  yield takeLatest(COMMENT_UPLOAD_IMAGE_REQUEST, uploadCommentImage);
+}
+
+function* watchModalCommentUploadImage() {
+  yield takeLatest(MODAL_COMMENT_UPLOAD_IMAGE_REQUEST, uploadModalCommentImage);
+}
+
 export default function* postSaga() {
   yield all([
     fork(watchLoadPosts),
@@ -175,6 +223,8 @@ export default function* postSaga() {
     fork(watchEditPost),
     fork(watchDeletePost),
     fork(watchPostUploadImages),
-    fork(watchEditPostUploadImages)
+    fork(watchEditPostUploadImages),
+    fork(watchCommentUploadImage),
+    fork(watchModalCommentUploadImage)
   ]);
 }

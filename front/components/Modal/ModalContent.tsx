@@ -6,6 +6,7 @@ import {
   DeleteOutlined,
   EditOutlined,
   LikeOutlined,
+  LoadingOutlined,
   MoreOutlined,
   PaperClipOutlined,
   SendOutlined,
@@ -17,11 +18,19 @@ import useInput from 'utils/useInput';
 import ModalCommentList from './ModalCommentList';
 import { RootState } from 'store/reducers';
 import { formatDate } from 'utils/useListTimes';
-import { executePostEdit, showDeleteModal } from 'store/actions/postAction';
-import { slideInTooltip } from 'styles/Common/animation';
+import {
+  executePostEdit,
+  modalCommentRemoveUploadedImage,
+  modalCommentUploadImageRequest,
+  showDeleteModal
+} from 'store/actions/postAction';
+import { slideInTooltip, slideInUploadImage } from 'styles/Common/animation';
 import { Tooltip, TooltipBtn, TooltipOutsideArea } from 'styles/Common/tooltip';
 import {
   ModalCommentInput,
+  ModalCommentInputImage,
+  ModalCommentInputImageWrapper,
+  ModalCommentInputWrapper,
   ModalContentHeader,
   ModalContentOptions,
   ModalContentText,
@@ -32,7 +41,9 @@ const ModalContent = () => {
   const dispatch = useDispatch();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { me } = useSelector((state: RootState) => state.user);
-  const { singlePost } = useSelector((state: RootState) => state.post);
+  const { singlePost, modalCommentImagePath, modalCommentUploadImageLoading } = useSelector(
+    (state: RootState) => state.post
+  );
   const [comment, onChangeComment] = useInput('');
 
   const [isTooltipVisible, setIsTooltipVisible] = useState<boolean>(false);
@@ -56,12 +67,33 @@ const ModalContent = () => {
 
   const onToggleComment = useCallback(() => {
     setIsModalCommentListVisible(prev => !prev);
+    if (isModalCommentListVisible && modalCommentImagePath.length !== 0) dispatch(modalCommentRemoveUploadedImage());
+  }, [isModalCommentListVisible, modalCommentImagePath]);
+
+  const handleRemoveImage = useCallback(() => {
+    dispatch(modalCommentRemoveUploadedImage());
   }, []);
 
   const openEditModal = useCallback(() => {
     setIsTooltipVisible(false);
     dispatch(executePostEdit());
   }, []);
+
+  const onFileChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const files = event.target.files as FileList;
+
+      const imageFormData = new FormData();
+      Array.from(files).forEach((file: File) => {
+        imageFormData.append('image', file);
+      });
+
+      dispatch(modalCommentUploadImageRequest(imageFormData));
+
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    },
+    [modalCommentImagePath]
+  );
 
   const handleKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -147,28 +179,42 @@ const ModalContent = () => {
         </div>
       </ModalContentOptions>
 
-      {isModalCommentListVisible && (
-        <ModalCommentInput $active={comment.length === 0}>
-          <div>
-            <PaperClipOutlined onClick={onClickImageUpload} />
-            {/* onChange={onFileChange} */}
-            <input type="file" name="image" ref={fileInputRef} />
+      <ModalCommentInputWrapper $uploading={modalCommentImagePath.length !== 0}>
+        {modalCommentImagePath.length !== 0 && (
+          <ModalCommentInputImageWrapper>
+            <ModalCommentInputImage key={modalCommentImagePath} {...slideInUploadImage}>
+              <img src={`http://localhost:3065/${modalCommentImagePath}`} alt="입력한 댓글의 첨부 이미지" />
+              <DeleteOutlined onClick={handleRemoveImage} />
+            </ModalCommentInputImage>
+          </ModalCommentInputImageWrapper>
+        )}
 
-            <SmileOutlined />
-            <input
-              type="text"
-              placeholder="Type a Comment..."
-              value={comment}
-              onChange={onChangeComment}
-              onKeyDown={handleKeyDown}
-            />
-          </div>
+        {isModalCommentListVisible && (
+          <ModalCommentInput $active={comment.length === 0} $uploading={modalCommentImagePath.length !== 0}>
+            <div>
+              {modalCommentUploadImageLoading ? (
+                <LoadingOutlined />
+              ) : (
+                <PaperClipOutlined onClick={onClickImageUpload} />
+              )}
+              <input type="file" name="image" ref={fileInputRef} onChange={onFileChange} />
 
-          <div>
-            <SendOutlined />
-          </div>
-        </ModalCommentInput>
-      )}
+              <SmileOutlined />
+              <input
+                type="text"
+                placeholder="Type a Comment..."
+                value={comment}
+                onChange={onChangeComment}
+                onKeyDown={handleKeyDown}
+              />
+            </div>
+
+            <div>
+              <SendOutlined />
+            </div>
+          </ModalCommentInput>
+        )}
+      </ModalCommentInputWrapper>
     </ModalContentWrapper>
   );
 };

@@ -4,19 +4,19 @@ import { motion } from 'framer-motion';
 import media from 'styles/media';
 import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
 
-export const ModalCommentListWrapper = styled.div<{ $isModalCommentListVisible: boolean }>`
-  height: 73%;
+export const ModalCommentListWrapper = styled.div<{ $isModalCommentListVisible: boolean; $uploading: boolean }>`
+  height: ${props => (props.$uploading ? '52%' : '73%')};
   padding: 0.8em;
   border-bottom: 1px solid #e4e5ec;
   overflow-y: scroll;
 
   ${media.tablet} {
-    height: ${props => (props.$isModalCommentListVisible ? '69%' : '75%')};
+    height: ${props => (props.$uploading ? '50%' : '71%')};
     padding: 0.6em;
   }
 
   ${media.mobile} {
-    height: 61%;
+    height: ${props => (props.$uploading ? '34%' : '63%')};
   }
 `;
 

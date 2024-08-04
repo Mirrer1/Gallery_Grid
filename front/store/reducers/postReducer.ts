@@ -23,6 +23,14 @@ import {
   EDIT_POST_UPLOAD_IMAGES_SUCCESS,
   EDIT_POST_UPLOAD_IMAGES_FAILURE,
   EDIT_POST_REMOVE_UPLOADED_IMAGE,
+  COMMENT_UPLOAD_IMAGE_REQUEST,
+  COMMENT_UPLOAD_IMAGE_SUCCESS,
+  COMMENT_UPLOAD_IMAGE_FAILURE,
+  COMMENT_REMOVE_UPLOADED_IMAGE,
+  MODAL_COMMENT_UPLOAD_IMAGE_REQUEST,
+  MODAL_COMMENT_UPLOAD_IMAGE_SUCCESS,
+  MODAL_COMMENT_UPLOAD_IMAGE_FAILURE,
+  MODAL_COMMENT_REMOVE_UPLOADED_IMAGE,
   DELETE_POST_FAILURE,
   DELETE_POST_SUCCESS,
   DELETE_POST_REQUEST,
@@ -40,6 +48,8 @@ export const initialState: PostState = {
   singlePost: null,
   postImagePaths: [],
   editPostImagePaths: [],
+  commentImagePath: [],
+  modalCommentImagePath: [],
   postEditMode: false,
   deleteId: null,
   hasMorePosts: true,
@@ -61,6 +71,12 @@ export const initialState: PostState = {
   editPostUploadImagesLoading: false,
   editPostUploadImagesDone: false,
   editPostUploadImagesError: null,
+  commentUploadImageLoading: false,
+  commentUploadImageDone: false,
+  commentUploadImageError: null,
+  modalCommentUploadImageLoading: false,
+  modalCommentUploadImageDone: false,
+  modalCommentUploadImageError: null,
   isCommentListVisible: false,
   isCarouselVisible: false,
   isPostModalVisible: false,
@@ -168,11 +184,46 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
       case EDIT_POST_REMOVE_UPLOADED_IMAGE:
         draft.editPostImagePaths = draft.editPostImagePaths.filter(path => path !== action.data);
         break;
+      case COMMENT_UPLOAD_IMAGE_REQUEST:
+        draft.commentUploadImageLoading = true;
+        draft.commentUploadImageDone = false;
+        draft.commentUploadImageError = null;
+        break;
+      case COMMENT_UPLOAD_IMAGE_SUCCESS:
+        draft.commentUploadImageLoading = false;
+        draft.commentUploadImageDone = true;
+        draft.commentImagePath = action.data;
+        break;
+      case COMMENT_UPLOAD_IMAGE_FAILURE:
+        draft.commentUploadImageLoading = false;
+        draft.commentUploadImageError = action.error;
+        break;
+      case COMMENT_REMOVE_UPLOADED_IMAGE:
+        draft.commentImagePath = [];
+        break;
+      case MODAL_COMMENT_UPLOAD_IMAGE_REQUEST:
+        draft.modalCommentUploadImageLoading = true;
+        draft.modalCommentUploadImageDone = false;
+        draft.modalCommentUploadImageError = null;
+        break;
+      case MODAL_COMMENT_UPLOAD_IMAGE_SUCCESS:
+        draft.modalCommentUploadImageLoading = false;
+        draft.modalCommentUploadImageDone = true;
+        draft.modalCommentImagePath = action.data;
+        break;
+      case MODAL_COMMENT_UPLOAD_IMAGE_FAILURE:
+        draft.modalCommentUploadImageLoading = false;
+        draft.modalCommentUploadImageError = action.error;
+        break;
+      case MODAL_COMMENT_REMOVE_UPLOADED_IMAGE:
+        draft.modalCommentImagePath = [];
+        break;
       case SHOW_COMMENT_LIST:
         draft.isCommentListVisible = true;
         break;
       case HIDE_COMMENT_LIST:
         draft.isCommentListVisible = false;
+        draft.commentImagePath = [];
         break;
       case SHOW_POST_CAROUSEL:
         draft.isCarouselVisible = true;
@@ -188,6 +239,7 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
         draft.isPostModalVisible = false;
         draft.postEditMode = false;
         draft.singlePost = null;
+        draft.modalCommentImagePath = [];
         break;
       case EXECUTE_POST_EDIT:
         draft.postEditMode = true;

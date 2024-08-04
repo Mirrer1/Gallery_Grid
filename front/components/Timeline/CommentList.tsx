@@ -1,14 +1,24 @@
 import React, { useCallback, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { CaretDownOutlined, PaperClipOutlined, SendOutlined, SmileOutlined } from '@ant-design/icons';
+import {
+  CaretDownOutlined,
+  DeleteOutlined,
+  LoadingOutlined,
+  PaperClipOutlined,
+  SendOutlined,
+  SmileOutlined
+} from '@ant-design/icons';
 
 import ReplyComment from './ReplyComment';
 import useInput from 'utils/useInput';
 import { RootState } from 'store/reducers';
-import { hideCommentList } from 'store/actions/postAction';
-import { slideInFromBottom } from 'styles/Common/animation';
+import { commentRemoveUploadedImage, commentUploadImageRequest, hideCommentList } from 'store/actions/postAction';
+import { slideInFromBottom, slideInUploadImage } from 'styles/Common/animation';
 import {
   CommentInput,
+  CommentInputImage,
+  CommentInputImageWrapper,
+  CommentInputWrapper,
   CommentListHeader,
   CommentListItem,
   CommentListItemWrapper,
@@ -85,7 +95,9 @@ const CommentList = () => {
 
   const dispatch = useDispatch();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { isCommentListVisible } = useSelector((state: RootState) => state.post);
+  const { isCommentListVisible, commentImagePath, commentUploadImageLoading } = useSelector(
+    (state: RootState) => state.post
+  );
   const [comment, onChangeComment] = useInput('');
 
   const onHideComment = useCallback(() => {
@@ -95,6 +107,26 @@ const CommentList = () => {
   const onClickImageUpload = useCallback(() => {
     if (fileInputRef.current) fileInputRef.current.click();
   }, []);
+
+  const handleRemoveImage = useCallback(() => {
+    dispatch(commentRemoveUploadedImage());
+  }, []);
+
+  const onFileChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const files = event.target.files as FileList;
+
+      const imageFormData = new FormData();
+      Array.from(files).forEach((file: File) => {
+        imageFormData.append('image', file);
+      });
+
+      dispatch(commentUploadImageRequest(imageFormData));
+
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    },
+    [commentImagePath]
+  );
 
   const handleKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -111,7 +143,7 @@ const CommentList = () => {
         <CaretDownOutlined onClick={onHideComment} />
       </CommentListHeader>
 
-      <CommentListItemWrapper>
+      <CommentListItemWrapper $uploading={commentImagePath.length !== 0}>
         {contentList.map(comment => (
           <div key={comment.id}>
             <CommentListItem $reply={false}>
@@ -139,25 +171,36 @@ const CommentList = () => {
         ))}
       </CommentListItemWrapper>
 
-      <CommentInput $active={comment.length === 0}>
-        <div>
-          <PaperClipOutlined onClick={onClickImageUpload} />
-          {/* onChange={onFileChange} */}rrr
-          <input type="file" name="image" ref={fileInputRef} />
-          <SmileOutlined />
-          <input
-            type="text"
-            placeholder="Type a Comment..."
-            value={comment}
-            onChange={onChangeComment}
-            onKeyDown={handleKeyDown}
-          />
-        </div>
+      <CommentInputWrapper $uploading={commentImagePath.length !== 0}>
+        {commentImagePath.length !== 0 && (
+          <CommentInputImageWrapper>
+            <CommentInputImage key={commentImagePath} {...slideInUploadImage}>
+              <img src={`http://localhost:3065/${commentImagePath}`} alt="입력한 댓글의 첨부 이미지" />
+              <DeleteOutlined onClick={handleRemoveImage} />
+            </CommentInputImage>
+          </CommentInputImageWrapper>
+        )}
 
-        <div>
-          <SendOutlined />
-        </div>
-      </CommentInput>
+        <CommentInput $active={comment.length === 0} $uploading={commentImagePath.length !== 0}>
+          <div>
+            {commentUploadImageLoading ? <LoadingOutlined /> : <PaperClipOutlined onClick={onClickImageUpload} />}
+            <input type="file" name="image" ref={fileInputRef} onChange={onFileChange} />
+
+            <SmileOutlined />
+            <input
+              type="text"
+              placeholder="Type a Comment..."
+              value={comment}
+              onChange={onChangeComment}
+              onKeyDown={handleKeyDown}
+            />
+          </div>
+
+          <div>
+            <SendOutlined />
+          </div>
+        </CommentInput>
+      </CommentInputWrapper>
     </CommentListWrapper>
   );
 };

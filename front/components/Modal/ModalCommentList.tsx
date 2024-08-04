@@ -1,8 +1,9 @@
 import React, { useCallback } from 'react';
 import { CaretDownOutlined } from '@ant-design/icons';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import ModalReplyComment from './ModalReplyComment';
+import { RootState } from 'store/reducers';
 import { hideCommentList } from 'store/actions/postAction';
 import { slideInFromBottom } from 'styles/Common/animation';
 import {
@@ -85,13 +86,17 @@ const ModalCommentList = ({ isModalCommentListVisible }: ModalCommentProps) => {
   ];
 
   const dispatch = useDispatch();
+  const { modalCommentImagePath } = useSelector((state: RootState) => state.post);
 
   const onHideComment = useCallback(() => {
     dispatch(hideCommentList());
   }, []);
 
   return (
-    <ModalCommentListWrapper $isModalCommentListVisible={isModalCommentListVisible}>
+    <ModalCommentListWrapper
+      $isModalCommentListVisible={isModalCommentListVisible}
+      $uploading={modalCommentImagePath.length !== 0}
+    >
       <ModalCommentListHeader>
         <CaretDownOutlined onClick={onHideComment} />
       </ModalCommentListHeader>
