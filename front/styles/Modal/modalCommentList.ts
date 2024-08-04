@@ -4,14 +4,14 @@ import { motion } from 'framer-motion';
 import media from 'styles/media';
 import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
 
-export const ModalCommentListWrapper = styled.div<{ $showCommentList: boolean }>`
+export const ModalCommentListWrapper = styled.div<{ $isModalCommentListVisible: boolean }>`
   height: 73%;
   padding: 0.8em;
   border-bottom: 1px solid #e4e5ec;
   overflow-y: scroll;
 
   ${media.tablet} {
-    height: ${props => (props.$showCommentList ? '69%' : '75%')};
+    height: ${props => (props.$isModalCommentListVisible ? '69%' : '75%')};
     padding: 0.6em;
   }
 

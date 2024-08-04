@@ -120,11 +120,11 @@ export const ModalContentText = styled.div`
   }
 `;
 
-export const ModalContentOptions = styled.div<{ $isCommentListVisible: boolean }>`
+export const ModalContentOptions = styled.div<{ $isModalCommentListVisible: boolean }>`
   height: 10%;
   padding: 0.8em;
   border-bottom: 1px solid ${({ theme }) => theme.colors.darkBg};
-  border-radius: ${props => (props.$isCommentListVisible ? '0 0 0 0' : '0 0 5px 0')};
+  border-radius: ${props => (props.$isModalCommentListVisible ? '0 0 0 0' : '0 0 5px 0')};
 
   & > div:first-child {
     margin-bottom: 0.5em;
@@ -140,7 +140,7 @@ export const ModalContentOptions = styled.div<{ $isCommentListVisible: boolean }
     }
 
     & > span:last-child {
-      color: ${props => (props.$isCommentListVisible ? '#6BA2E6' : 'black')};
+      color: ${props => (props.$isModalCommentListVisible ? '#6BA2E6' : 'black')};
     }
   }
 
@@ -174,7 +174,7 @@ export const ModalContentOptions = styled.div<{ $isCommentListVisible: boolean }
   ${media.mobile} {
     ${({ theme }) => theme.flexSet('space-between')};
     padding: 0.6em;
-    border-radius: ${props => (props.$isCommentListVisible ? '0 0 0 0' : '0 0 5px 5px')};
+    border-radius: ${props => (props.$isModalCommentListVisible ? '0 0 0 0' : '0 0 5px 5px')};
 
     & > div:first-child {
       margin-bottom: 0;

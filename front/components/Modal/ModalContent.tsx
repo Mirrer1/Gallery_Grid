@@ -36,7 +36,7 @@ const ModalContent = () => {
   const [comment, onChangeComment] = useInput('');
 
   const [isTooltipVisible, setIsTooltipVisible] = useState<boolean>(false);
-  const [showCommentList, setShowCommentList] = useState<boolean>(false);
+  const [isModalCommentListVisible, setIsModalCommentListVisible] = useState<boolean>(false);
 
   const onClickImageUpload = useCallback(() => {
     if (fileInputRef.current) fileInputRef.current.click();
@@ -55,7 +55,7 @@ const ModalContent = () => {
   }, []);
 
   const onToggleComment = useCallback(() => {
-    setShowCommentList(prev => !prev);
+    setIsModalCommentListVisible(prev => !prev);
   }, []);
 
   const openEditModal = useCallback(() => {
@@ -128,13 +128,13 @@ const ModalContent = () => {
         </div>
       </ModalContentHeader>
 
-      {showCommentList ? (
-        <ModalCommentList showCommentList={showCommentList} />
+      {isModalCommentListVisible ? (
+        <ModalCommentList isModalCommentListVisible={isModalCommentListVisible} />
       ) : (
         <ModalContentText>{singlePost.content}</ModalContentText>
       )}
 
-      <ModalContentOptions $isCommentListVisible={showCommentList}>
+      <ModalContentOptions $isModalCommentListVisible={isModalCommentListVisible}>
         <div>
           <LikeOutlined />
           <CommentOutlined onClick={onToggleComment} />
@@ -147,7 +147,7 @@ const ModalContent = () => {
         </div>
       </ModalContentOptions>
 
-      {showCommentList && (
+      {isModalCommentListVisible && (
         <ModalCommentInput $active={comment.length === 0}>
           <div>
             <PaperClipOutlined onClick={onClickImageUpload} />

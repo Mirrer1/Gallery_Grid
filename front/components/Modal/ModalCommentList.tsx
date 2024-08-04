@@ -13,10 +13,10 @@ import {
 } from 'styles/Modal/modalCommentList';
 
 type ModalCommentProps = {
-  showCommentList: boolean;
+  isModalCommentListVisible: boolean;
 };
 
-const ModalCommentList = ({ showCommentList }: ModalCommentProps) => {
+const ModalCommentList = ({ isModalCommentListVisible }: ModalCommentProps) => {
   const contentList = [
     {
       id: 1,
@@ -91,7 +91,7 @@ const ModalCommentList = ({ showCommentList }: ModalCommentProps) => {
   }, []);
 
   return (
-    <ModalCommentListWrapper $showCommentList={showCommentList}>
+    <ModalCommentListWrapper $isModalCommentListVisible={isModalCommentListVisible}>
       <ModalCommentListHeader>
         <CaretDownOutlined onClick={onHideComment} />
       </ModalCommentListHeader>
