@@ -7,15 +7,17 @@ import {
   SHOW_POST_CAROUSEL,
   SHOW_POST_MODAL,
   LOAD_POSTS_REQUEST,
-  UPLOAD_IMAGES_REQUEST,
-  REMOVE_UPLOADED_IMAGE,
   DELETE_POST_REQUEST,
   SHOW_DELETE_MODAL,
   HIDE_DELETE_MODAL,
   Post,
   EXECUTE_POST_EDIT,
   CANCEL_POST_EDIT,
-  EDIT_POST_REQUEST
+  EDIT_POST_REQUEST,
+  POST_UPLOAD_IMAGES_REQUEST,
+  POST_REMOVE_UPLOADED_IMAGE,
+  EDIT_POST_UPLOAD_IMAGES_REQUEST,
+  EDIT_POST_REMOVE_UPLOADED_IMAGE
 } from 'store/types/postType';
 
 export const loadPostsRequest = (lastId?: number) => ({
@@ -38,13 +40,23 @@ export const deletePostRequest = (data: number) => ({
   data
 });
 
-export const uploadImagesRequest = (data: FormData) => ({
-  type: UPLOAD_IMAGES_REQUEST,
+export const postUploadImagesRequest = (data: FormData) => ({
+  type: POST_UPLOAD_IMAGES_REQUEST,
   data
 });
 
-export const removeUploadedImage = (data: string) => ({
-  type: REMOVE_UPLOADED_IMAGE,
+export const postRemoveUploadedImage = (data: string) => ({
+  type: POST_REMOVE_UPLOADED_IMAGE,
+  data
+});
+
+export const editPostUploadImagesRequest = (data: FormData) => ({
+  type: EDIT_POST_UPLOAD_IMAGES_REQUEST,
+  data
+});
+
+export const editPostRemoveUploadedImage = (data: string) => ({
+  type: EDIT_POST_REMOVE_UPLOADED_IMAGE,
   data
 });
 

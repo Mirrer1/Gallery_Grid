@@ -47,7 +47,7 @@ const PostList = () => {
   const { me } = useSelector((state: RootState) => state.user);
   const {
     mainPosts,
-    imagePaths,
+    postImagePaths,
     isCommentListVisible,
     isCarouselVisible,
     isDeleteModalVisible,
@@ -107,7 +107,7 @@ const PostList = () => {
   }, [category, addPostDone]);
 
   return (
-    <PostContainer ref={postContainerRef} $uploading={imagePaths.length > 0}>
+    <PostContainer ref={postContainerRef} $uploading={postImagePaths.length > 0}>
       <div ref={firstPostRef} />
 
       <PostCategory>

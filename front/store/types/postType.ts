@@ -16,10 +16,15 @@ export const DELETE_POST_REQUEST = 'DELETE_POST_REQUEST' as const;
 export const DELETE_POST_SUCCESS = 'DELETE_POST_SUCCESS' as const;
 export const DELETE_POST_FAILURE = 'DELETE_POST_FAILURE' as const;
 
-export const UPLOAD_IMAGES_REQUEST = 'UPLOAD_IMAGES_REQUEST' as const;
-export const UPLOAD_IMAGES_SUCCESS = 'UPLOAD_IMAGES_SUCCESS' as const;
-export const UPLOAD_IMAGES_FAILURE = 'UPLOAD_IMAGES_FAILURE' as const;
-export const REMOVE_UPLOADED_IMAGE = 'REMOVE_UPLOADED_IMAGE' as const;
+export const POST_UPLOAD_IMAGES_REQUEST = 'POST_UPLOAD_IMAGES_REQUEST' as const;
+export const POST_UPLOAD_IMAGES_SUCCESS = 'POST_UPLOAD_IMAGES_SUCCESS' as const;
+export const POST_UPLOAD_IMAGES_FAILURE = 'POST_UPLOAD_IMAGES_FAILURE' as const;
+export const POST_REMOVE_UPLOADED_IMAGE = 'POST_REMOVE_UPLOADED_IMAGE' as const;
+
+export const EDIT_POST_UPLOAD_IMAGES_REQUEST = 'EDIT_POST_UPLOAD_IMAGES_REQUEST' as const;
+export const EDIT_POST_UPLOAD_IMAGES_SUCCESS = 'EDIT_POST_UPLOAD_IMAGES_SUCCESS' as const;
+export const EDIT_POST_UPLOAD_IMAGES_FAILURE = 'EDIT_POST_UPLOAD_IMAGES_FAILURE' as const;
+export const EDIT_POST_REMOVE_UPLOADED_IMAGE = 'EDIT_POST_REMOVE_UPLOADED_IMAGE' as const;
 
 export const SHOW_COMMENT_LIST = 'SHOW_COMMENT_LIST' as const;
 export const HIDE_COMMENT_LIST = 'HIDE_COMMENT_LIST' as const;
@@ -39,8 +44,8 @@ export const HIDE_DELETE_MODAL = 'HIDE_DELETE_MODAL' as const;
 export type PostState = {
   mainPosts: Post[];
   singlePost: Post | null;
-  imagePaths: string[];
-  editImagePaths: string[];
+  postImagePaths: string[];
+  editPostImagePaths: string[];
   postEditMode: boolean;
   deleteId: number | null;
   hasMorePosts: boolean;
@@ -56,9 +61,12 @@ export type PostState = {
   deletePostLoading: boolean;
   deletePostDone: boolean;
   deletePostError: null | string;
-  uploadImagesLoading: boolean;
-  uploadImagesDone: boolean;
-  uploadImagesError: null | string;
+  postUploadImagesLoading: boolean;
+  postUploadImagesDone: boolean;
+  postUploadImagesError: null | string;
+  editPostUploadImagesLoading: boolean;
+  editPostUploadImagesDone: boolean;
+  editPostUploadImagesError: null | string;
   isCommentListVisible: boolean;
   isCarouselVisible: boolean;
   isPostModalVisible: boolean;
@@ -152,32 +160,43 @@ export interface deletePostFailureAction {
   error: string;
 }
 
-export interface uploadImagesRequestAction {
-  type: typeof UPLOAD_IMAGES_REQUEST;
+export interface postUploadImagesRequestAction {
+  type: typeof POST_UPLOAD_IMAGES_REQUEST;
   data: FormData;
 }
 
-export interface uploadImagesSuccessAction {
-  type: typeof UPLOAD_IMAGES_SUCCESS;
+export interface postUploadImagesSuccessAction {
+  type: typeof POST_UPLOAD_IMAGES_SUCCESS;
   data: string[];
 }
 
-export interface uploadImagesFailureAction {
-  type: typeof UPLOAD_IMAGES_FAILURE;
+export interface postUploadImagesFailureAction {
+  type: typeof POST_UPLOAD_IMAGES_FAILURE;
   error: string;
 }
 
-export interface showImagePreviewAction {
-  type: typeof REMOVE_UPLOADED_IMAGE;
+export interface postRemoveUploadedImageAction {
+  type: typeof POST_REMOVE_UPLOADED_IMAGE;
   data: string;
 }
 
-export interface hideImagePreviewAction {
-  type: typeof REMOVE_UPLOADED_IMAGE;
+export interface editPostUploadImagesRequestAction {
+  type: typeof EDIT_POST_UPLOAD_IMAGES_REQUEST;
+  data: FormData;
 }
 
-export interface removeUploadedImageAction {
-  type: typeof REMOVE_UPLOADED_IMAGE;
+export interface editPostUploadImagesSuccessAction {
+  type: typeof EDIT_POST_UPLOAD_IMAGES_SUCCESS;
+  data: string[];
+}
+
+export interface editPostUploadImagesFailureAction {
+  type: typeof EDIT_POST_UPLOAD_IMAGES_FAILURE;
+  error: string;
+}
+
+export interface editPostRemoveUploadedImageAction {
+  type: typeof EDIT_POST_REMOVE_UPLOADED_IMAGE;
   data: string;
 }
 
@@ -233,7 +252,6 @@ export type PostAction =
   | loadPostsRequestAction
   | loadPostsSuccessAction
   | loadPostsFailureAction
-  | removeUploadedImageAction
   | addPostRequestAction
   | addPostSuccessAction
   | addPostFailureAction
@@ -243,9 +261,14 @@ export type PostAction =
   | deletePostRequestAction
   | deletePostSuccessAction
   | deletePostFailureAction
-  | uploadImagesRequestAction
-  | uploadImagesSuccessAction
-  | uploadImagesFailureAction
+  | postUploadImagesRequestAction
+  | postUploadImagesSuccessAction
+  | postUploadImagesFailureAction
+  | postRemoveUploadedImageAction
+  | editPostUploadImagesRequestAction
+  | editPostUploadImagesSuccessAction
+  | editPostUploadImagesFailureAction
+  | editPostRemoveUploadedImageAction
   | ShowDeleteModalAction
   | HideDeleteModalAction
   | executePostEditAction

@@ -15,7 +15,7 @@ import { toast } from 'react-toastify';
 import useInput from 'utils/useInput';
 import { useLocation } from 'utils/useLocation';
 import { RootState } from 'store/reducers';
-import { addPostRequest, removeUploadedImage, uploadImagesRequest } from 'store/actions/postAction';
+import { addPostRequest, postRemoveUploadedImage, postUploadImagesRequest } from 'store/actions/postAction';
 import { slideInModal, slideInUploadImage } from 'styles/Common/animation';
 import {
   PostingBtn,
@@ -29,7 +29,7 @@ import {
 const PostingForm = () => {
   const dispatch = useDispatch();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { imagePaths, uploadImagesLoading, addPostLoading, addPostDone, isPostModalVisible } = useSelector(
+  const { postImagePaths, postUploadImagesLoading, addPostLoading, addPostDone } = useSelector(
     (state: RootState) => state.post
   );
   const { location, getLocation, setLocation, loading } = useLocation();
@@ -66,7 +66,7 @@ const PostingForm = () => {
   const onFileChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const files = event.target.files as FileList;
-      if (imagePaths.length + files.length > 5) {
+      if (postImagePaths.length + files.length > 5) {
         toast.warning('이미지는 최대 5개까지 업로드할 수 있습니다.');
       }
 
@@ -75,24 +75,24 @@ const PostingForm = () => {
         imageFormData.append('image', file);
       });
 
-      dispatch(uploadImagesRequest(imageFormData));
+      dispatch(postUploadImagesRequest(imageFormData));
 
       if (fileInputRef.current) fileInputRef.current.value = '';
     },
-    [imagePaths]
+    [postImagePaths]
   );
 
   const onSubmitForm = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
 
-      if (imagePaths.length === 0) {
+      if (postImagePaths.length === 0) {
         toast.warning('게시글에 이미지를 첨부해주세요.');
         return;
       }
 
       const formData = new FormData();
-      imagePaths.forEach((image: string) => {
+      postImagePaths.forEach((image: string) => {
         formData.append('image', image);
       });
       if (content) formData.append('content', content);
@@ -100,7 +100,7 @@ const PostingForm = () => {
 
       dispatch(addPostRequest(formData));
     },
-    [content, location, imagePaths]
+    [content, location, postImagePaths]
   );
 
   const showImagePreview = useCallback((image: string) => {
@@ -112,7 +112,7 @@ const PostingForm = () => {
   }, []);
 
   const handleRemoveImage = useCallback((image: string) => {
-    dispatch(removeUploadedImage(image));
+    dispatch(postRemoveUploadedImage(image));
   }, []);
 
   useEffect(() => {
@@ -131,11 +131,7 @@ const PostingForm = () => {
   }, []);
 
   return (
-    <PostingWrapper
-      $uploading={imagePaths.length > 0 && !isPostModalVisible}
-      encType="multipart/form-data"
-      onSubmit={onSubmitForm}
-    >
+    <PostingWrapper $uploading={postImagePaths.length > 0} encType="multipart/form-data" onSubmit={onSubmitForm}>
       <textarea
         rows={6}
         maxLength={2000}
@@ -144,9 +140,9 @@ const PostingForm = () => {
         onChange={onChangeContent}
       />
 
-      {imagePaths.length > 0 && !isPostModalVisible && (
+      {postImagePaths.length > 0 && (
         <UploadImages>
-          {imagePaths.map((path: string, i: number) => (
+          {postImagePaths.map((path: string, i: number) => (
             <motion.div key={path} {...slideInUploadImage}>
               <img
                 src={`http://localhost:3065/${path}`}
@@ -161,7 +157,7 @@ const PostingForm = () => {
 
       <div>
         <div>
-          {uploadImagesLoading ? <LoadingOutlined /> : <PaperClipOutlined onClick={onClickImageUpload} />}
+          {postUploadImagesLoading ? <LoadingOutlined /> : <PaperClipOutlined onClick={onClickImageUpload} />}
           <input type="file" name="image" multiple ref={fileInputRef} onChange={onFileChange} />
 
           <SmileOutlined onClick={toggleEmojiPicker} />

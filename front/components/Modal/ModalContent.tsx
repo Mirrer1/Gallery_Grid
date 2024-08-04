@@ -152,7 +152,7 @@ const ModalContent = () => {
           <div>
             <PaperClipOutlined onClick={onClickImageUpload} />
             {/* onChange={onFileChange} */}
-            <input type="file" name="image" multiple ref={fileInputRef} />
+            <input type="file" name="image" ref={fileInputRef} />
 
             <SmileOutlined />
             <input

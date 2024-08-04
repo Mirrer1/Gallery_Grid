@@ -25,8 +25,6 @@ const upload = multer({
     },
     filename(req, file, done) {
       const ext = path.extname(file.originalname);
-      // const basename = Buffer.from(path.basename(file.originalname, ext), 'latin1').toString('utf8');
-
       let basename = Buffer.from(path.basename(file.originalname, ext), 'latin1').toString('utf8');
       basename = basename.replace(/[^가-힣a-zA-Z0-9]/g, '');
 

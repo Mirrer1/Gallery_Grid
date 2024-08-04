@@ -142,9 +142,8 @@ const CommentList = () => {
       <CommentInput $active={comment.length === 0}>
         <div>
           <PaperClipOutlined onClick={onClickImageUpload} />
-          {/* onChange={onFileChange} */}
-          <input type="file" name="image" multiple ref={fileInputRef} />
-
+          {/* onChange={onFileChange} */}rrr
+          <input type="file" name="image" ref={fileInputRef} />
           <SmileOutlined />
           <input
             type="text"

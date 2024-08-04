@@ -15,14 +15,17 @@ import {
   LOAD_POSTS_REQUEST,
   LOAD_POSTS_SUCCESS,
   Post,
-  UPLOAD_IMAGES_FAILURE,
-  UPLOAD_IMAGES_REQUEST,
-  UPLOAD_IMAGES_SUCCESS,
+  POST_UPLOAD_IMAGES_FAILURE,
+  POST_UPLOAD_IMAGES_REQUEST,
+  POST_UPLOAD_IMAGES_SUCCESS,
+  EDIT_POST_UPLOAD_IMAGES_FAILURE,
+  EDIT_POST_UPLOAD_IMAGES_REQUEST,
+  EDIT_POST_UPLOAD_IMAGES_SUCCESS,
   addPostRequestAction,
   deletePostRequestAction,
   editPostRequestAction,
   loadPostsRequestAction,
-  uploadImagesRequestAction
+  postUploadImagesRequestAction
 } from 'store/types/postType';
 
 function loadPostsAPI(lastId?: number) {
@@ -109,17 +112,33 @@ function uploadImagesAPI(data: FormData) {
   return axios.post('/post/images', data);
 }
 
-function* uploadImages(action: uploadImagesRequestAction) {
+function* uploadPostImages(action: postUploadImagesRequestAction) {
   try {
     const result: AxiosResponse<string[]> = yield call(uploadImagesAPI, action.data);
 
     yield put({
-      type: UPLOAD_IMAGES_SUCCESS,
+      type: POST_UPLOAD_IMAGES_SUCCESS,
       data: result.data
     });
   } catch (error: any) {
     yield put({
-      type: UPLOAD_IMAGES_FAILURE,
+      type: POST_UPLOAD_IMAGES_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
+function* uploadEditPostImages(action: postUploadImagesRequestAction) {
+  try {
+    const result: AxiosResponse<string[]> = yield call(uploadImagesAPI, action.data);
+
+    yield put({
+      type: EDIT_POST_UPLOAD_IMAGES_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: EDIT_POST_UPLOAD_IMAGES_FAILURE,
       error: error.response.data.message
     });
   }
@@ -141,8 +160,12 @@ function* watchDeletePost() {
   yield takeLatest(DELETE_POST_REQUEST, deletePost);
 }
 
-function* watchUploadImages() {
-  yield takeLatest(UPLOAD_IMAGES_REQUEST, uploadImages);
+function* watchPostUploadImages() {
+  yield takeLatest(POST_UPLOAD_IMAGES_REQUEST, uploadPostImages);
+}
+
+function* watchEditPostUploadImages() {
+  yield takeLatest(EDIT_POST_UPLOAD_IMAGES_REQUEST, uploadEditPostImages);
 }
 
 export default function* postSaga() {
@@ -151,6 +174,7 @@ export default function* postSaga() {
     fork(watchAddPost),
     fork(watchEditPost),
     fork(watchDeletePost),
-    fork(watchUploadImages)
+    fork(watchPostUploadImages),
+    fork(watchEditPostUploadImages)
   ]);
 }

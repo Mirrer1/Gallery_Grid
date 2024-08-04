@@ -20,7 +20,7 @@ import {
 
 const EditModalContent = () => {
   const dispatch = useDispatch();
-  const { singlePost, imagePaths, editPostLoading } = useSelector((state: RootState) => state.post);
+  const { singlePost, editPostImagePaths, editPostLoading } = useSelector((state: RootState) => state.post);
   const [content, onChangeContent, setContent] = useInput<string>('');
   const { location, getLocation, setLocation, loading } = useLocation();
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -55,13 +55,13 @@ const EditModalContent = () => {
     (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
 
-      if (imagePaths.length === 0) {
+      if (editPostImagePaths.length === 0) {
         toast.warning('게시글에 이미지를 첨부해주세요.');
         return;
       }
 
       const formData = new FormData();
-      imagePaths.forEach((image: string) => {
+      editPostImagePaths.forEach((image: string) => {
         formData.append('image', image);
       });
       if (content) formData.append('content', content);
@@ -70,7 +70,7 @@ const EditModalContent = () => {
 
       dispatch(editPostRequest(formData));
     },
-    [content, location, imagePaths, singlePost]
+    [content, location, editPostImagePaths, singlePost]
   );
 
   useEffect(() => {
