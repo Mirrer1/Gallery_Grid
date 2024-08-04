@@ -3,8 +3,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { DeleteOutlined, LoadingOutlined, UploadOutlined } from '@ant-design/icons';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, Navigation } from 'swiper';
-import { toast } from 'react-toastify';
 
+import useFileUpload from 'utils/useFileUpload';
 import { RootState } from 'store/reducers';
 import { editPostRemoveUploadedImage, editPostUploadImagesRequest } from 'store/actions/postAction';
 import { slideInSeletedImage } from 'styles/Common/animation';
@@ -23,11 +23,11 @@ import 'swiper/css/navigation';
 const EditModalCarousel = () => {
   const dispatch = useDispatch();
   const swiperRef = useRef<any>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const { fileInputRef, onFileChange } = useFileUpload(editPostUploadImagesRequest, { maxFiles: 5, showWarning: true });
   const { editPostImagePaths, editPostUploadImagesLoading, editPostUploadImagesDone, isPostModalVisible } = useSelector(
     (state: RootState) => state.post
   );
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const handleImageClick = useCallback((image: string) => {
     setSelectedImage(image);
@@ -52,25 +52,6 @@ const EditModalCarousel = () => {
   const onClickImageUpload = useCallback(() => {
     if (fileInputRef.current) fileInputRef.current.click();
   }, []);
-
-  const onFileChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      const files = event.target.files as FileList;
-      if (editPostImagePaths.length + files.length > 5) {
-        toast.warning('이미지는 최대 5개까지 업로드할 수 있습니다.');
-      }
-
-      const imageFormData = new FormData();
-      Array.from(files).forEach((file: File) => {
-        imageFormData.append('image', file);
-      });
-
-      dispatch(editPostUploadImagesRequest(imageFormData));
-
-      if (fileInputRef.current) fileInputRef.current.value = '';
-    },
-    [editPostImagePaths]
-  );
 
   useEffect(() => {
     if (!selectedImage && editPostImagePaths.length > 0) {
@@ -137,7 +118,13 @@ const EditModalCarousel = () => {
           </div>
         )}
 
-        <input type="file" name="image" multiple ref={fileInputRef} onChange={onFileChange} />
+        <input
+          type="file"
+          name="image"
+          multiple
+          ref={fileInputRef}
+          onChange={e => onFileChange(e, editPostImagePaths)}
+        />
       </EditModalUploadBtn>
     </EditModalCarouselWrapper>
   );

@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   CaretDownOutlined,
@@ -11,6 +11,7 @@ import {
 
 import ReplyComment from './ReplyComment';
 import useInput from 'utils/useInput';
+import useFileUpload from 'utils/useFileUpload';
 import { RootState } from 'store/reducers';
 import { commentRemoveUploadedImage, commentUploadImageRequest, hideCommentList } from 'store/actions/postAction';
 import { slideInFromBottom, slideInUploadImage } from 'styles/Common/animation';
@@ -94,10 +95,10 @@ const CommentList = () => {
   ];
 
   const dispatch = useDispatch();
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const { isCommentListVisible, commentImagePath, commentUploadImageLoading } = useSelector(
     (state: RootState) => state.post
   );
+  const { fileInputRef, onFileChange } = useFileUpload(commentUploadImageRequest, { showWarning: false });
   const [comment, onChangeComment] = useInput('');
 
   const onHideComment = useCallback(() => {
@@ -111,22 +112,6 @@ const CommentList = () => {
   const handleRemoveImage = useCallback(() => {
     dispatch(commentRemoveUploadedImage());
   }, []);
-
-  const onFileChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      const files = event.target.files as FileList;
-
-      const imageFormData = new FormData();
-      Array.from(files).forEach((file: File) => {
-        imageFormData.append('image', file);
-      });
-
-      dispatch(commentUploadImageRequest(imageFormData));
-
-      if (fileInputRef.current) fileInputRef.current.value = '';
-    },
-    [commentImagePath]
-  );
 
   const handleKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -184,7 +169,7 @@ const CommentList = () => {
         <CommentInput $active={comment.length === 0} $uploading={commentImagePath.length !== 0}>
           <div>
             {commentUploadImageLoading ? <LoadingOutlined /> : <PaperClipOutlined onClick={onClickImageUpload} />}
-            <input type="file" name="image" ref={fileInputRef} onChange={onFileChange} />
+            <input type="file" name="image" ref={fileInputRef} onChange={e => onFileChange(e, commentImagePath)} />
 
             <SmileOutlined />
             <input

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   CloseOutlined,
   CompassOutlined,
@@ -13,6 +13,7 @@ import { motion } from 'framer-motion';
 import { toast } from 'react-toastify';
 
 import useInput from 'utils/useInput';
+import useFileUpload from 'utils/useFileUpload';
 import { useLocation } from 'utils/useLocation';
 import { RootState } from 'store/reducers';
 import { addPostRequest, postRemoveUploadedImage, postUploadImagesRequest } from 'store/actions/postAction';
@@ -28,14 +29,14 @@ import {
 
 const PostingForm = () => {
   const dispatch = useDispatch();
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { fileInputRef, onFileChange } = useFileUpload(postUploadImagesRequest, { maxFiles: 5, showWarning: true });
+  const { location, getLocation, setLocation, loading } = useLocation();
+  const [content, onChangeContent, setContent] = useInput<string>('');
   const { postImagePaths, postUploadImagesLoading, addPostLoading, addPostDone } = useSelector(
     (state: RootState) => state.post
   );
-  const { location, getLocation, setLocation, loading } = useLocation();
-  const [content, onChangeContent, setContent] = useInput<string>('');
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [EmojiPicker, setEmojiPicker] =
     useState<React.ComponentType<{ onEmojiClick: (event: MouseEvent, emojiObject: IEmojiData) => void }>>();
@@ -62,25 +63,6 @@ const PostingForm = () => {
   const onClickImageUpload = useCallback(() => {
     if (fileInputRef.current) fileInputRef.current.click();
   }, []);
-
-  const onFileChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      const files = event.target.files as FileList;
-      if (postImagePaths.length + files.length > 5) {
-        toast.warning('이미지는 최대 5개까지 업로드할 수 있습니다.');
-      }
-
-      const imageFormData = new FormData();
-      Array.from(files).forEach((file: File) => {
-        imageFormData.append('image', file);
-      });
-
-      dispatch(postUploadImagesRequest(imageFormData));
-
-      if (fileInputRef.current) fileInputRef.current.value = '';
-    },
-    [postImagePaths]
-  );
 
   const onSubmitForm = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
@@ -158,7 +140,7 @@ const PostingForm = () => {
       <div>
         <div>
           {postUploadImagesLoading ? <LoadingOutlined /> : <PaperClipOutlined onClick={onClickImageUpload} />}
-          <input type="file" name="image" multiple ref={fileInputRef} onChange={onFileChange} />
+          <input type="file" name="image" multiple ref={fileInputRef} onChange={e => onFileChange(e, postImagePaths)} />
 
           <SmileOutlined onClick={toggleEmojiPicker} />
           {location ? (

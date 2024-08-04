@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   AlertOutlined,
@@ -15,6 +15,7 @@ import {
 } from '@ant-design/icons';
 
 import useInput from 'utils/useInput';
+import useFileUpload from 'utils/useFileUpload';
 import ModalCommentList from './ModalCommentList';
 import { RootState } from 'store/reducers';
 import { formatDate } from 'utils/useListTimes';
@@ -24,6 +25,7 @@ import {
   modalCommentUploadImageRequest,
   showDeleteModal
 } from 'store/actions/postAction';
+
 import { slideInTooltip, slideInUploadImage } from 'styles/Common/animation';
 import { Tooltip, TooltipBtn, TooltipOutsideArea } from 'styles/Common/tooltip';
 import {
@@ -39,15 +41,15 @@ import {
 
 const ModalContent = () => {
   const dispatch = useDispatch();
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const { me } = useSelector((state: RootState) => state.user);
   const { singlePost, modalCommentImagePath, modalCommentUploadImageLoading } = useSelector(
     (state: RootState) => state.post
   );
-  const [comment, onChangeComment] = useInput('');
 
-  const [isTooltipVisible, setIsTooltipVisible] = useState<boolean>(false);
+  const [comment, onChangeComment] = useInput('');
+  const { fileInputRef, onFileChange } = useFileUpload(modalCommentUploadImageRequest, { showWarning: false });
   const [isModalCommentListVisible, setIsModalCommentListVisible] = useState<boolean>(false);
+  const [isTooltipVisible, setIsTooltipVisible] = useState<boolean>(false);
 
   const onClickImageUpload = useCallback(() => {
     if (fileInputRef.current) fileInputRef.current.click();
@@ -78,22 +80,6 @@ const ModalContent = () => {
     setIsTooltipVisible(false);
     dispatch(executePostEdit());
   }, []);
-
-  const onFileChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      const files = event.target.files as FileList;
-
-      const imageFormData = new FormData();
-      Array.from(files).forEach((file: File) => {
-        imageFormData.append('image', file);
-      });
-
-      dispatch(modalCommentUploadImageRequest(imageFormData));
-
-      if (fileInputRef.current) fileInputRef.current.value = '';
-    },
-    [modalCommentImagePath]
-  );
 
   const handleKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -197,7 +183,12 @@ const ModalContent = () => {
               ) : (
                 <PaperClipOutlined onClick={onClickImageUpload} />
               )}
-              <input type="file" name="image" ref={fileInputRef} onChange={onFileChange} />
+              <input
+                type="file"
+                name="image"
+                ref={fileInputRef}
+                onChange={e => onFileChange(e, modalCommentImagePath)}
+              />
 
               <SmileOutlined />
               <input
