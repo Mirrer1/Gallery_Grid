@@ -162,7 +162,6 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
         break;
       case HIDE_POST_MODAL:
         draft.isPostModalVisible = false;
-        draft.isCommentListVisible = false;
         draft.postEditMode = false;
         draft.singlePost = null;
         draft.imagePaths = [];

@@ -207,7 +207,7 @@ export const PostOptions = styled.div<{ $isCommentListVisible: boolean }>`
   padding: 0 0.3em;
 
   & > div {
-    font-size: 0.7rem;
+    font-size: 0.85rem;
     ${HoverStyle('&')}
     cursor: pointer;
   }

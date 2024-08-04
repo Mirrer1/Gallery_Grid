@@ -1,12 +1,14 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { CaretDownOutlined } from '@ant-design/icons';
+import { CaretDownOutlined, PaperClipOutlined, SendOutlined, SmileOutlined } from '@ant-design/icons';
 
 import ReplyComment from './ReplyComment';
+import useInput from 'utils/useInput';
 import { RootState } from 'store/reducers';
 import { hideCommentList } from 'store/actions/postAction';
 import { slideInFromBottom } from 'styles/Common/animation';
 import {
+  CommentInput,
   CommentListHeader,
   CommentListItem,
   CommentListItemWrapper,
@@ -82,11 +84,26 @@ const CommentList = () => {
   ];
 
   const dispatch = useDispatch();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const { isCommentListVisible } = useSelector((state: RootState) => state.post);
+  const [comment, onChangeComment] = useInput('');
 
   const onHideComment = useCallback(() => {
     dispatch(hideCommentList());
   }, []);
+
+  const onClickImageUpload = useCallback(() => {
+    if (fileInputRef.current) fileInputRef.current.click();
+  }, []);
+
+  const handleKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLInputElement>) => {
+      if (event.key === 'Enter') {
+        console.log(comment);
+      }
+    },
+    [comment]
+  );
 
   return (
     <CommentListWrapper $isCommentListVisible={isCommentListVisible} {...slideInFromBottom()}>
@@ -121,6 +138,27 @@ const CommentList = () => {
           </div>
         ))}
       </CommentListItemWrapper>
+
+      <CommentInput $active={comment.length === 0}>
+        <div>
+          <PaperClipOutlined onClick={onClickImageUpload} />
+          {/* onChange={onFileChange} */}
+          <input type="file" name="image" multiple ref={fileInputRef} />
+
+          <SmileOutlined />
+          <input
+            type="text"
+            placeholder="Type a Comment..."
+            value={comment}
+            onChange={onChangeComment}
+            onKeyDown={handleKeyDown}
+          />
+        </div>
+
+        <div>
+          <SendOutlined />
+        </div>
+      </CommentInput>
     </CommentListWrapper>
   );
 };

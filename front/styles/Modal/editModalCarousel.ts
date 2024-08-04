@@ -34,7 +34,7 @@ export const EditModalSelectedImage = styled(motion.div)`
   }
 
   ${media.mobile} {
-    height: 61%;
+    height: 60.5%;
   }
 `;
 
@@ -65,6 +65,10 @@ export const EditModalSwiperImages = styled.div`
     opacity: 40%;
     cursor: pointer;
     ${ReverseHoverStyle('&')}
+  }
+
+  ${media.tablet} {
+    height: 28.5%;
   }
 
   ${media.mobile} {

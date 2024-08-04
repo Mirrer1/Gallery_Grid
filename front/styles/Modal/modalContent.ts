@@ -69,6 +69,7 @@ export const ModalContentHeader = styled.div`
   }
 
   ${media.tablet} {
+    height: 12%;
     padding: 0.6em;
 
     & > div:first-child {
@@ -109,12 +110,12 @@ export const ModalContentText = styled.div`
   overflow-y: auto;
 
   ${media.tablet} {
-    height: 81%;
+    height: 77%;
     font-size: 0.75rem;
   }
 
   ${media.mobile} {
-    height: 69%;
+    height: 72%;
     font-size: 0.7rem;
   }
 `;
@@ -153,7 +154,7 @@ export const ModalContentOptions = styled.div<{ $isCommentListVisible: boolean }
   }
 
   ${media.tablet} {
-    height: 9%;
+    height: 11%;
 
     & > div:first-child {
       & > span {
@@ -172,7 +173,6 @@ export const ModalContentOptions = styled.div<{ $isCommentListVisible: boolean }
 
   ${media.mobile} {
     ${({ theme }) => theme.flexSet('space-between')};
-    height: 14%;
     padding: 0.6em;
     border-radius: ${props => (props.$isCommentListVisible ? '0 0 0 0' : '0 0 5px 5px')};
 
@@ -201,8 +201,12 @@ export const ModalCommentInput = styled.div<{ $active: boolean }>`
       ${ReverseHoverStyle('&')}
     }
 
+    & > input:nth-child(2) {
+      display: none;
+    }
+
     & > input {
-      width: 95%;
+      width: 90%;
       font-size: 0.8rem;
       padding: 0.5em 1em 0.5em 0.5em;
       border: none;
@@ -233,15 +237,16 @@ export const ModalCommentInput = styled.div<{ $active: boolean }>`
   }
 
   ${media.tablet} {
-    height: 6%;
+    height: 8%;
 
     & > div:first-child {
       & > span {
-        width: 9%;
+        width: 8%;
+        font-size: 0.9rem;
       }
 
       & > input {
-        width: 93%;
+        width: 87%;
       }
     }
   }
@@ -249,5 +254,15 @@ export const ModalCommentInput = styled.div<{ $active: boolean }>`
   ${media.mobile} {
     height: 12%;
     border-radius: 0 0 5px 5px;
+
+    & > div:first-child {
+      & > span {
+        width: 7%;
+      }
+
+      & > input {
+        width: 88%;
+      }
+    }
   }
 `;

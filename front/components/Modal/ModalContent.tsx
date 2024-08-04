@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   AlertOutlined,
@@ -7,6 +7,7 @@ import {
   EditOutlined,
   LikeOutlined,
   MoreOutlined,
+  PaperClipOutlined,
   SendOutlined,
   ShareAltOutlined,
   SmileOutlined
@@ -16,7 +17,7 @@ import useInput from 'utils/useInput';
 import ModalCommentList from './ModalCommentList';
 import { RootState } from 'store/reducers';
 import { formatDate } from 'utils/useListTimes';
-import { executePostEdit, hideCommentList, showCommentList, showDeleteModal } from 'store/actions/postAction';
+import { executePostEdit, showDeleteModal } from 'store/actions/postAction';
 import { slideInTooltip } from 'styles/Common/animation';
 import { Tooltip, TooltipBtn, TooltipOutsideArea } from 'styles/Common/tooltip';
 import {
@@ -29,10 +30,17 @@ import {
 
 const ModalContent = () => {
   const dispatch = useDispatch();
-  const [comment, onChangeComment] = useInput('');
-  const [isTooltipVisible, setIsTooltipVisible] = useState<boolean>(false);
-  const { isCommentListVisible, singlePost, isPostModalVisible } = useSelector((state: RootState) => state.post);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const { me } = useSelector((state: RootState) => state.user);
+  const { singlePost } = useSelector((state: RootState) => state.post);
+  const [comment, onChangeComment] = useInput('');
+
+  const [isTooltipVisible, setIsTooltipVisible] = useState<boolean>(false);
+  const [showCommentList, setShowCommentList] = useState<boolean>(false);
+
+  const onClickImageUpload = useCallback(() => {
+    if (fileInputRef.current) fileInputRef.current.click();
+  }, []);
 
   const handleTooltip = useCallback(() => {
     setIsTooltipVisible(true);
@@ -47,13 +55,11 @@ const ModalContent = () => {
   }, []);
 
   const onToggleComment = useCallback(() => {
-    if (isCommentListVisible) dispatch(hideCommentList());
-    else dispatch(showCommentList());
-  }, [isCommentListVisible]);
+    setShowCommentList(prev => !prev);
+  }, []);
 
   const openEditModal = useCallback(() => {
     setIsTooltipVisible(false);
-    // dispatch(showPostModal(post));
     dispatch(executePostEdit());
   }, []);
 
@@ -122,13 +128,13 @@ const ModalContent = () => {
         </div>
       </ModalContentHeader>
 
-      {isCommentListVisible && isPostModalVisible ? (
-        <ModalCommentList />
+      {showCommentList ? (
+        <ModalCommentList showCommentList={showCommentList} />
       ) : (
         <ModalContentText>{singlePost.content}</ModalContentText>
       )}
 
-      <ModalContentOptions $isCommentListVisible={isCommentListVisible}>
+      <ModalContentOptions $isCommentListVisible={showCommentList}>
         <div>
           <LikeOutlined />
           <CommentOutlined onClick={onToggleComment} />
@@ -141,9 +147,13 @@ const ModalContent = () => {
         </div>
       </ModalContentOptions>
 
-      {isCommentListVisible && (
+      {showCommentList && (
         <ModalCommentInput $active={comment.length === 0}>
           <div>
+            <PaperClipOutlined onClick={onClickImageUpload} />
+            {/* onChange={onFileChange} */}
+            <input type="file" name="image" multiple ref={fileInputRef} />
+
             <SmileOutlined />
             <input
               type="text"

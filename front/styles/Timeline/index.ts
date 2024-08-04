@@ -60,7 +60,7 @@ export const MobileSuggestedBtn = styled.div`
     background-color: ${({ theme }) => theme.colors.lightBg};
     padding: 0.8em;
     border-radius: 50%;
-    z-index: 48;
+    z-index: 45;
     transform: scale(1.2);
     ${ShadowStyle};
 

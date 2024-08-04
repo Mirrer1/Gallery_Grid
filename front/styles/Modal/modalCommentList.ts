@@ -4,14 +4,14 @@ import { motion } from 'framer-motion';
 import media from 'styles/media';
 import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
 
-export const ModalCommentListWrapper = styled.div`
+export const ModalCommentListWrapper = styled.div<{ $showCommentList: boolean }>`
   height: 73%;
   padding: 0.8em;
   border-bottom: 1px solid #e4e5ec;
   overflow-y: scroll;
 
   ${media.tablet} {
-    height: 75%;
+    height: ${props => (props.$showCommentList ? '69%' : '75%')};
     padding: 0.6em;
   }
 
@@ -31,14 +31,21 @@ export const ModalCommentListHeader = styled.div`
 
 export const ModalCommentListItemWrapper = styled(motion.div)`
   height: 97%;
+  padding: 0 0.5em;
 
-  & > div > div {
-    margin-bottom: 1em;
+  & > div {
+    border-bottom: 1px solid #eeeff3;
+    padding: 1em 0;
   }
 `;
 
 export const ModalCommentListItem = styled.div<{ $reply: boolean }>`
   padding-left: ${props => (props.$reply ? '2em' : '0')};
+  margin-bottom: 1em;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
 
   & > div {
     ${({ theme }) => theme.flexSet('space-between')};

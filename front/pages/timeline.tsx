@@ -21,7 +21,7 @@ import { slideInFromBottom } from 'styles/Common/animation';
 import { CommunitySection, MobileSuggestedBtn, PostsSection, TimelineWrapper } from 'styles/Timeline';
 
 const Timeline = () => {
-  const { isCommentListVisible, isPostModalVisible } = useSelector((state: RootState) => state.post);
+  const { isCommentListVisible } = useSelector((state: RootState) => state.post);
   const [suggestedListVisible, setSuggestedListVisible] = useState(false);
   const isMobileOrTablet = typeof window !== 'undefined' && window.innerWidth <= 992;
   const delay1 = isMobileOrTablet ? 0.3 : 0;
@@ -52,7 +52,7 @@ const Timeline = () => {
               setSuggestedListVisible={setSuggestedListVisible}
             />
 
-            {isCommentListVisible && !isPostModalVisible && <CommentList />}
+            {isCommentListVisible && <CommentList />}
           </CommunitySection>
 
           <MobileSuggestedBtn>

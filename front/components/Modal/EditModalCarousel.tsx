@@ -58,7 +58,6 @@ const EditModalCarousel = () => {
       const files = event.target.files as FileList;
       if (imagePaths.length + files.length > 5) {
         toast.warning('이미지는 최대 5개까지 업로드할 수 있습니다.');
-        return;
       }
 
       const imageFormData = new FormData();
