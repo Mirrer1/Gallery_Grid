@@ -128,7 +128,7 @@ const PostingForm = () => {
             <motion.div key={path} {...slideInUploadImage}>
               <img
                 src={`http://localhost:3065/${path}`}
-                alt={`${i} Uploaded Image`}
+                alt={`업로드한 ${i}번째 이미지`}
                 onClick={() => showImagePreview(`http://localhost:3065/${path}`)}
               />
               <DeleteOutlined onClick={() => handleRemoveImage(path)} />
@@ -181,7 +181,7 @@ const PostingForm = () => {
           </div>
 
           <UploadImage {...slideInModal}>
-            <img src={imagePreview} alt="Uploaded Image Preview" />
+            <img src={imagePreview} alt="업로드한 이미지" />
           </UploadImage>
         </UploadImagePreview>
       )}

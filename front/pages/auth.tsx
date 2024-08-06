@@ -35,7 +35,7 @@ const Auth = () => {
     <AuthLoaderWrapper>
       <AuthLoader>
         <div>
-          <img src="/mark.png" alt="Icon Image" />
+          <img src="/mark.png" alt="사이트 서브 로고 이미지" />
 
           <div>
             <h1>Waiting for Google Sign In{dots}</h1>

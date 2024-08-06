@@ -98,7 +98,7 @@ const ModalContent = () => {
             src={
               singlePost.User.ProfileImage ? `http://localhost:3065/${singlePost.User.ProfileImage.src}` : '/user.jpg'
             }
-            alt="author profile image"
+            alt="유저 프로필 이미지"
           />
 
           <div>

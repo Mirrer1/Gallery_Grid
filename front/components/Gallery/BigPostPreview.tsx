@@ -21,7 +21,7 @@ const BigPostPreview = ({ post }: any) => {
   return (
     <BigPostPreviewWrapper {...slideInFromBottom()} onClick={onClickPost}>
       <BigPostPreviewImage>
-        <img src={post.img[0]} alt={`${post.user}의 게시글 이미지`} />
+        <img src={post.img[0]} alt={`${post.user}의 첫번째 게시글 이미지`} />
 
         <div>
           {post.img.map((_: any, i: any) => (

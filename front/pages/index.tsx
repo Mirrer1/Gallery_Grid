@@ -29,7 +29,7 @@ const Landing = () => {
   return (
     <>
       <HeaderWrapper>
-        <img src="/logo.jpg" alt="Logo Image" onClick={onClickLogo} />
+        <img src="/logo.jpg" alt="사이트 메인 로고 이미지" onClick={onClickLogo} />
 
         <nav>
           <MenuButton type="button" onClick={() => onClickMenu('home')} $selected={selectMenu === 'home'}>

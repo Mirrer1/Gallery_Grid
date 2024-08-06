@@ -130,7 +130,7 @@ const PostList = () => {
             <div>
               <img
                 src={post.User.ProfileImage ? `http://localhost:3065/${post.User.ProfileImage.src}` : '/user.jpg'}
-                alt="author profile image"
+                alt="유저 프로필 이미지"
               />
 
               <div>
@@ -182,7 +182,7 @@ const PostList = () => {
             <div>
               <img
                 src={`http://localhost:3065/${post.Images[0].src}`}
-                alt="post image"
+                alt="게시글의 첫번째 이미지"
                 onClick={() => showCarousel(post.Images)}
               />
 

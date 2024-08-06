@@ -67,7 +67,7 @@ const PostImageCarousel = ({ images }: CarouselProps) => {
         >
           {images.map((image: Image, i: number) => (
             <SwiperSlide key={i}>
-              <img src={`http://localhost:3065/${image.src}`} alt={`${i}번째 이미지`} />
+              <img src={`http://localhost:3065/${image.src}`} alt={`게시글의 ${i}번째 이미지`} />
             </SwiperSlide>
           ))}
         </Swiper>

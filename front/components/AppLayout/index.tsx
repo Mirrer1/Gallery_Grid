@@ -63,7 +63,7 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
           <NavbarProfile>
             <img
               src={me?.ProfileImage ? `http://localhost:3065/${me.ProfileImage}` : '/user.jpg'}
-              alt="User Profile Image"
+              alt="유저 프로필 이미지"
             />
 
             <h1>{me?.nickname}</h1>
