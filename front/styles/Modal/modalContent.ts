@@ -1,9 +1,7 @@
 import styled from 'styled-components';
-import { motion } from 'framer-motion';
 
-import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
-import { DarkShadowStyle } from 'styles/Common/shadow';
 import media from 'styles/media';
+import { HoverStyle } from 'styles/Common/hover';
 
 export const ModalContentWrapper = styled.div`
   width: 45%;
@@ -125,8 +123,7 @@ export const ModalContentText = styled.div`
 export const ModalContentOptions = styled.div<{ $isModalCommentListVisible: boolean }>`
   height: 10%;
   padding: 0.8em;
-  border-bottom: 1px solid ${({ theme }) => theme.colors.darkBg};
-  border-radius: ${props => (props.$isModalCommentListVisible ? '0 0 0 0' : '0 0 5px 0')};
+  border-radius: 0 0 5px 0;
 
   & > div:first-child {
     margin-bottom: 0.5em;
@@ -174,136 +171,10 @@ export const ModalContentOptions = styled.div<{ $isModalCommentListVisible: bool
   ${media.mobile} {
     ${({ theme }) => theme.flexSet('space-between')};
     padding: 0.6em;
-    border-radius: ${props => (props.$isModalCommentListVisible ? '0 0 0 0' : '0 0 5px 5px')};
+    border-radius: 0 0 5px 5px;
 
     & > div:first-child {
       margin-bottom: 0;
     }
-  }
-`;
-
-export const ModalCommentInputWrapper = styled.div<{ $uploading: boolean }>`
-  height: ${props => (props.$uploading ? '28%' : '7%')};
-
-  ${media.mobile} {
-    height: ${props => (props.$uploading ? '52%' : '16%')};
-    border-radius: 0 0 5px 5px;
-  }
-`;
-
-export const ModalCommentInputImageWrapper = styled.div`
-  width: 100%;
-  height: 69%;
-  position: relative;
-  background-color: white;
-  border-top: 1.5px solid #e4e5ec;
-`;
-
-export const ModalCommentInputImage = styled(motion.div)`
-  position: relative;
-  width: fit-content;
-  padding: 0.5em;
-  height: 120px;
-
-  & > img {
-    width: 120px;
-    height: 100%;
-    border-radius: 5px;
-    ${DarkShadowStyle};
-  }
-
-  & > span {
-    position: absolute;
-    top: 8%;
-    right: 7%;
-    font-size: 0.9rem;
-    opacity: 40%;
-    cursor: pointer;
-    ${ReverseHoverStyle('&')}
-  }
-
-  ${media.tablet} {
-    & > span {
-      top: 10%;
-      right: 8%;
-      opacity: 70%;
-    }
-  }
-`;
-
-export const ModalCommentInput = styled.div<{ $active: boolean; $uploading: boolean }>`
-  height: ${props => (props.$uploading ? '31%' : '100%')};
-  ${({ theme }) => theme.flexSet('space-between')}
-  background-color: white;
-  border-radius: 0 0 5px 0;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-  padding: 0.7em;
-
-  & > div:first-child {
-    width: 95%;
-    ${({ theme }) => theme.flexSet('start')}
-
-    & > span {
-      width: 6%;
-      font-size: 1rem;
-      opacity: 40%;
-      ${ReverseHoverStyle('&')}
-    }
-
-    & > input:nth-child(2) {
-      display: none;
-    }
-
-    & > input {
-      width: 88%;
-      font-size: 0.8rem;
-      padding: 0.5em 1em 0.5em 0.5em;
-      border: none;
-
-      &:focus {
-        outline: none;
-      }
-
-      &::placeholder {
-        opacity: 60%;
-      }
-    }
-  }
-
-  & > div:last-child {
-    width: 5%;
-    ${({ theme }) => theme.flexSet('end')}
-
-    & > span {
-      font-size: 0.85rem;
-      color: white;
-      opacity: ${props => (props.$active ? '40%' : '100%')};
-      background-color: ${({ theme }) => theme.colors.primary};
-      border-radius: 50%;
-      padding: 0.4em 0.4em 0.4em 0.6em;
-      ${HoverStyle('&')};
-    }
-  }
-
-  ${media.tablet} {
-    & > div:first-child {
-      width: 89%;
-
-      & > span {
-        width: 9%;
-      }
-
-      & > input {
-        width: 82%;
-      }
-    }
-
-    & > div:last-child {
-      width: 11%;
-    }
-  }
-
-  ${media.mobile} {
-    border-radius: 0 0 5px 5px;
   }
 `;

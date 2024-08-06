@@ -3,20 +3,29 @@ import { motion } from 'framer-motion';
 
 import media from 'styles/media';
 import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
+import { DarkShadowStyle } from 'styles/Common/shadow';
 
-export const ModalCommentListWrapper = styled.div<{ $isModalCommentListVisible: boolean; $uploading: boolean }>`
-  height: ${props => (props.$uploading ? '52%' : '73%')};
-  padding: 0.8em;
-  border-bottom: 1px solid #e4e5ec;
-  overflow-y: scroll;
+export const ModalCommentListContainer = styled(motion.div)`
+  height: 80%;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.darkBg};
 
   ${media.tablet} {
-    height: ${props => (props.$uploading ? '50%' : '71%')};
-    padding: 0.6em;
+    height: 78%;
   }
 
   ${media.mobile} {
-    height: ${props => (props.$uploading ? '34%' : '63%')};
+    height: 73%;
+  }
+`;
+
+export const ModalCommentListWrapper = styled.div<{ $uploading: boolean }>`
+  height: ${props => (props.$uploading ? '67%' : '90%')};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.darkBg};
+  padding: 0.8em 0.8em 0 0.8em;
+  overflow-y: auto;
+
+  ${media.mobile} {
+    height: ${props => (props.$uploading ? '36%' : '85%')};
   }
 `;
 
@@ -29,13 +38,17 @@ export const ModalCommentListHeader = styled.div`
   }
 `;
 
-export const ModalCommentListItemWrapper = styled(motion.div)`
+export const ModalCommentListItemWrapper = styled.div`
   height: 97%;
   padding: 0 0.5em;
 
   & > div {
     border-bottom: 1px solid #eeeff3;
     padding: 1em 0;
+  }
+
+  & > div:last-child {
+    border-bottom: none;
   }
 `;
 
@@ -126,6 +139,117 @@ export const ModalCommentListItem = styled.div<{ $reply: boolean }>`
 
     & > p {
       font-size: 0.7rem;
+    }
+  }
+`;
+
+export const ModalCommentInput = styled.div<{ $active: boolean }>`
+  ${({ theme }) => theme.flexSet('space-between')}
+  height: 10%;
+  background-color: white;
+  padding: 0.7em;
+
+  & > div:first-child {
+    width: 95%;
+    ${({ theme }) => theme.flexSet('start')}
+
+    & > span {
+      width: 6%;
+      font-size: 1rem;
+      opacity: 40%;
+      ${ReverseHoverStyle('&')}
+    }
+
+    & > input:nth-child(2) {
+      display: none;
+    }
+
+    & > input {
+      width: 88%;
+      font-size: 0.8rem;
+      padding: 0.5em 1em 0.5em 0.5em;
+      border: none;
+
+      &:focus {
+        outline: none;
+      }
+
+      &::placeholder {
+        opacity: 60%;
+      }
+    }
+  }
+
+  & > div:last-child {
+    width: 5%;
+    ${({ theme }) => theme.flexSet('end')}
+
+    & > span {
+      font-size: 0.85rem;
+      color: white;
+      opacity: ${props => (props.$active ? '40%' : '100%')};
+      background-color: ${({ theme }) => theme.colors.primary};
+      border-radius: 50%;
+      padding: 0.4em 0.4em 0.4em 0.6em;
+      ${HoverStyle('&')};
+    }
+  }
+
+  ${media.tablet} {
+    & > div:first-child {
+      width: 89%;
+
+      & > span {
+        font-size: 0.9rem;
+        width: 8%;
+      }
+
+      & > input {
+        width: 88%;
+      }
+    }
+  }
+
+  ${media.mobile} {
+    height: 15%;
+  }
+`;
+
+export const ModalCommentInputImageWrapper = styled.div`
+  width: 100%;
+  position: relative;
+  background-color: white;
+  border-top: 1.5px solid #e4e5ec;
+`;
+
+export const ModalCommentInputImage = styled(motion.div)`
+  width: fit-content;
+  position: relative;
+  padding: 0.5em;
+  height: 120px;
+
+  & > img {
+    width: 120px;
+    height: 100%;
+    border-radius: 5px;
+    ${DarkShadowStyle};
+  }
+
+  & > span {
+    position: absolute;
+    top: 8%;
+    right: 7%;
+    font-size: 0.9rem;
+    opacity: 40%;
+    cursor: pointer;
+    ${ReverseHoverStyle('&')}
+  }
+
+  ${media.tablet} {
+    & > span {
+      top: 10%;
+      right: 8%;
+      opacity: 70%;
     }
   }
 `;

@@ -1,23 +1,37 @@
 import React, { useCallback } from 'react';
-import { CaretDownOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
+import {
+  CaretDownOutlined,
+  DeleteOutlined,
+  LoadingOutlined,
+  PaperClipOutlined,
+  SendOutlined,
+  SmileOutlined
+} from '@ant-design/icons';
 
+import useInput from 'utils/useInput';
+import useFileUpload from 'utils/useFileUpload';
 import ModalReplyComment from './ModalReplyComment';
 import { RootState } from 'store/reducers';
-import { hideCommentList } from 'store/actions/postAction';
-import { slideInFromBottom } from 'styles/Common/animation';
+import {
+  hideCommentList,
+  modalCommentRemoveUploadedImage,
+  modalCommentUploadImageRequest
+} from 'store/actions/postAction';
+
+import { slideInFromBottom, slideInUploadImage } from 'styles/Common/animation';
 import {
   ModalCommentListHeader,
   ModalCommentListItem,
   ModalCommentListItemWrapper,
-  ModalCommentListWrapper
+  ModalCommentInput,
+  ModalCommentListWrapper,
+  ModalCommentListContainer,
+  ModalCommentInputImage,
+  ModalCommentInputImageWrapper
 } from 'styles/Modal/modalCommentList';
 
-type ModalCommentProps = {
-  isModalCommentListVisible: boolean;
-};
-
-const ModalCommentList = ({ isModalCommentListVisible }: ModalCommentProps) => {
+const ModalCommentList = () => {
   const contentList = [
     {
       id: 1,
@@ -86,49 +100,96 @@ const ModalCommentList = ({ isModalCommentListVisible }: ModalCommentProps) => {
   ];
 
   const dispatch = useDispatch();
-  const { modalCommentImagePath } = useSelector((state: RootState) => state.post);
+  const [comment, onChangeComment] = useInput('');
+  const { modalCommentImagePath, modalCommentUploadImageLoading } = useSelector((state: RootState) => state.post);
+  const { fileInputRef, onFileChange } = useFileUpload(modalCommentUploadImageRequest, { showWarning: false });
 
   const onHideComment = useCallback(() => {
     dispatch(hideCommentList());
   }, []);
 
-  return (
-    <ModalCommentListWrapper
-      $isModalCommentListVisible={isModalCommentListVisible}
-      $uploading={modalCommentImagePath.length !== 0}
-    >
-      <ModalCommentListHeader>
-        <CaretDownOutlined onClick={onHideComment} />
-      </ModalCommentListHeader>
+  const onClickImageUpload = useCallback(() => {
+    if (fileInputRef.current) fileInputRef.current.click();
+  }, []);
 
-      <ModalCommentListItemWrapper {...slideInFromBottom()}>
-        {contentList.map(comment => (
-          <div key={comment.id}>
-            <ModalCommentListItem $reply={false}>
-              <div>
+  const handleRemoveImage = useCallback(() => {
+    dispatch(modalCommentRemoveUploadedImage());
+  }, []);
+
+  const handleKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLInputElement>) => {
+      if (event.key === 'Enter') {
+        console.log(comment);
+      }
+    },
+    [comment]
+  );
+
+  return (
+    <ModalCommentListContainer {...slideInFromBottom()}>
+      <ModalCommentListWrapper $uploading={modalCommentImagePath.length !== 0}>
+        <ModalCommentListHeader>
+          <CaretDownOutlined onClick={onHideComment} />
+        </ModalCommentListHeader>
+
+        <ModalCommentListItemWrapper>
+          {contentList.map(comment => (
+            <div key={comment.id}>
+              <ModalCommentListItem $reply={false}>
                 <div>
-                  <img src={comment.profile} alt={`${comment.nickname}의 프로필 이미지`} />
+                  <div>
+                    <img src={comment.profile} alt={`${comment.nickname}의 프로필 이미지`} />
+
+                    <div>
+                      <h1>{comment.nickname}</h1>
+                      <p>{comment.createdAt}</p>
+                    </div>
+                  </div>
 
                   <div>
-                    <h1>{comment.nickname}</h1>
-                    <p>{comment.createdAt}</p>
+                    <button type="button">수정</button>
+                    <button type="button">삭제</button>
                   </div>
                 </div>
 
-                <div>
-                  <button type="button">수정</button>
-                  <button type="button">삭제</button>
-                </div>
-              </div>
+                <p>{comment.content}</p>
+              </ModalCommentListItem>
 
-              <p>{comment.content}</p>
-            </ModalCommentListItem>
+              <ModalReplyComment />
+            </div>
+          ))}
+        </ModalCommentListItemWrapper>
+      </ModalCommentListWrapper>
 
-            <ModalReplyComment />
-          </div>
-        ))}
-      </ModalCommentListItemWrapper>
-    </ModalCommentListWrapper>
+      {modalCommentImagePath.length !== 0 && (
+        <ModalCommentInputImageWrapper>
+          <ModalCommentInputImage key={modalCommentImagePath} {...slideInUploadImage}>
+            <img src={`http://localhost:3065/${modalCommentImagePath}`} alt="입력한 댓글의 첨부 이미지" />
+            <DeleteOutlined onClick={handleRemoveImage} />
+          </ModalCommentInputImage>
+        </ModalCommentInputImageWrapper>
+      )}
+
+      <ModalCommentInput $active={comment.length === 0}>
+        <div>
+          {modalCommentUploadImageLoading ? <LoadingOutlined /> : <PaperClipOutlined onClick={onClickImageUpload} />}
+          <input type="file" name="image" ref={fileInputRef} onChange={e => onFileChange(e, modalCommentImagePath)} />
+
+          <SmileOutlined />
+          <input
+            type="text"
+            placeholder="Type a Comment..."
+            value={comment}
+            onChange={onChangeComment}
+            onKeyDown={handleKeyDown}
+          />
+        </div>
+
+        <div>
+          <SendOutlined />
+        </div>
+      </ModalCommentInput>
+    </ModalCommentListContainer>
   );
 };
 

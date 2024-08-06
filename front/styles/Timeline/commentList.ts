@@ -233,11 +233,11 @@ export const CommentInput = styled.div<{ $active: boolean; $uploading: boolean }
       width: 96%;
 
       & > span {
-        width: 3.5%;
+        width: 3%;
       }
 
       & > input {
-        width: 93%;
+        width: 95%;
       }
     }
 
