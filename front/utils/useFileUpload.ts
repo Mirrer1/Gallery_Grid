@@ -1,8 +1,16 @@
 import { useCallback, useRef } from 'react';
 import { useDispatch } from 'react-redux';
+import { AnyAction } from 'redux';
 import { toast } from 'react-toastify';
 
-const useFileUpload = (dispatchAction: any, options: { maxFiles?: number; showWarning?: boolean } = {}) => {
+type UseFileUploadOptionsProps = {
+  maxFiles?: number;
+  showWarning?: boolean;
+};
+
+type DispatchActionProps = (formData: FormData) => AnyAction;
+
+const useFileUpload = (dispatchAction: DispatchActionProps, options: UseFileUploadOptionsProps = {}) => {
   const { maxFiles = 5, showWarning = true } = options;
   const fileInputRef = useRef<HTMLInputElement>(null);
   const dispatch = useDispatch();
