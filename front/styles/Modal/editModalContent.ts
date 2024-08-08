@@ -80,6 +80,7 @@ export const EditModalContentHeader = styled.div`
 
 export const EditModalForm = styled.form`
   height: 82%;
+  color: ${({ theme }) => theme.colors.font};
   padding: 0.7em 1em;
   border-bottom: 1px solid ${({ theme }) => theme.colors.darkBg};
   overflow-y: scroll;

@@ -4,7 +4,7 @@ import { GoogleOutlined, LoadingOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 
 import useInput from 'utils/useInput';
-import { IMenuProps } from './MenuContents';
+import { MenuProps } from './MenuContents';
 import { useValidate } from 'utils/useValidate';
 import { slideInFromBottom } from 'styles/Common/animation';
 import { loginGoogleRequest, resetSignUpMessage, signUpRequest } from 'store/actions/userAction';
@@ -22,7 +22,7 @@ import {
   AuthOptionsWrapper
 } from 'styles/Landing/accountForm';
 
-const SignUpForm = ({ selectMenu, onClickMenu }: IMenuProps) => {
+const SignUpForm = ({ selectMenu, onClickMenu }: MenuProps) => {
   const dispatch = useDispatch();
   const { signUpMessage, signUpLoading, loginGoogleLoading } = useSelector((state: RootState) => state.user);
 

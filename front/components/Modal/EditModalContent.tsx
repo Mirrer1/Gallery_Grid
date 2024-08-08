@@ -1,11 +1,12 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { CloseOutlined, CompassOutlined, LoadingOutlined, SmileOutlined } from '@ant-design/icons';
-import { IEmojiData } from 'emoji-picker-react';
 import { toast } from 'react-toastify';
+import EmojiPicker from 'emoji-picker-react';
 import Router from 'next/router';
 
 import useInput from 'utils/useInput';
+import useEmojiPicker from 'utils/useEmojiPicker';
 import { useLocation } from 'utils/useLocation';
 import { RootState } from 'store/reducers';
 import { formatDate } from 'utils/useListTimes';
@@ -23,9 +24,7 @@ const EditModalContent = () => {
   const { singlePost, editPostImagePaths, editPostLoading } = useSelector((state: RootState) => state.post);
   const [content, onChangeContent, setContent] = useInput<string>('');
   const { location, getLocation, setLocation, loading } = useLocation();
-  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  const [EmojiPicker, setEmojiPicker] =
-    useState<React.ComponentType<{ onEmojiClick: (event: MouseEvent, emojiObject: IEmojiData) => void }>>();
+  const { showEmoji, showEmojiPicker, closeEmojiPicker, onEmojiClick } = useEmojiPicker(setContent);
 
   const onClickCancel = useCallback(() => {
     if (Router.pathname === '/timeline') dispatch(hidePostModal());
@@ -35,21 +34,6 @@ const EditModalContent = () => {
   const setInitialLocation = useCallback(() => {
     setLocation(null);
   }, []);
-
-  const toggleEmojiPicker = useCallback(() => {
-    setShowEmojiPicker(prev => !prev);
-  }, []);
-
-  const closeEmojiPicker = useCallback(() => {
-    setShowEmojiPicker(false);
-  }, []);
-
-  const onEmojiClick = useCallback(
-    (event: MouseEvent, emojiObject: IEmojiData) => {
-      setContent(prevText => prevText + emojiObject.emoji);
-    },
-    [setContent]
-  );
 
   const onSubmitForm = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
@@ -72,17 +56,6 @@ const EditModalContent = () => {
     },
     [content, location, editPostImagePaths, singlePost]
   );
-
-  useEffect(() => {
-    setContent(singlePost.content);
-    setLocation(singlePost.location);
-
-    if (typeof window !== 'undefined') {
-      import('emoji-picker-react').then(module => {
-        setEmojiPicker(() => module.default);
-      });
-    }
-  }, []);
 
   return (
     <EditModalContentWrapper>
@@ -118,7 +91,7 @@ const EditModalContent = () => {
 
       <EditModalBtn $active={content.length !== 0} $edit={editPostLoading}>
         <div>
-          <SmileOutlined onClick={toggleEmojiPicker} />
+          <SmileOutlined onClick={showEmojiPicker} />
 
           {location ? (
             <div onClick={setInitialLocation}>
@@ -143,7 +116,7 @@ const EditModalContent = () => {
         </div>
       </EditModalBtn>
 
-      {showEmojiPicker && EmojiPicker && (
+      {showEmoji && EmojiPicker && (
         <EditModalEmojiPicker>
           <div onClick={closeEmojiPicker} />
 

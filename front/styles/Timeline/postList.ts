@@ -185,8 +185,8 @@ export const PostContents = styled.div`
   }
 
   & > div > p {
+    color: ${({ theme }) => theme.colors.font};
     font-size: 0.8rem;
-    opacity: 60%;
     line-height: 1.5;
     margin-bottom: 1em;
     padding: 0 0.3em;

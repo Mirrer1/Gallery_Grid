@@ -4,7 +4,7 @@ import { GoogleOutlined, LoadingOutlined } from '@ant-design/icons';
 import { toast } from 'react-toastify';
 
 import useInput from 'utils/useInput';
-import { IMenuProps } from './MenuContents';
+import { MenuProps } from './MenuContents';
 import { useValidate } from 'utils/useValidate';
 import { slideInFromBottom } from 'styles/Common/animation';
 import { loginGoogleRequest, loginRequest, resetLoginMessage } from 'store/actions/userAction';
@@ -21,7 +21,7 @@ import {
   AccountAlert
 } from 'styles/Landing/accountForm';
 
-const LoginForm = ({ selectMenu, onClickMenu }: IMenuProps) => {
+const LoginForm = ({ selectMenu, onClickMenu }: MenuProps) => {
   const dispatch = useDispatch();
   const { loginLoading, loginError, loginGoogleLoading } = useSelector((state: RootState) => state.user);
   const [email, onChangeEmail] = useInput('');

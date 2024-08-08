@@ -103,6 +103,7 @@ export const ModalContentHeader = styled.div`
 
 export const ModalContentText = styled.div`
   height: 80%;
+  color: ${({ theme }) => theme.colors.font};
   font-size: 0.85rem;
   line-height: 1.5;
   padding: 0.7em 1.2em;

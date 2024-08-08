@@ -8,12 +8,13 @@ import {
   SmileOutlined
 } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { IEmojiData } from 'emoji-picker-react';
 import { motion } from 'framer-motion';
 import { toast } from 'react-toastify';
+import EmojiPicker from 'emoji-picker-react';
 
 import useInput from 'utils/useInput';
 import useFileUpload from 'utils/useFileUpload';
+import useEmojiPicker from 'utils/useEmojiPicker';
 import { useLocation } from 'utils/useLocation';
 import { RootState } from 'store/reducers';
 import { addPostRequest, postRemoveUploadedImage, postUploadImagesRequest } from 'store/actions/postAction';
@@ -29,35 +30,18 @@ import {
 
 const PostingForm = () => {
   const dispatch = useDispatch();
-  const { fileInputRef, onFileChange } = useFileUpload(postUploadImagesRequest, { maxFiles: 5, showWarning: true });
-  const { location, getLocation, setLocation, loading } = useLocation();
   const [content, onChangeContent, setContent] = useInput<string>('');
+  const { location, getLocation, setLocation, loading } = useLocation();
+  const { showEmoji, showEmojiPicker, closeEmojiPicker, onEmojiClick } = useEmojiPicker(setContent);
+  const { fileInputRef, onFileChange } = useFileUpload(postUploadImagesRequest, { maxFiles: 5, showWarning: true });
+
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
   const { postImagePaths, postUploadImagesLoading, addPostLoading, addPostDone } = useSelector(
     (state: RootState) => state.post
   );
 
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  const [EmojiPicker, setEmojiPicker] =
-    useState<React.ComponentType<{ onEmojiClick: (event: MouseEvent, emojiObject: IEmojiData) => void }>>();
-
   const setInitialLocation = useCallback(() => {
     setLocation(null);
-  }, []);
-
-  const onEmojiClick = useCallback(
-    (event: MouseEvent, emojiObject: IEmojiData) => {
-      setContent(prevText => prevText + emojiObject.emoji);
-    },
-    [setContent]
-  );
-
-  const toggleEmojiPicker = useCallback(() => {
-    setShowEmojiPicker(prev => !prev);
-  }, []);
-
-  const closeEmojiPicker = useCallback(() => {
-    setShowEmojiPicker(false);
   }, []);
 
   const onClickImageUpload = useCallback(() => {
@@ -104,14 +88,6 @@ const PostingForm = () => {
     }
   }, [addPostDone]);
 
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      import('emoji-picker-react').then(module => {
-        setEmojiPicker(() => module.default);
-      });
-    }
-  }, []);
-
   return (
     <PostingWrapper $uploading={postImagePaths.length > 0} encType="multipart/form-data" onSubmit={onSubmitForm}>
       <textarea
@@ -142,7 +118,7 @@ const PostingForm = () => {
           {postUploadImagesLoading ? <LoadingOutlined /> : <PaperClipOutlined onClick={onClickImageUpload} />}
           <input type="file" name="image" multiple ref={fileInputRef} onChange={e => onFileChange(e, postImagePaths)} />
 
-          <SmileOutlined onClick={toggleEmojiPicker} />
+          <SmileOutlined onClick={showEmojiPicker} />
           {location ? (
             <div onClick={setInitialLocation}>
               <p>{location}</p>
@@ -155,7 +131,7 @@ const PostingForm = () => {
           )}
         </div>
 
-        {showEmojiPicker && EmojiPicker && (
+        {showEmoji && EmojiPicker && (
           <PostingEmojiPicker>
             <div onClick={closeEmojiPicker} />
 
