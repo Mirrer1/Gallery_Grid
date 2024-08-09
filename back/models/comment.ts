@@ -3,6 +3,7 @@ import User from './user';
 import Post from './post';
 import Alert from './alert';
 import Report from './report';
+import Image from './image';
 
 class Comment extends Model<InferAttributes<Comment>, InferCreationAttributes<Comment>> {
   declare id: CreationOptional<number>;
@@ -45,6 +46,7 @@ class Comment extends Model<InferAttributes<Comment>, InferCreationAttributes<Co
     Comment.belongsTo(Post);
     Comment.hasMany(Alert);
     Comment.hasMany(Report, { foreignKey: 'CommentId', as: 'Reports' });
+    Comment.hasOne(Image, { as: 'CommentImage', foreignKey: 'CommentId' });
   }
 }
 
