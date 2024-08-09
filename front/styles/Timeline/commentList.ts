@@ -176,6 +176,7 @@ export const CommentInputImage = styled(motion.div)`
 `;
 
 export const CommentInput = styled.div<{ $active: boolean; $uploading: boolean }>`
+  position: relative;
   height: ${props => (props.$uploading ? '31%' : '100%')};
   ${({ theme }) => theme.flexSet('space-between')}
   background-color: white;
@@ -261,6 +262,37 @@ export const CommentInput = styled.div<{ $active: boolean; $uploading: boolean }
 
     & > div:last-child {
       width: 8%;
+    }
+  }
+`;
+
+export const CommentEmojiPicker = styled.div`
+  & > div:first-child {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 49;
+  }
+
+  & > div:last-child {
+    position: absolute;
+    left: -25%;
+    bottom: 85%;
+    z-index: 50;
+  }
+
+  ${media.tablet} {
+    & > div:last-child {
+      left: 1%;
+    }
+  }
+
+  ${media.mobile} {
+    & > div:last-child {
+      left: 0;
+      bottom: 95%;
     }
   }
 `;

@@ -8,14 +8,18 @@ import {
   SendOutlined,
   SmileOutlined
 } from '@ant-design/icons';
+import EmojiPicker from 'emoji-picker-react';
 
 import ReplyComment from './ReplyComment';
 import useInput from 'utils/useInput';
 import useFileUpload from 'utils/useFileUpload';
+import useEmojiPicker from 'utils/useEmojiPicker';
+
 import { RootState } from 'store/reducers';
 import { commentRemoveUploadedImage, commentUploadImageRequest, hideCommentList } from 'store/actions/postAction';
 import { slideInFromBottom, slideInUploadImage } from 'styles/Common/animation';
 import {
+  CommentEmojiPicker,
   CommentInput,
   CommentInputImage,
   CommentInputImageWrapper,
@@ -95,11 +99,12 @@ const CommentList = () => {
   ];
 
   const dispatch = useDispatch();
+  const [comment, onChangeComment, setComment] = useInput('');
+  const { showEmoji, showEmojiPicker, closeEmojiPicker, onEmojiClick } = useEmojiPicker(setComment);
+  const { fileInputRef, onFileChange } = useFileUpload(commentUploadImageRequest, { showWarning: false });
   const { isCommentListVisible, commentImagePath, commentUploadImageLoading } = useSelector(
     (state: RootState) => state.post
   );
-  const { fileInputRef, onFileChange } = useFileUpload(commentUploadImageRequest, { showWarning: false });
-  const [comment, onChangeComment] = useInput('');
 
   const onHideComment = useCallback(() => {
     dispatch(hideCommentList());
@@ -171,7 +176,17 @@ const CommentList = () => {
             {commentUploadImageLoading ? <LoadingOutlined /> : <PaperClipOutlined onClick={onClickImageUpload} />}
             <input type="file" name="image" ref={fileInputRef} onChange={e => onFileChange(e, commentImagePath)} />
 
-            <SmileOutlined />
+            <SmileOutlined onClick={showEmojiPicker} />
+            {showEmoji && EmojiPicker && (
+              <CommentEmojiPicker>
+                <div onClick={closeEmojiPicker} />
+
+                <div>
+                  <EmojiPicker onEmojiClick={onEmojiClick} />
+                </div>
+              </CommentEmojiPicker>
+            )}
+
             <input
               type="text"
               placeholder="Type a Comment..."

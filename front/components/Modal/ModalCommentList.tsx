@@ -8,17 +8,19 @@ import {
   SendOutlined,
   SmileOutlined
 } from '@ant-design/icons';
+import EmojiPicker from 'emoji-picker-react';
 
 import useInput from 'utils/useInput';
 import useFileUpload from 'utils/useFileUpload';
+import useEmojiPicker from 'utils/useEmojiPicker';
 import ModalReplyComment from './ModalReplyComment';
+
 import { RootState } from 'store/reducers';
 import {
   hideCommentList,
   modalCommentRemoveUploadedImage,
   modalCommentUploadImageRequest
 } from 'store/actions/postAction';
-
 import { slideInFromBottom, slideInUploadImage } from 'styles/Common/animation';
 import {
   ModalCommentListHeader,
@@ -28,7 +30,8 @@ import {
   ModalCommentListWrapper,
   ModalCommentListContainer,
   ModalCommentInputImage,
-  ModalCommentInputImageWrapper
+  ModalCommentInputImageWrapper,
+  ModalCommentEmojiPicker
 } from 'styles/Modal/modalCommentList';
 
 const ModalCommentList = () => {
@@ -100,9 +103,10 @@ const ModalCommentList = () => {
   ];
 
   const dispatch = useDispatch();
-  const [comment, onChangeComment] = useInput('');
-  const { modalCommentImagePath, modalCommentUploadImageLoading } = useSelector((state: RootState) => state.post);
+  const [comment, onChangeComment, setComment] = useInput('');
+  const { showEmoji, showEmojiPicker, closeEmojiPicker, onEmojiClick } = useEmojiPicker(setComment);
   const { fileInputRef, onFileChange } = useFileUpload(modalCommentUploadImageRequest, { showWarning: false });
+  const { modalCommentImagePath, modalCommentUploadImageLoading } = useSelector((state: RootState) => state.post);
 
   const onHideComment = useCallback(() => {
     dispatch(hideCommentList());
@@ -175,7 +179,17 @@ const ModalCommentList = () => {
           {modalCommentUploadImageLoading ? <LoadingOutlined /> : <PaperClipOutlined onClick={onClickImageUpload} />}
           <input type="file" name="image" ref={fileInputRef} onChange={e => onFileChange(e, modalCommentImagePath)} />
 
-          <SmileOutlined />
+          <SmileOutlined onClick={showEmojiPicker} />
+          {showEmoji && EmojiPicker && (
+            <ModalCommentEmojiPicker>
+              <div onClick={closeEmojiPicker} />
+
+              <div>
+                <EmojiPicker onEmojiClick={onEmojiClick} />
+              </div>
+            </ModalCommentEmojiPicker>
+          )}
+
           <input
             type="text"
             placeholder="Type a Comment..."

@@ -144,6 +144,7 @@ export const ModalCommentListItem = styled.div<{ $reply: boolean }>`
 `;
 
 export const ModalCommentInput = styled.div<{ $active: boolean }>`
+  position: relative;
   ${({ theme }) => theme.flexSet('space-between')}
   height: 10%;
   background-color: white;
@@ -250,6 +251,37 @@ export const ModalCommentInputImage = styled(motion.div)`
       top: 10%;
       right: 8%;
       opacity: 70%;
+    }
+  }
+`;
+
+export const ModalCommentEmojiPicker = styled.div`
+  & > div:first-child {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 49;
+  }
+
+  & > div:last-child {
+    position: absolute;
+    left: -25%;
+    bottom: 85%;
+    z-index: 50;
+  }
+
+  ${media.tablet} {
+    & > div:last-child {
+      left: -40%;
+    }
+  }
+
+  ${media.mobile} {
+    & > div:last-child {
+      left: -6%;
+      bottom: 100%;
     }
   }
 `;
