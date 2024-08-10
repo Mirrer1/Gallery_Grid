@@ -8,6 +8,7 @@ import {
   SendOutlined,
   SmileOutlined
 } from '@ant-design/icons';
+import { toast } from 'react-toastify';
 import EmojiPicker from 'emoji-picker-react';
 
 import useInput from 'utils/useInput';
@@ -17,6 +18,7 @@ import ModalReplyComment from './ModalReplyComment';
 
 import { RootState } from 'store/reducers';
 import {
+  addCommentRequest,
   hideCommentList,
   modalCommentRemoveUploadedImage,
   modalCommentUploadImageRequest
@@ -26,12 +28,12 @@ import {
   ModalCommentListHeader,
   ModalCommentListItem,
   ModalCommentListItemWrapper,
-  ModalCommentInput,
   ModalCommentListWrapper,
   ModalCommentListContainer,
   ModalCommentInputImage,
   ModalCommentInputImageWrapper,
-  ModalCommentEmojiPicker
+  ModalCommentEmojiPicker,
+  ModalCommentForm
 } from 'styles/Modal/modalCommentList';
 
 const ModalCommentList = () => {
@@ -106,7 +108,9 @@ const ModalCommentList = () => {
   const [comment, onChangeComment, setComment] = useInput('');
   const { showEmoji, showEmojiPicker, closeEmojiPicker, onEmojiClick } = useEmojiPicker(setComment);
   const { fileInputRef, onFileChange } = useFileUpload(modalCommentUploadImageRequest, { showWarning: false });
-  const { modalCommentImagePath, modalCommentUploadImageLoading } = useSelector((state: RootState) => state.post);
+  const { modalCommentImagePath, modalCommentUploadImageLoading, singlePost } = useSelector(
+    (state: RootState) => state.post
+  );
 
   const onHideComment = useCallback(() => {
     dispatch(hideCommentList());
@@ -119,6 +123,31 @@ const ModalCommentList = () => {
   const handleRemoveImage = useCallback(() => {
     dispatch(modalCommentRemoveUploadedImage());
   }, []);
+
+  const onSubmitForm = useCallback(
+    (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+
+      if (!comment.trim()) {
+        toast.warning('댓글 내용을 입력해주세요.');
+        return;
+      }
+
+      const formData = new FormData();
+      if (modalCommentImagePath.length > 0) {
+        modalCommentImagePath.forEach((image: string) => {
+          formData.append('image', image);
+        });
+      }
+      formData.append('content', comment);
+      formData.append('PostId', singlePost.id);
+
+      dispatch(addCommentRequest(formData));
+
+      setComment('');
+    },
+    [comment, modalCommentImagePath, singlePost.id]
+  );
 
   const handleKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -174,7 +203,7 @@ const ModalCommentList = () => {
         </ModalCommentInputImageWrapper>
       )}
 
-      <ModalCommentInput $active={comment.length === 0}>
+      <ModalCommentForm encType="multipart/form-data" $active={comment.length === 0} onSubmit={onSubmitForm}>
         <div>
           {modalCommentUploadImageLoading ? <LoadingOutlined /> : <PaperClipOutlined onClick={onClickImageUpload} />}
           <input type="file" name="image" ref={fileInputRef} onChange={e => onFileChange(e, modalCommentImagePath)} />
@@ -199,10 +228,10 @@ const ModalCommentList = () => {
           />
         </div>
 
-        <div>
+        <button type="submit">
           <SendOutlined />
-        </div>
-      </ModalCommentInput>
+        </button>
+      </ModalCommentForm>
     </ModalCommentListContainer>
   );
 };

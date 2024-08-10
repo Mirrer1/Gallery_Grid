@@ -10,6 +10,8 @@ class Comment extends Model<InferAttributes<Comment>, InferCreationAttributes<Co
   declare content: string;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
+  declare PostId: number;
+  declare UserId: number;
   declare parentId?: number;
 
   static initiate(sequelize: Sequelize.Sequelize) {
@@ -27,6 +29,14 @@ class Comment extends Model<InferAttributes<Comment>, InferCreationAttributes<Co
         parentId: {
           type: Sequelize.INTEGER,
           allowNull: true
+        },
+        PostId: {
+          type: Sequelize.INTEGER,
+          allowNull: false
+        },
+        UserId: {
+          type: Sequelize.INTEGER,
+          allowNull: false
         },
         createdAt: Sequelize.DATE,
         updatedAt: Sequelize.DATE

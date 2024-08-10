@@ -40,7 +40,10 @@ import {
   CANCEL_POST_EDIT,
   EDIT_POST_REQUEST,
   EDIT_POST_SUCCESS,
-  EDIT_POST_FAILURE
+  EDIT_POST_FAILURE,
+  ADD_COMMENT_REQUEST,
+  ADD_COMMENT_SUCCESS,
+  ADD_COMMENT_FAILURE
 } from 'store/types/postType';
 
 export const initialState: PostState = {
@@ -52,6 +55,7 @@ export const initialState: PostState = {
   modalCommentImagePath: [],
   postEditMode: false,
   deleteId: null,
+  commentVisiblePostId: null,
   hasMorePosts: true,
   loadPostsLoading: false,
   loadPostsDone: false,
@@ -71,6 +75,9 @@ export const initialState: PostState = {
   editPostUploadImagesLoading: false,
   editPostUploadImagesDone: false,
   editPostUploadImagesError: null,
+  addCommentLoading: false,
+  addCommentDone: false,
+  addCommentError: null,
   commentUploadImageLoading: false,
   commentUploadImageDone: false,
   commentUploadImageError: null,
@@ -184,6 +191,23 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
       case EDIT_POST_REMOVE_UPLOADED_IMAGE:
         draft.editPostImagePaths = draft.editPostImagePaths.filter(path => path !== action.data);
         break;
+
+      case ADD_COMMENT_REQUEST:
+        draft.addCommentLoading = true;
+        draft.addCommentDone = false;
+        draft.addCommentError = null;
+        break;
+      case ADD_COMMENT_SUCCESS:
+        draft.addCommentLoading = false;
+        draft.addCommentDone = true;
+        // draft.mainPosts.unshift(action.data);
+        // draft.postImagePaths = [];
+        break;
+      case ADD_COMMENT_FAILURE:
+        draft.addCommentLoading = false;
+        draft.addCommentError = action.error;
+        break;
+
       case COMMENT_UPLOAD_IMAGE_REQUEST:
         draft.commentUploadImageLoading = true;
         draft.commentUploadImageDone = false;
@@ -220,9 +244,11 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
         break;
       case SHOW_COMMENT_LIST:
         draft.isCommentListVisible = true;
+        draft.commentVisiblePostId = action.data;
         break;
       case HIDE_COMMENT_LIST:
         draft.isCommentListVisible = false;
+        draft.commentVisiblePostId = null;
         draft.commentImagePath = [];
         break;
       case SHOW_POST_CAROUSEL:

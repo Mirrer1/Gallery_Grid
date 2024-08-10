@@ -8,6 +8,7 @@ import {
   SendOutlined,
   SmileOutlined
 } from '@ant-design/icons';
+import { toast } from 'react-toastify';
 import EmojiPicker from 'emoji-picker-react';
 
 import ReplyComment from './ReplyComment';
@@ -16,11 +17,16 @@ import useFileUpload from 'utils/useFileUpload';
 import useEmojiPicker from 'utils/useEmojiPicker';
 
 import { RootState } from 'store/reducers';
-import { commentRemoveUploadedImage, commentUploadImageRequest, hideCommentList } from 'store/actions/postAction';
+import {
+  addCommentRequest,
+  commentRemoveUploadedImage,
+  commentUploadImageRequest,
+  hideCommentList
+} from 'store/actions/postAction';
 import { slideInFromBottom, slideInUploadImage } from 'styles/Common/animation';
 import {
   CommentEmojiPicker,
-  CommentInput,
+  CommentForm,
   CommentInputImage,
   CommentInputImageWrapper,
   CommentInputWrapper,
@@ -102,7 +108,7 @@ const CommentList = () => {
   const [comment, onChangeComment, setComment] = useInput('');
   const { showEmoji, showEmojiPicker, closeEmojiPicker, onEmojiClick } = useEmojiPicker(setComment);
   const { fileInputRef, onFileChange } = useFileUpload(commentUploadImageRequest, { showWarning: false });
-  const { isCommentListVisible, commentImagePath, commentUploadImageLoading } = useSelector(
+  const { isCommentListVisible, commentImagePath, commentUploadImageLoading, commentVisiblePostId } = useSelector(
     (state: RootState) => state.post
   );
 
@@ -118,10 +124,35 @@ const CommentList = () => {
     dispatch(commentRemoveUploadedImage());
   }, []);
 
+  const onSubmitForm = useCallback(
+    (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+
+      if (!comment.trim()) {
+        toast.warning('댓글 내용을 입력해주세요.');
+        return;
+      }
+
+      const formData = new FormData();
+      if (commentImagePath.length > 0) {
+        commentImagePath.forEach((image: string) => {
+          formData.append('image', image);
+        });
+      }
+      formData.append('content', comment);
+      formData.append('PostId', commentVisiblePostId);
+
+      dispatch(addCommentRequest(formData));
+
+      setComment('');
+    },
+    [comment, commentImagePath, commentVisiblePostId]
+  );
+
   const handleKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
-      if (event.key === 'Enter') {
-        console.log(comment);
+      if (event.key === 'Enter' && !event.shiftKey) {
+        onSubmitForm(event as unknown as React.FormEvent<HTMLFormElement>);
       }
     },
     [comment]
@@ -171,7 +202,12 @@ const CommentList = () => {
           </CommentInputImageWrapper>
         )}
 
-        <CommentInput $active={comment.length === 0} $uploading={commentImagePath.length !== 0}>
+        <CommentForm
+          encType="multipart/form-data"
+          $active={comment.length === 0}
+          $uploading={commentImagePath.length !== 0}
+          onSubmit={onSubmitForm}
+        >
           <div>
             {commentUploadImageLoading ? <LoadingOutlined /> : <PaperClipOutlined onClick={onClickImageUpload} />}
             <input type="file" name="image" ref={fileInputRef} onChange={e => onFileChange(e, commentImagePath)} />
@@ -196,10 +232,10 @@ const CommentList = () => {
             />
           </div>
 
-          <div>
+          <button type="submit">
             <SendOutlined />
-          </div>
-        </CommentInput>
+          </button>
+        </CommentForm>
       </CommentInputWrapper>
     </CommentListWrapper>
   );

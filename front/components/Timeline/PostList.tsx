@@ -48,11 +48,11 @@ const PostList = () => {
   const {
     mainPosts,
     postImagePaths,
-    isCommentListVisible,
     isCarouselVisible,
     isDeleteModalVisible,
     addPostDone,
-    isPostModalVisible
+    isPostModalVisible,
+    commentVisiblePostId
   } = useSelector((state: RootState) => state.post);
 
   const postTimes = useListTimes(mainPosts);
@@ -78,7 +78,7 @@ const PostList = () => {
   const openEditModal = useCallback((post: Post) => {
     setIsTooltipVisible(null);
     dispatch(showPostModal(post));
-    // dispatch(executePostEdit());
+    dispatch(executePostEdit());
   }, []);
 
   const handleTooltip = useCallback(
@@ -92,10 +92,13 @@ const PostList = () => {
     setIsTooltipVisible(null);
   }, []);
 
-  const onToggleComment = useCallback(() => {
-    if (isCommentListVisible) dispatch(hideCommentList());
-    else dispatch(showCommentList());
-  }, [isCommentListVisible]);
+  const onToggleComment = useCallback(
+    (postId: number) => {
+      if (commentVisiblePostId === postId) dispatch(hideCommentList());
+      else dispatch(showCommentList(postId));
+    },
+    [commentVisiblePostId]
+  );
 
   useEffect(() => {
     if (firstPostRef.current) {
@@ -198,13 +201,13 @@ const PostList = () => {
             <div>
               <p>{post.content}</p>
 
-              <PostOptions $isCommentListVisible={isCommentListVisible}>
+              <PostOptions $commentVisiblePostId={commentVisiblePostId === post.id}>
                 <div>
                   <LikeOutlined />
                   <span>24</span>
                 </div>
 
-                <div onClick={onToggleComment}>
+                <div onClick={() => onToggleComment(post.id)}>
                   <CommentOutlined />
                   <span>13</span>
                 </div>

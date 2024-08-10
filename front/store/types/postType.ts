@@ -26,6 +26,10 @@ export const EDIT_POST_UPLOAD_IMAGES_SUCCESS = 'EDIT_POST_UPLOAD_IMAGES_SUCCESS'
 export const EDIT_POST_UPLOAD_IMAGES_FAILURE = 'EDIT_POST_UPLOAD_IMAGES_FAILURE' as const;
 export const EDIT_POST_REMOVE_UPLOADED_IMAGE = 'EDIT_POST_REMOVE_UPLOADED_IMAGE' as const;
 
+export const ADD_COMMENT_REQUEST = 'ADD_COMMENT_REQUEST' as const;
+export const ADD_COMMENT_SUCCESS = 'ADD_COMMENT_SUCCESS' as const;
+export const ADD_COMMENT_FAILURE = 'ADD_COMMENT_FAILURE' as const;
+
 export const COMMENT_UPLOAD_IMAGE_REQUEST = 'COMMENT_UPLOAD_IMAGE_REQUEST' as const;
 export const COMMENT_UPLOAD_IMAGE_SUCCESS = 'COMMENT_UPLOAD_IMAGE_SUCCESS' as const;
 export const COMMENT_UPLOAD_IMAGE_FAILURE = 'COMMENT_UPLOAD_IMAGE_FAILURE' as const;
@@ -60,6 +64,7 @@ export type PostState = {
   modalCommentImagePath: string[];
   postEditMode: boolean;
   deleteId: number | null;
+  commentVisiblePostId: number | null;
   hasMorePosts: boolean;
   loadPostsLoading: boolean;
   loadPostsDone: boolean;
@@ -79,6 +84,9 @@ export type PostState = {
   editPostUploadImagesLoading: boolean;
   editPostUploadImagesDone: boolean;
   editPostUploadImagesError: null | string;
+  addCommentLoading: boolean;
+  addCommentDone: boolean;
+  addCommentError: null | string;
   commentUploadImageLoading: boolean;
   commentUploadImageDone: boolean;
   commentUploadImageError: null | string;
@@ -104,6 +112,8 @@ export interface Comment {
   UserId: number;
   PostId: number;
   parentId: number | null;
+  User: User;
+  CommentImage: Image | null;
 }
 
 export interface Post {
@@ -218,6 +228,21 @@ export interface editPostRemoveUploadedImageAction {
   data: string;
 }
 
+export interface addCommentRequestAction {
+  type: typeof ADD_COMMENT_REQUEST;
+  data: FormData;
+}
+
+export interface addCommentSuccessAction {
+  type: typeof ADD_COMMENT_SUCCESS;
+  data: Comment;
+}
+
+export interface addCommentFailureAction {
+  type: typeof ADD_COMMENT_FAILURE;
+  error: string;
+}
+
 export interface commentUploadImageRequestAction {
   type: typeof COMMENT_UPLOAD_IMAGE_REQUEST;
   data: FormData;
@@ -258,6 +283,7 @@ export interface modalCommentRemoveUploadedImageAction {
 
 export interface ShowCommentListAction {
   type: typeof SHOW_COMMENT_LIST;
+  data: number;
 }
 
 export interface HideCommentListAction {
@@ -325,6 +351,9 @@ export type PostAction =
   | editPostUploadImagesSuccessAction
   | editPostUploadImagesFailureAction
   | editPostRemoveUploadedImageAction
+  | addCommentRequestAction
+  | addCommentSuccessAction
+  | addCommentFailureAction
   | commentUploadImageRequestAction
   | commentUploadImageSuccessAction
   | commentUploadImageFailureAction

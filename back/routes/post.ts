@@ -225,4 +225,62 @@ router.delete('/:postId', isLoggedIn, async (req, res, next) => {
   }
 });
 
+router.post('/comment', isLoggedIn, upload.none(), async (req, res, next) => {
+  try {
+    const { content, PostId, image, parentId } = req.body;
+
+    const post = await Post.findOne({ where: { id: PostId } });
+
+    if (!post) {
+      return res.status(404).json({ message: '존재하지 않는 게시글입니다.' });
+    }
+
+    const newComment = await Comment.create({
+      content,
+      PostId,
+      UserId: req.user!.id,
+      parentId: parentId || null
+    });
+
+    if (image) {
+      await Image.create({
+        type: 'comment',
+        src: image,
+        CommentId: newComment.id
+      });
+    }
+
+    const fullComment = await Comment.findOne({
+      where: { id: newComment.id },
+      include: [
+        {
+          model: User,
+          attributes: ['id', 'nickname'],
+          include: [
+            {
+              model: Image,
+              as: 'ProfileImage',
+              where: { type: 'user' },
+              attributes: ['id', 'src'],
+              required: false
+            }
+          ]
+        },
+        {
+          model: Image,
+          as: 'CommentImage',
+          where: { type: 'comment' },
+          attributes: ['id', 'src'],
+          required: false
+        }
+      ]
+    });
+
+    res.status(201).json(fullComment);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
 export default router;

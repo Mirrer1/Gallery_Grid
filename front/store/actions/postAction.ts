@@ -21,7 +21,8 @@ import {
   COMMENT_UPLOAD_IMAGE_REQUEST,
   COMMENT_REMOVE_UPLOADED_IMAGE,
   MODAL_COMMENT_UPLOAD_IMAGE_REQUEST,
-  MODAL_COMMENT_REMOVE_UPLOADED_IMAGE
+  MODAL_COMMENT_REMOVE_UPLOADED_IMAGE,
+  ADD_COMMENT_REQUEST
 } from 'store/types/postType';
 
 export const loadPostsRequest = (lastId?: number) => ({
@@ -64,6 +65,11 @@ export const editPostRemoveUploadedImage = (data: string) => ({
   data
 });
 
+export const addCommentRequest = (data: FormData) => ({
+  type: ADD_COMMENT_REQUEST,
+  data
+});
+
 export const commentUploadImageRequest = (data: FormData) => ({
   type: COMMENT_UPLOAD_IMAGE_REQUEST,
   data
@@ -82,8 +88,9 @@ export const modalCommentRemoveUploadedImage = () => ({
   type: MODAL_COMMENT_REMOVE_UPLOADED_IMAGE
 });
 
-export const showCommentList = () => ({
-  type: SHOW_COMMENT_LIST
+export const showCommentList = (data: number) => ({
+  type: SHOW_COMMENT_LIST,
+  data
 });
 
 export const hideCommentList = () => ({

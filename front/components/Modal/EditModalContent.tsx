@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { CloseOutlined, CompassOutlined, LoadingOutlined, SmileOutlined } from '@ant-design/icons';
 import { toast } from 'react-toastify';
@@ -44,18 +44,28 @@ const EditModalContent = () => {
         return;
       }
 
+      if (!content.trim()) {
+        toast.warning('게시글 내용을 입력해주세요.');
+        return;
+      }
+
       const formData = new FormData();
       editPostImagePaths.forEach((image: string) => {
         formData.append('image', image);
       });
-      if (content) formData.append('content', content);
+      formData.append('content', content);
+      formData.append('postId', singlePost.id);
       if (location) formData.append('location', location);
-      if (singlePost) formData.append('postId', singlePost.id);
 
       dispatch(editPostRequest(formData));
     },
     [content, location, editPostImagePaths, singlePost]
   );
+
+  useEffect(() => {
+    setContent(singlePost.content);
+    setLocation(singlePost.location);
+  }, []);
 
   return (
     <EditModalContentWrapper>

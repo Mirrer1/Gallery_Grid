@@ -202,7 +202,7 @@ export const PostContents = styled.div`
   }
 `;
 
-export const PostOptions = styled.div<{ $isCommentListVisible: boolean }>`
+export const PostOptions = styled.div<{ $commentVisiblePostId: boolean }>`
   ${({ theme }) => theme.flexSet('start')}
   padding: 0 0.3em;
 
@@ -217,7 +217,7 @@ export const PostOptions = styled.div<{ $isCommentListVisible: boolean }>`
   }
 
   & > div:last-child {
-    color: ${props => (props.$isCommentListVisible ? '#6BA2E6' : 'black')};
+    color: ${props => (props.$commentVisiblePostId ? '#6BA2E6' : 'black')};
   }
 
   & > div > span > svg {

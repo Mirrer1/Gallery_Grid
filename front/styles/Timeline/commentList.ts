@@ -175,7 +175,7 @@ export const CommentInputImage = styled(motion.div)`
   }
 `;
 
-export const CommentInput = styled.div<{ $active: boolean; $uploading: boolean }>`
+export const CommentForm = styled.form<{ $active: boolean; $uploading: boolean }>`
   position: relative;
   height: ${props => (props.$uploading ? '31%' : '100%')};
   ${({ theme }) => theme.flexSet('space-between')}
@@ -214,7 +214,7 @@ export const CommentInput = styled.div<{ $active: boolean; $uploading: boolean }
     }
   }
 
-  & > div:last-child {
+  & > button {
     width: 10%;
     ${({ theme }) => theme.flexSet('end')}
 
@@ -242,7 +242,7 @@ export const CommentInput = styled.div<{ $active: boolean; $uploading: boolean }
       }
     }
 
-    & > div:last-child {
+    & > button {
       width: 4%;
     }
   }
@@ -260,7 +260,7 @@ export const CommentInput = styled.div<{ $active: boolean; $uploading: boolean }
       }
     }
 
-    & > div:last-child {
+    & > button {
       width: 8%;
     }
   }

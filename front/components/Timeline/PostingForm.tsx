@@ -57,11 +57,16 @@ const PostingForm = () => {
         return;
       }
 
+      if (!content.trim()) {
+        toast.warning('게시글 내용을 입력해주세요.');
+        return;
+      }
+
       const formData = new FormData();
       postImagePaths.forEach((image: string) => {
         formData.append('image', image);
       });
-      if (content) formData.append('content', content);
+      formData.append('content', content);
       if (location) formData.append('location', location);
 
       dispatch(addPostRequest(formData));

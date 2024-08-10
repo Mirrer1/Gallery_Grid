@@ -143,7 +143,7 @@ export const ModalCommentListItem = styled.div<{ $reply: boolean }>`
   }
 `;
 
-export const ModalCommentInput = styled.div<{ $active: boolean }>`
+export const ModalCommentForm = styled.form<{ $active: boolean }>`
   position: relative;
   ${({ theme }) => theme.flexSet('space-between')}
   height: 10%;
@@ -181,7 +181,7 @@ export const ModalCommentInput = styled.div<{ $active: boolean }>`
     }
   }
 
-  & > div:last-child {
+  & > button {
     width: 5%;
     ${({ theme }) => theme.flexSet('end')}
 

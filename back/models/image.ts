@@ -6,7 +6,7 @@ import Comment from './comment';
 
 class Image extends Model<InferAttributes<Image>, InferCreationAttributes<Image>> {
   declare id: CreationOptional<number>;
-  declare type: 'user' | 'post';
+  declare type: 'user' | 'post' | 'comment';
   declare src: string;
   declare PostId: number | null;
   declare UserId: number | null;
