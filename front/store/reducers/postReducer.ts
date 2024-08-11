@@ -46,7 +46,14 @@ import {
   ADD_COMMENT_FAILURE,
   LOAD_COMMENTS_REQUEST,
   LOAD_COMMENTS_SUCCESS,
-  LOAD_COMMENTS_FAILURE
+  LOAD_COMMENTS_FAILURE,
+  ADD_REPLY_COMMENT_REQUEST,
+  ADD_REPLY_COMMENT_SUCCESS,
+  ADD_REPLY_COMMENT_FAILURE,
+  REPLY_COMMENT_UPLOAD_IMAGE_REQUEST,
+  REPLY_COMMENT_UPLOAD_IMAGE_SUCCESS,
+  REPLY_COMMENT_UPLOAD_IMAGE_FAILURE,
+  REPLY_COMMENT_REMOVE_UPLOADED_IMAGE
 } from 'store/types/postType';
 
 export const initialState: PostState = {
@@ -54,6 +61,7 @@ export const initialState: PostState = {
   singlePost: null,
   postImagePaths: [],
   editPostImagePaths: [],
+  replyCommentImagePath: [],
   commentImagePath: [],
   modalCommentImagePath: [],
   postEditMode: false,
@@ -88,6 +96,12 @@ export const initialState: PostState = {
   commentUploadImageLoading: false,
   commentUploadImageDone: false,
   commentUploadImageError: null,
+  addReplyCommentLoading: false,
+  addReplyCommentDone: false,
+  addReplyCommentError: null,
+  replyCommentUploadImageLoading: false,
+  replyCommentUploadImageDone: false,
+  replyCommentUploadImageError: null,
   modalCommentUploadImageLoading: false,
   modalCommentUploadImageDone: false,
   modalCommentUploadImageError: null,
@@ -198,7 +212,6 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
       case EDIT_POST_REMOVE_UPLOADED_IMAGE:
         draft.editPostImagePaths = draft.editPostImagePaths.filter(path => path !== action.data);
         break;
-
       case LOAD_COMMENTS_REQUEST:
         draft.loadCommentsLoading = true;
         draft.loadCommentsDone = false;
@@ -229,13 +242,11 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
         }
         draft.mainComments?.push(action.data);
         draft.commentImagePath = [];
-        draft.modalCommentImagePath = [];
         break;
       case ADD_COMMENT_FAILURE:
         draft.addCommentLoading = false;
         draft.addCommentError = action.error;
         break;
-
       case COMMENT_UPLOAD_IMAGE_REQUEST:
         draft.commentUploadImageLoading = true;
         draft.commentUploadImageDone = false;
@@ -252,6 +263,44 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
         break;
       case COMMENT_REMOVE_UPLOADED_IMAGE:
         draft.commentImagePath = [];
+        break;
+
+      case ADD_REPLY_COMMENT_REQUEST:
+        draft.addReplyCommentLoading = true;
+        draft.addReplyCommentDone = false;
+        draft.addReplyCommentError = null;
+        break;
+      case ADD_REPLY_COMMENT_SUCCESS:
+        draft.addReplyCommentLoading = false;
+        draft.addReplyCommentDone = true;
+        const replyCommentPostIndex = draft.mainPosts.findIndex(post => post.id === action.data.PostId);
+        if (replyCommentPostIndex !== -1) {
+          draft.mainPosts[replyCommentPostIndex].Comments.push({ id: action.data.id });
+        }
+        draft.mainComments?.push(action.data);
+        draft.replyCommentImagePath = [];
+        break;
+      case ADD_REPLY_COMMENT_FAILURE:
+        draft.addCommentLoading = false;
+        draft.addCommentError = action.error;
+        break;
+
+      case REPLY_COMMENT_UPLOAD_IMAGE_REQUEST:
+        draft.replyCommentUploadImageLoading = true;
+        draft.replyCommentUploadImageDone = false;
+        draft.replyCommentUploadImageError = null;
+        break;
+      case REPLY_COMMENT_UPLOAD_IMAGE_SUCCESS:
+        draft.replyCommentUploadImageLoading = false;
+        draft.replyCommentUploadImageDone = true;
+        draft.replyCommentImagePath = action.data;
+        break;
+      case REPLY_COMMENT_UPLOAD_IMAGE_FAILURE:
+        draft.replyCommentUploadImageLoading = false;
+        draft.replyCommentUploadImageError = action.error;
+        break;
+      case REPLY_COMMENT_REMOVE_UPLOADED_IMAGE:
+        draft.replyCommentImagePath = [];
         break;
       case MODAL_COMMENT_UPLOAD_IMAGE_REQUEST:
         draft.modalCommentUploadImageLoading = true;

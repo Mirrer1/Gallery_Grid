@@ -179,6 +179,7 @@ export const CommentListItem = styled.div<{ $reply: boolean }>`
     font-size: 0.75rem;
     opacity: 40%;
     margin-left: 0.5em;
+    margin-bottom: ${props => (props.$reply ? '1em' : '0')};
   }
 `;
 

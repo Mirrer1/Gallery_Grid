@@ -12,6 +12,7 @@ import {
 import { toast } from 'react-toastify';
 import EmojiPicker from 'emoji-picker-react';
 
+import ReplyCommentForm from './ReplyCommentForm';
 import ImagePreview from 'components/Modal/ImagePreviewModal';
 import ReplyComment from './ReplyComment';
 import useInput from 'utils/useInput';
@@ -51,6 +52,7 @@ const CommentList = () => {
   const { showEmoji, showEmojiPicker, closeEmojiPicker, onEmojiClick } = useEmojiPicker(setComment);
   const { fileInputRef, onFileChange } = useFileUpload(commentUploadImageRequest, { showWarning: false });
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [replyFormCommentId, setReplyFormCommentId] = useState<number | null>(null);
   const { me } = useSelector((state: RootState) => state.user);
   const {
     isCommentListVisible,
@@ -61,7 +63,8 @@ const CommentList = () => {
     isPostModalVisible,
     mainComments,
     loadCommentsLoading,
-    addCommentDone
+    addCommentDone,
+    addReplyCommentDone
   } = useSelector((state: RootState) => state.post);
 
   const onHideComment = useCallback(() => {
@@ -87,10 +90,14 @@ const CommentList = () => {
   const onSubmitForm = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      console.log('실행');
 
       if (!comment.trim()) {
         toast.warning('댓글 내용을 입력해주세요.');
+        return;
+      }
+
+      if (comment.length > 500) {
+        toast.warning('댓글은 500자 이하로 작성해주세요.');
         return;
       }
 
@@ -104,8 +111,6 @@ const CommentList = () => {
       formData.append('PostId', commentVisiblePostId);
 
       dispatch(addCommentRequest(formData));
-
-      setComment('');
     },
     [comment, commentImagePath, commentVisiblePostId]
   );
@@ -120,17 +125,27 @@ const CommentList = () => {
   );
 
   useEffect(() => {
-    if (addCommentDone && commentListRef.current) {
-      commentListRef.current.scrollTo({
-        top: commentListRef.current.scrollHeight,
-        behavior: 'smooth'
-      });
+    if (addCommentDone) {
+      setComment('');
+
+      if (commentListRef.current) {
+        commentListRef.current.scrollTo({
+          top: commentListRef.current.scrollHeight,
+          behavior: 'smooth'
+        });
+      }
     }
   }, [addCommentDone]);
 
   useEffect(() => {
     if (commentVisiblePostId) dispatch(loadCommentsRequest(commentVisiblePostId));
   }, [commentVisiblePostId]);
+
+  useEffect(() => {
+    if (addReplyCommentDone) {
+      setReplyFormCommentId(null);
+    }
+  }, [addReplyCommentDone]);
 
   return (
     <CommentListWrapper
@@ -197,11 +212,29 @@ const CommentList = () => {
                           />
                         </CommentListItemImage>
                       )}
+
                       <p>{comment.content}</p>
-                      <button type="button">답글쓰기</button>
+
+                      <button type="button" onClick={() => setReplyFormCommentId(comment.id)}>
+                        답글쓰기
+                      </button>
                     </CommentListItem>
 
-                    <ReplyComment />
+                    {replyFormCommentId === comment.id && (
+                      <ReplyCommentForm setReplyFormCommentId={setReplyFormCommentId} parentId={comment.id} />
+                    )}
+
+                    {mainComments
+                      .filter((reply: Comment) => reply.parentId === comment.id)
+                      .map((reply: Comment) => (
+                        <ReplyComment
+                          key={reply.id}
+                          comment={reply}
+                          parentId={comment.id}
+                          replyFormCommentId={replyFormCommentId}
+                          setReplyFormCommentId={setReplyFormCommentId}
+                        />
+                      ))}
                   </div>
                 )
             )}
@@ -210,12 +243,12 @@ const CommentList = () => {
           <CommentInputWrapper $uploading={commentImagePath.length !== 0}>
             {commentImagePath.length !== 0 && (
               <CommentInputImageWrapper>
-                <CommentInputImage
-                  key={commentImagePath}
-                  {...slideInUploadImage}
-                  onClick={() => showImagePreview(`http://localhost:3065/${commentImagePath}`)}
-                >
-                  <img src={`http://localhost:3065/${commentImagePath}`} alt="입력한 댓글의 첨부 이미지" />
+                <CommentInputImage key={commentImagePath} {...slideInUploadImage}>
+                  <img
+                    src={`http://localhost:3065/${commentImagePath}`}
+                    alt="입력한 댓글의 첨부 이미지"
+                    onClick={() => showImagePreview(`http://localhost:3065/${commentImagePath}`)}
+                  />
                   <DeleteOutlined onClick={handleRemoveImage} />
                 </CommentInputImage>
               </CommentInputImageWrapper>

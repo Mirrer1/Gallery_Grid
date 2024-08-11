@@ -41,7 +41,13 @@ import {
   LOAD_COMMENTS_REQUEST,
   loadCommentsRequestAction,
   LOAD_COMMENTS_SUCCESS,
-  LOAD_COMMENTS_FAILURE
+  LOAD_COMMENTS_FAILURE,
+  REPLY_COMMENT_UPLOAD_IMAGE_REQUEST,
+  REPLY_COMMENT_UPLOAD_IMAGE_SUCCESS,
+  REPLY_COMMENT_UPLOAD_IMAGE_FAILURE,
+  ADD_REPLY_COMMENT_REQUEST,
+  ADD_REPLY_COMMENT_SUCCESS,
+  ADD_REPLY_COMMENT_FAILURE
 } from 'store/types/postType';
 
 function loadPostsAPI(lastId?: number) {
@@ -200,6 +206,22 @@ function* addComment(action: addCommentRequestAction) {
   }
 }
 
+function* addReplyComment(action: addCommentRequestAction) {
+  try {
+    const result: AxiosResponse<Post> = yield call(addCommentAPI, action.data);
+
+    yield put({
+      type: ADD_REPLY_COMMENT_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: ADD_REPLY_COMMENT_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
 function* uploadCommentImage(action: commentUploadImageRequestAction) {
   try {
     const result: AxiosResponse<string[]> = yield call(uploadImagesAPI, action.data);
@@ -211,6 +233,22 @@ function* uploadCommentImage(action: commentUploadImageRequestAction) {
   } catch (error: any) {
     yield put({
       type: COMMENT_UPLOAD_IMAGE_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
+function* uploadReplyCommentImage(action: commentUploadImageRequestAction) {
+  try {
+    const result: AxiosResponse<string[]> = yield call(uploadImagesAPI, action.data);
+
+    yield put({
+      type: REPLY_COMMENT_UPLOAD_IMAGE_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: REPLY_COMMENT_UPLOAD_IMAGE_FAILURE,
       error: error.response.data.message
     });
   }
@@ -268,6 +306,14 @@ function* watchCommentUploadImage() {
   yield takeLatest(COMMENT_UPLOAD_IMAGE_REQUEST, uploadCommentImage);
 }
 
+function* watchAddReplyComment() {
+  yield takeLatest(ADD_REPLY_COMMENT_REQUEST, addReplyComment);
+}
+
+function* watchReplyCommentUploadImage() {
+  yield takeLatest(REPLY_COMMENT_UPLOAD_IMAGE_REQUEST, uploadReplyCommentImage);
+}
+
 function* watchModalCommentUploadImage() {
   yield takeLatest(MODAL_COMMENT_UPLOAD_IMAGE_REQUEST, uploadModalCommentImage);
 }
@@ -283,6 +329,8 @@ export default function* postSaga() {
     fork(watchLoadComments),
     fork(watchAddComment),
     fork(watchCommentUploadImage),
+    fork(watchAddReplyComment),
+    fork(watchReplyCommentUploadImage),
     fork(watchModalCommentUploadImage)
   ]);
 }

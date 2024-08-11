@@ -309,6 +309,10 @@ router.post('/comment', isLoggedIn, upload.none(), async (req, res, next) => {
           ]
         },
         {
+          model: Post,
+          attributes: ['UserId']
+        },
+        {
           model: Image,
           as: 'CommentImage',
           where: { type: 'comment' },

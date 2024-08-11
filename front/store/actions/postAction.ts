@@ -23,7 +23,10 @@ import {
   MODAL_COMMENT_UPLOAD_IMAGE_REQUEST,
   MODAL_COMMENT_REMOVE_UPLOADED_IMAGE,
   ADD_COMMENT_REQUEST,
-  LOAD_COMMENTS_REQUEST
+  LOAD_COMMENTS_REQUEST,
+  REPLY_COMMENT_UPLOAD_IMAGE_REQUEST,
+  REPLY_COMMENT_REMOVE_UPLOADED_IMAGE,
+  ADD_REPLY_COMMENT_REQUEST
 } from 'store/types/postType';
 
 export const loadPostsRequest = (lastId?: number) => ({
@@ -83,6 +86,20 @@ export const commentUploadImageRequest = (data: FormData) => ({
 
 export const commentRemoveUploadedImage = () => ({
   type: COMMENT_REMOVE_UPLOADED_IMAGE
+});
+
+export const addReplyCommentRequest = (data: FormData) => ({
+  type: ADD_REPLY_COMMENT_REQUEST,
+  data
+});
+
+export const replyCommentUploadImageRequest = (data: FormData) => ({
+  type: REPLY_COMMENT_UPLOAD_IMAGE_REQUEST,
+  data
+});
+
+export const replyCommentRemoveUploadedImage = () => ({
+  type: REPLY_COMMENT_REMOVE_UPLOADED_IMAGE
 });
 
 export const modalCommentUploadImageRequest = (data: FormData) => ({
