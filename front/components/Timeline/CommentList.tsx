@@ -1,7 +1,8 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   CaretDownOutlined,
+  CloseSquareTwoTone,
   DeleteOutlined,
   LoadingOutlined,
   PaperClipOutlined,
@@ -11,17 +12,21 @@ import {
 import { toast } from 'react-toastify';
 import EmojiPicker from 'emoji-picker-react';
 
+import ImagePreview from 'components/Modal/ImagePreviewModal';
 import ReplyComment from './ReplyComment';
 import useInput from 'utils/useInput';
 import useFileUpload from 'utils/useFileUpload';
 import useEmojiPicker from 'utils/useEmojiPicker';
+import { formatDate } from 'utils/useListTimes';
 
 import { RootState } from 'store/reducers';
+import { Comment } from 'store/types/postType';
 import {
   addCommentRequest,
   commentRemoveUploadedImage,
   commentUploadImageRequest,
-  hideCommentList
+  hideCommentList,
+  loadCommentsRequest
 } from 'store/actions/postAction';
 import { slideInFromBottom, slideInUploadImage } from 'styles/Common/animation';
 import {
@@ -32,85 +37,32 @@ import {
   CommentInputWrapper,
   CommentListHeader,
   CommentListItem,
+  CommentListItemImage,
   CommentListItemWrapper,
-  CommentListWrapper
+  CommentListWrapper,
+  CommentsLoading,
+  NoCommentsContainer
 } from 'styles/Timeline/commentList';
 
 const CommentList = () => {
-  const contentList = [
-    {
-      id: 1,
-      nickname: 'userasd1',
-      profile: 'https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg',
-      content:
-        '안녕하세요. 저는 댓글1입니다.안녕하세요. 저는 댓글1입니다.안녕하세요. 저는 댓글1입니다.안녕하세요. 저는 댓글1입니다.안녕하세요. 저는 댓글1입니다.안녕하세요. 저는 댓글1입니다.안녕하세요. 저는 댓글1입니다.안녕하세요. 저는 댓글1입니다.안녕하세요. 저는 댓글1입니다.안녕하세요. 저는 댓글1입니다.안녕하세요. 저는 댓글1입니다.안녕하세요. 저는 댓글1입니다.안녕하세요. 저는 댓글1입니다.안녕하세요. 저는 댓글1입니다.안녕하세요. 저는 댓글1입니다.안녕하세요. 저는 댓글1입니다.',
-      createdAt: '2024-2-14'
-    },
-    {
-      id: 2,
-      nickname: 'useasdasdr2',
-      profile: 'https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg',
-      content: '안녕하세요. 저는 댓글2입니다.',
-      createdAt: '2024-2-11'
-    },
-    {
-      id: 3,
-      nickname: 'usedasdasdr3',
-      profile: 'https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg',
-      content: '안녕하세요. 저는 댓글3입니다.',
-      createdAt: '2024-6-24'
-    },
-    {
-      id: 4,
-      nickname: 'user4',
-      profile: 'https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg',
-      content: '안녕하세요. 저는 댓글4입니다.',
-      createdAt: '2023-1-26'
-    },
-    {
-      id: 5,
-      nickname: 'user5',
-      profile: 'https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg',
-      content: '안녕하세요. 저는 댓글5입니다.',
-      createdAt: '2023-2-22'
-    },
-    {
-      id: 6,
-      nickname: 'user6',
-      profile: 'https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg',
-      content: '안녕하세요. 저는 댓글6입니다.',
-      createdAt: '2023-12-12'
-    },
-    {
-      id: 7,
-      nickname: 'user7',
-      profile: 'https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg',
-      content: '안녕하세요. 저는 댓글7입니다.',
-      createdAt: '2023-11-4'
-    },
-    {
-      id: 8,
-      nickname: 'user8',
-      profile: 'https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg',
-      content: '안녕하세요. 저는 댓글8입니다.',
-      createdAt: '2023-9-1'
-    },
-    {
-      id: 9,
-      nickname: 'user9',
-      profile: 'https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg',
-      content: '안녕하세요. 저는 댓글9입니다.',
-      createdAt: '2023-6-12'
-    }
-  ];
-
   const dispatch = useDispatch();
+  const commentListRef = useRef<HTMLDivElement>(null);
   const [comment, onChangeComment, setComment] = useInput('');
   const { showEmoji, showEmojiPicker, closeEmojiPicker, onEmojiClick } = useEmojiPicker(setComment);
   const { fileInputRef, onFileChange } = useFileUpload(commentUploadImageRequest, { showWarning: false });
-  const { isCommentListVisible, commentImagePath, commentUploadImageLoading, commentVisiblePostId } = useSelector(
-    (state: RootState) => state.post
-  );
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const { me } = useSelector((state: RootState) => state.user);
+  const {
+    isCommentListVisible,
+    commentImagePath,
+    commentUploadImageLoading,
+    commentVisiblePostId,
+    addCommentLoading,
+    isPostModalVisible,
+    mainComments,
+    loadCommentsLoading,
+    addCommentDone
+  } = useSelector((state: RootState) => state.post);
 
   const onHideComment = useCallback(() => {
     dispatch(hideCommentList());
@@ -124,9 +76,18 @@ const CommentList = () => {
     dispatch(commentRemoveUploadedImage());
   }, []);
 
+  const showImagePreview = useCallback((image: string) => {
+    setImagePreview(image);
+  }, []);
+
+  const hideImagePreview = useCallback(() => {
+    setImagePreview(null);
+  }, []);
+
   const onSubmitForm = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
+      console.log('실행');
 
       if (!comment.trim()) {
         toast.warning('댓글 내용을 입력해주세요.');
@@ -158,85 +119,153 @@ const CommentList = () => {
     [comment]
   );
 
+  useEffect(() => {
+    if (addCommentDone && commentListRef.current) {
+      commentListRef.current.scrollTo({
+        top: commentListRef.current.scrollHeight,
+        behavior: 'smooth'
+      });
+    }
+  }, [addCommentDone]);
+
+  useEffect(() => {
+    if (commentVisiblePostId) dispatch(loadCommentsRequest(commentVisiblePostId));
+  }, [commentVisiblePostId]);
+
   return (
-    <CommentListWrapper $isCommentListVisible={isCommentListVisible} {...slideInFromBottom()}>
+    <CommentListWrapper
+      key={commentVisiblePostId}
+      $isCommentListVisible={isCommentListVisible}
+      {...slideInFromBottom()}
+    >
       <CommentListHeader>
         <CaretDownOutlined onClick={onHideComment} />
       </CommentListHeader>
 
-      <CommentListItemWrapper $uploading={commentImagePath.length !== 0}>
-        {contentList.map(comment => (
-          <div key={comment.id}>
-            <CommentListItem $reply={false}>
-              <div>
-                <div>
-                  <img src={comment.profile} alt={`${comment.nickname}의 프로필 이미지`} />
+      {loadCommentsLoading ? (
+        <CommentsLoading>
+          <LoadingOutlined />
+        </CommentsLoading>
+      ) : mainComments?.length > 0 ? (
+        <>
+          <CommentListItemWrapper ref={commentListRef} $uploading={commentImagePath.length !== 0}>
+            {mainComments.map(
+              (comment: Comment) =>
+                comment.parentId === null && (
+                  <div key={comment.id}>
+                    <CommentListItem $reply={false}>
+                      <div>
+                        <div>
+                          <img
+                            src={
+                              comment.User.ProfileImage
+                                ? `http://localhost:3065/${comment.User.ProfileImage.src}`
+                                : '/user.jpg'
+                            }
+                            alt={`${comment.User.nickname}의 프로필 이미지`}
+                          />
 
-                  <div>
-                    <h1>{comment.nickname}</h1>
-                    <p>{comment.createdAt}</p>
+                          <div>
+                            <div>
+                              <h1>{comment.User.nickname}</h1>
+                              {comment.Post?.UserId === comment.UserId && <p>작성자</p>}
+                            </div>
+
+                            <p>{formatDate(comment.createdAt)}</p>
+                          </div>
+                        </div>
+
+                        {comment.User.id === me?.id ? (
+                          <div>
+                            <button type="button">수정</button>
+                            <button type="button">삭제</button>
+                          </div>
+                        ) : (
+                          <div>
+                            <button type="button">신고</button>
+                          </div>
+                        )}
+                      </div>
+
+                      {comment.CommentImage && (
+                        <CommentListItemImage
+                          onClick={() => showImagePreview(`http://localhost:3065/${comment.CommentImage?.src}`)}
+                        >
+                          <img
+                            src={`http://localhost:3065/${comment.CommentImage.src}`}
+                            alt={`${comment.User.nickname}의 댓글 이미지`}
+                          />
+                        </CommentListItemImage>
+                      )}
+                      <p>{comment.content}</p>
+                      <button type="button">답글쓰기</button>
+                    </CommentListItem>
+
+                    <ReplyComment />
                   </div>
-                </div>
+                )
+            )}
+          </CommentListItemWrapper>
 
-                <div>
-                  <button type="button">수정</button>
-                  <button type="button">삭제</button>
-                </div>
-              </div>
-
-              <p>{comment.content}</p>
-            </CommentListItem>
-
-            <ReplyComment />
-          </div>
-        ))}
-      </CommentListItemWrapper>
-
-      <CommentInputWrapper $uploading={commentImagePath.length !== 0}>
-        {commentImagePath.length !== 0 && (
-          <CommentInputImageWrapper>
-            <CommentInputImage key={commentImagePath} {...slideInUploadImage}>
-              <img src={`http://localhost:3065/${commentImagePath}`} alt="입력한 댓글의 첨부 이미지" />
-              <DeleteOutlined onClick={handleRemoveImage} />
-            </CommentInputImage>
-          </CommentInputImageWrapper>
-        )}
-
-        <CommentForm
-          encType="multipart/form-data"
-          $active={comment.length === 0}
-          $uploading={commentImagePath.length !== 0}
-          onSubmit={onSubmitForm}
-        >
-          <div>
-            {commentUploadImageLoading ? <LoadingOutlined /> : <PaperClipOutlined onClick={onClickImageUpload} />}
-            <input type="file" name="image" ref={fileInputRef} onChange={e => onFileChange(e, commentImagePath)} />
-
-            <SmileOutlined onClick={showEmojiPicker} />
-            {showEmoji && EmojiPicker && (
-              <CommentEmojiPicker>
-                <div onClick={closeEmojiPicker} />
-
-                <div>
-                  <EmojiPicker onEmojiClick={onEmojiClick} />
-                </div>
-              </CommentEmojiPicker>
+          <CommentInputWrapper $uploading={commentImagePath.length !== 0}>
+            {commentImagePath.length !== 0 && (
+              <CommentInputImageWrapper>
+                <CommentInputImage
+                  key={commentImagePath}
+                  {...slideInUploadImage}
+                  onClick={() => showImagePreview(`http://localhost:3065/${commentImagePath}`)}
+                >
+                  <img src={`http://localhost:3065/${commentImagePath}`} alt="입력한 댓글의 첨부 이미지" />
+                  <DeleteOutlined onClick={handleRemoveImage} />
+                </CommentInputImage>
+              </CommentInputImageWrapper>
             )}
 
-            <input
-              type="text"
-              placeholder="Type a Comment..."
-              value={comment}
-              onChange={onChangeComment}
-              onKeyDown={handleKeyDown}
-            />
-          </div>
+            <CommentForm
+              encType="multipart/form-data"
+              $active={comment.length === 0}
+              $uploading={commentImagePath.length !== 0}
+              onSubmit={onSubmitForm}
+            >
+              <div>
+                {commentUploadImageLoading ? <LoadingOutlined /> : <PaperClipOutlined onClick={onClickImageUpload} />}
+                <input type="file" name="image" ref={fileInputRef} onChange={e => onFileChange(e, commentImagePath)} />
 
-          <button type="submit">
-            <SendOutlined />
-          </button>
-        </CommentForm>
-      </CommentInputWrapper>
+                <SmileOutlined onClick={showEmojiPicker} />
+                {showEmoji && EmojiPicker && (
+                  <CommentEmojiPicker>
+                    <div onClick={closeEmojiPicker} />
+
+                    <div>
+                      <EmojiPicker onEmojiClick={onEmojiClick} />
+                    </div>
+                  </CommentEmojiPicker>
+                )}
+
+                <input
+                  type="text"
+                  placeholder="Type a Comment..."
+                  value={comment}
+                  onChange={onChangeComment}
+                  onKeyDown={handleKeyDown}
+                />
+              </div>
+
+              <button type="submit">
+                {addCommentLoading && !isPostModalVisible ? <LoadingOutlined /> : <SendOutlined />}
+              </button>
+            </CommentForm>
+          </CommentInputWrapper>
+        </>
+      ) : (
+        <NoCommentsContainer>
+          <CloseSquareTwoTone twoToneColor="#6BA2E6" />
+          <h1>No comments yet.</h1>
+          <p>첫번째 댓글을 작성해보세요!</p>
+        </NoCommentsContainer>
+      )}
+
+      <ImagePreview imagePreview={imagePreview} hideImagePreview={hideImagePreview} />
     </CommentListWrapper>
   );
 };

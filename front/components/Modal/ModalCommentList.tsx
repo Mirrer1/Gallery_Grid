@@ -108,7 +108,7 @@ const ModalCommentList = () => {
   const [comment, onChangeComment, setComment] = useInput('');
   const { showEmoji, showEmojiPicker, closeEmojiPicker, onEmojiClick } = useEmojiPicker(setComment);
   const { fileInputRef, onFileChange } = useFileUpload(modalCommentUploadImageRequest, { showWarning: false });
-  const { modalCommentImagePath, modalCommentUploadImageLoading, singlePost } = useSelector(
+  const { modalCommentImagePath, modalCommentUploadImageLoading, singlePost, addCommentLoading } = useSelector(
     (state: RootState) => state.post
   );
 
@@ -228,9 +228,7 @@ const ModalCommentList = () => {
           />
         </div>
 
-        <button type="submit">
-          <SendOutlined />
-        </button>
+        <button type="submit">{addCommentLoading ? <LoadingOutlined /> : <SendOutlined />}</button>
       </ModalCommentForm>
     </ModalCommentListContainer>
   );

@@ -42,6 +42,42 @@ export const CommentListHeader = styled.div`
   }
 `;
 
+export const CommentsLoading = styled.div`
+  ${({ theme }) => theme.flexColumnSet()};
+  height: 95%;
+
+  & > span {
+    font-size: 2rem;
+    color: #6ba2e6;
+  }
+
+  ${media.tablet} {
+    height: 94%;
+  }
+`;
+
+export const NoCommentsContainer = styled.div`
+  ${({ theme }) => theme.flexColumnSet()};
+  height: 95%;
+
+  & > span {
+    font-size: 3rem;
+    margin-bottom: 0.25em;
+  }
+
+  & > h1 {
+    color: ${({ theme }) => theme.colors.font};
+    font-size: 1.4rem;
+    font-weight: 500;
+    margin-bottom: 0.2em;
+  }
+
+  & > p {
+    font-size: 0.8rem;
+    opacity: 60%;
+  }
+`;
+
 export const CommentListItemWrapper = styled.div<{ $uploading: boolean }>`
   height: ${props => (props.$uploading ? '73%' : '88%')};
   padding: 0 1em;
@@ -84,18 +120,31 @@ export const CommentListItem = styled.div<{ $reply: boolean }>`
       }
 
       & > div {
-        & > h1 {
-          color: ${({ theme }) => theme.colors.primary};
-          font-size: 0.9rem;
-          font-weight: 500;
+        & > div {
+          ${({ theme }) => theme.flexSet()};
           margin-bottom: 0.3em;
-          cursor: pointer;
 
-          @media (min-width: 992px) {
-            &:hover {
-              text-decoration: underline;
-              text-underline-offset: 1.5px;
+          & > h1 {
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-right: 0.2em;
+            cursor: pointer;
+
+            @media (min-width: 992px) {
+              &:hover {
+                text-decoration: underline;
+                text-underline-offset: 1.5px;
+              }
             }
+          }
+
+          & > p {
+            font-size: 0.6rem;
+            font-weight: 500;
+            color: ${({ theme }) => theme.colors.primary};
+            background-color: #d6e4f8;
+            border-radius: 10px;
+            padding: 0.3em 0.6em;
           }
         }
 
@@ -125,6 +174,26 @@ export const CommentListItem = styled.div<{ $reply: boolean }>`
     line-height: 1.5;
     margin-left: 0.5em;
   }
+
+  & > button {
+    font-size: 0.75rem;
+    opacity: 40%;
+    margin-left: 0.5em;
+  }
+`;
+
+export const CommentListItemImage = styled.div`
+  width: 140px;
+  height: 140px;
+  margin-bottom: 0.5em;
+  cursor: pointer;
+
+  & > img {
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    ${DarkShadowStyle};
+  }
 `;
 
 export const CommentInputWrapper = styled.div<{ $uploading: boolean }>`
@@ -148,6 +217,7 @@ export const CommentInputImage = styled(motion.div)`
   width: fit-content;
   padding: 0.5em;
   height: 120px;
+  cursor: pointer;
 
   & > img {
     width: 120px;
@@ -224,8 +294,13 @@ export const CommentForm = styled.form<{ $active: boolean; $uploading: boolean }
       opacity: ${props => (props.$active ? '40%' : '100%')};
       background-color: ${({ theme }) => theme.colors.primary};
       border-radius: 50%;
-      padding: 0.4em 0.4em 0.4em 0.6em;
+      padding: 0.5em;
       ${HoverStyle('&')};
+
+      & > svg {
+        position: relative;
+        left: 1px;
+      }
     }
   }
 

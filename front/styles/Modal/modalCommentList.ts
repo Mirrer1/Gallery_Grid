@@ -191,8 +191,13 @@ export const ModalCommentForm = styled.form<{ $active: boolean }>`
       opacity: ${props => (props.$active ? '40%' : '100%')};
       background-color: ${({ theme }) => theme.colors.primary};
       border-radius: 50%;
-      padding: 0.4em 0.4em 0.4em 0.6em;
+      padding: 0.5em;
       ${HoverStyle('&')};
+
+      & > svg {
+        position: relative;
+        left: 1px;
+      }
     }
   }
 

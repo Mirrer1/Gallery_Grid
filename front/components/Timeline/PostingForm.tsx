@@ -15,18 +15,12 @@ import EmojiPicker from 'emoji-picker-react';
 import useInput from 'utils/useInput';
 import useFileUpload from 'utils/useFileUpload';
 import useEmojiPicker from 'utils/useEmojiPicker';
+import ImagePreview from 'components/Modal/ImagePreviewModal';
 import { useLocation } from 'utils/useLocation';
 import { RootState } from 'store/reducers';
 import { addPostRequest, postRemoveUploadedImage, postUploadImagesRequest } from 'store/actions/postAction';
-import { slideInModal, slideInUploadImage } from 'styles/Common/animation';
-import {
-  PostingBtn,
-  PostingEmojiPicker,
-  PostingWrapper,
-  UploadImage,
-  UploadImagePreview,
-  UploadImages
-} from 'styles/Timeline/postingForm';
+import { slideInUploadImage } from 'styles/Common/animation';
+import { PostingBtn, PostingEmojiPicker, PostingWrapper, UploadImages } from 'styles/Timeline/postingForm';
 
 const PostingForm = () => {
   const dispatch = useDispatch();
@@ -155,17 +149,7 @@ const PostingForm = () => {
         </div>
       </div>
 
-      {imagePreview && (
-        <UploadImagePreview>
-          <div onClick={hideImagePreview}>
-            <CloseOutlined onClick={hideImagePreview} />
-          </div>
-
-          <UploadImage {...slideInModal}>
-            <img src={imagePreview} alt="업로드한 이미지" />
-          </UploadImage>
-        </UploadImagePreview>
-      )}
+      <ImagePreview imagePreview={imagePreview} hideImagePreview={hideImagePreview} />
     </PostingWrapper>
   );
 };

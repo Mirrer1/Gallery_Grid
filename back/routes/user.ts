@@ -5,8 +5,8 @@ import { Op } from 'sequelize';
 import User from '../models/user';
 import passport from 'passport';
 import Image from '../models/image';
-import { isLoggedIn, isNotLoggedIn } from './middleware';
 import Post from '../models/post';
+import { isLoggedIn, isNotLoggedIn } from './middleware';
 
 const router = express.Router();
 

@@ -43,7 +43,10 @@ import {
   EDIT_POST_FAILURE,
   ADD_COMMENT_REQUEST,
   ADD_COMMENT_SUCCESS,
-  ADD_COMMENT_FAILURE
+  ADD_COMMENT_FAILURE,
+  LOAD_COMMENTS_REQUEST,
+  LOAD_COMMENTS_SUCCESS,
+  LOAD_COMMENTS_FAILURE
 } from 'store/types/postType';
 
 export const initialState: PostState = {
@@ -55,6 +58,7 @@ export const initialState: PostState = {
   modalCommentImagePath: [],
   postEditMode: false,
   deleteId: null,
+  mainComments: null,
   commentVisiblePostId: null,
   hasMorePosts: true,
   loadPostsLoading: false,
@@ -75,6 +79,9 @@ export const initialState: PostState = {
   editPostUploadImagesLoading: false,
   editPostUploadImagesDone: false,
   editPostUploadImagesError: null,
+  loadCommentsLoading: false,
+  loadCommentsDone: false,
+  loadCommentsError: null,
   addCommentLoading: false,
   addCommentDone: false,
   addCommentError: null,
@@ -192,6 +199,22 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
         draft.editPostImagePaths = draft.editPostImagePaths.filter(path => path !== action.data);
         break;
 
+      case LOAD_COMMENTS_REQUEST:
+        draft.loadCommentsLoading = true;
+        draft.loadCommentsDone = false;
+        draft.loadCommentsError = null;
+        break;
+      case LOAD_COMMENTS_SUCCESS:
+        draft.loadCommentsLoading = false;
+        draft.loadCommentsDone = true;
+        draft.mainComments = action.data;
+        // draft.mainPosts = draft.mainPosts.concat(action.data);
+        // draft.hasMorePosts = action.data.length === 10;
+        break;
+      case LOAD_COMMENTS_FAILURE:
+        draft.loadCommentsLoading = false;
+        draft.loadCommentsError = action.error;
+        break;
       case ADD_COMMENT_REQUEST:
         draft.addCommentLoading = true;
         draft.addCommentDone = false;
@@ -200,8 +223,13 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
       case ADD_COMMENT_SUCCESS:
         draft.addCommentLoading = false;
         draft.addCommentDone = true;
-        // draft.mainPosts.unshift(action.data);
-        // draft.postImagePaths = [];
+        const commentPostIndex = draft.mainPosts.findIndex(post => post.id === action.data.PostId);
+        if (commentPostIndex !== -1) {
+          draft.mainPosts[commentPostIndex].Comments.push({ id: action.data.id });
+        }
+        draft.mainComments?.push(action.data);
+        draft.commentImagePath = [];
+        draft.modalCommentImagePath = [];
         break;
       case ADD_COMMENT_FAILURE:
         draft.addCommentLoading = false;

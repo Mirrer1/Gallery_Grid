@@ -22,7 +22,8 @@ import {
   COMMENT_REMOVE_UPLOADED_IMAGE,
   MODAL_COMMENT_UPLOAD_IMAGE_REQUEST,
   MODAL_COMMENT_REMOVE_UPLOADED_IMAGE,
-  ADD_COMMENT_REQUEST
+  ADD_COMMENT_REQUEST,
+  LOAD_COMMENTS_REQUEST
 } from 'store/types/postType';
 
 export const loadPostsRequest = (lastId?: number) => ({
@@ -62,6 +63,11 @@ export const editPostUploadImagesRequest = (data: FormData) => ({
 
 export const editPostRemoveUploadedImage = (data: string) => ({
   type: EDIT_POST_REMOVE_UPLOADED_IMAGE,
+  data
+});
+
+export const loadCommentsRequest = (data: number) => ({
+  type: LOAD_COMMENTS_REQUEST,
   data
 });
 

@@ -26,6 +26,10 @@ export const EDIT_POST_UPLOAD_IMAGES_SUCCESS = 'EDIT_POST_UPLOAD_IMAGES_SUCCESS'
 export const EDIT_POST_UPLOAD_IMAGES_FAILURE = 'EDIT_POST_UPLOAD_IMAGES_FAILURE' as const;
 export const EDIT_POST_REMOVE_UPLOADED_IMAGE = 'EDIT_POST_REMOVE_UPLOADED_IMAGE' as const;
 
+export const LOAD_COMMENTS_REQUEST = 'LOAD_COMMENTS_REQUEST' as const;
+export const LOAD_COMMENTS_SUCCESS = 'LOAD_COMMENTS_SUCCESS' as const;
+export const LOAD_COMMENTS_FAILURE = 'LOAD_COMMENTS_FAILURE' as const;
+
 export const ADD_COMMENT_REQUEST = 'ADD_COMMENT_REQUEST' as const;
 export const ADD_COMMENT_SUCCESS = 'ADD_COMMENT_SUCCESS' as const;
 export const ADD_COMMENT_FAILURE = 'ADD_COMMENT_FAILURE' as const;
@@ -55,6 +59,36 @@ export const CANCEL_POST_EDIT = 'CANCEL_POST_EDIT' as const;
 export const SHOW_DELETE_MODAL = 'SHOW_DELETE_MODAL' as const;
 export const HIDE_DELETE_MODAL = 'HIDE_DELETE_MODAL' as const;
 
+export interface Image {
+  id: number;
+  src: string;
+}
+
+export interface Comment {
+  id: number;
+  content: string;
+  createdAt: string;
+  updatedAt: string;
+  UserId: number;
+  PostId: number;
+  parentId: number | null;
+  User: User;
+  Post: { UserId: number };
+  CommentImage: Image | null;
+}
+
+export interface Post {
+  id: number;
+  content: string;
+  location: string | null;
+  UserId: number;
+  createdAt: string;
+  updatedAt: string;
+  User: User;
+  Images: Image[];
+  Comments: { id: number }[];
+}
+
 export type PostState = {
   mainPosts: Post[];
   singlePost: Post | null;
@@ -64,6 +98,7 @@ export type PostState = {
   modalCommentImagePath: string[];
   postEditMode: boolean;
   deleteId: number | null;
+  mainComments: Comment[] | null;
   commentVisiblePostId: number | null;
   hasMorePosts: boolean;
   loadPostsLoading: boolean;
@@ -84,6 +119,9 @@ export type PostState = {
   editPostUploadImagesLoading: boolean;
   editPostUploadImagesDone: boolean;
   editPostUploadImagesError: null | string;
+  loadCommentsLoading: boolean;
+  loadCommentsDone: boolean;
+  loadCommentsError: null | string;
   addCommentLoading: boolean;
   addCommentDone: boolean;
   addCommentError: null | string;
@@ -98,35 +136,6 @@ export type PostState = {
   isPostModalVisible: boolean;
   isDeleteModalVisible: boolean;
 };
-
-export interface Image {
-  id: number;
-  src: string;
-}
-
-export interface Comment {
-  id: number;
-  content: string;
-  createdAt: string;
-  updatedAt: string;
-  UserId: number;
-  PostId: number;
-  parentId: number | null;
-  User: User;
-  CommentImage: Image | null;
-}
-
-export interface Post {
-  id: number;
-  content: string;
-  location: string | null;
-  UserId: number;
-  createdAt: string;
-  updatedAt: string;
-  User: User;
-  Images: Image[];
-  Comments: Comment[];
-}
 
 export interface loadPostsRequestAction {
   type: typeof LOAD_POSTS_REQUEST;
@@ -226,6 +235,21 @@ export interface editPostUploadImagesFailureAction {
 export interface editPostRemoveUploadedImageAction {
   type: typeof EDIT_POST_REMOVE_UPLOADED_IMAGE;
   data: string;
+}
+
+export interface loadCommentsRequestAction {
+  type: typeof LOAD_COMMENTS_REQUEST;
+  data: number;
+}
+
+export interface loadCommentsSuccessAction {
+  type: typeof LOAD_COMMENTS_SUCCESS;
+  data: Comment[];
+}
+
+export interface loadCommentsFailureAction {
+  type: typeof LOAD_COMMENTS_FAILURE;
+  error: string;
 }
 
 export interface addCommentRequestAction {
@@ -351,6 +375,9 @@ export type PostAction =
   | editPostUploadImagesSuccessAction
   | editPostUploadImagesFailureAction
   | editPostRemoveUploadedImageAction
+  | loadCommentsRequestAction
+  | loadCommentsSuccessAction
+  | loadCommentsFailureAction
   | addCommentRequestAction
   | addCommentSuccessAction
   | addCommentFailureAction

@@ -37,7 +37,11 @@ import {
   ADD_COMMENT_REQUEST,
   addCommentRequestAction,
   ADD_COMMENT_SUCCESS,
-  ADD_COMMENT_FAILURE
+  ADD_COMMENT_FAILURE,
+  LOAD_COMMENTS_REQUEST,
+  loadCommentsRequestAction,
+  LOAD_COMMENTS_SUCCESS,
+  LOAD_COMMENTS_FAILURE
 } from 'store/types/postType';
 
 function loadPostsAPI(lastId?: number) {
@@ -156,6 +160,26 @@ function* uploadEditPostImages(action: postUploadImagesRequestAction) {
   }
 }
 
+function loadCommentsAPI(data: number) {
+  return axios.get(`/post/comment/${data}`);
+}
+
+function* loadComments(action: loadCommentsRequestAction) {
+  try {
+    const result: AxiosResponse<Post> = yield call(() => loadCommentsAPI(action.data));
+
+    yield put({
+      type: LOAD_COMMENTS_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: LOAD_COMMENTS_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
 function addCommentAPI(data: FormData) {
   return axios.post('/post/comment', data);
 }
@@ -232,6 +256,10 @@ function* watchEditPostUploadImages() {
   yield takeLatest(EDIT_POST_UPLOAD_IMAGES_REQUEST, uploadEditPostImages);
 }
 
+function* watchLoadComments() {
+  yield takeLatest(LOAD_COMMENTS_REQUEST, loadComments);
+}
+
 function* watchAddComment() {
   yield takeLatest(ADD_COMMENT_REQUEST, addComment);
 }
@@ -252,6 +280,7 @@ export default function* postSaga() {
     fork(watchDeletePost),
     fork(watchPostUploadImages),
     fork(watchEditPostUploadImages),
+    fork(watchLoadComments),
     fork(watchAddComment),
     fork(watchCommentUploadImage),
     fork(watchModalCommentUploadImage)

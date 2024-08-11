@@ -18,7 +18,9 @@ const ReplyComment = () => {
           <img src={comment.profile} alt={`${comment.nickname}의 프로필 이미지`} />
 
           <div>
-            <h1>{comment.nickname}</h1>
+            <div>
+              <h1>{comment.nickname}</h1>
+            </div>
             <p>{comment.createdAt}</p>
           </div>
         </div>

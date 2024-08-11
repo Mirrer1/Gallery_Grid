@@ -209,7 +209,7 @@ const PostList = () => {
 
                 <div onClick={() => onToggleComment(post.id)}>
                   <CommentOutlined />
-                  <span>13</span>
+                  <span>{post.Comments.length}</span>
                 </div>
               </PostOptions>
             </div>

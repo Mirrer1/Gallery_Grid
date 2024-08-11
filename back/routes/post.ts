@@ -225,6 +225,48 @@ router.delete('/:postId', isLoggedIn, async (req, res, next) => {
   }
 });
 
+router.get('/comment/:postId', async (req, res, next) => {
+  try {
+    const postId = req.params.postId;
+
+    const comments = await Comment.findAll({
+      where: { PostId: postId },
+      include: [
+        {
+          model: User,
+          attributes: ['id', 'nickname'],
+          include: [
+            {
+              model: Image,
+              as: 'ProfileImage',
+              where: { type: 'user' },
+              attributes: ['id', 'src'],
+              required: false
+            }
+          ]
+        },
+        {
+          model: Post,
+          attributes: ['UserId']
+        },
+        {
+          model: Image,
+          as: 'CommentImage',
+          where: { type: 'comment' },
+          attributes: ['id', 'src'],
+          required: false
+        }
+      ],
+      order: [['createdAt', 'ASC']]
+    });
+
+    res.status(200).json(comments);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
 router.post('/comment', isLoggedIn, upload.none(), async (req, res, next) => {
   try {
     const { content, PostId, image, parentId } = req.body;
