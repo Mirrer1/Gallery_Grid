@@ -56,9 +56,9 @@ export const CommentsLoading = styled.div`
   }
 `;
 
-export const NoCommentsContainer = styled.div`
+export const NoCommentsContainer = styled.div<{ $uploading: boolean }>`
   ${({ theme }) => theme.flexColumnSet()};
-  height: 95%;
+  height: ${props => (props.$uploading ? '73%' : '88%')};
 
   & > span {
     font-size: 3rem;
@@ -76,6 +76,14 @@ export const NoCommentsContainer = styled.div`
     font-size: 0.8rem;
     opacity: 60%;
   }
+
+  ${media.tablet} {
+    height: ${props => (props.$uploading ? '69%' : '87%')};
+  }
+
+  ${media.mobile} {
+    height: ${props => (props.$uploading ? '67%' : '87%')};
+  }
 `;
 
 export const CommentListItemWrapper = styled.div<{ $uploading: boolean }>`
@@ -89,15 +97,15 @@ export const CommentListItemWrapper = styled.div<{ $uploading: boolean }>`
   }
 
   ${media.tablet} {
-    height: ${props => (props.$uploading ? '72%' : '87%')};
+    height: ${props => (props.$uploading ? '69%' : '87%')};
   }
 
   ${media.mobile} {
-    height: ${props => (props.$uploading ? '69%' : '87%')};
+    height: ${props => (props.$uploading ? '67%' : '87%')};
   }
 `;
 
-export const CommentListItem = styled.div<{ $reply: boolean }>`
+export const CommentContainer = styled.div<{ $reply: boolean }>`
   padding-left: ${props => (props.$reply ? '2em' : '0')};
   margin-bottom: 1em;
 
@@ -121,13 +129,13 @@ export const CommentListItem = styled.div<{ $reply: boolean }>`
 
       & > div {
         & > div {
-          ${({ theme }) => theme.flexSet()};
+          ${({ theme }) => theme.flexSet('flex-start')};
           margin-bottom: 0.3em;
 
           & > h1 {
             font-size: 0.9rem;
             font-weight: 500;
-            margin-right: 0.2em;
+            margin-right: 0.3em;
             cursor: pointer;
 
             @media (min-width: 992px) {
@@ -200,8 +208,12 @@ export const CommentListItemImage = styled.div`
 export const CommentInputWrapper = styled.div<{ $uploading: boolean }>`
   height: ${props => (props.$uploading ? '22%' : '7%')};
 
-  ${media.mobile} {
+  ${media.tablet} {
     height: ${props => (props.$uploading ? '25%' : '7%')};
+  }
+
+  ${media.mobile} {
+    height: ${props => (props.$uploading ? '27%' : '7%')};
   }
 `;
 
@@ -353,22 +365,23 @@ export const CommentEmojiPicker = styled.div`
   }
 
   & > div:last-child {
+    transform: scale(0.8);
     position: absolute;
     left: -25%;
-    bottom: 85%;
+    bottom: 0;
     z-index: 50;
   }
 
   ${media.tablet} {
     & > div:last-child {
-      left: 1%;
+      left: -2%;
     }
   }
 
   ${media.mobile} {
     & > div:last-child {
-      left: 0;
-      bottom: 95%;
+      left: -6%;
+      bottom: -15%;
     }
   }
 `;

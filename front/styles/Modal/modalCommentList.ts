@@ -271,22 +271,23 @@ export const ModalCommentEmojiPicker = styled.div`
   }
 
   & > div:last-child {
+    transform: scale(0.8);
     position: absolute;
-    left: -25%;
-    bottom: 85%;
+    left: -24%;
+    bottom: 0;
     z-index: 50;
   }
 
   ${media.tablet} {
     & > div:last-child {
-      left: -40%;
+      left: -28%;
     }
   }
 
   ${media.mobile} {
     & > div:last-child {
-      left: -6%;
-      bottom: 100%;
+      left: -14%;
+      bottom: -36%;
     }
   }
 `;

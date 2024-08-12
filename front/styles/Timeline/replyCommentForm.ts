@@ -36,13 +36,13 @@ export const ReplyCommentWrapper = styled(motion.form)`
   }
 
   & > div {
+    position: relative;
     ${({ theme }) => theme.flexSet('space-between')};
     width: 100%;
     border-top: 1px solid ${({ theme }) => theme.colors.darkBg};
     padding: 0.5em;
 
     & > div:first-child {
-      position: relative;
       ${({ theme }) => theme.flexSet()};
 
       & > input {
@@ -135,25 +135,25 @@ export const ReplyCommentEmojiPicker = styled.div`
   }
 
   & > div:last-child {
+    transform: scale(0.8);
     position: absolute;
-    top: 1%;
-    right: 25%;
+    bottom: -20%;
+    right: -5%;
     z-index: 50;
   }
 
   ${media.tablet} {
     & > div:last-child {
-      width: fit-content;
-      top: 2.5%;
-      left: 1%;
+      bottom: -16%;
+      left: -15%;
       right: 0;
     }
   }
 
   ${media.mobile} {
     & > div:last-child {
-      top: 1%;
-      left: 2%;
+      bottom: -14%;
+      left: -25%;
     }
   }
 `;

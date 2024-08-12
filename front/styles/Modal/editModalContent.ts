@@ -245,15 +245,16 @@ export const EditModalEmojiPicker = styled.div`
   }
 
   & > div:last-child {
+    transform: scale(0.8);
     position: absolute;
-    bottom: 19%;
+    bottom: 17%;
     right: 25%;
     z-index: 100;
   }
 
   ${media.tablet} {
     & > div:last-child {
-      right: 24%;
+      right: 22%;
     }
   }
 
@@ -261,7 +262,8 @@ export const EditModalEmojiPicker = styled.div`
     height: 450%;
 
     & > div:last-child {
-      bottom: 19.5%;
+      bottom: 16%;
+      right: 17.5%;
     }
   }
 `;

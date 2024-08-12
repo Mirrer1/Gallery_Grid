@@ -264,7 +264,6 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
       case COMMENT_REMOVE_UPLOADED_IMAGE:
         draft.commentImagePath = [];
         break;
-
       case ADD_REPLY_COMMENT_REQUEST:
         draft.addReplyCommentLoading = true;
         draft.addReplyCommentDone = false;
@@ -284,7 +283,6 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
         draft.addCommentLoading = false;
         draft.addCommentError = action.error;
         break;
-
       case REPLY_COMMENT_UPLOAD_IMAGE_REQUEST:
         draft.replyCommentUploadImageLoading = true;
         draft.replyCommentUploadImageDone = false;
@@ -322,6 +320,8 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
       case SHOW_COMMENT_LIST:
         draft.isCommentListVisible = true;
         draft.commentVisiblePostId = action.data;
+        draft.commentImagePath = [];
+        draft.replyCommentImagePath = [];
         break;
       case HIDE_COMMENT_LIST:
         draft.isCommentListVisible = false;

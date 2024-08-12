@@ -1,34 +1,22 @@
-import React, { useCallback, useState } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
-
-import ImagePreview from 'components/Modal/ImagePreviewModal';
-import ReplyCommentForm from './ReplyCommentForm';
-import { formatDate } from 'utils/useListTimes';
 import { RootState } from 'store/reducers';
 import { Comment } from 'store/types/postType';
-import { CommentContainer, CommentListItemImage } from 'styles/Timeline/commentList';
 
-type ReplyCommentProps = {
+import { CommentContainer, CommentListItemImage } from 'styles/Timeline/commentList';
+import { formatDate } from 'utils/useListTimes';
+
+type CommentListItemProps = {
   comment: Comment;
-  parentId: number;
-  replyFormCommentId: number | null;
-  setReplyFormCommentId: React.Dispatch<React.SetStateAction<number | null>>;
+  showImagePreview: (src: string) => void;
+  setReplyFormCommentId: (id: number | null) => void;
 };
 
-const ReplyComment = ({ comment, parentId, replyFormCommentId, setReplyFormCommentId }: ReplyCommentProps) => {
+const CommentListItem = ({ comment, showImagePreview, setReplyFormCommentId }: CommentListItemProps) => {
   const { me } = useSelector((state: RootState) => state.user);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-
-  const showImagePreview = useCallback((image: string) => {
-    setImagePreview(image);
-  }, []);
-
-  const hideImagePreview = useCallback(() => {
-    setImagePreview(null);
-  }, []);
 
   return (
-    <CommentContainer $reply={true}>
+    <CommentContainer $reply={false}>
       <div>
         <div>
           <img
@@ -57,6 +45,7 @@ const ReplyComment = ({ comment, parentId, replyFormCommentId, setReplyFormComme
           </div>
         )}
       </div>
+
       {comment.CommentImage && (
         <CommentListItemImage onClick={() => showImagePreview(`http://localhost:3065/${comment.CommentImage?.src}`)}>
           <img
@@ -65,19 +54,14 @@ const ReplyComment = ({ comment, parentId, replyFormCommentId, setReplyFormComme
           />
         </CommentListItemImage>
       )}
+
       <p>{comment.content}</p>
 
       <button type="button" onClick={() => setReplyFormCommentId(comment.id)}>
         답글쓰기
       </button>
-
-      {replyFormCommentId === comment.id && (
-        <ReplyCommentForm setReplyFormCommentId={setReplyFormCommentId} parentId={parentId} />
-      )}
-
-      <ImagePreview imagePreview={imagePreview} hideImagePreview={hideImagePreview} />
     </CommentContainer>
   );
 };
 
-export default ReplyComment;
+export default CommentListItem;

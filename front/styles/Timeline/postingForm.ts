@@ -194,10 +194,24 @@ export const PostingEmojiPicker = styled.div`
   }
 
   & > div:last-child {
+    transform: scale(0.8);
     position: absolute;
-    top: 75%;
-    left: 5%;
+    top: 10%;
+    left: 0;
     z-index: 50;
+  }
+
+  ${media.tablet} {
+    & > div:last-child {
+      left: -4%;
+    }
+  }
+
+  ${media.mobile} {
+    & > div:last-child {
+      top: 6%;
+      left: -8%;
+    }
   }
 `;
 
