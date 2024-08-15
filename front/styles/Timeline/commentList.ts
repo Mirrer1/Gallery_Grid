@@ -13,7 +13,7 @@ export const CommentListWrapper = styled(motion.article)<{ $isCommentListVisible
   height: 96%;
   background-color: white;
   border-radius: 5px;
-  z-index: 45;
+  z-index: 100;
   ${ShadowStyle}
 
   ${media.tablet} {
@@ -22,8 +22,9 @@ export const CommentListWrapper = styled(motion.article)<{ $isCommentListVisible
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 80%;
+    height: 95%;
     border-radius: 5px 5px 0 0;
+    transition: bottom 0.15s ease;
   }
 `;
 
@@ -37,8 +38,32 @@ export const CommentListHeader = styled.div`
     ${HoverStyle('&')};
   }
 
+  & > div {
+    display: none;
+  }
+
   ${media.tablet} {
-    height: 6%;
+    height: 4%;
+    justify-content: center;
+
+    & > span {
+      display: none;
+    }
+
+    & > div {
+      display: block;
+      width: 15%;
+      height: 8px;
+      background-color: ${({ theme }) => theme.colors.darkBg};
+      border-radius: 10px;
+    }
+  }
+
+  ${media.mobile} {
+    & > div {
+      width: 30%;
+      height: 6px;
+    }
   }
 `;
 
@@ -56,9 +81,9 @@ export const CommentsLoading = styled.div`
   }
 `;
 
-export const NoCommentsContainer = styled.div<{ $uploading: boolean }>`
+export const NoCommentsContainer = styled.div`
   ${({ theme }) => theme.flexColumnSet()};
-  height: ${props => (props.$uploading ? '73%' : '88%')};
+  height: 89%;
 
   & > span {
     font-size: 3rem;
@@ -78,16 +103,12 @@ export const NoCommentsContainer = styled.div<{ $uploading: boolean }>`
   }
 
   ${media.tablet} {
-    height: ${props => (props.$uploading ? '69%' : '87%')};
-  }
-
-  ${media.mobile} {
-    height: ${props => (props.$uploading ? '67%' : '87%')};
+    height: 90%;
   }
 `;
 
-export const CommentListItemWrapper = styled.div<{ $uploading: boolean }>`
-  height: ${props => (props.$uploading ? '73%' : '88%')};
+export const CommentListItemWrapper = styled.div`
+  height: 89%;
   padding: 0 1em;
   overflow-y: scroll;
 
@@ -97,11 +118,7 @@ export const CommentListItemWrapper = styled.div<{ $uploading: boolean }>`
   }
 
   ${media.tablet} {
-    height: ${props => (props.$uploading ? '69%' : '87%')};
-  }
-
-  ${media.mobile} {
-    height: ${props => (props.$uploading ? '67%' : '87%')};
+    height: 90%;
   }
 `;
 
@@ -205,22 +222,16 @@ export const CommentListItemImage = styled.div`
   }
 `;
 
-export const CommentInputWrapper = styled.div<{ $uploading: boolean }>`
-  height: ${props => (props.$uploading ? '22%' : '7%')};
-
-  ${media.tablet} {
-    height: ${props => (props.$uploading ? '25%' : '7%')};
-  }
-
-  ${media.mobile} {
-    height: ${props => (props.$uploading ? '27%' : '7%')};
-  }
+export const CommentInputWrapper = styled.div`
+  position: relative;
+  height: 6%;
 `;
 
 export const CommentInputImageWrapper = styled.div`
+  position: absolute;
+  bottom: 100%;
+  left: 0;
   width: 100%;
-  height: 69%;
-  position: relative;
   background-color: white;
   border-top: 1.5px solid #e4e5ec;
 `;
@@ -258,13 +269,13 @@ export const CommentInputImage = styled(motion.div)`
   }
 `;
 
-export const CommentForm = styled.form<{ $active: boolean; $uploading: boolean }>`
+export const CommentForm = styled.form<{ $active: boolean }>`
   position: relative;
-  height: ${props => (props.$uploading ? '31%' : '100%')};
+  height: 100%;
   ${({ theme }) => theme.flexSet('space-between')}
   background-color: white;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-  padding: 0.7em;
+  padding: 0.5em;
 
   & > div:first-child {
     width: 90%;
@@ -322,16 +333,21 @@ export const CommentForm = styled.form<{ $active: boolean; $uploading: boolean }
       width: 96%;
 
       & > span {
-        width: 3%;
+        font-size: 1.4rem;
+        width: 4.5%;
       }
 
       & > input {
-        width: 95%;
+        width: 90%;
       }
     }
 
     & > button {
       width: 4%;
+
+      & > span {
+        font-size: 1rem;
+      }
     }
   }
 
@@ -340,11 +356,12 @@ export const CommentForm = styled.form<{ $active: boolean; $uploading: boolean }
       width: 92%;
 
       & > span {
-        width: 7%;
+        font-size: 1.2rem;
+        width: 8%;
       }
 
       & > input {
-        width: 86%;
+        width: 84%;
       }
     }
 

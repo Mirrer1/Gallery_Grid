@@ -1,6 +1,6 @@
-import dayjs from 'dayjs';
+import { useMemo } from 'react';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { useEffect, useState } from 'react';
+import dayjs from 'dayjs';
 
 import { Post } from 'store/types/postType';
 
@@ -15,16 +15,13 @@ export const formatDate = (date: string): string => {
   if (diffHours < 24) {
     return diffMinutes < 60 ? postDate.fromNow() : postDate.fromNow(true);
   } else {
-    return postDate.format('YYYY-MM-DD');
+    return postDate.format('YYYY.MM.DD');
   }
 };
 
 const useListTimes = (list: Post[]) => {
-  const [times, setTimes] = useState<string[]>([]);
-
-  useEffect(() => {
-    const times = list.map((item: Post) => formatDate(item.createdAt));
-    setTimes(times);
+  const times = useMemo(() => {
+    return list.map((item: Post) => formatDate(item.createdAt));
   }, [list]);
 
   return times;

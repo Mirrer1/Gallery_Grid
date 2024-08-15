@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   CaretDownOutlined,
@@ -19,7 +19,6 @@ import ModalReplyComment from './ModalReplyComment';
 import { RootState } from 'store/reducers';
 import {
   addCommentRequest,
-  hideCommentList,
   modalCommentRemoveUploadedImage,
   modalCommentUploadImageRequest
 } from 'store/actions/postAction';
@@ -33,10 +32,15 @@ import {
   ModalCommentInputImage,
   ModalCommentInputImageWrapper,
   ModalCommentEmojiPicker,
-  ModalCommentForm
+  ModalCommentForm,
+  ModalCommentFormWrapper
 } from 'styles/Modal/modalCommentList';
 
-const ModalCommentList = () => {
+type ModalCommentListProps = {
+  setIsModalCommentListVisible: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+const ModalCommentList = ({ setIsModalCommentListVisible }: ModalCommentListProps) => {
   const contentList = [
     {
       id: 1,
@@ -108,12 +112,14 @@ const ModalCommentList = () => {
   const [comment, onChangeComment, setComment] = useInput('');
   const { showEmoji, showEmojiPicker, closeEmojiPicker, onEmojiClick } = useEmojiPicker(setComment);
   const { fileInputRef, onFileChange } = useFileUpload(modalCommentUploadImageRequest, { showWarning: false });
+  const [touchStartY, setTouchStartY] = useState<number | null>(null);
+  const [translateY, setTranslateY] = useState(0);
   const { modalCommentImagePath, modalCommentUploadImageLoading, singlePost, addCommentLoading } = useSelector(
     (state: RootState) => state.post
   );
 
   const onHideComment = useCallback(() => {
-    dispatch(hideCommentList());
+    setIsModalCommentListVisible(false);
   }, []);
 
   const onClickImageUpload = useCallback(() => {
@@ -158,11 +164,43 @@ const ModalCommentList = () => {
     [comment]
   );
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (window.innerWidth <= 992) {
+      setTouchStartY(e.touches[0].clientY);
+    }
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (window.innerWidth <= 992 && touchStartY !== null) {
+      const deltaY = e.touches[0].clientY - touchStartY;
+      if (deltaY > 0) {
+        setTranslateY(deltaY);
+      }
+    }
+  };
+
+  const handleTouchEnd = () => {
+    if (translateY > 200) {
+      setTranslateY(window.innerHeight);
+      setTimeout(() => {
+        onHideComment();
+      }, 300);
+    } else {
+      setTranslateY(0);
+    }
+    setTouchStartY(null);
+  };
+
   return (
-    <ModalCommentListContainer {...slideInFromBottom()}>
-      <ModalCommentListWrapper $uploading={modalCommentImagePath.length !== 0}>
-        <ModalCommentListHeader>
+    <ModalCommentListContainer style={{ bottom: `${-translateY}px` }} {...slideInFromBottom()}>
+      <ModalCommentListWrapper>
+        <ModalCommentListHeader
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
           <CaretDownOutlined onClick={onHideComment} />
+          <div />
         </ModalCommentListHeader>
 
         <ModalCommentListItemWrapper>
@@ -194,42 +232,44 @@ const ModalCommentList = () => {
         </ModalCommentListItemWrapper>
       </ModalCommentListWrapper>
 
-      {modalCommentImagePath.length !== 0 && (
-        <ModalCommentInputImageWrapper>
-          <ModalCommentInputImage key={modalCommentImagePath} {...slideInUploadImage}>
-            <img src={`http://localhost:3065/${modalCommentImagePath}`} alt="입력한 댓글의 첨부 이미지" />
-            <DeleteOutlined onClick={handleRemoveImage} />
-          </ModalCommentInputImage>
-        </ModalCommentInputImageWrapper>
-      )}
+      <ModalCommentFormWrapper>
+        {modalCommentImagePath.length !== 0 && (
+          <ModalCommentInputImageWrapper>
+            <ModalCommentInputImage key={modalCommentImagePath} {...slideInUploadImage}>
+              <img src={`http://localhost:3065/${modalCommentImagePath}`} alt="입력한 댓글의 첨부 이미지" />
+              <DeleteOutlined onClick={handleRemoveImage} />
+            </ModalCommentInputImage>
+          </ModalCommentInputImageWrapper>
+        )}
 
-      <ModalCommentForm encType="multipart/form-data" $active={comment.length === 0} onSubmit={onSubmitForm}>
-        <div>
-          {modalCommentUploadImageLoading ? <LoadingOutlined /> : <PaperClipOutlined onClick={onClickImageUpload} />}
-          <input type="file" name="image" ref={fileInputRef} onChange={e => onFileChange(e, modalCommentImagePath)} />
+        <ModalCommentForm encType="multipart/form-data" $active={comment.length === 0} onSubmit={onSubmitForm}>
+          <div>
+            {modalCommentUploadImageLoading ? <LoadingOutlined /> : <PaperClipOutlined onClick={onClickImageUpload} />}
+            <input type="file" name="image" ref={fileInputRef} onChange={e => onFileChange(e, modalCommentImagePath)} />
 
-          <SmileOutlined onClick={showEmojiPicker} />
-          {showEmoji && EmojiPicker && (
-            <ModalCommentEmojiPicker>
-              <div onClick={closeEmojiPicker} />
+            <SmileOutlined onClick={showEmojiPicker} />
+            {showEmoji && EmojiPicker && (
+              <ModalCommentEmojiPicker>
+                <div onClick={closeEmojiPicker} />
 
-              <div>
-                <EmojiPicker onEmojiClick={onEmojiClick} />
-              </div>
-            </ModalCommentEmojiPicker>
-          )}
+                <div>
+                  <EmojiPicker onEmojiClick={onEmojiClick} />
+                </div>
+              </ModalCommentEmojiPicker>
+            )}
 
-          <input
-            type="text"
-            placeholder="Type a Comment..."
-            value={comment}
-            onChange={onChangeComment}
-            onKeyDown={handleKeyDown}
-          />
-        </div>
+            <input
+              type="text"
+              placeholder="Type a Comment..."
+              value={comment}
+              onChange={onChangeComment}
+              onKeyDown={handleKeyDown}
+            />
+          </div>
 
-        <button type="submit">{addCommentLoading ? <LoadingOutlined /> : <SendOutlined />}</button>
-      </ModalCommentForm>
+          <button type="submit">{addCommentLoading ? <LoadingOutlined /> : <SendOutlined />}</button>
+        </ModalCommentForm>
+      </ModalCommentFormWrapper>
     </ModalCommentListContainer>
   );
 };

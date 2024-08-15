@@ -110,7 +110,7 @@ export const EditModalForm = styled.form`
   }
 
   ${media.tablet} {
-    height: 81%;
+    height: 82%;
 
     & > textarea {
       font-size: 0.75rem;
@@ -199,7 +199,7 @@ export const EditModalBtn = styled.div<{ $active: boolean; $edit: boolean }>`
   }
 
   ${media.tablet} {
-    height: 9%;
+    height: 8%;
     padding: 0.6em;
 
     & > div:last-child {

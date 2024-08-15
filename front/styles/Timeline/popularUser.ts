@@ -25,6 +25,11 @@ export const PopularBtn = styled.div<{ $alignleft: string }>`
 
   ${media.mobile} {
     ${props => (props.$alignleft === 'true' ? 'transform: translate(10%, 25%);' : 'transform: translate(-20%, 25%);')}
+
+    & > span {
+      position: relative;
+      right: ${props => (props.$alignleft === 'true' ? '1px' : '-1px')};
+    }
   }
 `;
 
@@ -67,6 +72,8 @@ export const PopularUserWrapper = styled.div<{ $commentvisible: boolean }>`
   }
 
   ${media.tablet} {
+    visibility: visible;
+    opacity: 1;
     width: 100%;
     height: 100%;
     margin-bottom: 0;

@@ -86,7 +86,7 @@ const CommentInput = ({ showImagePreview }: CommentInputProps) => {
   }, [addCommentDone]);
 
   return (
-    <CommentInputWrapper $uploading={commentImagePath.length !== 0}>
+    <CommentInputWrapper>
       {commentImagePath.length !== 0 && (
         <CommentInputImageWrapper>
           <CommentInputImage key={commentImagePath} {...slideInUploadImage}>
@@ -100,12 +100,7 @@ const CommentInput = ({ showImagePreview }: CommentInputProps) => {
         </CommentInputImageWrapper>
       )}
 
-      <CommentForm
-        encType="multipart/form-data"
-        $active={comment.length === 0}
-        $uploading={commentImagePath.length !== 0}
-        onSubmit={onSubmitForm}
-      >
+      <CommentForm encType="multipart/form-data" $active={comment.length === 0} onSubmit={onSubmitForm}>
         <div>
           {commentUploadImageLoading ? <LoadingOutlined /> : <PaperClipOutlined onClick={onClickImageUpload} />}
           <input type="file" name="image" ref={fileInputRef} onChange={e => onFileChange(e, commentImagePath)} />

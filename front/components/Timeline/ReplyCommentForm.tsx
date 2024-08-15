@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { CompassOutlined, DeleteOutlined, LoadingOutlined, PaperClipOutlined, SmileOutlined } from '@ant-design/icons';
+import { DeleteOutlined, LoadingOutlined, PaperClipOutlined, SmileOutlined } from '@ant-design/icons';
 import { toast } from 'react-toastify';
 import EmojiPicker from 'emoji-picker-react';
 
@@ -134,7 +134,6 @@ const ReplyCommentForm = ({ setReplyFormCommentId, parentId }: ReplyCommentFormP
           />
 
           <SmileOutlined onClick={showEmojiPicker} />
-          <CompassOutlined />
         </div>
 
         {showEmoji && EmojiPicker && (

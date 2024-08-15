@@ -109,7 +109,8 @@ const ModalContent = () => {
         </div>
       </ModalContentHeader>
 
-      {isModalCommentListVisible ? <ModalCommentList /> : <ModalContentText>{singlePost.content}</ModalContentText>}
+      <ModalContentText $isModalCommentListVisible={isModalCommentListVisible}>{singlePost.content}</ModalContentText>
+      {isModalCommentListVisible && <ModalCommentList setIsModalCommentListVisible={setIsModalCommentListVisible} />}
 
       <ModalContentOptions $isModalCommentListVisible={isModalCommentListVisible}>
         <div>

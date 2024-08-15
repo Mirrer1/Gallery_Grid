@@ -7,25 +7,29 @@ import { DarkShadowStyle } from 'styles/Common/shadow';
 
 export const ModalCommentListContainer = styled(motion.div)`
   height: 80%;
-  border-bottom: 1px solid ${({ theme }) => theme.colors.darkBg};
 
   ${media.tablet} {
-    height: 78%;
-  }
-
-  ${media.mobile} {
-    height: 73%;
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 95%;
+    background-color: white;
+    z-index: 100;
+    transition: bottom 0.15s ease;
   }
 `;
 
-export const ModalCommentListWrapper = styled.div<{ $uploading: boolean }>`
-  height: ${props => (props.$uploading ? '67%' : '90%')};
-  border-bottom: 1px solid ${({ theme }) => theme.colors.darkBg};
+export const ModalCommentListWrapper = styled.div`
+  height: 92%;
+  border-bottom: 1.5px solid ${({ theme }) => theme.colors.darkBg};
   padding: 0.8em 0.8em 0 0.8em;
   overflow-y: auto;
 
-  ${media.mobile} {
-    height: ${props => (props.$uploading ? '36%' : '85%')};
+  ${media.tablet} {
+    height: 95%;
+    padding: 0 0.8em;
   }
 `;
 
@@ -35,6 +39,35 @@ export const ModalCommentListHeader = styled.div`
 
   & > span {
     ${HoverStyle('&')};
+  }
+
+  & > div {
+    display: none;
+  }
+
+  ${media.tablet} {
+    height: 4.5%;
+    border-bottom: 1px solid ${({ theme }) => theme.colors.darkBg};
+    justify-content: center;
+
+    & > span {
+      display: none;
+    }
+
+    & > div {
+      display: block;
+      width: 15%;
+      height: 8px;
+      background-color: ${({ theme }) => theme.colors.darkBg};
+      border-radius: 10px;
+    }
+  }
+
+  ${media.mobile} {
+    & > div {
+      width: 30%;
+      height: 6px;
+    }
   }
 `;
 
@@ -49,6 +82,10 @@ export const ModalCommentListItemWrapper = styled.div`
 
   & > div:last-child {
     border-bottom: none;
+  }
+
+  ${media.tablet} {
+    height: 96.5%;
   }
 `;
 
@@ -143,12 +180,21 @@ export const ModalCommentListItem = styled.div<{ $reply: boolean }>`
   }
 `;
 
+export const ModalCommentFormWrapper = styled.div`
+  position: relative;
+  height: 8%;
+
+  ${media.tablet} {
+    height: 5%;
+  }
+`;
+
 export const ModalCommentForm = styled.form<{ $active: boolean }>`
   position: relative;
   ${({ theme }) => theme.flexSet('space-between')}
-  height: 10%;
   background-color: white;
-  padding: 0.7em;
+  padding: 0.5em;
+  border-bottom: 1.5px solid ${({ theme }) => theme.colors.darkBg};
 
   & > div:first-child {
     width: 95%;
@@ -202,30 +248,43 @@ export const ModalCommentForm = styled.form<{ $active: boolean }>`
   }
 
   ${media.tablet} {
+    height: 100%;
+
     & > div:first-child {
       width: 89%;
 
       & > span {
-        font-size: 0.9rem;
-        width: 8%;
+        font-size: 1.4rem;
+        width: 5%;
       }
 
       & > input {
-        width: 88%;
+        width: 98%;
       }
     }
   }
 
   ${media.mobile} {
-    height: 15%;
+    & > div:first-child {
+      & > span {
+        font-size: 1.2rem;
+        width: 9%;
+      }
+
+      & > input {
+        width: 85%;
+      }
+    }
   }
 `;
 
 export const ModalCommentInputImageWrapper = styled.div`
   width: 100%;
-  position: relative;
+  position: absolute;
+  bottom: 100%;
+  right: 0;
   background-color: white;
-  border-top: 1.5px solid #e4e5ec;
+  border-top: 1.5px solid ${({ theme }) => theme.colors.darkBg};
 `;
 
 export const ModalCommentInputImage = styled(motion.div)`

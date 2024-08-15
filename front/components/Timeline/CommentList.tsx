@@ -25,9 +25,10 @@ const CommentList = () => {
   const commentListRef = useRef<HTMLDivElement>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [replyFormCommentId, setReplyFormCommentId] = useState<number | null>(null);
+  const [touchStartY, setTouchStartY] = useState<number | null>(null);
+  const [translateY, setTranslateY] = useState(0);
   const {
     isCommentListVisible,
-    commentImagePath,
     commentVisiblePostId,
     mainComments,
     loadCommentsLoading,
@@ -46,6 +47,33 @@ const CommentList = () => {
   const hideImagePreview = useCallback(() => {
     setImagePreview(null);
   }, []);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (window.innerWidth <= 992) {
+      setTouchStartY(e.touches[0].clientY);
+    }
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (window.innerWidth <= 992 && touchStartY !== null) {
+      const deltaY = e.touches[0].clientY - touchStartY;
+      if (deltaY > 0) {
+        setTranslateY(deltaY);
+      }
+    }
+  };
+
+  const handleTouchEnd = () => {
+    if (translateY > 300) {
+      setTranslateY(window.innerHeight);
+      setTimeout(() => {
+        onHideComment();
+      }, 300);
+    } else {
+      setTranslateY(0);
+    }
+    setTouchStartY(null);
+  };
 
   useEffect(() => {
     if (addCommentDone && commentListRef.current) {
@@ -70,10 +98,12 @@ const CommentList = () => {
     <CommentListWrapper
       key={commentVisiblePostId}
       $isCommentListVisible={isCommentListVisible}
+      style={{ bottom: `${-translateY}px` }}
       {...slideInFromBottom()}
     >
-      <CommentListHeader>
+      <CommentListHeader onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
         <CaretDownOutlined onClick={onHideComment} />
+        <div />
       </CommentListHeader>
 
       {loadCommentsLoading ? (
@@ -83,7 +113,7 @@ const CommentList = () => {
       ) : (
         <>
           {mainComments?.length > 0 ? (
-            <CommentListItemWrapper ref={commentListRef} $uploading={commentImagePath.length !== 0}>
+            <CommentListItemWrapper ref={commentListRef}>
               {mainComments.map(
                 (comment: Comment) =>
                   comment.parentId === null && (
@@ -114,7 +144,7 @@ const CommentList = () => {
               )}
             </CommentListItemWrapper>
           ) : (
-            <NoCommentsContainer $uploading={commentImagePath.length !== 0}>
+            <NoCommentsContainer>
               <CloseSquareTwoTone twoToneColor="#6BA2E6" />
               <h1>No comments yet.</h1>
               <p>첫번째 댓글을 작성해보세요!</p>
