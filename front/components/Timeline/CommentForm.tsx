@@ -12,17 +12,17 @@ import { addCommentRequest, commentRemoveUploadedImage, commentUploadImageReques
 import { slideInUploadImage } from 'styles/Common/animation';
 import {
   CommentEmojiPicker,
-  CommentForm,
-  CommentInputImage,
-  CommentInputImageWrapper,
-  CommentInputWrapper
+  CommentFormInput,
+  CommentFormImage,
+  CommentFormImageWrapper,
+  CommentFormWrapper
 } from 'styles/Timeline/commentList';
 
-type CommentInputProps = {
+type CommentFormProps = {
   showImagePreview: (src: string) => void;
 };
 
-const CommentInput = ({ showImagePreview }: CommentInputProps) => {
+const CommentForm = ({ showImagePreview }: CommentFormProps) => {
   const dispatch = useDispatch();
   const [comment, onChangeComment, setComment] = useInput('');
   const { showEmoji, showEmojiPicker, closeEmojiPicker, onEmojiClick } = useEmojiPicker(setComment);
@@ -86,21 +86,21 @@ const CommentInput = ({ showImagePreview }: CommentInputProps) => {
   }, [addCommentDone]);
 
   return (
-    <CommentInputWrapper>
+    <CommentFormWrapper>
       {commentImagePath.length !== 0 && (
-        <CommentInputImageWrapper>
-          <CommentInputImage key={commentImagePath} {...slideInUploadImage}>
+        <CommentFormImageWrapper>
+          <CommentFormImage key={commentImagePath} {...slideInUploadImage}>
             <img
               src={`http://localhost:3065/${commentImagePath}`}
               alt="입력한 댓글의 첨부 이미지"
               onClick={() => showImagePreview(`http://localhost:3065/${commentImagePath}`)}
             />
             <DeleteOutlined onClick={handleRemoveImage} />
-          </CommentInputImage>
-        </CommentInputImageWrapper>
+          </CommentFormImage>
+        </CommentFormImageWrapper>
       )}
 
-      <CommentForm encType="multipart/form-data" $active={comment.length === 0} onSubmit={onSubmitForm}>
+      <CommentFormInput encType="multipart/form-data" $active={comment.length === 0} onSubmit={onSubmitForm}>
         <div>
           {commentUploadImageLoading ? <LoadingOutlined /> : <PaperClipOutlined onClick={onClickImageUpload} />}
           <input type="file" name="image" ref={fileInputRef} onChange={e => onFileChange(e, commentImagePath)} />
@@ -128,9 +128,9 @@ const CommentInput = ({ showImagePreview }: CommentInputProps) => {
         <button type="submit">
           {addCommentLoading && !isPostModalVisible ? <LoadingOutlined /> : <SendOutlined />}
         </button>
-      </CommentForm>
-    </CommentInputWrapper>
+      </CommentFormInput>
+    </CommentFormWrapper>
   );
 };
 
-export default CommentInput;
+export default CommentForm;

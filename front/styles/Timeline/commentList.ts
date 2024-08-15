@@ -222,12 +222,12 @@ export const CommentListItemImage = styled.div`
   }
 `;
 
-export const CommentInputWrapper = styled.div`
+export const CommentFormWrapper = styled.div`
   position: relative;
   height: 6%;
 `;
 
-export const CommentInputImageWrapper = styled.div`
+export const CommentFormImageWrapper = styled.div`
   position: absolute;
   bottom: 100%;
   left: 0;
@@ -236,7 +236,7 @@ export const CommentInputImageWrapper = styled.div`
   border-top: 1.5px solid #e4e5ec;
 `;
 
-export const CommentInputImage = styled(motion.div)`
+export const CommentFormImage = styled(motion.div)`
   position: relative;
   width: fit-content;
   padding: 0.5em;
@@ -269,7 +269,7 @@ export const CommentInputImage = styled(motion.div)`
   }
 `;
 
-export const CommentForm = styled.form<{ $active: boolean }>`
+export const CommentFormInput = styled.form<{ $active: boolean }>`
   position: relative;
   height: 100%;
   ${({ theme }) => theme.flexSet('space-between')}

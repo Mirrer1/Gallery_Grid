@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CaretDownOutlined, CloseSquareTwoTone, LoadingOutlined } from '@ant-design/icons';
 
-import CommentInput from './CommentInput';
+import CommentForm from './CommentForm';
 import CommentListItem from './CommentListItem';
 import ReplyCommentForm from './ReplyCommentForm';
 import ReplyComment from './ReplyComment';
@@ -151,7 +151,7 @@ const CommentList = () => {
             </NoCommentsContainer>
           )}
 
-          <CommentInput showImagePreview={showImagePreview} />
+          <CommentForm showImagePreview={showImagePreview} />
         </>
       )}
 
