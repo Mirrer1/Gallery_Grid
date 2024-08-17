@@ -11,8 +11,8 @@ import {
 } from '@ant-design/icons';
 
 import ModalCommentList from './ModalCommentList';
+import formatDate from 'utils/useListTimes';
 import { RootState } from 'store/reducers';
-import { formatDate } from 'utils/useListTimes';
 import { executePostEdit, modalCommentRemoveUploadedImage, showDeleteModal } from 'store/actions/postAction';
 
 import { slideInTooltip } from 'styles/Common/animation';
@@ -41,6 +41,7 @@ const ModalContent = () => {
 
   const openDeleteModal = useCallback((postId: number) => {
     dispatch(showDeleteModal(postId));
+    setIsTooltipVisible(false);
   }, []);
 
   const onToggleComment = useCallback(() => {

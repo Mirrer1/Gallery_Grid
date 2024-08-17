@@ -4,6 +4,7 @@ import Post from './post';
 import Alert from './alert';
 import Report from './report';
 import Image from './image';
+import ReplyComment from './replyComment';
 
 class Comment extends Model<InferAttributes<Comment>, InferCreationAttributes<Comment>> {
   declare id: CreationOptional<number>;
@@ -12,7 +13,6 @@ class Comment extends Model<InferAttributes<Comment>, InferCreationAttributes<Co
   declare updatedAt: CreationOptional<Date>;
   declare PostId: number;
   declare UserId: number;
-  declare parentId?: number;
 
   static initiate(sequelize: Sequelize.Sequelize) {
     Comment.init(
@@ -25,10 +25,6 @@ class Comment extends Model<InferAttributes<Comment>, InferCreationAttributes<Co
         content: {
           type: Sequelize.TEXT,
           allowNull: false
-        },
-        parentId: {
-          type: Sequelize.INTEGER,
-          allowNull: true
         },
         PostId: {
           type: Sequelize.INTEGER,
@@ -57,6 +53,7 @@ class Comment extends Model<InferAttributes<Comment>, InferCreationAttributes<Co
     Comment.hasMany(Alert);
     Comment.hasMany(Report, { foreignKey: 'CommentId', as: 'Reports' });
     Comment.hasOne(Image, { as: 'CommentImage', foreignKey: 'CommentId' });
+    Comment.hasMany(ReplyComment, { foreignKey: 'CommentId', as: 'Replies' });
   }
 }
 

@@ -3,19 +3,19 @@ import { useSelector } from 'react-redux';
 
 import ImagePreview from 'components/Modal/ImagePreviewModal';
 import ReplyCommentForm from './ReplyCommentForm';
-import { formatDate } from 'utils/useListTimes';
+import formatDate from 'utils/useListTimes';
 import { RootState } from 'store/reducers';
-import { Comment } from 'store/types/postType';
+import { IReplyComment } from 'store/types/postType';
 import { CommentContainer, CommentListItemImage } from 'styles/Timeline/commentList';
 
 type ReplyCommentProps = {
-  comment: Comment;
+  comment: IReplyComment;
   parentId: number;
-  replyFormCommentId: number | null;
-  setReplyFormCommentId: React.Dispatch<React.SetStateAction<number | null>>;
+  setReplyId: (id: number | null) => void;
+  setReplyUser: (user: string | null) => void;
 };
 
-const ReplyComment = ({ comment, parentId, replyFormCommentId, setReplyFormCommentId }: ReplyCommentProps) => {
+const ReplyComment = ({ comment, parentId, setReplyId, setReplyUser }: ReplyCommentProps) => {
   const { me } = useSelector((state: RootState) => state.user);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
@@ -25,6 +25,16 @@ const ReplyComment = ({ comment, parentId, replyFormCommentId, setReplyFormComme
 
   const hideImagePreview = useCallback(() => {
     setImagePreview(null);
+  }, []);
+
+  const onClickReply = useCallback((user: string) => {
+    setReplyId(null);
+    setReplyUser(null);
+
+    setTimeout(() => {
+      setReplyId(parentId);
+      setReplyUser(user);
+    }, 0);
   }, []);
 
   return (
@@ -57,23 +67,18 @@ const ReplyComment = ({ comment, parentId, replyFormCommentId, setReplyFormComme
           </div>
         )}
       </div>
-      {comment.CommentImage && (
-        <CommentListItemImage onClick={() => showImagePreview(`http://localhost:3065/${comment.CommentImage?.src}`)}>
-          <img
-            src={`http://localhost:3065/${comment.CommentImage.src}`}
-            alt={`${comment.User.nickname}의 댓글 이미지`}
-          />
+      {comment.ReplyImage && (
+        <CommentListItemImage onClick={() => showImagePreview(`http://localhost:3065/${comment.ReplyImage?.src}`)}>
+          <img src={`http://localhost:3065/${comment.ReplyImage.src}`} alt={`${comment.User.nickname}의 댓글 이미지`} />
         </CommentListItemImage>
       )}
       <p>{comment.content}</p>
 
-      <button type="button" onClick={() => setReplyFormCommentId(comment.id)}>
+      <button type="button" onClick={() => onClickReply(comment.User.nickname)}>
         답글쓰기
       </button>
 
-      {replyFormCommentId === comment.id && (
-        <ReplyCommentForm setReplyFormCommentId={setReplyFormCommentId} parentId={parentId} />
-      )}
+      {/* {replyId === comment.id && <ReplyCommentForm setReplyId={setReplyId} parentId={parentId} />} */}
 
       <ImagePreview imagePreview={imagePreview} hideImagePreview={hideImagePreview} />
     </CommentContainer>

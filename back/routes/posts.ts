@@ -5,6 +5,7 @@ import Post from '../models/post';
 import User from '../models/user';
 import Image from '../models/image';
 import Comment from '../models/comment';
+import ReplyComment from '../models/replyComment';
 
 const router = express.Router();
 
@@ -50,7 +51,14 @@ router.get('/', async (req, res, next) => {
         },
         {
           model: Comment,
-          attributes: ['id']
+          attributes: ['id'],
+          include: [
+            {
+              model: ReplyComment,
+              as: 'Replies',
+              attributes: ['id']
+            }
+          ]
         }
       ]
     });

@@ -11,6 +11,7 @@ import Comment from './comment';
 import Alert from './alert';
 import User from './user';
 import Report from './report';
+import ReplyComment from './replyComment';
 
 class Post extends Model<InferAttributes<Post>, InferCreationAttributes<Post>> {
   declare id: CreationOptional<number>;
@@ -58,6 +59,7 @@ class Post extends Model<InferAttributes<Post>, InferCreationAttributes<Post>> {
 
   static associate() {
     Post.hasMany(Comment);
+    Post.hasMany(ReplyComment);
     Post.hasMany(Image);
     Post.hasMany(Alert);
     Post.belongsTo(User, { foreignKey: 'UserId' });

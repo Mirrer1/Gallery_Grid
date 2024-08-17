@@ -9,6 +9,7 @@ import Chat from './chat';
 import Comment from './comment';
 import Image from './image';
 import Report from './report';
+import ReplyComment from './replyComment';
 
 const env = (process.env.NODE_ENV as 'production' | 'test') || 'development';
 const config = configObj[env];
@@ -23,6 +24,7 @@ Chat.initiate(sequelize);
 Comment.initiate(sequelize);
 Image.initiate(sequelize);
 Report.initiate(sequelize);
+ReplyComment.initiate(sequelize);
 
 User.associate();
 Post.associate();
@@ -32,3 +34,4 @@ Chat.associate();
 Comment.associate();
 Image.associate();
 Report.associate();
+ReplyComment.associate();

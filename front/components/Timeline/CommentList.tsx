@@ -9,7 +9,7 @@ import ReplyComment from './ReplyComment';
 import ImagePreview from 'components/Modal/ImagePreviewModal';
 
 import { RootState } from 'store/reducers';
-import { Comment } from 'store/types/postType';
+import { Comment, IReplyComment } from 'store/types/postType';
 import { hideCommentList, loadCommentsRequest } from 'store/actions/postAction';
 import { slideInFromBottom } from 'styles/Common/animation';
 import {
@@ -23,8 +23,11 @@ import {
 const CommentList = () => {
   const dispatch = useDispatch();
   const commentListRef = useRef<HTMLDivElement>(null);
+  const commentRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
+
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [replyFormCommentId, setReplyFormCommentId] = useState<number | null>(null);
+  const [replyId, setReplyId] = useState<number | null>(null);
+  const [replyUser, setReplyUser] = useState<string | null>(null);
   const [touchStartY, setTouchStartY] = useState<number | null>(null);
   const [translateY, setTranslateY] = useState(0);
   const {
@@ -33,7 +36,7 @@ const CommentList = () => {
     mainComments,
     loadCommentsLoading,
     addCommentDone,
-    addReplyCommentDone
+    lastChangedCommentId
   } = useSelector((state: RootState) => state.post);
 
   const onHideComment = useCallback(() => {
@@ -76,23 +79,17 @@ const CommentList = () => {
   };
 
   useEffect(() => {
-    if (addCommentDone && commentListRef.current) {
-      commentListRef.current.scrollTo({
-        top: commentListRef.current.scrollHeight,
-        behavior: 'smooth'
-      });
+    setReplyId(null);
+    setReplyUser(null);
+
+    if (addCommentDone && lastChangedCommentId && commentRefs.current[lastChangedCommentId]) {
+      commentRefs.current[lastChangedCommentId]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
-  }, [addCommentDone]);
+  }, [addCommentDone, lastChangedCommentId]);
 
   useEffect(() => {
     if (commentVisiblePostId) dispatch(loadCommentsRequest(commentVisiblePostId));
   }, [commentVisiblePostId]);
-
-  useEffect(() => {
-    if (addReplyCommentDone) {
-      setReplyFormCommentId(null);
-    }
-  }, [addReplyCommentDone]);
 
   return (
     <CommentListWrapper
@@ -116,29 +113,27 @@ const CommentList = () => {
             <CommentListItemWrapper ref={commentListRef}>
               {mainComments.map(
                 (comment: Comment) =>
-                  comment.parentId === null && (
-                    <div key={comment.id}>
+                  comment && (
+                    <div key={comment.id} ref={el => (commentRefs.current[comment.id] = el)}>
                       <CommentListItem
                         comment={comment}
                         showImagePreview={showImagePreview}
-                        setReplyFormCommentId={setReplyFormCommentId}
+                        setReplyId={setReplyId}
+                        setReplyUser={setReplyUser}
                       />
 
-                      {replyFormCommentId === comment.id && (
-                        <ReplyCommentForm setReplyFormCommentId={setReplyFormCommentId} parentId={comment.id} />
-                      )}
+                      {/* {replyId === comment.id && <ReplyCommentForm setReplyId={setReplyId} parentId={comment.id} />} */}
 
-                      {mainComments
-                        .filter((reply: Comment) => reply.parentId === comment.id)
-                        .map((reply: Comment) => (
+                      {comment.Replies.map((reply: IReplyComment) => (
+                        <div key={reply.id} ref={el => (commentRefs.current[reply.id] = el)}>
                           <ReplyComment
-                            key={reply.id}
                             comment={reply}
                             parentId={comment.id}
-                            replyFormCommentId={replyFormCommentId}
-                            setReplyFormCommentId={setReplyFormCommentId}
+                            setReplyId={setReplyId}
+                            setReplyUser={setReplyUser}
                           />
-                        ))}
+                        </div>
+                      ))}
                     </div>
                   )
               )}
@@ -151,7 +146,12 @@ const CommentList = () => {
             </NoCommentsContainer>
           )}
 
-          <CommentForm showImagePreview={showImagePreview} />
+          <CommentForm
+            showImagePreview={showImagePreview}
+            replyId={replyId}
+            replyUser={replyUser}
+            setReplyId={setReplyId}
+          />
         </>
       )}
 

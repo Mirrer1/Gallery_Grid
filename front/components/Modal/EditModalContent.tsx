@@ -6,10 +6,10 @@ import EmojiPicker from 'emoji-picker-react';
 import Router from 'next/router';
 
 import useInput from 'utils/useInput';
+import formatDate from 'utils/useListTimes';
 import useEmojiPicker from 'utils/useEmojiPicker';
 import { useLocation } from 'utils/useLocation';
 import { RootState } from 'store/reducers';
-import { formatDate } from 'utils/useListTimes';
 import { cancelPostEdit, editPostRequest, hidePostModal } from 'store/actions/postAction';
 import {
   EditModalBtn,

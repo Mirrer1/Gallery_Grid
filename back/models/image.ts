@@ -3,14 +3,16 @@ import Post from './post';
 import User from './user';
 import Chat from './chat';
 import Comment from './comment';
+import ReplyComment from './replyComment';
 
 class Image extends Model<InferAttributes<Image>, InferCreationAttributes<Image>> {
   declare id: CreationOptional<number>;
-  declare type: 'user' | 'post' | 'comment';
+  declare type: 'user' | 'post' | 'comment' | 'reply';
   declare src: string;
   declare PostId: number | null;
   declare UserId: number | null;
   declare CommentId: number | null;
+  declare ReplyCommentId: number | null;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 
@@ -42,6 +44,10 @@ class Image extends Model<InferAttributes<Image>, InferCreationAttributes<Image>
           type: Sequelize.INTEGER,
           allowNull: true
         },
+        ReplyCommentId: {
+          type: Sequelize.INTEGER,
+          allowNull: true
+        },
         createdAt: Sequelize.DATE,
         updatedAt: Sequelize.DATE
       },
@@ -59,6 +65,7 @@ class Image extends Model<InferAttributes<Image>, InferCreationAttributes<Image>
     Image.belongsTo(Post, { as: 'Post', foreignKey: 'PostId' });
     Image.belongsTo(User, { as: 'User', foreignKey: 'UserId' });
     Image.belongsTo(Comment, { as: 'Comment', foreignKey: 'CommentId' });
+    Image.belongsTo(ReplyComment, { as: 'ReplyComment', foreignKey: 'ReplyCommentId' });
     Image.hasMany(Chat, {
       as: 'ChatMessages',
       foreignKey: 'ImageId'

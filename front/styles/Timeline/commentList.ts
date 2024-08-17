@@ -227,13 +227,13 @@ export const CommentFormWrapper = styled.div`
   height: 6%;
 `;
 
-export const CommentFormImageWrapper = styled.div`
+export const CommentExtrasWrapper = styled.div`
   position: absolute;
   bottom: 100%;
   left: 0;
   width: 100%;
   background-color: white;
-  border-top: 1.5px solid #e4e5ec;
+  border-top: 1.5px solid ${({ theme }) => theme.colors.darkBg};
 `;
 
 export const CommentFormImage = styled(motion.div)`
@@ -266,6 +266,26 @@ export const CommentFormImage = styled(motion.div)`
       right: 8%;
       opacity: 70%;
     }
+  }
+`;
+
+export const CommentFormReply = styled(motion.div)`
+  ${({ theme }) => theme.flexSet('space-between')};
+  width: 100%;
+  background-color: ${({ theme }) => theme.colors.lightBg};
+  padding: 0.5em;
+
+  & > p {
+    font-size: 0.75rem;
+    opacity: 40%;
+  }
+
+  & > span {
+    font-size: 0.9rem;
+    opacity: 70%;
+    margin-right: 0.5em;
+    cursor: pointer;
+    ${HoverStyle('&')};
   }
 `;
 

@@ -16,7 +16,7 @@ import DeleteModal from 'components/Modal/DeleteModal';
 import PostModal from 'components/Modal/PostModal';
 
 import useScroll from 'utils/useScroll';
-import useListTimes from 'utils/useListTimes';
+import formatDate from 'utils/useListTimes';
 import { RootState } from 'store/reducers';
 import { Image, Post } from 'store/types/postType';
 import {
@@ -55,7 +55,6 @@ const PostList = () => {
     commentVisiblePostId
   } = useSelector((state: RootState) => state.post);
 
-  const postTimes = useListTimes(mainPosts);
   const [category, setCategory] = useState('best');
   const [modalImages, setModalImages] = useState<Image[]>([]);
   const [isTooltipVisible, setIsTooltipVisible] = useState<number | null>(null);
@@ -127,7 +126,7 @@ const PostList = () => {
         </CategoryItem>
       </PostCategory>
 
-      {mainPosts.map((post: Post, i: number) => (
+      {mainPosts.map((post: Post) => (
         <PostWrapper key={post.id} {...slideInList}>
           <PostHeader>
             <div>
@@ -139,7 +138,7 @@ const PostList = () => {
               <div>
                 <h1>{post.User.nickname}</h1>
                 <p>
-                  {postTimes[i]}
+                  {formatDate(post.createdAt)}
                   {post.location && ` - ${post.location}`}
                 </p>
               </div>
@@ -209,7 +208,10 @@ const PostList = () => {
 
                 <div onClick={() => onToggleComment(post.id)}>
                   <CommentOutlined />
-                  <span>{post.Comments.length}</span>
+                  {post.Comments.reduce((total, comment) => {
+                    const repliesCount = comment.Replies ? comment.Replies.length : 0;
+                    return total + 1 + repliesCount;
+                  }, 0)}
                 </div>
               </PostOptions>
             </div>

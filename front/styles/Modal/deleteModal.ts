@@ -12,7 +12,7 @@ export const DeleteModalWrapper = styled.section`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 99;
+  z-index: 199;
 `;
 
 export const DeleteModalOutsideArea = styled.div`
@@ -21,7 +21,7 @@ export const DeleteModalOutsideArea = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 99;
+  z-index: 199;
 `;
 
 export const DeleteModalContent = styled(motion.div)`
@@ -32,7 +32,7 @@ export const DeleteModalContent = styled(motion.div)`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) !important;
-  z-index: 100;
+  z-index: 200;
   background-color: white;
   border-radius: 10px;
   padding: 1em;

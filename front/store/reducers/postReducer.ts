@@ -53,7 +53,8 @@ import {
   REPLY_COMMENT_UPLOAD_IMAGE_REQUEST,
   REPLY_COMMENT_UPLOAD_IMAGE_SUCCESS,
   REPLY_COMMENT_UPLOAD_IMAGE_FAILURE,
-  REPLY_COMMENT_REMOVE_UPLOADED_IMAGE
+  REPLY_COMMENT_REMOVE_UPLOADED_IMAGE,
+  IReplyComment
 } from 'store/types/postType';
 
 export const initialState: PostState = {
@@ -66,7 +67,8 @@ export const initialState: PostState = {
   modalCommentImagePath: [],
   postEditMode: false,
   deleteId: null,
-  mainComments: null,
+  mainComments: [],
+  lastChangedCommentId: null,
   commentVisiblePostId: null,
   hasMorePosts: true,
   loadPostsLoading: false,
@@ -169,6 +171,7 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
       case DELETE_POST_SUCCESS:
         draft.deletePostLoading = false;
         draft.deletePostDone = true;
+        draft.isPostModalVisible = false;
         const index = draft.mainPosts.findIndex(post => post.id === action.data);
         if (index !== -1) draft.mainPosts.splice(index, 1);
         break;
@@ -236,12 +239,32 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
       case ADD_COMMENT_SUCCESS:
         draft.addCommentLoading = false;
         draft.addCommentDone = true;
-        const commentPostIndex = draft.mainPosts.findIndex(post => post.id === action.data.PostId);
-        if (commentPostIndex !== -1) {
-          draft.mainPosts[commentPostIndex].Comments.push({ id: action.data.id });
-        }
-        draft.mainComments?.push(action.data);
         draft.commentImagePath = [];
+        draft.lastChangedCommentId = action.data.comment.id;
+
+        const commentPostIndex = draft.mainPosts.findIndex(post => post.id === action.data.comment.PostId);
+        if (commentPostIndex === -1) break;
+
+        const comments = draft.mainPosts[commentPostIndex].Comments;
+        const parentId = action.data.parentId ? parseInt(action.data.parentId, 10) : null;
+
+        if (!!action.data.parentId) {
+          const parentComment = comments.find(comment => comment.id === parentId);
+
+          if (parentComment) {
+            parentComment.Replies = parentComment.Replies || [];
+            parentComment.Replies.push({ id: action.data.comment.id });
+
+            const mainParentComment = draft.mainComments?.find(comment => comment.id === parentId);
+            if (mainParentComment) {
+              mainParentComment.Replies = mainParentComment.Replies || [];
+              mainParentComment.Replies.push(action.data.comment as IReplyComment);
+            }
+          }
+        } else {
+          comments.push({ id: action.data.comment.id, Replies: [] });
+          draft.mainComments?.push(action.data.comment);
+        }
         break;
       case ADD_COMMENT_FAILURE:
         draft.addCommentLoading = false;

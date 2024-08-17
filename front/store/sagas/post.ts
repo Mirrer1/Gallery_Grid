@@ -47,7 +47,8 @@ import {
   REPLY_COMMENT_UPLOAD_IMAGE_FAILURE,
   ADD_REPLY_COMMENT_REQUEST,
   ADD_REPLY_COMMENT_SUCCESS,
-  ADD_REPLY_COMMENT_FAILURE
+  ADD_REPLY_COMMENT_FAILURE,
+  ResponseComment
 } from 'store/types/postType';
 
 function loadPostsAPI(lastId?: number) {
@@ -192,7 +193,7 @@ function addCommentAPI(data: FormData) {
 
 function* addComment(action: addCommentRequestAction) {
   try {
-    const result: AxiosResponse<Post> = yield call(addCommentAPI, action.data);
+    const result: AxiosResponse<ResponseComment> = yield call(addCommentAPI, action.data);
 
     yield put({
       type: ADD_COMMENT_SUCCESS,

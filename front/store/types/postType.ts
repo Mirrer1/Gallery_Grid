@@ -73,6 +73,11 @@ export interface Image {
   src: string;
 }
 
+export interface ResponseComment {
+  comment: Comment | IReplyComment;
+  parentId?: string | null;
+}
+
 export interface Comment {
   id: number;
   content: string;
@@ -84,6 +89,17 @@ export interface Comment {
   User: User;
   Post: { UserId: number };
   CommentImage: Image | null;
+  Replies: IReplyComment[];
+}
+
+export interface IReplyComment extends Comment {
+  CommentId: number;
+  ReplyImage?: Image | null;
+}
+
+export interface PostComment {
+  id: number;
+  Replies: { id: number }[];
 }
 
 export interface Post {
@@ -95,7 +111,7 @@ export interface Post {
   updatedAt: string;
   User: User;
   Images: Image[];
-  Comments: { id: number }[];
+  Comments: PostComment[];
 }
 
 export type PostState = {
@@ -108,7 +124,8 @@ export type PostState = {
   modalCommentImagePath: string[];
   postEditMode: boolean;
   deleteId: number | null;
-  mainComments: Comment[] | null;
+  mainComments: Comment[];
+  lastChangedCommentId: number | null;
   commentVisiblePostId: number | null;
   hasMorePosts: boolean;
   loadPostsLoading: boolean;
@@ -275,7 +292,7 @@ export interface addCommentRequestAction {
 
 export interface addCommentSuccessAction {
   type: typeof ADD_COMMENT_SUCCESS;
-  data: Comment;
+  data: ResponseComment;
 }
 
 export interface addCommentFailureAction {

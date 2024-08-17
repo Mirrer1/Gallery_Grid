@@ -10,6 +10,7 @@ import useFileUpload from 'utils/useFileUpload';
 import useEmojiPicker from 'utils/useEmojiPicker';
 import { RootState } from 'store/reducers';
 import {
+  addCommentRequest,
   addReplyCommentRequest,
   replyCommentRemoveUploadedImage,
   replyCommentUploadImageRequest
@@ -25,11 +26,11 @@ import {
 } from 'styles/Timeline/replyCommentForm';
 
 type ReplyCommentFormProps = {
-  setReplyFormCommentId: React.Dispatch<React.SetStateAction<number | null>>;
+  setReplyId: React.Dispatch<React.SetStateAction<number | null>>;
   parentId: number;
 };
 
-const ReplyCommentForm = ({ setReplyFormCommentId, parentId }: ReplyCommentFormProps) => {
+const ReplyCommentForm = ({ setReplyId, parentId }: ReplyCommentFormProps) => {
   const dispatch = useDispatch();
   const [comment, onChangeComment, setComment] = useInput<string>('');
   const { showEmoji, showEmojiPicker, closeEmojiPicker, onEmojiClick } = useEmojiPicker(setComment);
@@ -44,7 +45,7 @@ const ReplyCommentForm = ({ setReplyFormCommentId, parentId }: ReplyCommentFormP
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const handleCancel = useCallback(() => {
-    setReplyFormCommentId(null);
+    setReplyId(null);
   }, []);
 
   const onClickImageUpload = useCallback(() => {
@@ -87,7 +88,8 @@ const ReplyCommentForm = ({ setReplyFormCommentId, parentId }: ReplyCommentFormP
       formData.append('PostId', commentVisiblePostId);
       formData.append('parentId', parentId.toString());
 
-      dispatch(addReplyCommentRequest(formData));
+      // dispatch(addReplyCommentRequest(formData));
+      dispatch(addCommentRequest(formData));
     },
     [comment, replyCommentImagePath, commentVisiblePostId]
   );

@@ -1,6 +1,13 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { DeleteOutlined, LoadingOutlined, PaperClipOutlined, SendOutlined, SmileOutlined } from '@ant-design/icons';
+import {
+  CloseOutlined,
+  DeleteOutlined,
+  LoadingOutlined,
+  PaperClipOutlined,
+  SendOutlined,
+  SmileOutlined
+} from '@ant-design/icons';
 import { toast } from 'react-toastify';
 import EmojiPicker from 'emoji-picker-react';
 
@@ -9,21 +16,26 @@ import useFileUpload from 'utils/useFileUpload';
 import useEmojiPicker from 'utils/useEmojiPicker';
 import { RootState } from 'store/reducers';
 import { addCommentRequest, commentRemoveUploadedImage, commentUploadImageRequest } from 'store/actions/postAction';
-import { slideInUploadImage } from 'styles/Common/animation';
+import { slideInTooltip, slideInUploadImage } from 'styles/Common/animation';
 import {
   CommentEmojiPicker,
   CommentFormInput,
   CommentFormImage,
-  CommentFormImageWrapper,
-  CommentFormWrapper
+  CommentFormWrapper,
+  CommentExtrasWrapper,
+  CommentFormReply
 } from 'styles/Timeline/commentList';
 
 type CommentFormProps = {
   showImagePreview: (src: string) => void;
+  replyId: number | null;
+  replyUser: string | null;
+  setReplyId: React.Dispatch<React.SetStateAction<number | null>>;
 };
 
-const CommentForm = ({ showImagePreview }: CommentFormProps) => {
+const CommentForm = ({ showImagePreview, replyId, replyUser, setReplyId }: CommentFormProps) => {
   const dispatch = useDispatch();
+  const inputRef = useRef<HTMLInputElement>(null);
   const [comment, onChangeComment, setComment] = useInput('');
   const { showEmoji, showEmojiPicker, closeEmojiPicker, onEmojiClick } = useEmojiPicker(setComment);
   const { fileInputRef, onFileChange } = useFileUpload(commentUploadImageRequest, { showWarning: false });
@@ -42,6 +54,10 @@ const CommentForm = ({ showImagePreview }: CommentFormProps) => {
 
   const onClickImageUpload = useCallback(() => {
     if (fileInputRef.current) fileInputRef.current.click();
+  }, []);
+
+  const handleCancel = useCallback(() => {
+    setReplyId(null);
   }, []);
 
   const onSubmitForm = useCallback(
@@ -66,10 +82,11 @@ const CommentForm = ({ showImagePreview }: CommentFormProps) => {
       }
       formData.append('content', comment);
       formData.append('PostId', commentVisiblePostId);
+      if (replyId) formData.append('parentId', replyId.toString());
 
       dispatch(addCommentRequest(formData));
     },
-    [comment, commentImagePath, commentVisiblePostId]
+    [comment, commentImagePath, commentVisiblePostId, replyId, replyUser]
   );
 
   const handleKeyDown = useCallback(
@@ -78,8 +95,14 @@ const CommentForm = ({ showImagePreview }: CommentFormProps) => {
         onSubmitForm(event as unknown as React.FormEvent<HTMLFormElement>);
       }
     },
-    [comment]
+    [comment, commentImagePath, commentVisiblePostId, replyId, replyUser]
   );
+
+  useEffect(() => {
+    if ((replyId || commentImagePath.length !== 0) && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [replyId, commentImagePath]);
 
   useEffect(() => {
     if (addCommentDone) setComment('');
@@ -87,17 +110,26 @@ const CommentForm = ({ showImagePreview }: CommentFormProps) => {
 
   return (
     <CommentFormWrapper>
-      {commentImagePath.length !== 0 && (
-        <CommentFormImageWrapper>
-          <CommentFormImage key={commentImagePath} {...slideInUploadImage}>
-            <img
-              src={`http://localhost:3065/${commentImagePath}`}
-              alt="입력한 댓글의 첨부 이미지"
-              onClick={() => showImagePreview(`http://localhost:3065/${commentImagePath}`)}
-            />
-            <DeleteOutlined onClick={handleRemoveImage} />
-          </CommentFormImage>
-        </CommentFormImageWrapper>
+      {(replyId || commentImagePath.length !== 0) && (
+        <CommentExtrasWrapper>
+          {replyId && (
+            <CommentFormReply {...slideInTooltip}>
+              <p>{replyUser}님에게 답글 작성중...</p>
+              <CloseOutlined onClick={handleCancel} />
+            </CommentFormReply>
+          )}
+
+          {commentImagePath.length !== 0 && (
+            <CommentFormImage key={commentImagePath} {...slideInUploadImage}>
+              <img
+                src={`http://localhost:3065/${commentImagePath}`}
+                alt="입력한 댓글의 첨부 이미지"
+                onClick={() => showImagePreview(`http://localhost:3065/${commentImagePath}`)}
+              />
+              <DeleteOutlined onClick={handleRemoveImage} />
+            </CommentFormImage>
+          )}
+        </CommentExtrasWrapper>
       )}
 
       <CommentFormInput encType="multipart/form-data" $active={comment.length === 0} onSubmit={onSubmitForm}>
@@ -119,6 +151,7 @@ const CommentForm = ({ showImagePreview }: CommentFormProps) => {
           <input
             type="text"
             placeholder="Type a Comment..."
+            ref={inputRef}
             value={comment}
             onChange={onChangeComment}
             onKeyDown={handleKeyDown}
