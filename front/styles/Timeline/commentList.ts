@@ -114,7 +114,7 @@ export const CommentListItemWrapper = styled.div`
 
   & > div {
     border-bottom: 1px solid #eeeff3;
-    padding: 1em 0;
+    padding-top: 1em;
   }
 
   ${media.tablet} {
@@ -125,10 +125,6 @@ export const CommentListItemWrapper = styled.div`
 export const CommentContainer = styled.div<{ $reply: boolean }>`
   padding-left: ${props => (props.$reply ? '2em' : '0')};
   margin-bottom: 1em;
-
-  &:last-child {
-    margin-bottom: 0;
-  }
 
   & > div {
     ${({ theme }) => theme.flexSet('space-between')};
@@ -204,7 +200,6 @@ export const CommentContainer = styled.div<{ $reply: boolean }>`
     font-size: 0.75rem;
     opacity: 40%;
     margin-left: 0.5em;
-    margin-bottom: ${props => (props.$reply ? '1em' : '0')};
   }
 `;
 

@@ -440,4 +440,149 @@ router.post('/comment', isLoggedIn, upload.none(), async (req, res, next) => {
   }
 });
 
+router.patch('/comment/edit', isLoggedIn, upload.none(), async (req, res, next) => {
+  try {
+    const { content, commentId, image, parentId } = req.body;
+
+    let comment;
+    if (parentId) {
+      comment = await ReplyComment.findOne({ where: { id: commentId, CommentId: parentId } });
+      if (!comment) {
+        return res.status(404).json({ message: '존재하지 않는 대댓글입니다.' });
+      }
+
+      await comment.update({ content });
+
+      if (image) {
+        const replyImage = await Image.findOne({ where: { ReplyCommentId: commentId } });
+        if (replyImage) {
+          await replyImage.update({ src: image });
+        } else {
+          await Image.create({
+            type: 'reply',
+            src: image,
+            ReplyCommentId: comment.id
+          });
+        }
+      } else {
+        await Image.destroy({ where: { ReplyCommentId: commentId } });
+      }
+    } else {
+      comment = await Comment.findOne({ where: { id: commentId } });
+      if (!comment) {
+        return res.status(404).json({ message: '존재하지 않는 댓글입니다.' });
+      }
+
+      await comment.update({ content });
+
+      if (image) {
+        const commentImage = await Image.findOne({ where: { CommentId: commentId } });
+        if (commentImage) {
+          await commentImage.update({ src: image });
+        } else {
+          await Image.create({
+            type: 'comment',
+            src: image,
+            CommentId: comment.id
+          });
+        }
+      } else {
+        await Image.destroy({ where: { CommentId: commentId } });
+      }
+    }
+
+    const fullComment = parentId
+      ? await ReplyComment.findOne({
+          where: { id: commentId },
+          include: [
+            {
+              model: User,
+              attributes: ['id', 'nickname'],
+              include: [
+                {
+                  model: Image,
+                  as: 'ProfileImage',
+                  where: { type: 'user' },
+                  attributes: ['id', 'src'],
+                  required: false
+                }
+              ]
+            },
+            {
+              model: Comment,
+              attributes: ['id']
+            },
+            {
+              model: Image,
+              as: 'ReplyImage',
+              where: { type: 'reply' },
+              attributes: ['id', 'src'],
+              required: false
+            }
+          ]
+        })
+      : await Comment.findOne({
+          where: { id: commentId },
+          include: [
+            {
+              model: User,
+              attributes: ['id', 'nickname'],
+              include: [
+                {
+                  model: Image,
+                  as: 'ProfileImage',
+                  where: { type: 'user' },
+                  attributes: ['id', 'src'],
+                  required: false
+                }
+              ]
+            },
+            {
+              model: Post,
+              attributes: ['UserId']
+            },
+            {
+              model: Image,
+              as: 'CommentImage',
+              where: { type: 'comment' },
+              attributes: ['id', 'src'],
+              required: false
+            },
+            {
+              model: ReplyComment,
+              as: 'Replies',
+              include: [
+                {
+                  model: User,
+                  attributes: ['id', 'nickname'],
+                  include: [
+                    {
+                      model: Image,
+                      as: 'ProfileImage',
+                      where: { type: 'user' },
+                      attributes: ['id', 'src'],
+                      required: false
+                    }
+                  ]
+                },
+                {
+                  model: Image,
+                  as: 'ReplyImage',
+                  where: { type: 'reply' },
+                  attributes: ['id', 'src'],
+                  required: false
+                }
+              ],
+              order: [['createdAt', 'ASC']]
+            }
+          ]
+        });
+
+    return res.status(200).json({ comment: fullComment, parentId });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
 export default router;

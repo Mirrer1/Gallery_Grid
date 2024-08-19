@@ -1,8 +1,6 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 
-import ImagePreview from 'components/Modal/ImagePreviewModal';
-import ReplyCommentForm from './ReplyCommentForm';
 import formatDate from 'utils/useListTimes';
 import { RootState } from 'store/reducers';
 import { IReplyComment } from 'store/types/postType';
@@ -10,29 +8,29 @@ import { CommentContainer, CommentListItemImage } from 'styles/Timeline/commentL
 
 type ReplyCommentProps = {
   comment: IReplyComment;
-  parentId: number;
+  replyId: number;
   setReplyId: (id: number | null) => void;
   setReplyUser: (user: string | null) => void;
+  showImagePreview: (src: string) => void;
+  onEditClick: () => void;
 };
 
-const ReplyComment = ({ comment, parentId, setReplyId, setReplyUser }: ReplyCommentProps) => {
+const ReplyComment = ({
+  comment,
+  replyId,
+  setReplyId,
+  setReplyUser,
+  showImagePreview,
+  onEditClick
+}: ReplyCommentProps) => {
   const { me } = useSelector((state: RootState) => state.user);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-
-  const showImagePreview = useCallback((image: string) => {
-    setImagePreview(image);
-  }, []);
-
-  const hideImagePreview = useCallback(() => {
-    setImagePreview(null);
-  }, []);
 
   const onClickReply = useCallback((user: string) => {
     setReplyId(null);
     setReplyUser(null);
 
     setTimeout(() => {
-      setReplyId(parentId);
+      setReplyId(replyId);
       setReplyUser(user);
     }, 0);
   }, []);
@@ -58,7 +56,9 @@ const ReplyComment = ({ comment, parentId, setReplyId, setReplyUser }: ReplyComm
 
         {comment.User.id === me?.id ? (
           <div>
-            <button type="button">수정</button>
+            <button type="button" onClick={onEditClick}>
+              수정
+            </button>
             <button type="button">삭제</button>
           </div>
         ) : (
@@ -77,10 +77,6 @@ const ReplyComment = ({ comment, parentId, setReplyId, setReplyUser }: ReplyComm
       <button type="button" onClick={() => onClickReply(comment.User.nickname)}>
         답글쓰기
       </button>
-
-      {/* {replyId === comment.id && <ReplyCommentForm setReplyId={setReplyId} parentId={parentId} />} */}
-
-      <ImagePreview imagePreview={imagePreview} hideImagePreview={hideImagePreview} />
     </CommentContainer>
   );
 };

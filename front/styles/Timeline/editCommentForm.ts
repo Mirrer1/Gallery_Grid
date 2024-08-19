@@ -5,7 +5,11 @@ import media from 'styles/media';
 import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
 import { DarkShadowStyle } from 'styles/Common/shadow';
 
-export const ReplyCommentWrapper = styled(motion.form)`
+export const EditCommentWrapper = styled.div<{ $reply: boolean }>`
+  padding-left: ${props => (props.$reply ? '2em' : '0')};
+`;
+
+export const EditCommentFormSection = styled(motion.form)`
   border: 1px solid ${({ theme }) => theme.colors.darkBg};
   border-radius: 5px;
   margin-bottom: 1em;
@@ -85,13 +89,60 @@ export const ReplyCommentWrapper = styled(motion.form)`
   }
 `;
 
-export const ReplyCommentImageWrapper = styled.section`
+export const EditCommentHeader = styled.header`
+  ${({ theme }) => theme.flexSet('start')};
+  margin-bottom: 0.5em;
+
+  & > img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 0.4em;
+  }
+
+  & > div {
+    & > div {
+      ${({ theme }) => theme.flexSet('flex-start')};
+      margin-bottom: 0.3em;
+
+      & > h1 {
+        font-size: 0.9rem;
+        font-weight: 500;
+        margin-right: 0.3em;
+        cursor: pointer;
+
+        @media (min-width: 992px) {
+          &:hover {
+            text-decoration: underline;
+            text-underline-offset: 1.5px;
+          }
+        }
+      }
+
+      & > p {
+        font-size: 0.6rem;
+        font-weight: 500;
+        color: ${({ theme }) => theme.colors.primary};
+        background-color: #d6e4f8;
+        border-radius: 10px;
+        padding: 0.3em 0.6em;
+      }
+    }
+
+    & > p {
+      font-size: 0.65rem;
+      opacity: 40%;
+    }
+  }
+`;
+
+export const EditCommentImageWrapper = styled.section`
   width: 100%;
   position: relative;
   background-color: white;
 `;
 
-export const ReplyCommentImage = styled(motion.div)`
+export const EditCommentImage = styled(motion.div)`
   position: relative;
   width: fit-content;
   padding: 0.5em;
@@ -124,7 +175,7 @@ export const ReplyCommentImage = styled(motion.div)`
   }
 `;
 
-export const ReplyCommentEmojiPicker = styled.div`
+export const EditCommentEmojiPicker = styled.div`
   & > div:first-child {
     position: fixed;
     top: 0;
@@ -158,7 +209,7 @@ export const ReplyCommentEmojiPicker = styled.div`
   }
 `;
 
-export const ReplyCommentBtn = styled.button<{ $active: boolean }>`
+export const EditCommentBtn = styled.button<{ $active: boolean }>`
   color: ${({ theme }) => theme.colors.primary};
   border: 1px solid ${({ theme }) => theme.colors.primary};
   opacity: ${props => (props.$active ? '100%' : '40%')};
@@ -177,7 +228,7 @@ export const ReplyCommentBtn = styled.button<{ $active: boolean }>`
   }
 `;
 
-export const ReplyCancelBtn = styled.button`
+export const EditCancelBtn = styled.button`
   color: ${({ theme }) => theme.colors.red};
   border: 1px solid ${({ theme }) => theme.colors.red};
   font-size: 0.7rem;

@@ -8,12 +8,19 @@ import { CommentContainer, CommentListItemImage } from 'styles/Timeline/commentL
 
 type CommentListItemProps = {
   comment: Comment;
-  showImagePreview: (src: string) => void;
   setReplyId: (id: number | null) => void;
   setReplyUser: (user: string | null) => void;
+  showImagePreview: (src: string) => void;
+  onEditClick: () => void;
 };
 
-const CommentListItem = ({ comment, showImagePreview, setReplyId, setReplyUser }: CommentListItemProps) => {
+const CommentListItem = ({
+  comment,
+  setReplyId,
+  setReplyUser,
+  showImagePreview,
+  onEditClick
+}: CommentListItemProps) => {
   const { me } = useSelector((state: RootState) => state.user);
 
   const onClickReply = useCallback((commentId: number, user: string) => {
@@ -47,7 +54,9 @@ const CommentListItem = ({ comment, showImagePreview, setReplyId, setReplyUser }
 
         {comment.User.id === me?.id ? (
           <div>
-            <button type="button">수정</button>
+            <button type="button" onClick={onEditClick}>
+              수정
+            </button>
             <button type="button">삭제</button>
           </div>
         ) : (

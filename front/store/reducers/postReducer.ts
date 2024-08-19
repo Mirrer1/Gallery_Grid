@@ -47,14 +47,15 @@ import {
   LOAD_COMMENTS_REQUEST,
   LOAD_COMMENTS_SUCCESS,
   LOAD_COMMENTS_FAILURE,
-  ADD_REPLY_COMMENT_REQUEST,
-  ADD_REPLY_COMMENT_SUCCESS,
-  ADD_REPLY_COMMENT_FAILURE,
-  REPLY_COMMENT_UPLOAD_IMAGE_REQUEST,
-  REPLY_COMMENT_UPLOAD_IMAGE_SUCCESS,
-  REPLY_COMMENT_UPLOAD_IMAGE_FAILURE,
-  REPLY_COMMENT_REMOVE_UPLOADED_IMAGE,
-  IReplyComment
+  IReplyComment,
+  EXECUTE_COMMENT_EDIT,
+  EDIT_COMMENT_UPLOAD_IMAGE_REQUEST,
+  EDIT_COMMENT_UPLOAD_IMAGE_SUCCESS,
+  EDIT_COMMENT_UPLOAD_IMAGE_FAILURE,
+  EDIT_COMMENT_REMOVE_UPLOADED_IMAGE,
+  EDIT_COMMENT_REQUEST,
+  EDIT_COMMENT_SUCCESS,
+  EDIT_COMMENT_FAILURE
 } from 'store/types/postType';
 
 export const initialState: PostState = {
@@ -62,8 +63,8 @@ export const initialState: PostState = {
   singlePost: null,
   postImagePaths: [],
   editPostImagePaths: [],
-  replyCommentImagePath: [],
   commentImagePath: [],
+  editCommentImagePath: [],
   modalCommentImagePath: [],
   postEditMode: false,
   deleteId: null,
@@ -98,12 +99,12 @@ export const initialState: PostState = {
   commentUploadImageLoading: false,
   commentUploadImageDone: false,
   commentUploadImageError: null,
-  addReplyCommentLoading: false,
-  addReplyCommentDone: false,
-  addReplyCommentError: null,
-  replyCommentUploadImageLoading: false,
-  replyCommentUploadImageDone: false,
-  replyCommentUploadImageError: null,
+  editCommentLoading: false,
+  editCommentDone: false,
+  editCommentError: null,
+  editCommentUploadImageLoading: false,
+  editCommentUploadImageDone: false,
+  editCommentUploadImageError: null,
   modalCommentUploadImageLoading: false,
   modalCommentUploadImageDone: false,
   modalCommentUploadImageError: null,
@@ -287,41 +288,87 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
       case COMMENT_REMOVE_UPLOADED_IMAGE:
         draft.commentImagePath = [];
         break;
-      case ADD_REPLY_COMMENT_REQUEST:
-        draft.addReplyCommentLoading = true;
-        draft.addReplyCommentDone = false;
-        draft.addReplyCommentError = null;
+      case EDIT_COMMENT_REQUEST:
+        draft.editCommentLoading = true;
+        draft.editCommentDone = false;
+        draft.editCommentError = null;
         break;
-      case ADD_REPLY_COMMENT_SUCCESS:
-        draft.addReplyCommentLoading = false;
-        draft.addReplyCommentDone = true;
-        const replyCommentPostIndex = draft.mainPosts.findIndex(post => post.id === action.data.PostId);
-        if (replyCommentPostIndex !== -1) {
-          draft.mainPosts[replyCommentPostIndex].Comments.push({ id: action.data.id });
+      case EDIT_COMMENT_SUCCESS: {
+        draft.editCommentLoading = false;
+        draft.editCommentDone = true;
+        draft.editCommentImagePath = [];
+        draft.lastChangedCommentId = action.data.comment.id;
+
+        const commentPostIndex = draft.mainPosts.findIndex(post => post.id === action.data.comment.PostId);
+        if (commentPostIndex === -1) break;
+
+        const comments = draft.mainPosts[commentPostIndex].Comments;
+        const parentId = action.data.parentId ? parseInt(action.data.parentId, 10) : null;
+
+        if (!!action.data.parentId) {
+          const parentComment = comments.find(comment => comment.id === parentId);
+          if (parentComment) {
+            const replyIndex = parentComment.Replies.findIndex(reply => reply.id === action.data.comment.id);
+            if (replyIndex !== -1) {
+              parentComment.Replies[replyIndex] = {
+                ...parentComment.Replies[replyIndex],
+                ...action.data.comment
+              };
+
+              const mainParentComment = draft.mainComments?.find(comment => comment.id === parentId);
+              if (mainParentComment) {
+                const mainReplyIndex = mainParentComment.Replies.findIndex(
+                  reply => reply.id === action.data.comment.id
+                );
+                if (mainReplyIndex !== -1) {
+                  mainParentComment.Replies[mainReplyIndex] = {
+                    ...mainParentComment.Replies[mainReplyIndex],
+                    ...action.data.comment
+                  };
+                }
+              }
+            }
+          }
+        } else {
+          const commentIndex = comments.findIndex(comment => comment.id === action.data.comment.id);
+          if (commentIndex !== -1) {
+            comments[commentIndex] = {
+              ...comments[commentIndex],
+              ...action.data.comment
+            };
+
+            const mainCommentIndex =
+              draft.mainComments?.findIndex(comment => comment.id === action.data.comment.id) ?? -1;
+            if (mainCommentIndex !== -1 && mainCommentIndex !== undefined) {
+              draft.mainComments![mainCommentIndex] = {
+                ...draft.mainComments![mainCommentIndex],
+                ...action.data.comment
+              };
+            }
+          }
         }
-        draft.mainComments?.push(action.data);
-        draft.replyCommentImagePath = [];
         break;
-      case ADD_REPLY_COMMENT_FAILURE:
-        draft.addCommentLoading = false;
-        draft.addCommentError = action.error;
+      }
+      case EDIT_COMMENT_FAILURE:
+        draft.editCommentLoading = false;
+        draft.editCommentError = action.error;
         break;
-      case REPLY_COMMENT_UPLOAD_IMAGE_REQUEST:
-        draft.replyCommentUploadImageLoading = true;
-        draft.replyCommentUploadImageDone = false;
-        draft.replyCommentUploadImageError = null;
+      case EDIT_COMMENT_UPLOAD_IMAGE_REQUEST:
+        draft.editCommentUploadImageLoading = true;
+        draft.editCommentUploadImageDone = false;
+        draft.editCommentUploadImageError = null;
         break;
-      case REPLY_COMMENT_UPLOAD_IMAGE_SUCCESS:
-        draft.replyCommentUploadImageLoading = false;
-        draft.replyCommentUploadImageDone = true;
-        draft.replyCommentImagePath = action.data;
+      case EDIT_COMMENT_UPLOAD_IMAGE_SUCCESS:
+        draft.editCommentUploadImageLoading = false;
+        draft.editCommentUploadImageDone = true;
+        draft.editCommentImagePath = action.data;
         break;
-      case REPLY_COMMENT_UPLOAD_IMAGE_FAILURE:
-        draft.replyCommentUploadImageLoading = false;
-        draft.replyCommentUploadImageError = action.error;
+      case EDIT_COMMENT_UPLOAD_IMAGE_FAILURE:
+        draft.editCommentUploadImageLoading = false;
+        draft.editCommentUploadImageError = action.error;
         break;
-      case REPLY_COMMENT_REMOVE_UPLOADED_IMAGE:
-        draft.replyCommentImagePath = [];
+      case EDIT_COMMENT_REMOVE_UPLOADED_IMAGE:
+        draft.editCommentImagePath = [];
         break;
       case MODAL_COMMENT_UPLOAD_IMAGE_REQUEST:
         draft.modalCommentUploadImageLoading = true;
@@ -344,7 +391,7 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
         draft.isCommentListVisible = true;
         draft.commentVisiblePostId = action.data;
         draft.commentImagePath = [];
-        draft.replyCommentImagePath = [];
+        draft.editCommentImagePath = [];
         break;
       case HIDE_COMMENT_LIST:
         draft.isCommentListVisible = false;
@@ -380,6 +427,9 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
         break;
       case HIDE_DELETE_MODAL:
         draft.isDeleteModalVisible = false;
+        break;
+      case EXECUTE_COMMENT_EDIT:
+        draft.editCommentImagePath = [action.data];
         break;
       default:
         return state;

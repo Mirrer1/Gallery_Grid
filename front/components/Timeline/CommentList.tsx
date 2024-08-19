@@ -4,13 +4,13 @@ import { CaretDownOutlined, CloseSquareTwoTone, LoadingOutlined } from '@ant-des
 
 import CommentForm from './CommentForm';
 import CommentListItem from './CommentListItem';
-import ReplyCommentForm from './ReplyCommentForm';
+import EditCommentForm from './EditCommentForm';
 import ReplyComment from './ReplyComment';
 import ImagePreview from 'components/Modal/ImagePreviewModal';
 
 import { RootState } from 'store/reducers';
 import { Comment, IReplyComment } from 'store/types/postType';
-import { hideCommentList, loadCommentsRequest } from 'store/actions/postAction';
+import { editCommentRemoveUploadedImage, hideCommentList, loadCommentsRequest } from 'store/actions/postAction';
 import { slideInFromBottom } from 'styles/Common/animation';
 import {
   CommentListHeader,
@@ -24,20 +24,25 @@ const CommentList = () => {
   const dispatch = useDispatch();
   const commentListRef = useRef<HTMLDivElement>(null);
   const commentRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
-
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [replyId, setReplyId] = useState<number | null>(null);
-  const [replyUser, setReplyUser] = useState<string | null>(null);
-  const [touchStartY, setTouchStartY] = useState<number | null>(null);
-  const [translateY, setTranslateY] = useState(0);
   const {
     isCommentListVisible,
     commentVisiblePostId,
     mainComments,
     loadCommentsLoading,
     addCommentDone,
-    lastChangedCommentId
+    lastChangedCommentId,
+    editCommentDone
   } = useSelector((state: RootState) => state.post);
+
+  const [translateY, setTranslateY] = useState(0);
+  const [touchStartY, setTouchStartY] = useState<number | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [replyId, setReplyId] = useState<number | null>(null);
+  const [replyUser, setReplyUser] = useState<string | null>(null);
+  const [editingComment, setEditingComment] = useState<{ id: number | null; type: 'comment' | 'reply' | null }>({
+    id: null,
+    type: null
+  });
 
   const onHideComment = useCallback(() => {
     dispatch(hideCommentList());
@@ -49,6 +54,15 @@ const CommentList = () => {
 
   const hideImagePreview = useCallback(() => {
     setImagePreview(null);
+  }, []);
+
+  const handleEditClick = useCallback((id: number, type: 'comment' | 'reply') => {
+    setEditingComment({ id, type });
+  }, []);
+
+  const cancelEdit = useCallback(() => {
+    setEditingComment({ id: null, type: null });
+    dispatch(editCommentRemoveUploadedImage());
   }, []);
 
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -77,6 +91,10 @@ const CommentList = () => {
     }
     setTouchStartY(null);
   };
+
+  useEffect(() => {
+    if (editCommentDone) cancelEdit();
+  }, [editCommentDone]);
 
   useEffect(() => {
     setReplyId(null);
@@ -115,23 +133,44 @@ const CommentList = () => {
                 (comment: Comment) =>
                   comment && (
                     <div key={comment.id} ref={el => (commentRefs.current[comment.id] = el)}>
-                      <CommentListItem
-                        comment={comment}
-                        showImagePreview={showImagePreview}
-                        setReplyId={setReplyId}
-                        setReplyUser={setReplyUser}
-                      />
-
-                      {/* {replyId === comment.id && <ReplyCommentForm setReplyId={setReplyId} parentId={comment.id} />} */}
+                      {editingComment.id === comment.id && editingComment.type === 'comment' ? (
+                        <EditCommentForm
+                          reply={false}
+                          comment={comment}
+                          replyId={null}
+                          cancelEdit={cancelEdit}
+                          showImagePreview={showImagePreview}
+                        />
+                      ) : (
+                        <CommentListItem
+                          comment={comment}
+                          setReplyId={setReplyId}
+                          setReplyUser={setReplyUser}
+                          showImagePreview={showImagePreview}
+                          onEditClick={() => handleEditClick(comment.id, 'comment')}
+                        />
+                      )}
 
                       {comment.Replies.map((reply: IReplyComment) => (
                         <div key={reply.id} ref={el => (commentRefs.current[reply.id] = el)}>
-                          <ReplyComment
-                            comment={reply}
-                            parentId={comment.id}
-                            setReplyId={setReplyId}
-                            setReplyUser={setReplyUser}
-                          />
+                          {editingComment.id === reply.id && editingComment.type === 'reply' ? (
+                            <EditCommentForm
+                              reply={true}
+                              comment={reply}
+                              replyId={comment.id}
+                              cancelEdit={cancelEdit}
+                              showImagePreview={showImagePreview}
+                            />
+                          ) : (
+                            <ReplyComment
+                              comment={reply}
+                              replyId={comment.id}
+                              setReplyId={setReplyId}
+                              setReplyUser={setReplyUser}
+                              showImagePreview={showImagePreview}
+                              onEditClick={() => handleEditClick(reply.id, 'reply')}
+                            />
+                          )}
                         </div>
                       ))}
                     </div>

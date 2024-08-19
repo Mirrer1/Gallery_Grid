@@ -42,13 +42,13 @@ import {
   loadCommentsRequestAction,
   LOAD_COMMENTS_SUCCESS,
   LOAD_COMMENTS_FAILURE,
-  REPLY_COMMENT_UPLOAD_IMAGE_REQUEST,
-  REPLY_COMMENT_UPLOAD_IMAGE_SUCCESS,
-  REPLY_COMMENT_UPLOAD_IMAGE_FAILURE,
-  ADD_REPLY_COMMENT_REQUEST,
-  ADD_REPLY_COMMENT_SUCCESS,
-  ADD_REPLY_COMMENT_FAILURE,
-  ResponseComment
+  ResponseComment,
+  EDIT_COMMENT_UPLOAD_IMAGE_REQUEST,
+  EDIT_COMMENT_UPLOAD_IMAGE_SUCCESS,
+  EDIT_COMMENT_UPLOAD_IMAGE_FAILURE,
+  EDIT_COMMENT_REQUEST,
+  EDIT_COMMENT_SUCCESS,
+  EDIT_COMMENT_FAILURE
 } from 'store/types/postType';
 
 function loadPostsAPI(lastId?: number) {
@@ -207,17 +207,21 @@ function* addComment(action: addCommentRequestAction) {
   }
 }
 
-function* addReplyComment(action: addCommentRequestAction) {
+function editCommentAPI(data: FormData) {
+  return axios.patch('/post/comment/edit', data);
+}
+
+function* editComment(action: addCommentRequestAction) {
   try {
-    const result: AxiosResponse<Post> = yield call(addCommentAPI, action.data);
+    const result: AxiosResponse<ResponseComment> = yield call(editCommentAPI, action.data);
 
     yield put({
-      type: ADD_REPLY_COMMENT_SUCCESS,
+      type: EDIT_COMMENT_SUCCESS,
       data: result.data
     });
   } catch (error: any) {
     yield put({
-      type: ADD_REPLY_COMMENT_FAILURE,
+      type: EDIT_COMMENT_FAILURE,
       error: error.response.data.message
     });
   }
@@ -239,17 +243,17 @@ function* uploadCommentImage(action: commentUploadImageRequestAction) {
   }
 }
 
-function* uploadReplyCommentImage(action: commentUploadImageRequestAction) {
+function* uploadEditCommentImage(action: commentUploadImageRequestAction) {
   try {
     const result: AxiosResponse<string[]> = yield call(uploadImagesAPI, action.data);
 
     yield put({
-      type: REPLY_COMMENT_UPLOAD_IMAGE_SUCCESS,
+      type: EDIT_COMMENT_UPLOAD_IMAGE_SUCCESS,
       data: result.data
     });
   } catch (error: any) {
     yield put({
-      type: REPLY_COMMENT_UPLOAD_IMAGE_FAILURE,
+      type: EDIT_COMMENT_UPLOAD_IMAGE_FAILURE,
       error: error.response.data.message
     });
   }
@@ -307,12 +311,12 @@ function* watchCommentUploadImage() {
   yield takeLatest(COMMENT_UPLOAD_IMAGE_REQUEST, uploadCommentImage);
 }
 
-function* watchAddReplyComment() {
-  yield takeLatest(ADD_REPLY_COMMENT_REQUEST, addReplyComment);
+function* watchEditComment() {
+  yield takeLatest(EDIT_COMMENT_REQUEST, editComment);
 }
 
-function* watchReplyCommentUploadImage() {
-  yield takeLatest(REPLY_COMMENT_UPLOAD_IMAGE_REQUEST, uploadReplyCommentImage);
+function* watchEditCommentUploadImage() {
+  yield takeLatest(EDIT_COMMENT_UPLOAD_IMAGE_REQUEST, uploadEditCommentImage);
 }
 
 function* watchModalCommentUploadImage() {
@@ -330,8 +334,8 @@ export default function* postSaga() {
     fork(watchLoadComments),
     fork(watchAddComment),
     fork(watchCommentUploadImage),
-    fork(watchAddReplyComment),
-    fork(watchReplyCommentUploadImage),
+    fork(watchEditComment),
+    fork(watchEditCommentUploadImage),
     fork(watchModalCommentUploadImage)
   ]);
 }

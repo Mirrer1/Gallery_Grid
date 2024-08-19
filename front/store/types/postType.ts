@@ -39,14 +39,15 @@ export const COMMENT_UPLOAD_IMAGE_SUCCESS = 'COMMENT_UPLOAD_IMAGE_SUCCESS' as co
 export const COMMENT_UPLOAD_IMAGE_FAILURE = 'COMMENT_UPLOAD_IMAGE_FAILURE' as const;
 export const COMMENT_REMOVE_UPLOADED_IMAGE = 'COMMENT_REMOVE_UPLOADED_IMAGE' as const;
 
-export const ADD_REPLY_COMMENT_REQUEST = 'ADD_REPLY_COMMENT_REQUEST' as const;
-export const ADD_REPLY_COMMENT_SUCCESS = 'ADD_REPLY_COMMENT_SUCCESS' as const;
-export const ADD_REPLY_COMMENT_FAILURE = 'ADD_REPLY_COMMENT_FAILURE' as const;
+export const EDIT_COMMENT_REQUEST = 'EDIT_COMMENT_REQUEST' as const;
+export const EDIT_COMMENT_SUCCESS = 'EDIT_COMMENT_SUCCESS' as const;
+export const EDIT_COMMENT_FAILURE = 'EDIT_COMMENT_FAILURE' as const;
 
-export const REPLY_COMMENT_UPLOAD_IMAGE_REQUEST = 'REPLY_COMMENT_UPLOAD_IMAGE_REQUEST' as const;
-export const REPLY_COMMENT_UPLOAD_IMAGE_SUCCESS = 'REPLY_COMMENT_UPLOAD_IMAGE_SUCCESS' as const;
-export const REPLY_COMMENT_UPLOAD_IMAGE_FAILURE = 'REPLY_COMMENT_UPLOAD_IMAGE_FAILURE' as const;
-export const REPLY_COMMENT_REMOVE_UPLOADED_IMAGE = 'REPLY_COMMENT_REMOVE_UPLOADED_IMAGE' as const;
+export const EXECUTE_COMMENT_EDIT = 'EXECUTE_COMMENT_EDIT' as const;
+export const EDIT_COMMENT_UPLOAD_IMAGE_REQUEST = 'EDIT_COMMENT_UPLOAD_IMAGE_REQUEST' as const;
+export const EDIT_COMMENT_UPLOAD_IMAGE_SUCCESS = 'EDIT_COMMENT_UPLOAD_IMAGE_SUCCESS' as const;
+export const EDIT_COMMENT_UPLOAD_IMAGE_FAILURE = 'EDIT_COMMENT_UPLOAD_IMAGE_FAILURE' as const;
+export const EDIT_COMMENT_REMOVE_UPLOADED_IMAGE = 'EDIT_COMMENT_REMOVE_UPLOADED_IMAGE' as const;
 
 export const MODAL_COMMENT_UPLOAD_IMAGE_REQUEST = 'MODAL_COMMENT_UPLOAD_IMAGE_REQUEST' as const;
 export const MODAL_COMMENT_UPLOAD_IMAGE_SUCCESS = 'MODAL_COMMENT_UPLOAD_IMAGE_SUCCESS' as const;
@@ -120,11 +121,11 @@ export type PostState = {
   postImagePaths: string[];
   editPostImagePaths: string[];
   commentImagePath: string[];
-  replyCommentImagePath: string[];
+  editCommentImagePath: string[];
   modalCommentImagePath: string[];
   postEditMode: boolean;
   deleteId: number | null;
-  mainComments: Comment[];
+  mainComments: Comment[] | null;
   lastChangedCommentId: number | null;
   commentVisiblePostId: number | null;
   hasMorePosts: boolean;
@@ -155,12 +156,12 @@ export type PostState = {
   commentUploadImageLoading: boolean;
   commentUploadImageDone: boolean;
   commentUploadImageError: null | string;
-  addReplyCommentLoading: boolean;
-  addReplyCommentDone: boolean;
-  addReplyCommentError: null | string;
-  replyCommentUploadImageLoading: boolean;
-  replyCommentUploadImageDone: boolean;
-  replyCommentUploadImageError: null | string;
+  editCommentLoading: boolean;
+  editCommentDone: boolean;
+  editCommentError: null | string;
+  editCommentUploadImageLoading: boolean;
+  editCommentUploadImageDone: boolean;
+  editCommentUploadImageError: null | string;
   modalCommentUploadImageLoading: boolean;
   modalCommentUploadImageDone: boolean;
   modalCommentUploadImageError: null | string;
@@ -319,38 +320,38 @@ export interface commentRemoveUploadedImageAction {
   type: typeof COMMENT_REMOVE_UPLOADED_IMAGE;
 }
 
-export interface addReplyCommentRequestAction {
-  type: typeof ADD_REPLY_COMMENT_REQUEST;
+export interface editCommentRequestAction {
+  type: typeof EDIT_COMMENT_REQUEST;
   data: FormData;
 }
 
-export interface addReplyCommentSuccessAction {
-  type: typeof ADD_REPLY_COMMENT_SUCCESS;
-  data: Comment;
+export interface editCommentSuccessAction {
+  type: typeof EDIT_COMMENT_SUCCESS;
+  data: ResponseComment;
 }
 
-export interface addReplyCommentFailureAction {
-  type: typeof ADD_REPLY_COMMENT_FAILURE;
+export interface editCommentFailureAction {
+  type: typeof EDIT_COMMENT_FAILURE;
   error: string;
 }
 
-export interface replyCommentUploadImageRequestAction {
-  type: typeof REPLY_COMMENT_UPLOAD_IMAGE_REQUEST;
+export interface editCommentUploadImageRequestAction {
+  type: typeof EDIT_COMMENT_UPLOAD_IMAGE_REQUEST;
   data: FormData;
 }
 
-export interface replyCommentUploadImageSuccessAction {
-  type: typeof REPLY_COMMENT_UPLOAD_IMAGE_SUCCESS;
+export interface editCommentUploadImageSuccessAction {
+  type: typeof EDIT_COMMENT_UPLOAD_IMAGE_SUCCESS;
   data: string[];
 }
 
-export interface replyCommentUploadImageFailureAction {
-  type: typeof REPLY_COMMENT_UPLOAD_IMAGE_FAILURE;
+export interface editCommentUploadImageFailureAction {
+  type: typeof EDIT_COMMENT_UPLOAD_IMAGE_FAILURE;
   error: string;
 }
 
-export interface replyCommentRemoveUploadedImageAction {
-  type: typeof REPLY_COMMENT_REMOVE_UPLOADED_IMAGE;
+export interface editCommentRemoveUploadedImageAction {
+  type: typeof EDIT_COMMENT_REMOVE_UPLOADED_IMAGE;
 }
 
 export interface modalCommentUploadImageRequestAction {
@@ -415,6 +416,11 @@ export interface HideDeleteModalAction {
   type: typeof HIDE_DELETE_MODAL;
 }
 
+export interface executeCommentEditAction {
+  type: typeof EXECUTE_COMMENT_EDIT;
+  data: string;
+}
+
 export type PostAction =
   | ShowCommentListAction
   | HideCommentListAction
@@ -452,18 +458,19 @@ export type PostAction =
   | commentUploadImageSuccessAction
   | commentUploadImageFailureAction
   | commentRemoveUploadedImageAction
-  | addReplyCommentRequestAction
-  | addReplyCommentSuccessAction
-  | addReplyCommentFailureAction
   | modalCommentUploadImageRequestAction
   | modalCommentUploadImageSuccessAction
   | modalCommentUploadImageFailureAction
   | modalCommentRemoveUploadedImageAction
-  | replyCommentUploadImageRequestAction
-  | replyCommentUploadImageSuccessAction
-  | replyCommentUploadImageFailureAction
-  | replyCommentRemoveUploadedImageAction
+  | editCommentRequestAction
+  | editCommentSuccessAction
+  | editCommentFailureAction
+  | editCommentUploadImageRequestAction
+  | editCommentUploadImageSuccessAction
+  | editCommentUploadImageFailureAction
+  | editCommentRemoveUploadedImageAction
   | ShowDeleteModalAction
   | HideDeleteModalAction
   | executePostEditAction
-  | cancelPostEditAction;
+  | cancelPostEditAction
+  | executeCommentEditAction;

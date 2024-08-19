@@ -24,9 +24,10 @@ import {
   MODAL_COMMENT_REMOVE_UPLOADED_IMAGE,
   ADD_COMMENT_REQUEST,
   LOAD_COMMENTS_REQUEST,
-  REPLY_COMMENT_UPLOAD_IMAGE_REQUEST,
-  REPLY_COMMENT_REMOVE_UPLOADED_IMAGE,
-  ADD_REPLY_COMMENT_REQUEST
+  EXECUTE_COMMENT_EDIT,
+  EDIT_COMMENT_UPLOAD_IMAGE_REQUEST,
+  EDIT_COMMENT_REMOVE_UPLOADED_IMAGE,
+  EDIT_COMMENT_REQUEST
 } from 'store/types/postType';
 
 export const loadPostsRequest = (lastId?: number) => ({
@@ -88,18 +89,18 @@ export const commentRemoveUploadedImage = () => ({
   type: COMMENT_REMOVE_UPLOADED_IMAGE
 });
 
-export const addReplyCommentRequest = (data: FormData) => ({
-  type: ADD_REPLY_COMMENT_REQUEST,
+export const editCommentRequest = (data: FormData) => ({
+  type: EDIT_COMMENT_REQUEST,
   data
 });
 
-export const replyCommentUploadImageRequest = (data: FormData) => ({
-  type: REPLY_COMMENT_UPLOAD_IMAGE_REQUEST,
+export const editCommentUploadImageRequest = (data: FormData) => ({
+  type: EDIT_COMMENT_UPLOAD_IMAGE_REQUEST,
   data
 });
 
-export const replyCommentRemoveUploadedImage = () => ({
-  type: REPLY_COMMENT_REMOVE_UPLOADED_IMAGE
+export const editCommentRemoveUploadedImage = () => ({
+  type: EDIT_COMMENT_REMOVE_UPLOADED_IMAGE
 });
 
 export const modalCommentUploadImageRequest = (data: FormData) => ({
@@ -152,4 +153,9 @@ export const showDeleteModal = (data: number) => ({
 
 export const hideDeleteModal = () => ({
   type: HIDE_DELETE_MODAL
+});
+
+export const executeCommentEdit = (data: string) => ({
+  type: EXECUTE_COMMENT_EDIT,
+  data
 });
