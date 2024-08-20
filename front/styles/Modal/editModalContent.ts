@@ -4,6 +4,8 @@ import { HoverStyle } from 'styles/Common/hover';
 import media from 'styles/media';
 
 export const EditModalContentWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
   width: 45%;
   height: 100%;
   background-color: white;
@@ -18,7 +20,6 @@ export const EditModalContentWrapper = styled.div`
 
 export const EditModalContentHeader = styled.div`
   ${({ theme }) => theme.flexSet('space-between')};
-  height: 10%;
   padding: 0.8em;
   border-bottom: 1px solid ${({ theme }) => theme.colors.darkBg};
 
@@ -79,11 +80,12 @@ export const EditModalContentHeader = styled.div`
 `;
 
 export const EditModalForm = styled.form`
-  height: 82%;
+  flex-grow: 1;
+  height: 1px;
   color: ${({ theme }) => theme.colors.font};
   padding: 0.7em 1em;
   border-bottom: 1px solid ${({ theme }) => theme.colors.darkBg};
-  overflow-y: scroll;
+  overflow-y: auto;
 
   & > textarea {
     width: 100%;
@@ -138,7 +140,6 @@ export const EditModalForm = styled.form`
 
 export const EditModalBtn = styled.div<{ $active: boolean; $edit: boolean }>`
   ${({ theme }) => theme.flexSet('space-between')};
-  height: 8%;
   padding: 0.8em;
   border-bottom: 1px solid ${({ theme }) => theme.colors.darkBg};
   border-radius: 0 0 5px 0;

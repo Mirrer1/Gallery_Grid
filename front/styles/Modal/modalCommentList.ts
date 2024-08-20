@@ -6,36 +6,45 @@ import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
 import { DarkShadowStyle } from 'styles/Common/shadow';
 
 export const ModalCommentListContainer = styled(motion.div)`
-  height: 80%;
+  flex-grow: 1;
+  height: 1px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 
   ${media.tablet} {
     position: fixed;
     top: auto;
     bottom: 0;
     left: 0;
+    display: flex;
+    flex-direction: column;
     width: 100%;
-    height: 95%;
+    height: 100%;
     background-color: white;
-    z-index: 100;
+    z-index: 200;
     transition: bottom 0.15s ease;
   }
 `;
 
 export const ModalCommentListWrapper = styled.div`
-  height: 92%;
-  border-bottom: 1.5px solid ${({ theme }) => theme.colors.darkBg};
+  flex-grow: 1;
+  height: 1px;
   padding: 0.8em 0.8em 0 0.8em;
+  border-bottom: 1.5px solid ${({ theme }) => theme.colors.darkBg};
   overflow-y: auto;
 
   ${media.tablet} {
-    height: 95%;
+    flex-grow: 1;
+    height: 1px;
     padding: 0 0.8em;
   }
 `;
 
 export const ModalCommentListHeader = styled.div`
   ${({ theme }) => theme.flexSet('end')};
-  height: 3%;
+  padding: 0.5em;
+  border-bottom: 1.5px solid ${({ theme }) => theme.colors.darkBg};
 
   & > span {
     ${HoverStyle('&')};
@@ -46,9 +55,9 @@ export const ModalCommentListHeader = styled.div`
   }
 
   ${media.tablet} {
-    height: 4.5%;
     border-bottom: 1px solid ${({ theme }) => theme.colors.darkBg};
     justify-content: center;
+    padding: 1em;
 
     & > span {
       display: none;
@@ -182,11 +191,6 @@ export const ModalCommentListItem = styled.div<{ $reply: boolean }>`
 
 export const ModalCommentFormWrapper = styled.div`
   position: relative;
-  height: 8%;
-
-  ${media.tablet} {
-    height: 5%;
-  }
 `;
 
 export const ModalCommentForm = styled.form<{ $active: boolean }>`
@@ -211,11 +215,16 @@ export const ModalCommentForm = styled.form<{ $active: boolean }>`
       display: none;
     }
 
-    & > input {
+    & > textarea {
       width: 88%;
+      min-height: 34px;
+      max-height: 700px;
       font-size: 0.8rem;
-      padding: 0.5em 1em 0.5em 0.5em;
+      padding: 0.8em 0.5em;
       border: none;
+      resize: none;
+      overflow-y: auto;
+      transition: height 0.2s ease-out;
 
       &:focus {
         outline: none;
@@ -258,7 +267,7 @@ export const ModalCommentForm = styled.form<{ $active: boolean }>`
         width: 5%;
       }
 
-      & > input {
+      & > textarea {
         width: 98%;
       }
     }
@@ -271,7 +280,7 @@ export const ModalCommentForm = styled.form<{ $active: boolean }>`
         width: 9%;
       }
 
-      & > input {
+      & > textarea {
         width: 85%;
       }
     }

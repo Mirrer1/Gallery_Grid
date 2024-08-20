@@ -448,7 +448,7 @@ router.patch('/comment/edit', isLoggedIn, upload.none(), async (req, res, next) 
     if (parentId) {
       comment = await ReplyComment.findOne({ where: { id: commentId, CommentId: parentId } });
       if (!comment) {
-        return res.status(404).json({ message: '존재하지 않는 대댓글입니다.' });
+        return res.status(404).json({ message: '존재하지 않는 댓글입니다.' });
       }
 
       await comment.update({ content });

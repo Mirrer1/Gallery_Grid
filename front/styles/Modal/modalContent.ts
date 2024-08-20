@@ -4,6 +4,8 @@ import media from 'styles/media';
 import { HoverStyle } from 'styles/Common/hover';
 
 export const ModalContentWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
   width: 45%;
   height: 100%;
   background-color: white;
@@ -24,7 +26,6 @@ export const ModalContentWrapper = styled.div`
 
 export const ModalContentHeader = styled.div`
   ${({ theme }) => theme.flexSet('space-between')};
-  height: 10%;
   padding: 0.8em;
   border-bottom: 1.5px solid ${({ theme }) => theme.colors.darkBg};
 
@@ -75,7 +76,6 @@ export const ModalContentHeader = styled.div`
   }
 
   ${media.tablet} {
-    height: 10%;
     padding: 0.6em;
 
     & > div:first-child {
@@ -102,14 +102,14 @@ export const ModalContentHeader = styled.div`
   }
 
   ${media.mobile} {
-    height: 17%;
     padding: 0.5em;
   }
 `;
 
 export const ModalContentText = styled.div<{ $isModalCommentListVisible: boolean }>`
+  flex-grow: 1;
+  height: 1px;
   display: ${props => (props.$isModalCommentListVisible ? 'none' : 'block')};
-  height: 80%;
   color: ${({ theme }) => theme.colors.font};
   font-size: 0.85rem;
   line-height: 1.5;
@@ -119,18 +119,15 @@ export const ModalContentText = styled.div<{ $isModalCommentListVisible: boolean
 
   ${media.tablet} {
     display: block;
-    height: 82%;
     font-size: 0.75rem;
   }
 
   ${media.mobile} {
-    height: 71%;
     font-size: 0.7rem;
   }
 `;
 
 export const ModalContentOptions = styled.div<{ $isModalCommentListVisible: boolean }>`
-  height: 10%;
   padding: 0.8em;
   border-radius: 0 0 5px 0;
 
@@ -162,8 +159,6 @@ export const ModalContentOptions = styled.div<{ $isModalCommentListVisible: bool
   }
 
   ${media.tablet} {
-    height: 8%;
-
     & > div:first-child {
       & > span {
         font-size: 1rem;
@@ -180,7 +175,6 @@ export const ModalContentOptions = styled.div<{ $isModalCommentListVisible: bool
   }
 
   ${media.mobile} {
-    height: 12%;
     ${({ theme }) => theme.flexSet('space-between')};
     padding: 0.6em;
     border-radius: 0 0 5px 5px;

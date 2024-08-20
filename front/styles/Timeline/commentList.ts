@@ -9,11 +9,13 @@ export const CommentListWrapper = styled(motion.article)<{ $isCommentListVisible
   position: absolute;
   top: 3.9%;
   left: 3.9%;
+  display: flex;
+  flex-direction: column;
   width: 88%;
   height: 96%;
   background-color: white;
   border-radius: 5px;
-  z-index: 100;
+  z-index: 200;
   ${ShadowStyle}
 
   ${media.tablet} {
@@ -22,7 +24,7 @@ export const CommentListWrapper = styled(motion.article)<{ $isCommentListVisible
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 95%;
+    height: 100%;
     border-radius: 5px 5px 0 0;
     transition: bottom 0.15s ease;
   }
@@ -30,9 +32,8 @@ export const CommentListWrapper = styled(motion.article)<{ $isCommentListVisible
 
 export const CommentListHeader = styled.div`
   ${({ theme }) => theme.flexSet('end')};
-  height: 5%;
   border-bottom: 1.5px solid #e4e5ec;
-  padding: 0 0.5em;
+  padding: 0.5em;
 
   & > span {
     ${HoverStyle('&')};
@@ -43,8 +44,8 @@ export const CommentListHeader = styled.div`
   }
 
   ${media.tablet} {
-    height: 4%;
     justify-content: center;
+    padding: 1em;
 
     & > span {
       display: none;
@@ -108,17 +109,14 @@ export const NoCommentsContainer = styled.div`
 `;
 
 export const CommentListItemWrapper = styled.div`
-  height: 89%;
+  flex-grow: 1;
+  height: 1px;
   padding: 0 1em;
-  overflow-y: scroll;
+  overflow-y: auto;
 
   & > div {
     border-bottom: 1px solid #eeeff3;
     padding-top: 1em;
-  }
-
-  ${media.tablet} {
-    height: 90%;
   }
 `;
 
@@ -219,7 +217,6 @@ export const CommentListItemImage = styled.div`
 
 export const CommentFormWrapper = styled.div`
   position: relative;
-  height: 6%;
 `;
 
 export const CommentExtrasWrapper = styled.div`
@@ -307,11 +304,16 @@ export const CommentFormInput = styled.form<{ $active: boolean }>`
       display: none;
     }
 
-    & > input {
+    & > textarea {
       width: 87%;
+      min-height: 34px;
+      max-height: 700px;
       font-size: 0.8rem;
-      padding: 0.5em 1em 0.5em 0.5em;
+      padding: 0.8em 0.5em;
       border: none;
+      resize: none;
+      overflow-y: auto;
+      transition: height 0.2s ease-out;
 
       &:focus {
         outline: none;
@@ -351,10 +353,6 @@ export const CommentFormInput = styled.form<{ $active: boolean }>`
         font-size: 1.4rem;
         width: 4.5%;
       }
-
-      & > input {
-        width: 90%;
-      }
     }
 
     & > button {
@@ -375,7 +373,7 @@ export const CommentFormInput = styled.form<{ $active: boolean }>`
         width: 8%;
       }
 
-      & > input {
+      & > textarea {
         width: 84%;
       }
     }

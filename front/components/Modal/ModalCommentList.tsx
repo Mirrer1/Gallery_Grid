@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   CaretDownOutlined,
@@ -109,6 +109,7 @@ const ModalCommentList = ({ setIsModalCommentListVisible }: ModalCommentListProp
   ];
 
   const dispatch = useDispatch();
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [comment, onChangeComment, setComment] = useInput('');
   const { showEmoji, showEmojiPicker, closeEmojiPicker, onEmojiClick } = useEmojiPicker(setComment);
   const { fileInputRef, onFileChange } = useFileUpload(modalCommentUploadImageRequest, { showWarning: false });
@@ -156,7 +157,7 @@ const ModalCommentList = ({ setIsModalCommentListVisible }: ModalCommentListProp
   );
 
   const handleKeyDown = useCallback(
-    (event: React.KeyboardEvent<HTMLInputElement>) => {
+    (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
       if (event.key === 'Enter') {
         console.log(comment);
       }
@@ -191,18 +192,33 @@ const ModalCommentList = ({ setIsModalCommentListVisible }: ModalCommentListProp
     setTouchStartY(null);
   };
 
+  const autoResize = useCallback(() => {
+    const textarea = textareaRef.current;
+
+    if (textarea) {
+      textarea.style.height = 'auto';
+      textarea.style.height = `${textarea.scrollHeight}px`;
+    }
+  }, []);
+
+  // useEffect(() => {
+  //   if (addCommentDone) setComment('');
+  //   if (textareaRef.current) {
+  //     textareaRef.current.style.height = 'auto';
+  //   }
+  // }, [addCommentDone]);
+
+  useEffect(() => {
+    if (comment.length === 500) toast.warning('댓글은 500자 이하로 작성해주세요.');
+  }, [comment]);
+
   return (
     <ModalCommentListContainer style={{ bottom: `${-translateY}px` }} {...slideInFromBottom()}>
+      <ModalCommentListHeader onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
+        <CaretDownOutlined onClick={onHideComment} />
+        <div />
+      </ModalCommentListHeader>
       <ModalCommentListWrapper>
-        <ModalCommentListHeader
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
-        >
-          <CaretDownOutlined onClick={onHideComment} />
-          <div />
-        </ModalCommentListHeader>
-
         <ModalCommentListItemWrapper>
           {contentList.map(comment => (
             <div key={comment.id}>
@@ -258,12 +274,15 @@ const ModalCommentList = ({ setIsModalCommentListVisible }: ModalCommentListProp
               </ModalCommentEmojiPicker>
             )}
 
-            <input
-              type="text"
+            <textarea
               placeholder="Type a Comment..."
+              ref={textareaRef}
               value={comment}
               onChange={onChangeComment}
               onKeyDown={handleKeyDown}
+              onInput={autoResize}
+              maxLength={500}
+              rows={1}
             />
           </div>
 

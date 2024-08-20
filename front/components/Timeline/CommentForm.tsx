@@ -35,7 +35,7 @@ type CommentFormProps = {
 
 const CommentForm = ({ showImagePreview, replyId, replyUser, setReplyId }: CommentFormProps) => {
   const dispatch = useDispatch();
-  const inputRef = useRef<HTMLInputElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [comment, onChangeComment, setComment] = useInput('');
   const { showEmoji, showEmojiPicker, closeEmojiPicker, onEmojiClick } = useEmojiPicker(setComment);
   const { fileInputRef, onFileChange } = useFileUpload(commentUploadImageRequest, { showWarning: false });
@@ -69,11 +69,6 @@ const CommentForm = ({ showImagePreview, replyId, replyUser, setReplyId }: Comme
         return;
       }
 
-      if (comment.length > 500) {
-        toast.warning('댓글은 500자 이하로 작성해주세요.');
-        return;
-      }
-
       const formData = new FormData();
       if (commentImagePath.length > 0) {
         commentImagePath.forEach((image: string) => {
@@ -90,7 +85,7 @@ const CommentForm = ({ showImagePreview, replyId, replyUser, setReplyId }: Comme
   );
 
   const handleKeyDown = useCallback(
-    (event: React.KeyboardEvent<HTMLInputElement>) => {
+    (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
       if (event.key === 'Enter' && !event.shiftKey) {
         onSubmitForm(event as unknown as React.FormEvent<HTMLFormElement>);
       }
@@ -98,15 +93,31 @@ const CommentForm = ({ showImagePreview, replyId, replyUser, setReplyId }: Comme
     [comment, commentImagePath, commentVisiblePostId, replyId, replyUser]
   );
 
+  const autoResize = useCallback(() => {
+    const textarea = textareaRef.current;
+
+    if (textarea) {
+      textarea.style.height = 'auto';
+      textarea.style.height = `${textarea.scrollHeight}px`;
+    }
+  }, []);
+
   useEffect(() => {
-    if ((replyId || commentImagePath.length !== 0) && inputRef.current) {
-      inputRef.current.focus();
+    if ((replyId || commentImagePath.length !== 0) && textareaRef.current) {
+      textareaRef.current.focus();
     }
   }, [replyId, commentImagePath]);
 
   useEffect(() => {
     if (addCommentDone) setComment('');
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+    }
   }, [addCommentDone]);
+
+  useEffect(() => {
+    if (comment.length === 500) toast.warning('댓글은 500자 이하로 작성해주세요.');
+  }, [comment]);
 
   return (
     <CommentFormWrapper>
@@ -148,13 +159,15 @@ const CommentForm = ({ showImagePreview, replyId, replyUser, setReplyId }: Comme
             </CommentEmojiPicker>
           )}
 
-          <input
-            type="text"
+          <textarea
             placeholder="Type a Comment..."
-            ref={inputRef}
+            ref={textareaRef}
             value={comment}
             onChange={onChangeComment}
             onKeyDown={handleKeyDown}
+            onInput={autoResize}
+            maxLength={500}
+            rows={1}
           />
         </div>
 
