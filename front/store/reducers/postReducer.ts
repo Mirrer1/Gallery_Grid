@@ -55,7 +55,10 @@ import {
   EDIT_COMMENT_REMOVE_UPLOADED_IMAGE,
   EDIT_COMMENT_REQUEST,
   EDIT_COMMENT_SUCCESS,
-  EDIT_COMMENT_FAILURE
+  EDIT_COMMENT_FAILURE,
+  DELETE_COMMENT_REQUEST,
+  DELETE_COMMENT_SUCCESS,
+  DELETE_COMMENT_FAILURE
 } from 'store/types/postType';
 
 export const initialState: PostState = {
@@ -67,7 +70,7 @@ export const initialState: PostState = {
   editCommentImagePath: [],
   modalCommentImagePath: [],
   postEditMode: false,
-  deleteId: null,
+  deleteInfo: null,
   mainComments: [],
   lastChangedCommentId: null,
   commentVisiblePostId: null,
@@ -105,6 +108,9 @@ export const initialState: PostState = {
   editCommentUploadImageLoading: false,
   editCommentUploadImageDone: false,
   editCommentUploadImageError: null,
+  deleteCommentLoading: false,
+  deleteCommentDone: false,
+  deleteCommentError: null,
   modalCommentUploadImageLoading: false,
   modalCommentUploadImageDone: false,
   modalCommentUploadImageError: null,
@@ -173,6 +179,12 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
         draft.deletePostLoading = false;
         draft.deletePostDone = true;
         draft.isPostModalVisible = false;
+        draft.isDeleteModalVisible = false;
+        if (draft.commentVisiblePostId === action.data) {
+          draft.isCommentListVisible = false;
+          draft.commentVisiblePostId = null;
+          draft.commentImagePath = [];
+        }
         const index = draft.mainPosts.findIndex(post => post.id === action.data);
         if (index !== -1) draft.mainPosts.splice(index, 1);
         break;
@@ -263,7 +275,7 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
             }
           }
         } else {
-          comments.push({ id: action.data.comment.id, Replies: [] });
+          comments.push({ id: action.data.comment.id, isDeleted: false, Replies: [] });
           draft.mainComments?.push(action.data.comment);
         }
         break;
@@ -370,6 +382,67 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
       case EDIT_COMMENT_REMOVE_UPLOADED_IMAGE:
         draft.editCommentImagePath = [];
         break;
+      case DELETE_COMMENT_REQUEST:
+        draft.deleteCommentLoading = true;
+        draft.deleteCommentDone = false;
+        draft.deleteCommentError = null;
+        break;
+      case DELETE_COMMENT_SUCCESS: {
+        draft.deleteCommentLoading = false;
+        draft.deleteCommentDone = true;
+
+        const { id, replyId, hasChild, postId } = action.data;
+        const postIndex = draft.mainPosts.findIndex(post => post.id === postId);
+        if (postIndex === -1) break;
+
+        const postComments = draft.mainPosts[postIndex].Comments;
+        if (replyId) {
+          const parentComment = postComments.find(comment => comment.id === replyId);
+          if (parentComment) {
+            parentComment.Replies = parentComment.Replies.filter(reply => reply.id !== id);
+
+            if (draft.mainComments) {
+              const mainParentComment = draft.mainComments.find(comment => comment.id === replyId);
+
+              if (mainParentComment) {
+                mainParentComment.Replies = mainParentComment.Replies.filter(reply => reply.id !== id);
+              }
+            }
+
+            if (parentComment.Replies.length === 0 && parentComment.isDeleted) {
+              draft.mainPosts[postIndex].Comments = postComments.filter(comment => comment.id !== replyId);
+
+              if (draft.mainComments) {
+                draft.mainComments = draft.mainComments.filter(comment => comment.id !== replyId);
+              }
+            }
+          }
+        } else {
+          if (hasChild) {
+            const commentToUpdate = postComments.find(comment => comment.id === id);
+            if (commentToUpdate) commentToUpdate.isDeleted = true;
+
+            if (draft.mainComments) {
+              const mainCommentToUpdate = draft.mainComments.find(comment => comment.id === id);
+              if (mainCommentToUpdate) mainCommentToUpdate.isDeleted = true;
+            }
+          } else {
+            draft.mainPosts[postIndex].Comments = postComments.filter(comment => comment.id !== id);
+
+            if (draft.mainComments) {
+              draft.mainComments = draft.mainComments.filter(comment => comment.id !== id);
+            }
+          }
+        }
+
+        draft.isDeleteModalVisible = false;
+        draft.deleteInfo = null;
+        break;
+      }
+      case DELETE_COMMENT_FAILURE:
+        draft.deleteCommentLoading = false;
+        draft.deleteCommentError = action.error;
+        break;
       case MODAL_COMMENT_UPLOAD_IMAGE_REQUEST:
         draft.modalCommentUploadImageLoading = true;
         draft.modalCommentUploadImageDone = false;
@@ -423,10 +496,11 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
         break;
       case SHOW_DELETE_MODAL:
         draft.isDeleteModalVisible = true;
-        draft.deleteId = action.data;
+        draft.deleteInfo = action.data;
         break;
       case HIDE_DELETE_MODAL:
         draft.isDeleteModalVisible = false;
+        draft.deleteInfo = null;
         break;
       case EXECUTE_COMMENT_EDIT:
         draft.editCommentImagePath = [action.data];

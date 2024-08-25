@@ -13,7 +13,7 @@ export const PostModalWrapper = styled.section`
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.6);
-  z-index: 101;
+  z-index: 499;
 
   ${media.mobile} {
     ${({ theme }) => theme.flexColumnSet()};
@@ -26,6 +26,7 @@ export const ModalOutsideArea = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
+  z-index: 499;
 `;
 
 export const PostModalBtn = styled(CloseOutlined)`
@@ -57,6 +58,7 @@ export const PostModalContentsWrapper = styled(motion.div)`
   margin: auto;
   width: 60%;
   height: 75%;
+  z-index: 500;
 
   ${media.tablet} {
     width: 90%;

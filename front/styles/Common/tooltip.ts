@@ -23,7 +23,7 @@ export const TooltipBtn = styled.div`
   border-radius: 6px;
   padding: 7px 0;
   margin-left: -60px;
-  z-index: 30;
+  z-index: 500;
   background-color: #fff;
   ${DarkShadowStyle}
 
@@ -61,5 +61,5 @@ export const TooltipOutsideArea = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 29;
+  z-index: 499;
 `;

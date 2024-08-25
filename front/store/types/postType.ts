@@ -49,6 +49,10 @@ export const EDIT_COMMENT_UPLOAD_IMAGE_SUCCESS = 'EDIT_COMMENT_UPLOAD_IMAGE_SUCC
 export const EDIT_COMMENT_UPLOAD_IMAGE_FAILURE = 'EDIT_COMMENT_UPLOAD_IMAGE_FAILURE' as const;
 export const EDIT_COMMENT_REMOVE_UPLOADED_IMAGE = 'EDIT_COMMENT_REMOVE_UPLOADED_IMAGE' as const;
 
+export const DELETE_COMMENT_REQUEST = 'DELETE_COMMENT_REQUEST' as const;
+export const DELETE_COMMENT_SUCCESS = 'DELETE_COMMENT_SUCCESS' as const;
+export const DELETE_COMMENT_FAILURE = 'DELETE_COMMENT_FAILURE' as const;
+
 export const MODAL_COMMENT_UPLOAD_IMAGE_REQUEST = 'MODAL_COMMENT_UPLOAD_IMAGE_REQUEST' as const;
 export const MODAL_COMMENT_UPLOAD_IMAGE_SUCCESS = 'MODAL_COMMENT_UPLOAD_IMAGE_SUCCESS' as const;
 export const MODAL_COMMENT_UPLOAD_IMAGE_FAILURE = 'MODAL_COMMENT_UPLOAD_IMAGE_FAILURE' as const;
@@ -69,6 +73,13 @@ export const CANCEL_POST_EDIT = 'CANCEL_POST_EDIT' as const;
 export const SHOW_DELETE_MODAL = 'SHOW_DELETE_MODAL' as const;
 export const HIDE_DELETE_MODAL = 'HIDE_DELETE_MODAL' as const;
 
+export interface DeleteInfo {
+  type?: '댓글' | '게시글';
+  id: number;
+  hasChild?: boolean;
+  replyId?: number | null;
+}
+
 export interface Image {
   id: number;
   src: string;
@@ -79,6 +90,13 @@ export interface ResponseComment {
   parentId?: string | null;
 }
 
+export interface ResponseDeleteComment {
+  id: number;
+  postId: number;
+  replyId?: number;
+  hasChild?: boolean;
+}
+
 export interface Comment {
   id: number;
   content: string;
@@ -87,6 +105,7 @@ export interface Comment {
   UserId: number;
   PostId: number;
   parentId: number | null;
+  isDeleted: boolean;
   User: User;
   Post: { UserId: number };
   CommentImage: Image | null;
@@ -100,6 +119,7 @@ export interface IReplyComment extends Comment {
 
 export interface PostComment {
   id: number;
+  isDeleted: boolean;
   Replies: { id: number }[];
 }
 
@@ -124,7 +144,7 @@ export type PostState = {
   editCommentImagePath: string[];
   modalCommentImagePath: string[];
   postEditMode: boolean;
-  deleteId: number | null;
+  deleteInfo: DeleteInfo | null;
   mainComments: Comment[] | null;
   lastChangedCommentId: number | null;
   commentVisiblePostId: number | null;
@@ -162,6 +182,9 @@ export type PostState = {
   editCommentUploadImageLoading: boolean;
   editCommentUploadImageDone: boolean;
   editCommentUploadImageError: null | string;
+  deleteCommentLoading: boolean;
+  deleteCommentDone: boolean;
+  deleteCommentError: null | string;
   modalCommentUploadImageLoading: boolean;
   modalCommentUploadImageDone: boolean;
   modalCommentUploadImageError: null | string;
@@ -354,6 +377,21 @@ export interface editCommentRemoveUploadedImageAction {
   type: typeof EDIT_COMMENT_REMOVE_UPLOADED_IMAGE;
 }
 
+export interface deleteCommentRequestAction {
+  type: typeof DELETE_COMMENT_REQUEST;
+  data: DeleteInfo;
+}
+
+export interface deleteCommentSuccessAction {
+  type: typeof DELETE_COMMENT_SUCCESS;
+  data: ResponseDeleteComment;
+}
+
+export interface deleteCommentFailureAction {
+  type: typeof DELETE_COMMENT_FAILURE;
+  error: string;
+}
+
 export interface modalCommentUploadImageRequestAction {
   type: typeof MODAL_COMMENT_UPLOAD_IMAGE_REQUEST;
   data: FormData;
@@ -409,7 +447,7 @@ export interface cancelPostEditAction {
 
 export interface ShowDeleteModalAction {
   type: typeof SHOW_DELETE_MODAL;
-  data: number;
+  data: DeleteInfo;
 }
 
 export interface HideDeleteModalAction {
@@ -469,6 +507,9 @@ export type PostAction =
   | editCommentUploadImageSuccessAction
   | editCommentUploadImageFailureAction
   | editCommentRemoveUploadedImageAction
+  | deleteCommentRequestAction
+  | deleteCommentSuccessAction
+  | deleteCommentFailureAction
   | ShowDeleteModalAction
   | HideDeleteModalAction
   | executePostEditAction

@@ -4,6 +4,10 @@ export const ShadowStyle = css`
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 `;
 
+export const ModalShadowStyle = css`
+  box-shadow: 0 3px 3px rgba(0, 0, 0, 0.025);
+`;
+
 export const DarkShadowStyle = css`
   box-shadow:
     0px 0px 0px 1px rgb(0 0 0 / 0.06),

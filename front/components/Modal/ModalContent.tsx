@@ -40,7 +40,7 @@ const ModalContent = () => {
   }, []);
 
   const openDeleteModal = useCallback((postId: number) => {
-    dispatch(showDeleteModal(postId));
+    dispatch(showDeleteModal({ type: '게시글', id: postId }));
     setIsTooltipVisible(false);
   }, []);
 

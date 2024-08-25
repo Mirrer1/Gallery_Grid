@@ -27,7 +27,9 @@ import {
   EXECUTE_COMMENT_EDIT,
   EDIT_COMMENT_UPLOAD_IMAGE_REQUEST,
   EDIT_COMMENT_REMOVE_UPLOADED_IMAGE,
-  EDIT_COMMENT_REQUEST
+  EDIT_COMMENT_REQUEST,
+  DeleteInfo,
+  DELETE_COMMENT_REQUEST
 } from 'store/types/postType';
 
 export const loadPostsRequest = (lastId?: number) => ({
@@ -103,6 +105,11 @@ export const editCommentRemoveUploadedImage = () => ({
   type: EDIT_COMMENT_REMOVE_UPLOADED_IMAGE
 });
 
+export const deleteCommentRequest = (data: DeleteInfo) => ({
+  type: DELETE_COMMENT_REQUEST,
+  data
+});
+
 export const modalCommentUploadImageRequest = (data: FormData) => ({
   type: MODAL_COMMENT_UPLOAD_IMAGE_REQUEST,
   data
@@ -146,7 +153,7 @@ export const cancelPostEdit = () => ({
   type: CANCEL_POST_EDIT
 });
 
-export const showDeleteModal = (data: number) => ({
+export const showDeleteModal = (data: DeleteInfo) => ({
   type: SHOW_DELETE_MODAL,
   data
 });

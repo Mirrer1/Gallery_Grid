@@ -11,7 +11,7 @@ export const ImageCarouselWrapper = styled(motion.div)`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) !important;
-  z-index: 100;
+  z-index: 500;
   border-radius: 5px;
 
   ${media.tablet} {
@@ -43,7 +43,7 @@ export const CarouselOutsideArea = styled.div`
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.6);
-  z-index: 99;
+  z-index: 499;
 `;
 
 export const HideSwiperBtn = styled(CloseOutlined)`

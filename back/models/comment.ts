@@ -13,6 +13,7 @@ class Comment extends Model<InferAttributes<Comment>, InferCreationAttributes<Co
   declare updatedAt: CreationOptional<Date>;
   declare PostId: number;
   declare UserId: number;
+  declare isDeleted: CreationOptional<boolean>;
 
   static initiate(sequelize: Sequelize.Sequelize) {
     Comment.init(
@@ -33,6 +34,11 @@ class Comment extends Model<InferAttributes<Comment>, InferCreationAttributes<Co
         UserId: {
           type: Sequelize.INTEGER,
           allowNull: false
+        },
+        isDeleted: {
+          type: Sequelize.BOOLEAN,
+          allowNull: false,
+          defaultValue: false
         },
         createdAt: Sequelize.DATE,
         updatedAt: Sequelize.DATE

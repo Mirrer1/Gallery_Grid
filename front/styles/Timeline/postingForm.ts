@@ -30,7 +30,7 @@ export const PostingWrapper = styled.form<{ $uploading: boolean }>`
     position: relative;
     ${({ theme }) => theme.flexSet('space-between')};
     width: 100%;
-    height: ${props => (props.$uploading ? '15%' : '30%')};
+    height: ${props => (props.$uploading ? '15%' : '28%')};
     background-color: ${({ theme }) => theme.colors.darkBg};
     padding: 0 1.2em;
 

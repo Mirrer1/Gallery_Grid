@@ -1,10 +1,12 @@
 import React, { useCallback } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import formatDate from 'utils/useListTimes';
+import DeleteModal from 'components/Modal/DeleteModal';
 import { RootState } from 'store/reducers';
 import { IReplyComment } from 'store/types/postType';
 import { CommentContainer, CommentListItemImage } from 'styles/Timeline/commentList';
+import { showDeleteModal } from 'store/actions/postAction';
 
 type ReplyCommentProps = {
   comment: IReplyComment;
@@ -23,7 +25,16 @@ const ReplyComment = ({
   showImagePreview,
   onEditClick
 }: ReplyCommentProps) => {
+  const dispatch = useDispatch();
   const { me } = useSelector((state: RootState) => state.user);
+  const { isDeleteModalVisible } = useSelector((state: RootState) => state.post);
+
+  const openDeleteModal = useCallback(
+    (commentId: number) => {
+      dispatch(showDeleteModal({ type: '댓글', id: commentId, replyId, hasChild: false }));
+    },
+    [comment]
+  );
 
   const onClickReply = useCallback((user: string) => {
     setReplyId(null);
@@ -59,7 +70,9 @@ const ReplyComment = ({
             <button type="button" onClick={onEditClick}>
               수정
             </button>
-            <button type="button">삭제</button>
+            <button type="button" onClick={() => openDeleteModal(comment.id)}>
+              삭제
+            </button>
           </div>
         ) : (
           <div>
@@ -77,6 +90,8 @@ const ReplyComment = ({
       <button type="button" onClick={() => onClickReply(comment.User.nickname)}>
         답글쓰기
       </button>
+
+      {isDeleteModalVisible && <DeleteModal />}
     </CommentContainer>
   );
 };

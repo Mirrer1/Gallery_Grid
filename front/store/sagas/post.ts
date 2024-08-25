@@ -48,7 +48,13 @@ import {
   EDIT_COMMENT_UPLOAD_IMAGE_FAILURE,
   EDIT_COMMENT_REQUEST,
   EDIT_COMMENT_SUCCESS,
-  EDIT_COMMENT_FAILURE
+  EDIT_COMMENT_FAILURE,
+  DELETE_COMMENT_REQUEST,
+  deleteCommentRequestAction,
+  ResponseDeleteComment,
+  DELETE_COMMENT_SUCCESS,
+  DELETE_COMMENT_FAILURE,
+  DeleteInfo
 } from 'store/types/postType';
 
 function loadPostsAPI(lastId?: number) {
@@ -227,6 +233,26 @@ function* editComment(action: addCommentRequestAction) {
   }
 }
 
+function deleteCommentAPI(data: DeleteInfo) {
+  return axios.post('/post/comment/delete', data);
+}
+
+function* deleteComment(action: deleteCommentRequestAction) {
+  try {
+    const result: AxiosResponse<ResponseDeleteComment> = yield call(deleteCommentAPI, action.data);
+
+    yield put({
+      type: DELETE_COMMENT_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: DELETE_COMMENT_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
 function* uploadCommentImage(action: commentUploadImageRequestAction) {
   try {
     const result: AxiosResponse<string[]> = yield call(uploadImagesAPI, action.data);
@@ -319,6 +345,10 @@ function* watchEditCommentUploadImage() {
   yield takeLatest(EDIT_COMMENT_UPLOAD_IMAGE_REQUEST, uploadEditCommentImage);
 }
 
+function* watchDeleteComment() {
+  yield takeLatest(DELETE_COMMENT_REQUEST, deleteComment);
+}
+
 function* watchModalCommentUploadImage() {
   yield takeLatest(MODAL_COMMENT_UPLOAD_IMAGE_REQUEST, uploadModalCommentImage);
 }
@@ -336,6 +366,7 @@ export default function* postSaga() {
     fork(watchCommentUploadImage),
     fork(watchEditComment),
     fork(watchEditCommentUploadImage),
+    fork(watchDeleteComment),
     fork(watchModalCommentUploadImage)
   ]);
 }

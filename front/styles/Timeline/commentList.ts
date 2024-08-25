@@ -84,7 +84,8 @@ export const CommentsLoading = styled.div`
 
 export const NoCommentsContainer = styled.div`
   ${({ theme }) => theme.flexColumnSet()};
-  height: 89%;
+  flex-grow: 1;
+  height: 1px;
 
   & > span {
     font-size: 3rem;
@@ -102,10 +103,6 @@ export const NoCommentsContainer = styled.div`
     font-size: 0.8rem;
     opacity: 60%;
   }
-
-  ${media.tablet} {
-    height: 90%;
-  }
 `;
 
 export const CommentListItemWrapper = styled.div`
@@ -118,6 +115,13 @@ export const CommentListItemWrapper = styled.div`
     border-bottom: 1px solid #eeeff3;
     padding-top: 1em;
   }
+`;
+
+export const DeleteCommentText = styled.p`
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 1em;
+  opacity: 40%;
 `;
 
 export const CommentContainer = styled.div<{ $reply: boolean }>`

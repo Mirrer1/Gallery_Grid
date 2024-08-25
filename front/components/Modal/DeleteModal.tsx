@@ -3,26 +3,31 @@ import { useSelector, useDispatch } from 'react-redux';
 import { DeleteOutlined, LoadingOutlined } from '@ant-design/icons';
 
 import { RootState } from 'store/reducers';
-import { deletePostRequest, hideDeleteModal } from 'store/actions/postAction';
+import { deleteCommentRequest, deletePostRequest, hideDeleteModal } from 'store/actions/postAction';
 import { slideInModal } from 'styles/Common/animation';
 import { DeleteModalContent, DeleteModalOutsideArea, DeleteModalWrapper } from 'styles/Modal/deleteModal';
 
-type DeleteProps = {
-  type: string;
-};
-
-const DeleteModal = ({ type }: DeleteProps) => {
+const DeleteModal = () => {
   const dispatch = useDispatch();
-  const { deletePostLoading, deleteId } = useSelector((state: RootState) => state.post);
+  const { deletePostLoading, deleteInfo, deleteCommentLoading } = useSelector((state: RootState) => state.post);
 
   const hideModal = useCallback(() => {
     dispatch(hideDeleteModal());
   }, []);
 
   const onDeletePost = useCallback(() => {
-    dispatch(deletePostRequest(deleteId));
-    dispatch(hideDeleteModal());
-  }, []);
+    if (deleteInfo.type === '게시글') {
+      dispatch(deletePostRequest(deleteInfo.id));
+    } else if (deleteInfo.type === '댓글') {
+      dispatch(
+        deleteCommentRequest({
+          id: deleteInfo.id,
+          hasChild: deleteInfo.hasChild,
+          replyId: deleteInfo.replyId
+        })
+      );
+    }
+  }, [deleteInfo]);
 
   return (
     <DeleteModalWrapper>
@@ -35,14 +40,14 @@ const DeleteModal = ({ type }: DeleteProps) => {
 
         <h1>Are you sure?</h1>
         <p>
-          {type}을 정말 삭제하시겠습니까?
+          {deleteInfo.type}을 정말 삭제하시겠습니까?
           <br />
-          삭제된 {type}은 복구할 수 없습니다.
+          삭제된 {deleteInfo.type}은 복구할 수 없습니다.
         </p>
 
         <div>
           <button type="button" onClick={onDeletePost}>
-            {deletePostLoading ? <LoadingOutlined /> : <>삭제</>}
+            {deletePostLoading || deleteCommentLoading ? <LoadingOutlined /> : <>삭제</>}
           </button>
 
           <button type="button" onClick={hideModal}>

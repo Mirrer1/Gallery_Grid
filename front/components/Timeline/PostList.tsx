@@ -70,7 +70,7 @@ const PostList = () => {
   }, []);
 
   const openDeleteModal = useCallback((postId: number) => {
-    dispatch(showDeleteModal(postId));
+    dispatch(showDeleteModal({ type: '게시글', id: postId }));
     setIsTooltipVisible(null);
   }, []);
 
@@ -210,6 +210,11 @@ const PostList = () => {
                   <CommentOutlined />
                   {post.Comments.reduce((total, comment) => {
                     const repliesCount = comment.Replies ? comment.Replies.length : 0;
+
+                    if (comment.isDeleted) {
+                      return total + repliesCount;
+                    }
+
                     return total + 1 + repliesCount;
                   }, 0)}
                 </div>
@@ -221,7 +226,7 @@ const PostList = () => {
 
       {isCarouselVisible && <PostImageCarousel images={modalImages} />}
       {isPostModalVisible && <PostModal />}
-      {isDeleteModalVisible && <DeleteModal type="게시글" />}
+      {isDeleteModalVisible && <DeleteModal />}
     </PostContainer>
   );
 };

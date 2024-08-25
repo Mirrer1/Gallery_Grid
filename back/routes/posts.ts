@@ -51,7 +51,7 @@ router.get('/', async (req, res, next) => {
         },
         {
           model: Comment,
-          attributes: ['id'],
+          attributes: ['id', 'isDeleted'],
           include: [
             {
               model: ReplyComment,

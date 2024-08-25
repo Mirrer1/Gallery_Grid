@@ -81,7 +81,7 @@ router.post('/', isLoggedIn, upload.none(), async (req, res, next) => {
         },
         {
           model: Comment,
-          attributes: ['id'],
+          attributes: ['id', 'isDeleted'],
           include: [
             {
               model: ReplyComment,
@@ -173,7 +173,7 @@ router.patch('/:postId', isLoggedIn, upload.none(), async (req, res, next) => {
         },
         {
           model: Comment,
-          attributes: ['id'],
+          attributes: ['id', 'isDeleted'],
           include: [
             {
               model: ReplyComment,
@@ -279,6 +279,10 @@ router.get('/comment/:postId', isLoggedIn, async (req, res, next) => {
               ]
             },
             {
+              model: Post,
+              attributes: ['UserId']
+            },
+            {
               model: Image,
               as: 'ReplyImage',
               where: { type: 'reply' },
@@ -344,6 +348,10 @@ router.post('/comment', isLoggedIn, upload.none(), async (req, res, next) => {
                 required: false
               }
             ]
+          },
+          {
+            model: Post,
+            attributes: ['UserId']
           },
           {
             model: Comment,
@@ -579,6 +587,62 @@ router.patch('/comment/edit', isLoggedIn, upload.none(), async (req, res, next) 
         });
 
     return res.status(200).json({ comment: fullComment, parentId });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+router.post('/comment/delete', isLoggedIn, async (req, res, next) => {
+  try {
+    const { id, hasChild, replyId } = req.body;
+    let postId;
+
+    if (replyId) {
+      const replyComment = await ReplyComment.findOne({
+        where: { id, CommentId: replyId }
+      });
+
+      if (!replyComment) {
+        return res.status(404).json({ message: '존재하지 않는 댓글입니다.' });
+      }
+
+      postId = replyComment.PostId;
+
+      await Image.update({ ReplyCommentId: null }, { where: { ReplyCommentId: id } });
+      await ReplyComment.destroy({ where: { id } });
+
+      const remainingReplies = await ReplyComment.count({ where: { CommentId: replyId } });
+      if (remainingReplies === 0) {
+        const parentComment = await Comment.findOne({ where: { id: replyId, isDeleted: true } });
+        if (parentComment) {
+          await Image.update({ CommentId: null }, { where: { CommentId: replyId } });
+          await Comment.destroy({ where: { id: replyId } });
+        }
+      }
+
+      return res.status(200).json({ id, replyId, postId });
+    } else {
+      const comment = await Comment.findOne({
+        where: { id },
+        include: [{ model: ReplyComment, as: 'Replies' }]
+      });
+
+      if (!comment) {
+        return res.status(404).json({ message: '존재하지 않는 댓글입니다.' });
+      }
+
+      postId = comment.PostId;
+
+      if (hasChild) {
+        await Comment.update({ isDeleted: true }, { where: { id } });
+      } else {
+        await Image.update({ CommentId: null }, { where: { CommentId: id } });
+        await Comment.destroy({ where: { id } });
+      }
+
+      return res.status(200).json({ id, hasChild, postId });
+    }
   } catch (error) {
     console.error(error);
     next(error);

@@ -17,6 +17,7 @@ import {
   CommentListItemWrapper,
   CommentListWrapper,
   CommentsLoading,
+  DeleteCommentText,
   NoCommentsContainer
 } from 'styles/Timeline/commentList';
 
@@ -133,7 +134,9 @@ const CommentList = () => {
                 (comment: Comment) =>
                   comment && (
                     <div key={comment.id} ref={el => (commentRefs.current[comment.id] = el)}>
-                      {editingComment.id === comment.id && editingComment.type === 'comment' ? (
+                      {comment.isDeleted ? (
+                        <DeleteCommentText>삭제된 댓글입니다.</DeleteCommentText>
+                      ) : editingComment.id === comment.id && editingComment.type === 'comment' ? (
                         <EditCommentForm
                           reply={false}
                           comment={comment}
