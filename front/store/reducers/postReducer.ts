@@ -58,7 +58,10 @@ import {
   EDIT_COMMENT_FAILURE,
   DELETE_COMMENT_REQUEST,
   DELETE_COMMENT_SUCCESS,
-  DELETE_COMMENT_FAILURE
+  DELETE_COMMENT_FAILURE,
+  LOAD_MODAL_COMMENTS_REQUEST,
+  LOAD_MODAL_COMMENTS_SUCCESS,
+  LOAD_MODAL_COMMENTS_FAILURE
 } from 'store/types/postType';
 
 export const initialState: PostState = {
@@ -72,6 +75,7 @@ export const initialState: PostState = {
   postEditMode: false,
   deleteInfo: null,
   mainComments: [],
+  modalComments: [],
   lastChangedCommentId: null,
   commentVisiblePostId: null,
   hasMorePosts: true,
@@ -111,6 +115,9 @@ export const initialState: PostState = {
   deleteCommentLoading: false,
   deleteCommentDone: false,
   deleteCommentError: null,
+  loadModalCommentsLoading: false,
+  loadModalCommentsDone: false,
+  loadModalCommentsError: null,
   modalCommentUploadImageLoading: false,
   modalCommentUploadImageDone: false,
   modalCommentUploadImageError: null,
@@ -442,6 +449,22 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
       case DELETE_COMMENT_FAILURE:
         draft.deleteCommentLoading = false;
         draft.deleteCommentError = action.error;
+        break;
+      case LOAD_MODAL_COMMENTS_REQUEST:
+        draft.loadModalCommentsLoading = true;
+        draft.loadModalCommentsDone = false;
+        draft.loadModalCommentsError = null;
+        break;
+      case LOAD_MODAL_COMMENTS_SUCCESS:
+        draft.loadModalCommentsLoading = false;
+        draft.loadModalCommentsDone = true;
+        draft.modalComments = action.data;
+        // draft.mainPosts = draft.mainPosts.concat(action.data);
+        // draft.hasMorePosts = action.data.length === 10;
+        break;
+      case LOAD_MODAL_COMMENTS_FAILURE:
+        draft.loadModalCommentsLoading = false;
+        draft.loadModalCommentsError = action.error;
         break;
       case MODAL_COMMENT_UPLOAD_IMAGE_REQUEST:
         draft.modalCommentUploadImageLoading = true;

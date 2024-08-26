@@ -27,20 +27,6 @@ export const ModalCommentListContainer = styled(motion.div)`
   }
 `;
 
-export const ModalCommentListWrapper = styled.div`
-  flex-grow: 1;
-  height: 1px;
-  padding: 0.8em 0.8em 0 0.8em;
-  border-bottom: 1.5px solid ${({ theme }) => theme.colors.darkBg};
-  overflow-y: auto;
-
-  ${media.tablet} {
-    flex-grow: 1;
-    height: 1px;
-    padding: 0 0.8em;
-  }
-`;
-
 export const ModalCommentListHeader = styled.div`
   ${({ theme }) => theme.flexSet('end')};
   padding: 0.5em;
@@ -80,31 +66,54 @@ export const ModalCommentListHeader = styled.div`
   }
 `;
 
-export const ModalCommentListItemWrapper = styled.div`
-  height: 97%;
-  padding: 0 0.5em;
+export const ModalCommentsLoading = styled.div`
+  ${({ theme }) => theme.flexColumnSet()};
+  flex-grow: 1;
 
-  & > div {
-    border-bottom: 1px solid #eeeff3;
-    padding: 1em 0;
-  }
-
-  & > div:last-child {
-    border-bottom: none;
-  }
-
-  ${media.tablet} {
-    height: 96.5%;
+  & > span {
+    font-size: 2rem;
+    color: #6ba2e6;
   }
 `;
 
-export const ModalCommentListItem = styled.div<{ $reply: boolean }>`
+export const ModalNoCommentsContainer = styled.div`
+  ${({ theme }) => theme.flexColumnSet()};
+  flex-grow: 1;
+  height: 1px;
+
+  & > span {
+    font-size: 3rem;
+    margin-bottom: 0.25em;
+  }
+
+  & > h1 {
+    color: ${({ theme }) => theme.colors.font};
+    font-size: 1.4rem;
+    font-weight: 500;
+    margin-bottom: 0.2em;
+  }
+
+  & > p {
+    font-size: 0.8rem;
+    opacity: 60%;
+  }
+`;
+
+export const ModalCommentListItemWrapper = styled.div`
+  flex-grow: 1;
+  height: 1px;
+  padding: 0 1em;
+  overflow-y: auto;
+
+  & > div {
+    border-bottom: 1px solid #eeeff3;
+    padding-top: 1em;
+  }
+`;
+
+export const ModalCommentContainer = styled.div<{ $reply: boolean }>`
   padding-left: ${props => (props.$reply ? '2em' : '0')};
   margin-bottom: 1em;
-
-  &:last-child {
-    margin-bottom: 0;
-  }
 
   & > div {
     ${({ theme }) => theme.flexSet('space-between')};
@@ -121,23 +130,36 @@ export const ModalCommentListItem = styled.div<{ $reply: boolean }>`
       }
 
       & > div {
-        & > h1 {
-          color: ${({ theme }) => theme.colors.primary};
-          font-size: 0.9rem;
-          font-weight: 500;
+        & > div {
+          ${({ theme }) => theme.flexSet('flex-start')};
           margin-bottom: 0.3em;
-          cursor: pointer;
 
-          @media (min-width: 992px) {
-            &:hover {
-              text-decoration: underline;
-              text-underline-offset: 1.5px;
+          & > h1 {
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-right: 0.3em;
+            cursor: pointer;
+
+            @media (min-width: 992px) {
+              &:hover {
+                text-decoration: underline;
+                text-underline-offset: 1.5px;
+              }
             }
+          }
+
+          & > p {
+            font-size: 0.6rem;
+            font-weight: 500;
+            color: ${({ theme }) => theme.colors.primary};
+            background-color: #d6e4f8;
+            border-radius: 10px;
+            padding: 0.3em 0.6em;
           }
         }
 
         & > p {
-          font-size: 0.7rem;
+          font-size: 0.65rem;
           opacity: 40%;
         }
       }
@@ -163,37 +185,33 @@ export const ModalCommentListItem = styled.div<{ $reply: boolean }>`
     margin-left: 0.5em;
   }
 
-  ${media.tablet} {
-    & > div {
-      & > div:first-child {
-        & > img {
-          width: 38px;
-          height: 38px;
-        }
+  & > button {
+    font-size: 0.75rem;
+    opacity: 40%;
+    margin-left: 0.5em;
+  }
+`;
 
-        & > div {
-          & > h1 {
-            font-size: 0.8rem;
-          }
+export const ModalCommentListItemImage = styled.div`
+  width: 140px;
+  height: 140px;
+  margin-bottom: 0.5em;
+  cursor: pointer;
 
-          & > p {
-            font-size: 0.65rem;
-          }
-        }
-      }
-    }
-
-    & > p {
-      font-size: 0.7rem;
-    }
+  & > img {
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    ${DarkShadowStyle};
   }
 `;
 
 export const ModalCommentFormWrapper = styled.div`
   position: relative;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 `;
 
-export const ModalCommentForm = styled.form<{ $active: boolean }>`
+export const ModalCommentFormItem = styled.form<{ $active: boolean }>`
   position: relative;
   ${({ theme }) => theme.flexSet('space-between')}
   background-color: white;

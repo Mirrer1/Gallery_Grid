@@ -53,6 +53,10 @@ export const DELETE_COMMENT_REQUEST = 'DELETE_COMMENT_REQUEST' as const;
 export const DELETE_COMMENT_SUCCESS = 'DELETE_COMMENT_SUCCESS' as const;
 export const DELETE_COMMENT_FAILURE = 'DELETE_COMMENT_FAILURE' as const;
 
+export const LOAD_MODAL_COMMENTS_REQUEST = 'LOAD_MODAL_COMMENTS_REQUEST' as const;
+export const LOAD_MODAL_COMMENTS_SUCCESS = 'LOAD_MODAL_COMMENTS_SUCCESS' as const;
+export const LOAD_MODAL_COMMENTS_FAILURE = 'LOAD_MODAL_COMMENTS_FAILURE' as const;
+
 export const MODAL_COMMENT_UPLOAD_IMAGE_REQUEST = 'MODAL_COMMENT_UPLOAD_IMAGE_REQUEST' as const;
 export const MODAL_COMMENT_UPLOAD_IMAGE_SUCCESS = 'MODAL_COMMENT_UPLOAD_IMAGE_SUCCESS' as const;
 export const MODAL_COMMENT_UPLOAD_IMAGE_FAILURE = 'MODAL_COMMENT_UPLOAD_IMAGE_FAILURE' as const;
@@ -146,6 +150,7 @@ export type PostState = {
   postEditMode: boolean;
   deleteInfo: DeleteInfo | null;
   mainComments: Comment[] | null;
+  modalComments: Comment[] | null;
   lastChangedCommentId: number | null;
   commentVisiblePostId: number | null;
   hasMorePosts: boolean;
@@ -185,6 +190,9 @@ export type PostState = {
   deleteCommentLoading: boolean;
   deleteCommentDone: boolean;
   deleteCommentError: null | string;
+  loadModalCommentsLoading: boolean;
+  loadModalCommentsDone: boolean;
+  loadModalCommentsError: null | string;
   modalCommentUploadImageLoading: boolean;
   modalCommentUploadImageDone: boolean;
   modalCommentUploadImageError: null | string;
@@ -392,6 +400,21 @@ export interface deleteCommentFailureAction {
   error: string;
 }
 
+export interface loadModalCommentsRequestAction {
+  type: typeof LOAD_MODAL_COMMENTS_REQUEST;
+  data: number;
+}
+
+export interface loadModalCommentsSuccessAction {
+  type: typeof LOAD_MODAL_COMMENTS_SUCCESS;
+  data: Comment[];
+}
+
+export interface loadModalCommentsFailureAction {
+  type: typeof LOAD_MODAL_COMMENTS_FAILURE;
+  error: string;
+}
+
 export interface modalCommentUploadImageRequestAction {
   type: typeof MODAL_COMMENT_UPLOAD_IMAGE_REQUEST;
   data: FormData;
@@ -496,6 +519,9 @@ export type PostAction =
   | commentUploadImageSuccessAction
   | commentUploadImageFailureAction
   | commentRemoveUploadedImageAction
+  | loadModalCommentsRequestAction
+  | loadModalCommentsSuccessAction
+  | loadModalCommentsFailureAction
   | modalCommentUploadImageRequestAction
   | modalCommentUploadImageSuccessAction
   | modalCommentUploadImageFailureAction

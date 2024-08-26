@@ -29,7 +29,8 @@ import {
   EDIT_COMMENT_REMOVE_UPLOADED_IMAGE,
   EDIT_COMMENT_REQUEST,
   DeleteInfo,
-  DELETE_COMMENT_REQUEST
+  DELETE_COMMENT_REQUEST,
+  LOAD_MODAL_COMMENTS_REQUEST
 } from 'store/types/postType';
 
 export const loadPostsRequest = (lastId?: number) => ({
@@ -107,6 +108,11 @@ export const editCommentRemoveUploadedImage = () => ({
 
 export const deleteCommentRequest = (data: DeleteInfo) => ({
   type: DELETE_COMMENT_REQUEST,
+  data
+});
+
+export const loadModalCommentsRequest = (data: number) => ({
+  type: LOAD_MODAL_COMMENTS_REQUEST,
   data
 });
 

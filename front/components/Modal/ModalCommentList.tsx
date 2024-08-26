@@ -1,39 +1,22 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  CaretDownOutlined,
-  DeleteOutlined,
-  LoadingOutlined,
-  PaperClipOutlined,
-  SendOutlined,
-  SmileOutlined
-} from '@ant-design/icons';
-import { toast } from 'react-toastify';
-import EmojiPicker from 'emoji-picker-react';
+import { CaretDownOutlined, CloseSquareTwoTone, LoadingOutlined } from '@ant-design/icons';
 
-import useInput from 'utils/useInput';
-import useFileUpload from 'utils/useFileUpload';
-import useEmojiPicker from 'utils/useEmojiPicker';
 import ModalReplyComment from './ModalReplyComment';
+import ModalCommentListItem from './ModalCommentListItem';
+import ImagePreview from './ImagePreviewModal';
+import ModalCommentForm from './ModalCommentForm';
 
 import { RootState } from 'store/reducers';
-import {
-  addCommentRequest,
-  modalCommentRemoveUploadedImage,
-  modalCommentUploadImageRequest
-} from 'store/actions/postAction';
-import { slideInFromBottom, slideInUploadImage } from 'styles/Common/animation';
+import { Comment, IReplyComment } from 'store/types/postType';
+import { loadModalCommentsRequest } from 'store/actions/postAction';
+import { slideInFromBottom } from 'styles/Common/animation';
 import {
   ModalCommentListHeader,
-  ModalCommentListItem,
   ModalCommentListItemWrapper,
-  ModalCommentListWrapper,
   ModalCommentListContainer,
-  ModalCommentInputImage,
-  ModalCommentInputImageWrapper,
-  ModalCommentEmojiPicker,
-  ModalCommentForm,
-  ModalCommentFormWrapper
+  ModalCommentsLoading,
+  ModalNoCommentsContainer
 } from 'styles/Modal/modalCommentList';
 
 type ModalCommentListProps = {
@@ -41,129 +24,23 @@ type ModalCommentListProps = {
 };
 
 const ModalCommentList = ({ setIsModalCommentListVisible }: ModalCommentListProps) => {
-  const contentList = [
-    {
-      id: 1,
-      nickname: 'userasd1',
-      profile: 'https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg',
-      content:
-        '안녕하세요. 저는 댓글1입니다.안녕하세요. 저는 댓글1입니다.안녕하세요. 저는 댓글1입니다.안녕하세요. 저는 댓글1입니다.안녕하세요. 저는 댓글1입니다.안녕하세요. 저는 댓글1입니다.안녕하세요. 저는 댓글1입니다.안녕하세요. 저는 댓글1입니다.안녕하세요. 저는 댓글1입니다.안녕하세요. 저는 댓글1입니다.안녕하세요. 저는 댓글1입니다.안녕하세요. 저는 댓글1입니다.안녕하세요. 저는 댓글1입니다.안녕하세요. 저는 댓글1입니다.안녕하세요. 저는 댓글1입니다.안녕하세요. 저는 댓글1입니다.',
-      createdAt: '2024-2-14'
-    },
-    {
-      id: 2,
-      nickname: 'useasdasdr2',
-      profile: 'https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg',
-      content: '안녕하세요. 저는 댓글2입니다.',
-      createdAt: '2024-2-11'
-    },
-    {
-      id: 3,
-      nickname: 'usedasdasdr3',
-      profile: 'https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg',
-      content: '안녕하세요. 저는 댓글3입니다.',
-      createdAt: '2024-6-24'
-    },
-    {
-      id: 4,
-      nickname: 'user4',
-      profile: 'https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg',
-      content: '안녕하세요. 저는 댓글4입니다.',
-      createdAt: '2023-1-26'
-    },
-    {
-      id: 5,
-      nickname: 'user5',
-      profile: 'https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg',
-      content: '안녕하세요. 저는 댓글5입니다.',
-      createdAt: '2023-2-22'
-    },
-    {
-      id: 6,
-      nickname: 'user6',
-      profile: 'https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg',
-      content: '안녕하세요. 저는 댓글6입니다.',
-      createdAt: '2023-12-12'
-    },
-    {
-      id: 7,
-      nickname: 'user7',
-      profile: 'https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg',
-      content: '안녕하세요. 저는 댓글7입니다.',
-      createdAt: '2023-11-4'
-    },
-    {
-      id: 8,
-      nickname: 'user8',
-      profile: 'https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg',
-      content: '안녕하세요. 저는 댓글8입니다.',
-      createdAt: '2023-9-1'
-    },
-    {
-      id: 9,
-      nickname: 'user9',
-      profile: 'https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg',
-      content: '안녕하세요. 저는 댓글9입니다.',
-      createdAt: '2023-6-12'
-    }
-  ];
-
   const dispatch = useDispatch();
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const [comment, onChangeComment, setComment] = useInput('');
-  const { showEmoji, showEmojiPicker, closeEmojiPicker, onEmojiClick } = useEmojiPicker(setComment);
-  const { fileInputRef, onFileChange } = useFileUpload(modalCommentUploadImageRequest, { showWarning: false });
-  const [touchStartY, setTouchStartY] = useState<number | null>(null);
+  const { singlePost, modalComments, loadModalCommentsLoading } = useSelector((state: RootState) => state.post);
   const [translateY, setTranslateY] = useState(0);
-  const { modalCommentImagePath, modalCommentUploadImageLoading, singlePost, addCommentLoading } = useSelector(
-    (state: RootState) => state.post
-  );
+  const [touchStartY, setTouchStartY] = useState<number | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const onHideComment = useCallback(() => {
     setIsModalCommentListVisible(false);
   }, []);
 
-  const onClickImageUpload = useCallback(() => {
-    if (fileInputRef.current) fileInputRef.current.click();
+  const showImagePreview = useCallback((image: string) => {
+    setImagePreview(image);
   }, []);
 
-  const handleRemoveImage = useCallback(() => {
-    dispatch(modalCommentRemoveUploadedImage());
+  const hideImagePreview = useCallback(() => {
+    setImagePreview(null);
   }, []);
-
-  const onSubmitForm = useCallback(
-    (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-
-      if (!comment.trim()) {
-        toast.warning('댓글 내용을 입력해주세요.');
-        return;
-      }
-
-      const formData = new FormData();
-      if (modalCommentImagePath.length > 0) {
-        modalCommentImagePath.forEach((image: string) => {
-          formData.append('image', image);
-        });
-      }
-      formData.append('content', comment);
-      formData.append('PostId', singlePost.id);
-
-      dispatch(addCommentRequest(formData));
-
-      setComment('');
-    },
-    [comment, modalCommentImagePath, singlePost.id]
-  );
-
-  const handleKeyDown = useCallback(
-    (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-      if (event.key === 'Enter') {
-        console.log(comment);
-      }
-    },
-    [comment]
-  );
 
   const handleTouchStart = (e: React.TouchEvent) => {
     if (window.innerWidth <= 992) {
@@ -192,25 +69,9 @@ const ModalCommentList = ({ setIsModalCommentListVisible }: ModalCommentListProp
     setTouchStartY(null);
   };
 
-  const autoResize = useCallback(() => {
-    const textarea = textareaRef.current;
-
-    if (textarea) {
-      textarea.style.height = 'auto';
-      textarea.style.height = `${textarea.scrollHeight}px`;
-    }
-  }, []);
-
-  // useEffect(() => {
-  //   if (addCommentDone) setComment('');
-  //   if (textareaRef.current) {
-  //     textareaRef.current.style.height = 'auto';
-  //   }
-  // }, [addCommentDone]);
-
   useEffect(() => {
-    if (comment.length === 500) toast.warning('댓글은 500자 이하로 작성해주세요.');
-  }, [comment]);
+    dispatch(loadModalCommentsRequest(singlePost.id));
+  }, [singlePost]);
 
   return (
     <ModalCommentListContainer style={{ bottom: `${-translateY}px` }} {...slideInFromBottom()}>
@@ -218,77 +79,48 @@ const ModalCommentList = ({ setIsModalCommentListVisible }: ModalCommentListProp
         <CaretDownOutlined onClick={onHideComment} />
         <div />
       </ModalCommentListHeader>
-      <ModalCommentListWrapper>
+
+      {loadModalCommentsLoading ? (
+        <ModalCommentsLoading>
+          <LoadingOutlined />
+        </ModalCommentsLoading>
+      ) : modalComments?.length > 0 ? (
         <ModalCommentListItemWrapper>
-          {contentList.map(comment => (
+          {modalComments.map((comment: Comment) => (
             <div key={comment.id}>
-              <ModalCommentListItem $reply={false}>
-                <div>
-                  <div>
-                    <img src={comment.profile} alt={`${comment.nickname}의 프로필 이미지`} />
+              <ModalCommentListItem comment={comment} showImagePreview={showImagePreview} />
 
-                    <div>
-                      <h1>{comment.nickname}</h1>
-                      <p>{comment.createdAt}</p>
-                    </div>
-                  </div>
-
-                  <div>
-                    <button type="button">수정</button>
-                    <button type="button">삭제</button>
-                  </div>
+              {comment.Replies.map((reply: IReplyComment) => (
+                <div key={reply.id}>
+                  <ModalReplyComment
+                    comment={reply}
+                    // replyId={comment.id}
+                    // setReplyId={setReplyId}
+                    // setReplyUser={setReplyUser}
+                    showImagePreview={showImagePreview}
+                    // onEditClick={() => handleEditClick(reply.id, 'reply')}
+                  />
                 </div>
-
-                <p>{comment.content}</p>
-              </ModalCommentListItem>
-
-              <ModalReplyComment />
+              ))}
             </div>
           ))}
         </ModalCommentListItemWrapper>
-      </ModalCommentListWrapper>
+      ) : (
+        <ModalNoCommentsContainer>
+          <CloseSquareTwoTone twoToneColor="#6BA2E6" />
+          <h1>No comments yet.</h1>
+          <p>첫번째 댓글을 작성해보세요!</p>
+        </ModalNoCommentsContainer>
+      )}
 
-      <ModalCommentFormWrapper>
-        {modalCommentImagePath.length !== 0 && (
-          <ModalCommentInputImageWrapper>
-            <ModalCommentInputImage key={modalCommentImagePath} {...slideInUploadImage}>
-              <img src={`http://localhost:3065/${modalCommentImagePath}`} alt="입력한 댓글의 첨부 이미지" />
-              <DeleteOutlined onClick={handleRemoveImage} />
-            </ModalCommentInputImage>
-          </ModalCommentInputImageWrapper>
-        )}
+      <ModalCommentForm
+        showImagePreview={showImagePreview}
+        // replyId={replyId}
+        // replyUser={replyUser}
+        // setReplyId={setReplyId}
+      />
 
-        <ModalCommentForm encType="multipart/form-data" $active={comment.length === 0} onSubmit={onSubmitForm}>
-          <div>
-            {modalCommentUploadImageLoading ? <LoadingOutlined /> : <PaperClipOutlined onClick={onClickImageUpload} />}
-            <input type="file" name="image" ref={fileInputRef} onChange={e => onFileChange(e, modalCommentImagePath)} />
-
-            <SmileOutlined onClick={showEmojiPicker} />
-            {showEmoji && EmojiPicker && (
-              <ModalCommentEmojiPicker>
-                <div onClick={closeEmojiPicker} />
-
-                <div>
-                  <EmojiPicker onEmojiClick={onEmojiClick} />
-                </div>
-              </ModalCommentEmojiPicker>
-            )}
-
-            <textarea
-              placeholder="Type a Comment..."
-              ref={textareaRef}
-              value={comment}
-              onChange={onChangeComment}
-              onKeyDown={handleKeyDown}
-              onInput={autoResize}
-              maxLength={500}
-              rows={1}
-            />
-          </div>
-
-          <button type="submit">{addCommentLoading ? <LoadingOutlined /> : <SendOutlined />}</button>
-        </ModalCommentForm>
-      </ModalCommentFormWrapper>
+      <ImagePreview imagePreview={imagePreview} hideImagePreview={hideImagePreview} />
     </ModalCommentListContainer>
   );
 };

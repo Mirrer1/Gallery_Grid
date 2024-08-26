@@ -70,15 +70,11 @@ export const CommentListHeader = styled.div`
 
 export const CommentsLoading = styled.div`
   ${({ theme }) => theme.flexColumnSet()};
-  height: 95%;
+  flex-grow: 1;
 
   & > span {
     font-size: 2rem;
     color: #6ba2e6;
-  }
-
-  ${media.tablet} {
-    height: 94%;
   }
 `;
 

@@ -23,6 +23,7 @@ import {
   ModalContentText,
   ModalContentWrapper
 } from 'styles/Modal/modalContent';
+import { Comment } from 'store/types/postType';
 
 const ModalContent = () => {
   const dispatch = useDispatch();
@@ -121,8 +122,19 @@ const ModalContent = () => {
 
         <div>
           <p>좋아요 114개</p>
-          {/* 좋아요 없으면 "가장 먼저 좋아요를 눌러보세요" 문구로 대체 */}
-          <p>댓글 29개</p>
+          <p>
+            댓글{' '}
+            {singlePost.Comments.reduce((total: number, comment: Comment) => {
+              const repliesCount = comment.Replies ? comment.Replies.length : 0;
+
+              if (comment.isDeleted) {
+                return total + repliesCount;
+              }
+
+              return total + 1 + repliesCount;
+            }, 0)}
+            개
+          </p>
         </div>
       </ModalContentOptions>
     </ModalContentWrapper>

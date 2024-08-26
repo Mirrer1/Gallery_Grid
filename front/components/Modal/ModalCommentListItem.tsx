@@ -1,32 +1,31 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 
+import DeleteModal from './DeleteModal';
 import formatDate from 'utils/useListTimes';
 import { RootState } from 'store/reducers';
-import { IReplyComment } from 'store/types/postType';
+import { Comment } from 'store/types/postType';
 import { ModalCommentContainer, ModalCommentListItemImage } from 'styles/Modal/modalCommentList';
 
-type ModalReplyCommentProps = {
-  comment: IReplyComment;
-  // replyId: number;
+type ModalCommentListItemProps = {
+  comment: Comment;
   // setReplyId: (id: number | null) => void;
   // setReplyUser: (user: string | null) => void;
   showImagePreview: (src: string) => void;
   // onEditClick: () => void;
 };
 
-const ModalReplyComment = ({
+const ModalCommentListItem = ({
   comment,
-  // replyId,
   // setReplyId,
   // setReplyUser,
   showImagePreview
   // onEditClick
-}: ModalReplyCommentProps) => {
+}: ModalCommentListItemProps) => {
   const { me } = useSelector((state: RootState) => state.user);
 
   return (
-    <ModalCommentContainer $reply={true}>
+    <ModalCommentContainer $reply={false}>
       <div>
         <div>
           <img
@@ -57,14 +56,21 @@ const ModalReplyComment = ({
           </div>
         )}
       </div>
-      {comment.ReplyImage && (
-        <ModalCommentListItemImage onClick={() => showImagePreview(`http://localhost:3065/${comment.ReplyImage?.src}`)}>
-          <img src={`http://localhost:3065/${comment.ReplyImage.src}`} alt={`${comment.User.nickname}의 댓글 이미지`} />
+
+      {comment.CommentImage && (
+        <ModalCommentListItemImage
+          onClick={() => showImagePreview(`http://localhost:3065/${comment.CommentImage?.src}`)}
+        >
+          <img
+            src={`http://localhost:3065/${comment.CommentImage.src}`}
+            alt={`${comment.User.nickname}의 댓글 이미지`}
+          />
         </ModalCommentListItemImage>
       )}
+
       <p>{comment.content}</p>
 
-      {/* onClick={() => onClickReply(comment.User.nickname)} */}
+      {/* onClick={() => onClickReply(comment.id, comment.User.nickname)} */}
       <button type="button">답글쓰기</button>
 
       {/* {isDeleteModalVisible && <DeleteModal />} */}
@@ -72,4 +78,4 @@ const ModalReplyComment = ({
   );
 };
 
-export default ModalReplyComment;
+export default ModalCommentListItem;
