@@ -65,6 +65,9 @@ import {
   ADD_MODAL_COMMENT_REQUEST,
   ADD_MODAL_COMMENT_SUCCESS,
   ADD_MODAL_COMMENT_FAILURE,
+  DELETE_MODAL_COMMENT_REQUEST,
+  DELETE_MODAL_COMMENT_SUCCESS,
+  DELETE_MODAL_COMMENT_FAILURE,
   SHOW_MODAL_COMMENT_LIST,
   HIDE_MODAL_COMMENT_LIST
 } from 'store/types/postType';
@@ -130,6 +133,9 @@ export const initialState: PostState = {
   modalCommentUploadImageLoading: false,
   modalCommentUploadImageDone: false,
   modalCommentUploadImageError: null,
+  deleteModalCommentLoading: false,
+  deleteModalCommentDone: false,
+  deleteModalCommentError: null,
   isCommentListVisible: false,
   isModalCommentListVisible: false,
   isCarouselVisible: false,
@@ -449,7 +455,6 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
             }
           }
         }
-
         draft.isDeleteModalVisible = false;
         draft.deleteInfo = null;
         break;
@@ -472,7 +477,6 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
         draft.loadModalCommentsLoading = false;
         draft.loadModalCommentsError = action.error;
         break;
-
       case ADD_MODAL_COMMENT_REQUEST:
         draft.addModalCommentLoading = true;
         draft.addModalCommentDone = false;
@@ -538,7 +542,6 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
 
           draft.mainPosts[mainPostIndex].Comments = mainComments;
         }
-
         break;
       case ADD_MODAL_COMMENT_FAILURE:
         draft.addModalCommentLoading = false;
@@ -560,6 +563,105 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
         break;
       case MODAL_COMMENT_REMOVE_UPLOADED_IMAGE:
         draft.modalCommentImagePath = [];
+        break;
+      case DELETE_MODAL_COMMENT_REQUEST:
+        draft.deleteModalCommentLoading = true;
+        draft.deleteModalCommentDone = false;
+        draft.deleteModalCommentError = null;
+        break;
+      case DELETE_MODAL_COMMENT_SUCCESS: {
+        draft.deleteModalCommentLoading = false;
+        draft.deleteModalCommentDone = true;
+
+        const { id, replyId, hasChild, postId } = action.data;
+
+        if (draft.singlePost?.id === postId) {
+          const modalComments = draft.singlePost.Comments;
+          if (replyId) {
+            const parentComment = modalComments.find(comment => comment.id === replyId);
+            if (parentComment) {
+              parentComment.Replies = parentComment.Replies.filter(reply => reply.id !== id);
+
+              const modalMainParentComment = draft.modalComments?.find(comment => comment.id === replyId);
+              if (modalMainParentComment) {
+                modalMainParentComment.Replies = modalMainParentComment.Replies.filter(reply => reply.id !== id);
+              }
+
+              if (parentComment.Replies.length === 0 && parentComment.isDeleted) {
+                draft.singlePost.Comments = modalComments.filter(comment => comment.id !== replyId);
+
+                if (draft.modalComments) {
+                  draft.modalComments = draft.modalComments.filter(comment => comment.id !== replyId);
+                }
+              }
+            }
+          } else {
+            if (hasChild) {
+              const commentToUpdate = modalComments.find(comment => comment.id === id);
+              if (commentToUpdate) commentToUpdate.isDeleted = true;
+
+              if (draft.modalComments) {
+                const modalCommentToUpdate = draft.modalComments.find(comment => comment.id === id);
+                if (modalCommentToUpdate) modalCommentToUpdate.isDeleted = true;
+              }
+            } else {
+              draft.singlePost.Comments = modalComments.filter(comment => comment.id !== id);
+
+              if (draft.modalComments) {
+                draft.modalComments = draft.modalComments.filter(comment => comment.id !== id);
+              }
+            }
+          }
+        }
+
+        const mainPostIndex = draft.mainPosts.findIndex(post => post.id === postId);
+        if (mainPostIndex !== -1) {
+          const postComments = draft.mainPosts[mainPostIndex].Comments;
+          if (replyId) {
+            const parentComment = postComments.find(comment => comment.id === replyId);
+            if (parentComment) {
+              parentComment.Replies = parentComment.Replies.filter(reply => reply.id !== id);
+
+              if (draft.mainComments) {
+                const mainParentComment = draft.mainComments.find(comment => comment.id === replyId);
+                if (mainParentComment) {
+                  mainParentComment.Replies = mainParentComment.Replies.filter(reply => reply.id !== id);
+                }
+              }
+
+              if (parentComment.Replies.length === 0 && parentComment.isDeleted) {
+                draft.mainPosts[mainPostIndex].Comments = postComments.filter(comment => comment.id !== replyId);
+
+                if (draft.mainComments) {
+                  draft.mainComments = draft.mainComments.filter(comment => comment.id !== replyId);
+                }
+              }
+            }
+          } else {
+            if (hasChild) {
+              const commentToUpdate = postComments.find(comment => comment.id === id);
+              if (commentToUpdate) commentToUpdate.isDeleted = true;
+
+              if (draft.mainComments) {
+                const mainCommentToUpdate = draft.mainComments.find(comment => comment.id === id);
+                if (mainCommentToUpdate) mainCommentToUpdate.isDeleted = true;
+              }
+            } else {
+              draft.mainPosts[mainPostIndex].Comments = postComments.filter(comment => comment.id !== id);
+
+              if (draft.mainComments) {
+                draft.mainComments = draft.mainComments.filter(comment => comment.id !== id);
+              }
+            }
+          }
+        }
+        draft.isDeleteModalVisible = false;
+        draft.deleteInfo = null;
+        break;
+      }
+      case DELETE_MODAL_COMMENT_FAILURE:
+        draft.deleteModalCommentLoading = false;
+        draft.deleteModalCommentError = action.error;
         break;
       case SHOW_COMMENT_LIST:
         draft.isCommentListVisible = true;

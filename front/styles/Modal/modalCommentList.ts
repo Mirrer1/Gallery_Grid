@@ -192,6 +192,13 @@ export const ModalCommentContainer = styled.div<{ $reply: boolean }>`
   }
 `;
 
+export const DeleteModalCommentText = styled.p`
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 1em;
+  opacity: 40%;
+`;
+
 export const ModalCommentListItemImage = styled.div`
   width: 140px;
   height: 140px;

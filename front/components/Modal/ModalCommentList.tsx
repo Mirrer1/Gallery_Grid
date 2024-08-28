@@ -16,7 +16,8 @@ import {
   ModalCommentListItemWrapper,
   ModalCommentListContainer,
   ModalCommentsLoading,
-  ModalNoCommentsContainer
+  ModalNoCommentsContainer,
+  DeleteModalCommentText
 } from 'styles/Modal/modalCommentList';
 
 const ModalCommentList = () => {
@@ -98,13 +99,17 @@ const ModalCommentList = () => {
         <ModalCommentListItemWrapper>
           {modalComments.map((comment: Comment) => (
             <div key={comment.id} ref={el => (commentRefs.current[comment.id] = el)}>
-              <ModalCommentListItem
-                comment={comment}
-                setReplyId={setReplyId}
-                setReplyUser={setReplyUser}
-                showImagePreview={showImagePreview}
-                // onEditClick={() => handleEditClick(comment.id, 'comment')}
-              />
+              {comment.isDeleted ? (
+                <DeleteModalCommentText>삭제된 댓글입니다.</DeleteModalCommentText>
+              ) : (
+                <ModalCommentListItem
+                  comment={comment}
+                  setReplyId={setReplyId}
+                  setReplyUser={setReplyUser}
+                  showImagePreview={showImagePreview}
+                  // onEditClick={() => handleEditClick(comment.id, 'comment')}
+                />
+              )}
 
               {comment.Replies.map((reply: IReplyComment) => (
                 <div key={reply.id} ref={el => (commentRefs.current[reply.id] = el)}>

@@ -3,15 +3,19 @@ import { useSelector, useDispatch } from 'react-redux';
 import { DeleteOutlined, LoadingOutlined } from '@ant-design/icons';
 
 import { RootState } from 'store/reducers';
-import { deleteCommentRequest, deletePostRequest, hideDeleteModal } from 'store/actions/postAction';
+import {
+  deleteCommentRequest,
+  deleteModalCommentRequest,
+  deletePostRequest,
+  hideDeleteModal
+} from 'store/actions/postAction';
 import { slideInModal } from 'styles/Common/animation';
 import { DeleteModalContent, DeleteModalOutsideArea, DeleteModalWrapper } from 'styles/Modal/deleteModal';
 
 const DeleteModal = () => {
   const dispatch = useDispatch();
-  const { deletePostLoading, deleteInfo, deleteCommentLoading, isModalCommentListVisible } = useSelector(
-    (state: RootState) => state.post
-  );
+  const { deletePostLoading, deleteInfo, deleteCommentLoading, deleteModalCommentLoading, isModalCommentListVisible } =
+    useSelector((state: RootState) => state.post);
 
   const hideModal = useCallback(() => {
     dispatch(hideDeleteModal());
@@ -21,17 +25,21 @@ const DeleteModal = () => {
     if (deleteInfo.type === '게시글') {
       dispatch(deletePostRequest(deleteInfo.id));
     } else if (!isModalCommentListVisible && deleteInfo.type === '댓글') {
-      console.log('일반 댓글 삭제');
-
-      // dispatch(
-      //   deleteCommentRequest({
-      //     id: deleteInfo.id,
-      //     hasChild: deleteInfo.hasChild,
-      //     replyId: deleteInfo.replyId
-      //   })
-      // );
+      dispatch(
+        deleteCommentRequest({
+          id: deleteInfo.id,
+          hasChild: deleteInfo.hasChild,
+          replyId: deleteInfo.replyId
+        })
+      );
     } else if (isModalCommentListVisible && deleteInfo.type === '댓글') {
-      console.log('모달 댓글 삭제');
+      dispatch(
+        deleteModalCommentRequest({
+          id: deleteInfo.id,
+          hasChild: deleteInfo.hasChild,
+          replyId: deleteInfo.replyId
+        })
+      );
     }
   }, [deleteInfo]);
 
@@ -53,7 +61,7 @@ const DeleteModal = () => {
 
         <div>
           <button type="button" onClick={onDeletePost}>
-            {deletePostLoading || deleteCommentLoading ? <LoadingOutlined /> : <>삭제</>}
+            {deletePostLoading || deleteCommentLoading || deleteModalCommentLoading ? <LoadingOutlined /> : <>삭제</>}
           </button>
 
           <button type="button" onClick={hideModal}>

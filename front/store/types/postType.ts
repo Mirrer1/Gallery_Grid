@@ -66,6 +66,10 @@ export const MODAL_COMMENT_UPLOAD_IMAGE_SUCCESS = 'MODAL_COMMENT_UPLOAD_IMAGE_SU
 export const MODAL_COMMENT_UPLOAD_IMAGE_FAILURE = 'MODAL_COMMENT_UPLOAD_IMAGE_FAILURE' as const;
 export const MODAL_COMMENT_REMOVE_UPLOADED_IMAGE = 'MODAL_COMMENT_REMOVE_UPLOADED_IMAGE' as const;
 
+export const DELETE_MODAL_COMMENT_REQUEST = 'DELETE_MODAL_COMMENT_REQUEST' as const;
+export const DELETE_MODAL_COMMENT_SUCCESS = 'DELETE_MODAL_COMMENT_SUCCESS' as const;
+export const DELETE_MODAL_COMMENT_FAILURE = 'DELETE_MODAL_COMMENT_FAILURE' as const;
+
 export const SHOW_COMMENT_LIST = 'SHOW_COMMENT_LIST' as const;
 export const HIDE_COMMENT_LIST = 'HIDE_COMMENT_LIST' as const;
 
@@ -207,6 +211,9 @@ export type PostState = {
   modalCommentUploadImageLoading: boolean;
   modalCommentUploadImageDone: boolean;
   modalCommentUploadImageError: null | string;
+  deleteModalCommentLoading: boolean;
+  deleteModalCommentDone: boolean;
+  deleteModalCommentError: null | string;
   isCommentListVisible: boolean;
   isModalCommentListVisible: boolean;
   isCarouselVisible: boolean;
@@ -461,6 +468,21 @@ export interface modalCommentRemoveUploadedImageAction {
   type: typeof MODAL_COMMENT_REMOVE_UPLOADED_IMAGE;
 }
 
+export interface deleteModalCommentRequestAction {
+  type: typeof DELETE_MODAL_COMMENT_REQUEST;
+  data: DeleteInfo;
+}
+
+export interface deleteModalCommentSuccessAction {
+  type: typeof DELETE_MODAL_COMMENT_SUCCESS;
+  data: ResponseDeleteComment;
+}
+
+export interface deleteModalCommentFailureAction {
+  type: typeof DELETE_MODAL_COMMENT_FAILURE;
+  error: string;
+}
+
 export interface ShowCommentListAction {
   type: typeof SHOW_COMMENT_LIST;
   data: number;
@@ -580,4 +602,7 @@ export type PostAction =
   | cancelPostEditAction
   | executeCommentEditAction
   | showModalCommentListAction
-  | hideModalCommentListAction;
+  | hideModalCommentListAction
+  | deleteModalCommentRequestAction
+  | deleteModalCommentSuccessAction
+  | deleteModalCommentFailureAction;

@@ -61,7 +61,10 @@ import {
   ADD_MODAL_COMMENT_REQUEST,
   addModalCommentRequestAction,
   ADD_MODAL_COMMENT_SUCCESS,
-  ADD_MODAL_COMMENT_FAILURE
+  ADD_MODAL_COMMENT_FAILURE,
+  DELETE_MODAL_COMMENT_REQUEST,
+  DELETE_MODAL_COMMENT_SUCCESS,
+  DELETE_MODAL_COMMENT_FAILURE
 } from 'store/types/postType';
 
 function loadPostsAPI(lastId?: number) {
@@ -344,6 +347,22 @@ function* uploadModalCommentImage(action: modalCommentUploadImageRequestAction) 
   }
 }
 
+function* deleteModalComment(action: deleteCommentRequestAction) {
+  try {
+    const result: AxiosResponse<ResponseDeleteComment> = yield call(deleteCommentAPI, action.data);
+
+    yield put({
+      type: DELETE_MODAL_COMMENT_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: DELETE_MODAL_COMMENT_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
 function* watchLoadPosts() {
   yield takeLatest(LOAD_POSTS_REQUEST, loadPosts);
 }
@@ -404,6 +423,10 @@ function* watchModalCommentUploadImage() {
   yield takeLatest(MODAL_COMMENT_UPLOAD_IMAGE_REQUEST, uploadModalCommentImage);
 }
 
+function* watchDeleteModalComment() {
+  yield takeLatest(DELETE_MODAL_COMMENT_REQUEST, deleteModalComment);
+}
+
 export default function* postSaga() {
   yield all([
     fork(watchLoadPosts),
@@ -420,6 +443,7 @@ export default function* postSaga() {
     fork(watchDeleteComment),
     fork(watchLoadModalComments),
     fork(watchAddModalComment),
-    fork(watchModalCommentUploadImage)
+    fork(watchModalCommentUploadImage),
+    fork(watchDeleteModalComment)
   ]);
 }
