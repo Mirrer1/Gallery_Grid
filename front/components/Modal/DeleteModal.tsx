@@ -9,7 +9,9 @@ import { DeleteModalContent, DeleteModalOutsideArea, DeleteModalWrapper } from '
 
 const DeleteModal = () => {
   const dispatch = useDispatch();
-  const { deletePostLoading, deleteInfo, deleteCommentLoading } = useSelector((state: RootState) => state.post);
+  const { deletePostLoading, deleteInfo, deleteCommentLoading, isModalCommentListVisible } = useSelector(
+    (state: RootState) => state.post
+  );
 
   const hideModal = useCallback(() => {
     dispatch(hideDeleteModal());
@@ -18,14 +20,18 @@ const DeleteModal = () => {
   const onDeletePost = useCallback(() => {
     if (deleteInfo.type === '게시글') {
       dispatch(deletePostRequest(deleteInfo.id));
-    } else if (deleteInfo.type === '댓글') {
-      dispatch(
-        deleteCommentRequest({
-          id: deleteInfo.id,
-          hasChild: deleteInfo.hasChild,
-          replyId: deleteInfo.replyId
-        })
-      );
+    } else if (!isModalCommentListVisible && deleteInfo.type === '댓글') {
+      console.log('일반 댓글 삭제');
+
+      // dispatch(
+      //   deleteCommentRequest({
+      //     id: deleteInfo.id,
+      //     hasChild: deleteInfo.hasChild,
+      //     replyId: deleteInfo.replyId
+      //   })
+      // );
+    } else if (isModalCommentListVisible && deleteInfo.type === '댓글') {
+      console.log('모달 댓글 삭제');
     }
   }, [deleteInfo]);
 

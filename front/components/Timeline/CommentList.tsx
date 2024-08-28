@@ -23,7 +23,6 @@ import {
 
 const CommentList = () => {
   const dispatch = useDispatch();
-  const commentListRef = useRef<HTMLDivElement>(null);
   const commentRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
   const {
     isCommentListVisible,
@@ -129,56 +128,53 @@ const CommentList = () => {
       ) : (
         <>
           {mainComments?.length > 0 ? (
-            <CommentListItemWrapper ref={commentListRef}>
-              {mainComments.map(
-                (comment: Comment) =>
-                  comment && (
-                    <div key={comment.id} ref={el => (commentRefs.current[comment.id] = el)}>
-                      {comment.isDeleted ? (
-                        <DeleteCommentText>삭제된 댓글입니다.</DeleteCommentText>
-                      ) : editingComment.id === comment.id && editingComment.type === 'comment' ? (
+            <CommentListItemWrapper>
+              {mainComments.map((comment: Comment) => (
+                <div key={comment.id} ref={el => (commentRefs.current[comment.id] = el)}>
+                  {comment.isDeleted ? (
+                    <DeleteCommentText>삭제된 댓글입니다.</DeleteCommentText>
+                  ) : editingComment.id === comment.id && editingComment.type === 'comment' ? (
+                    <EditCommentForm
+                      reply={false}
+                      comment={comment}
+                      replyId={null}
+                      cancelEdit={cancelEdit}
+                      showImagePreview={showImagePreview}
+                    />
+                  ) : (
+                    <CommentListItem
+                      comment={comment}
+                      setReplyId={setReplyId}
+                      setReplyUser={setReplyUser}
+                      showImagePreview={showImagePreview}
+                      onEditClick={() => handleEditClick(comment.id, 'comment')}
+                    />
+                  )}
+
+                  {comment.Replies.map((reply: IReplyComment) => (
+                    <div key={reply.id} ref={el => (commentRefs.current[reply.id] = el)}>
+                      {editingComment.id === reply.id && editingComment.type === 'reply' ? (
                         <EditCommentForm
-                          reply={false}
-                          comment={comment}
-                          replyId={null}
+                          reply={true}
+                          comment={reply}
+                          replyId={comment.id}
                           cancelEdit={cancelEdit}
                           showImagePreview={showImagePreview}
                         />
                       ) : (
-                        <CommentListItem
-                          comment={comment}
+                        <ReplyComment
+                          comment={reply}
+                          replyId={comment.id}
                           setReplyId={setReplyId}
                           setReplyUser={setReplyUser}
                           showImagePreview={showImagePreview}
-                          onEditClick={() => handleEditClick(comment.id, 'comment')}
+                          onEditClick={() => handleEditClick(reply.id, 'reply')}
                         />
                       )}
-
-                      {comment.Replies.map((reply: IReplyComment) => (
-                        <div key={reply.id} ref={el => (commentRefs.current[reply.id] = el)}>
-                          {editingComment.id === reply.id && editingComment.type === 'reply' ? (
-                            <EditCommentForm
-                              reply={true}
-                              comment={reply}
-                              replyId={comment.id}
-                              cancelEdit={cancelEdit}
-                              showImagePreview={showImagePreview}
-                            />
-                          ) : (
-                            <ReplyComment
-                              comment={reply}
-                              replyId={comment.id}
-                              setReplyId={setReplyId}
-                              setReplyUser={setReplyUser}
-                              showImagePreview={showImagePreview}
-                              onEditClick={() => handleEditClick(reply.id, 'reply')}
-                            />
-                          )}
-                        </div>
-                      ))}
                     </div>
-                  )
-              )}
+                  ))}
+                </div>
+              ))}
             </CommentListItemWrapper>
           ) : (
             <NoCommentsContainer>

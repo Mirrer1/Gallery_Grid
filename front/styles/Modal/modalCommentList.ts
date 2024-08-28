@@ -211,6 +211,35 @@ export const ModalCommentFormWrapper = styled.div`
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 `;
 
+export const ModalCommentExtrasWrapper = styled.div`
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  width: 100%;
+  background-color: white;
+  border-top: 1.5px solid ${({ theme }) => theme.colors.darkBg};
+`;
+
+export const ModalCommentFormReply = styled(motion.div)`
+  ${({ theme }) => theme.flexSet('space-between')};
+  width: 100%;
+  background-color: ${({ theme }) => theme.colors.lightBg};
+  padding: 0.5em;
+
+  & > p {
+    font-size: 0.75rem;
+    opacity: 40%;
+  }
+
+  & > span {
+    font-size: 0.9rem;
+    opacity: 70%;
+    margin-right: 0.5em;
+    cursor: pointer;
+    ${HoverStyle('&')};
+  }
+`;
+
 export const ModalCommentFormItem = styled.form<{ $active: boolean }>`
   position: relative;
   ${({ theme }) => theme.flexSet('space-between')}
@@ -305,20 +334,12 @@ export const ModalCommentFormItem = styled.form<{ $active: boolean }>`
   }
 `;
 
-export const ModalCommentInputImageWrapper = styled.div`
-  width: 100%;
-  position: absolute;
-  bottom: 100%;
-  right: 0;
-  background-color: white;
-  border-top: 1.5px solid ${({ theme }) => theme.colors.darkBg};
-`;
-
-export const ModalCommentInputImage = styled(motion.div)`
+export const ModalCommentFormImage = styled(motion.div)`
   width: fit-content;
   position: relative;
   padding: 0.5em;
   height: 120px;
+  cursor: pointer;
 
   & > img {
     width: 120px;

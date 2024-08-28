@@ -61,7 +61,12 @@ import {
   DELETE_COMMENT_FAILURE,
   LOAD_MODAL_COMMENTS_REQUEST,
   LOAD_MODAL_COMMENTS_SUCCESS,
-  LOAD_MODAL_COMMENTS_FAILURE
+  LOAD_MODAL_COMMENTS_FAILURE,
+  ADD_MODAL_COMMENT_REQUEST,
+  ADD_MODAL_COMMENT_SUCCESS,
+  ADD_MODAL_COMMENT_FAILURE,
+  SHOW_MODAL_COMMENT_LIST,
+  HIDE_MODAL_COMMENT_LIST
 } from 'store/types/postType';
 
 export const initialState: PostState = {
@@ -77,6 +82,7 @@ export const initialState: PostState = {
   mainComments: [],
   modalComments: [],
   lastChangedCommentId: null,
+  lastChangedModalCommentId: null,
   commentVisiblePostId: null,
   hasMorePosts: true,
   loadPostsLoading: false,
@@ -118,10 +124,14 @@ export const initialState: PostState = {
   loadModalCommentsLoading: false,
   loadModalCommentsDone: false,
   loadModalCommentsError: null,
+  addModalCommentLoading: false,
+  addModalCommentDone: false,
+  addModalCommentError: null,
   modalCommentUploadImageLoading: false,
   modalCommentUploadImageDone: false,
   modalCommentUploadImageError: null,
   isCommentListVisible: false,
+  isModalCommentListVisible: false,
   isCarouselVisible: false,
   isPostModalVisible: false,
   isDeleteModalVisible: false
@@ -244,8 +254,6 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
         draft.loadCommentsLoading = false;
         draft.loadCommentsDone = true;
         draft.mainComments = action.data;
-        // draft.mainPosts = draft.mainPosts.concat(action.data);
-        // draft.hasMorePosts = action.data.length === 10;
         break;
       case LOAD_COMMENTS_FAILURE:
         draft.loadCommentsLoading = false;
@@ -459,12 +467,82 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
         draft.loadModalCommentsLoading = false;
         draft.loadModalCommentsDone = true;
         draft.modalComments = action.data;
-        // draft.mainPosts = draft.mainPosts.concat(action.data);
-        // draft.hasMorePosts = action.data.length === 10;
         break;
       case LOAD_MODAL_COMMENTS_FAILURE:
         draft.loadModalCommentsLoading = false;
         draft.loadModalCommentsError = action.error;
+        break;
+
+      case ADD_MODAL_COMMENT_REQUEST:
+        draft.addModalCommentLoading = true;
+        draft.addModalCommentDone = false;
+        draft.addModalCommentError = null;
+        break;
+      case ADD_MODAL_COMMENT_SUCCESS:
+        draft.addModalCommentLoading = false;
+        draft.addModalCommentDone = true;
+        draft.modalCommentImagePath = [];
+        draft.lastChangedModalCommentId = action.data.comment.id;
+
+        if (draft.singlePost!.id === action.data.comment.PostId) {
+          const modalComments = draft.singlePost!.Comments || [];
+          const modalParentId = action.data.parentId ? parseInt(action.data.parentId, 10) : null;
+
+          if (modalParentId) {
+            const modalParentComment = modalComments.find(comment => comment.id === modalParentId);
+
+            if (modalParentComment) {
+              modalParentComment.Replies = modalParentComment.Replies || [];
+              modalParentComment.Replies.push(action.data.comment);
+
+              const modalMainParentComment = draft.modalComments?.find(comment => comment.id === modalParentId);
+              if (modalMainParentComment) {
+                modalMainParentComment.Replies = modalMainParentComment.Replies || [];
+                modalMainParentComment.Replies.push(action.data.comment as IReplyComment);
+              }
+            }
+          } else {
+            modalComments.push({ id: action.data.comment.id, isDeleted: false, Replies: [] });
+            draft.modalComments?.push(action.data.comment);
+          }
+
+          draft.singlePost!.Comments = modalComments;
+        }
+
+        const mainPostIndex = draft.mainPosts.findIndex(post => post.id === action.data.comment.PostId);
+        if (mainPostIndex !== -1) {
+          const mainComments = draft.mainPosts[mainPostIndex].Comments;
+          const mainParentId = action.data.parentId ? parseInt(action.data.parentId, 10) : null;
+
+          if (mainParentId) {
+            const mainParentComment = mainComments.find(comment => comment.id === mainParentId);
+            if (mainParentComment) {
+              mainParentComment.Replies = mainParentComment.Replies || [];
+              mainParentComment.Replies.push(action.data.comment);
+
+              if (draft.commentVisiblePostId === action.data.comment.PostId) {
+                const mainModalParentComment = draft.mainComments?.find(comment => comment.id === mainParentId);
+                if (mainModalParentComment) {
+                  mainModalParentComment.Replies = mainModalParentComment.Replies || [];
+                  mainModalParentComment.Replies.push(action.data.comment as IReplyComment);
+                }
+              }
+            }
+          } else {
+            mainComments.push({ id: action.data.comment.id, isDeleted: false, Replies: [] });
+
+            if (draft.commentVisiblePostId === action.data.comment.PostId) {
+              draft.mainComments?.push(action.data.comment);
+            }
+          }
+
+          draft.mainPosts[mainPostIndex].Comments = mainComments;
+        }
+
+        break;
+      case ADD_MODAL_COMMENT_FAILURE:
+        draft.addModalCommentLoading = false;
+        draft.addModalCommentError = action.error;
         break;
       case MODAL_COMMENT_UPLOAD_IMAGE_REQUEST:
         draft.modalCommentUploadImageLoading = true;
@@ -494,6 +572,15 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
         draft.commentVisiblePostId = null;
         draft.commentImagePath = [];
         break;
+      case SHOW_MODAL_COMMENT_LIST:
+        draft.isModalCommentListVisible = true;
+        draft.modalCommentImagePath = [];
+        // draft.editModalCommentImagePath = [];
+        break;
+      case HIDE_MODAL_COMMENT_LIST:
+        draft.isModalCommentListVisible = false;
+        draft.modalCommentImagePath = [];
+        break;
       case SHOW_POST_CAROUSEL:
         draft.isCarouselVisible = true;
         break;
@@ -505,10 +592,12 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
         draft.singlePost = action.data;
         break;
       case HIDE_POST_MODAL:
-        draft.isPostModalVisible = false;
-        draft.postEditMode = false;
         draft.singlePost = null;
         draft.modalCommentImagePath = [];
+        draft.postEditMode = false;
+        draft.isPostModalVisible = false;
+        draft.isModalCommentListVisible = false;
+        draft.lastChangedModalCommentId = null;
         break;
       case EXECUTE_POST_EDIT:
         draft.postEditMode = true;

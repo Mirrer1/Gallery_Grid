@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CaretDownOutlined, CloseSquareTwoTone, LoadingOutlined } from '@ant-design/icons';
 
@@ -9,7 +9,7 @@ import ModalCommentForm from './ModalCommentForm';
 
 import { RootState } from 'store/reducers';
 import { Comment, IReplyComment } from 'store/types/postType';
-import { loadModalCommentsRequest } from 'store/actions/postAction';
+import { hideModalCommentList, loadModalCommentsRequest } from 'store/actions/postAction';
 import { slideInFromBottom } from 'styles/Common/animation';
 import {
   ModalCommentListHeader,
@@ -19,19 +19,20 @@ import {
   ModalNoCommentsContainer
 } from 'styles/Modal/modalCommentList';
 
-type ModalCommentListProps = {
-  setIsModalCommentListVisible: React.Dispatch<React.SetStateAction<boolean>>;
-};
-
-const ModalCommentList = ({ setIsModalCommentListVisible }: ModalCommentListProps) => {
+const ModalCommentList = () => {
   const dispatch = useDispatch();
-  const { singlePost, modalComments, loadModalCommentsLoading } = useSelector((state: RootState) => state.post);
+  const commentRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
+  const { singlePost, modalComments, loadModalCommentsLoading, addModalCommentDone, lastChangedModalCommentId } =
+    useSelector((state: RootState) => state.post);
+  const [replyId, setReplyId] = useState<number | null>(null);
+  const [replyUser, setReplyUser] = useState<string | null>(null);
+
   const [translateY, setTranslateY] = useState(0);
   const [touchStartY, setTouchStartY] = useState<number | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const onHideComment = useCallback(() => {
-    setIsModalCommentListVisible(false);
+    dispatch(hideModalCommentList());
   }, []);
 
   const showImagePreview = useCallback((image: string) => {
@@ -70,8 +71,17 @@ const ModalCommentList = ({ setIsModalCommentListVisible }: ModalCommentListProp
   };
 
   useEffect(() => {
+    setReplyId(null);
+    setReplyUser(null);
+
+    if (addModalCommentDone && lastChangedModalCommentId && commentRefs.current[lastChangedModalCommentId]) {
+      commentRefs.current[lastChangedModalCommentId]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, [addModalCommentDone, lastChangedModalCommentId]);
+
+  useEffect(() => {
     dispatch(loadModalCommentsRequest(singlePost.id));
-  }, [singlePost]);
+  }, []);
 
   return (
     <ModalCommentListContainer style={{ bottom: `${-translateY}px` }} {...slideInFromBottom()}>
@@ -87,16 +97,22 @@ const ModalCommentList = ({ setIsModalCommentListVisible }: ModalCommentListProp
       ) : modalComments?.length > 0 ? (
         <ModalCommentListItemWrapper>
           {modalComments.map((comment: Comment) => (
-            <div key={comment.id}>
-              <ModalCommentListItem comment={comment} showImagePreview={showImagePreview} />
+            <div key={comment.id} ref={el => (commentRefs.current[comment.id] = el)}>
+              <ModalCommentListItem
+                comment={comment}
+                setReplyId={setReplyId}
+                setReplyUser={setReplyUser}
+                showImagePreview={showImagePreview}
+                // onEditClick={() => handleEditClick(comment.id, 'comment')}
+              />
 
               {comment.Replies.map((reply: IReplyComment) => (
-                <div key={reply.id}>
+                <div key={reply.id} ref={el => (commentRefs.current[reply.id] = el)}>
                   <ModalReplyComment
                     comment={reply}
-                    // replyId={comment.id}
-                    // setReplyId={setReplyId}
-                    // setReplyUser={setReplyUser}
+                    replyId={comment.id}
+                    setReplyId={setReplyId}
+                    setReplyUser={setReplyUser}
                     showImagePreview={showImagePreview}
                     // onEditClick={() => handleEditClick(reply.id, 'reply')}
                   />
@@ -115,9 +131,9 @@ const ModalCommentList = ({ setIsModalCommentListVisible }: ModalCommentListProp
 
       <ModalCommentForm
         showImagePreview={showImagePreview}
-        // replyId={replyId}
-        // replyUser={replyUser}
-        // setReplyId={setReplyId}
+        replyId={replyId}
+        replyUser={replyUser}
+        setReplyId={setReplyId}
       />
 
       <ImagePreview imagePreview={imagePreview} hideImagePreview={hideImagePreview} />

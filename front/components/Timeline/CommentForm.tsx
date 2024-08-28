@@ -48,12 +48,12 @@ const CommentForm = ({ showImagePreview, replyId, replyUser, setReplyId }: Comme
     addCommentDone
   } = useSelector((state: RootState) => state.post);
 
-  const handleRemoveImage = useCallback(() => {
-    dispatch(commentRemoveUploadedImage());
-  }, []);
-
   const onClickImageUpload = useCallback(() => {
     if (fileInputRef.current) fileInputRef.current.click();
+  }, []);
+
+  const handleRemoveImage = useCallback(() => {
+    dispatch(commentRemoveUploadedImage());
   }, []);
 
   const handleCancel = useCallback(() => {

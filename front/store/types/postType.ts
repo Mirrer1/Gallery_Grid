@@ -57,6 +57,10 @@ export const LOAD_MODAL_COMMENTS_REQUEST = 'LOAD_MODAL_COMMENTS_REQUEST' as cons
 export const LOAD_MODAL_COMMENTS_SUCCESS = 'LOAD_MODAL_COMMENTS_SUCCESS' as const;
 export const LOAD_MODAL_COMMENTS_FAILURE = 'LOAD_MODAL_COMMENTS_FAILURE' as const;
 
+export const ADD_MODAL_COMMENT_REQUEST = 'ADD_MODAL_COMMENT_REQUEST' as const;
+export const ADD_MODAL_COMMENT_SUCCESS = 'ADD_MODAL_COMMENT_SUCCESS' as const;
+export const ADD_MODAL_COMMENT_FAILURE = 'ADD_MODAL_COMMENT_FAILURE' as const;
+
 export const MODAL_COMMENT_UPLOAD_IMAGE_REQUEST = 'MODAL_COMMENT_UPLOAD_IMAGE_REQUEST' as const;
 export const MODAL_COMMENT_UPLOAD_IMAGE_SUCCESS = 'MODAL_COMMENT_UPLOAD_IMAGE_SUCCESS' as const;
 export const MODAL_COMMENT_UPLOAD_IMAGE_FAILURE = 'MODAL_COMMENT_UPLOAD_IMAGE_FAILURE' as const;
@@ -70,6 +74,9 @@ export const HIDE_POST_CAROUSEL = 'HIDE_POST_CAROUSEL' as const;
 
 export const SHOW_POST_MODAL = 'SHOW_POST_MODAL' as const;
 export const HIDE_POST_MODAL = 'HIDE_POST_MODAL' as const;
+
+export const SHOW_MODAL_COMMENT_LIST = 'SHOW_MODAL_COMMENT_LIST' as const;
+export const HIDE_MODAL_COMMENT_LIST = 'HIDE_MODAL_COMMENT_LIST' as const;
 
 export const EXECUTE_POST_EDIT = 'EXECUTE_POST_EDIT' as const;
 export const CANCEL_POST_EDIT = 'CANCEL_POST_EDIT' as const;
@@ -152,6 +159,7 @@ export type PostState = {
   mainComments: Comment[] | null;
   modalComments: Comment[] | null;
   lastChangedCommentId: number | null;
+  lastChangedModalCommentId: number | null;
   commentVisiblePostId: number | null;
   hasMorePosts: boolean;
   loadPostsLoading: boolean;
@@ -193,10 +201,14 @@ export type PostState = {
   loadModalCommentsLoading: boolean;
   loadModalCommentsDone: boolean;
   loadModalCommentsError: null | string;
+  addModalCommentLoading: boolean;
+  addModalCommentDone: boolean;
+  addModalCommentError: null | string;
   modalCommentUploadImageLoading: boolean;
   modalCommentUploadImageDone: boolean;
   modalCommentUploadImageError: null | string;
   isCommentListVisible: boolean;
+  isModalCommentListVisible: boolean;
   isCarouselVisible: boolean;
   isPostModalVisible: boolean;
   isDeleteModalVisible: boolean;
@@ -415,6 +427,21 @@ export interface loadModalCommentsFailureAction {
   error: string;
 }
 
+export interface addModalCommentRequestAction {
+  type: typeof ADD_MODAL_COMMENT_REQUEST;
+  data: FormData;
+}
+
+export interface addModalCommentSuccessAction {
+  type: typeof ADD_MODAL_COMMENT_SUCCESS;
+  data: ResponseComment;
+}
+
+export interface addModalCommentFailureAction {
+  type: typeof ADD_MODAL_COMMENT_FAILURE;
+  error: string;
+}
+
 export interface modalCommentUploadImageRequestAction {
   type: typeof MODAL_COMMENT_UPLOAD_IMAGE_REQUEST;
   data: FormData;
@@ -441,6 +468,14 @@ export interface ShowCommentListAction {
 
 export interface HideCommentListAction {
   type: typeof HIDE_COMMENT_LIST;
+}
+
+export interface showModalCommentListAction {
+  type: typeof SHOW_MODAL_COMMENT_LIST;
+}
+
+export interface hideModalCommentListAction {
+  type: typeof HIDE_MODAL_COMMENT_LIST;
 }
 
 export interface ShowPostCarouselAction {
@@ -536,8 +571,13 @@ export type PostAction =
   | deleteCommentRequestAction
   | deleteCommentSuccessAction
   | deleteCommentFailureAction
+  | addModalCommentRequestAction
+  | addModalCommentSuccessAction
+  | addModalCommentFailureAction
   | ShowDeleteModalAction
   | HideDeleteModalAction
   | executePostEditAction
   | cancelPostEditAction
-  | executeCommentEditAction;
+  | executeCommentEditAction
+  | showModalCommentListAction
+  | hideModalCommentListAction;

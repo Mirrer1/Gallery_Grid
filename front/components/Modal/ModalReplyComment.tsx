@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 
 import formatDate from 'utils/useListTimes';
@@ -8,22 +8,32 @@ import { ModalCommentContainer, ModalCommentListItemImage } from 'styles/Modal/m
 
 type ModalReplyCommentProps = {
   comment: IReplyComment;
-  // replyId: number;
-  // setReplyId: (id: number | null) => void;
-  // setReplyUser: (user: string | null) => void;
+  replyId: number;
+  setReplyId: (id: number | null) => void;
+  setReplyUser: (user: string | null) => void;
   showImagePreview: (src: string) => void;
   // onEditClick: () => void;
 };
 
 const ModalReplyComment = ({
   comment,
-  // replyId,
-  // setReplyId,
-  // setReplyUser,
+  replyId,
+  setReplyId,
+  setReplyUser,
   showImagePreview
   // onEditClick
 }: ModalReplyCommentProps) => {
   const { me } = useSelector((state: RootState) => state.user);
+
+  const onClickReply = useCallback((user: string) => {
+    setReplyId(null);
+    setReplyUser(null);
+
+    setTimeout(() => {
+      setReplyId(replyId);
+      setReplyUser(user);
+    }, 0);
+  }, []);
 
   return (
     <ModalCommentContainer $reply={true}>
@@ -64,8 +74,9 @@ const ModalReplyComment = ({
       )}
       <p>{comment.content}</p>
 
-      {/* onClick={() => onClickReply(comment.User.nickname)} */}
-      <button type="button">답글쓰기</button>
+      <button type="button" onClick={() => onClickReply(comment.User.nickname)}>
+        답글쓰기
+      </button>
 
       {/* {isDeleteModalVisible && <DeleteModal />} */}
     </ModalCommentContainer>

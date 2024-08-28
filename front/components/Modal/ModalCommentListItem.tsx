@@ -1,28 +1,48 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useCallback } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
 import DeleteModal from './DeleteModal';
 import formatDate from 'utils/useListTimes';
 import { RootState } from 'store/reducers';
 import { Comment } from 'store/types/postType';
+import { showDeleteModal } from 'store/actions/postAction';
 import { ModalCommentContainer, ModalCommentListItemImage } from 'styles/Modal/modalCommentList';
 
 type ModalCommentListItemProps = {
   comment: Comment;
-  // setReplyId: (id: number | null) => void;
-  // setReplyUser: (user: string | null) => void;
+  setReplyId: (id: number | null) => void;
+  setReplyUser: (user: string | null) => void;
   showImagePreview: (src: string) => void;
   // onEditClick: () => void;
 };
 
 const ModalCommentListItem = ({
   comment,
-  // setReplyId,
-  // setReplyUser,
+  setReplyId,
+  setReplyUser,
   showImagePreview
   // onEditClick
 }: ModalCommentListItemProps) => {
+  const dispatch = useDispatch();
   const { me } = useSelector((state: RootState) => state.user);
+  const { isDeleteModalVisible } = useSelector((state: RootState) => state.post);
+
+  const openDeleteModal = useCallback(
+    (commentId: number) => {
+      dispatch(showDeleteModal({ type: '댓글', id: commentId, replyId: null, hasChild: comment.Replies.length > 0 }));
+    },
+    [comment]
+  );
+
+  const onClickReply = useCallback((commentId: number, user: string) => {
+    setReplyId(null);
+    setReplyUser(null);
+
+    setTimeout(() => {
+      setReplyId(commentId);
+      setReplyUser(user);
+    }, 0);
+  }, []);
 
   return (
     <ModalCommentContainer $reply={false}>
@@ -47,8 +67,10 @@ const ModalCommentListItem = ({
           <div>
             {/* onClick={onEditClick} */}
             <button type="button">수정</button>
-            {/* onClick={() => openDeleteModal(comment.id)} */}
-            <button type="button">삭제</button>
+
+            <button type="button" onClick={() => openDeleteModal(comment.id)}>
+              삭제
+            </button>
           </div>
         ) : (
           <div>
@@ -70,10 +92,11 @@ const ModalCommentListItem = ({
 
       <p>{comment.content}</p>
 
-      {/* onClick={() => onClickReply(comment.id, comment.User.nickname)} */}
-      <button type="button">답글쓰기</button>
+      <button type="button" onClick={() => onClickReply(comment.id, comment.User.nickname)}>
+        답글쓰기
+      </button>
 
-      {/* {isDeleteModalVisible && <DeleteModal />} */}
+      {isDeleteModalVisible && <DeleteModal />}
     </ModalCommentContainer>
   );
 };

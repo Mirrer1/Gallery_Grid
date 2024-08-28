@@ -13,7 +13,8 @@ import {
 import ModalCommentList from './ModalCommentList';
 import formatDate from 'utils/useListTimes';
 import { RootState } from 'store/reducers';
-import { executePostEdit, modalCommentRemoveUploadedImage, showDeleteModal } from 'store/actions/postAction';
+import { Comment } from 'store/types/postType';
+import { executePostEdit, hideModalCommentList, showDeleteModal, showModalCommentList } from 'store/actions/postAction';
 
 import { slideInTooltip } from 'styles/Common/animation';
 import { Tooltip, TooltipBtn, TooltipOutsideArea } from 'styles/Common/tooltip';
@@ -23,13 +24,13 @@ import {
   ModalContentText,
   ModalContentWrapper
 } from 'styles/Modal/modalContent';
-import { Comment } from 'store/types/postType';
 
 const ModalContent = () => {
   const dispatch = useDispatch();
   const { me } = useSelector((state: RootState) => state.user);
-  const { singlePost, modalCommentImagePath } = useSelector((state: RootState) => state.post);
-  const [isModalCommentListVisible, setIsModalCommentListVisible] = useState<boolean>(false);
+  const { singlePost, modalCommentImagePath, isModalCommentListVisible } = useSelector(
+    (state: RootState) => state.post
+  );
   const [isTooltipVisible, setIsTooltipVisible] = useState<boolean>(false);
 
   const handleTooltip = useCallback(() => {
@@ -46,8 +47,8 @@ const ModalContent = () => {
   }, []);
 
   const onToggleComment = useCallback(() => {
-    setIsModalCommentListVisible(prev => !prev);
-    if (isModalCommentListVisible && modalCommentImagePath.length !== 0) dispatch(modalCommentRemoveUploadedImage());
+    if (isModalCommentListVisible) dispatch(hideModalCommentList());
+    else dispatch(showModalCommentList());
   }, [isModalCommentListVisible, modalCommentImagePath]);
 
   const openEditModal = useCallback(() => {
@@ -112,7 +113,7 @@ const ModalContent = () => {
       </ModalContentHeader>
 
       <ModalContentText $isModalCommentListVisible={isModalCommentListVisible}>{singlePost.content}</ModalContentText>
-      {isModalCommentListVisible && <ModalCommentList setIsModalCommentListVisible={setIsModalCommentListVisible} />}
+      {isModalCommentListVisible && <ModalCommentList />}
 
       <ModalContentOptions $isModalCommentListVisible={isModalCommentListVisible}>
         <div>
