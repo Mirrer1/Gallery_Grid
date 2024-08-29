@@ -56,6 +56,9 @@ import {
   EDIT_COMMENT_REQUEST,
   EDIT_COMMENT_SUCCESS,
   EDIT_COMMENT_FAILURE,
+  EDIT_MODAL_COMMENT_REQUEST,
+  EDIT_MODAL_COMMENT_SUCCESS,
+  EDIT_MODAL_COMMENT_FAILURE,
   DELETE_COMMENT_REQUEST,
   DELETE_COMMENT_SUCCESS,
   DELETE_COMMENT_FAILURE,
@@ -69,7 +72,12 @@ import {
   DELETE_MODAL_COMMENT_SUCCESS,
   DELETE_MODAL_COMMENT_FAILURE,
   SHOW_MODAL_COMMENT_LIST,
-  HIDE_MODAL_COMMENT_LIST
+  HIDE_MODAL_COMMENT_LIST,
+  EXECUTE_MODAL_COMMENT_EDIT,
+  EDIT_MODAL_COMMENT_UPLOAD_IMAGE_REQUEST,
+  EDIT_MODAL_COMMENT_UPLOAD_IMAGE_SUCCESS,
+  EDIT_MODAL_COMMENT_UPLOAD_IMAGE_FAILURE,
+  EDIT_MODAL_COMMENT_REMOVE_UPLOADED_IMAGE
 } from 'store/types/postType';
 
 export const initialState: PostState = {
@@ -80,6 +88,7 @@ export const initialState: PostState = {
   commentImagePath: [],
   editCommentImagePath: [],
   modalCommentImagePath: [],
+  editModalCommentImagePath: [],
   postEditMode: false,
   deleteInfo: null,
   mainComments: [],
@@ -133,6 +142,12 @@ export const initialState: PostState = {
   modalCommentUploadImageLoading: false,
   modalCommentUploadImageDone: false,
   modalCommentUploadImageError: null,
+  editModalCommentLoading: false,
+  editModalCommentDone: false,
+  editModalCommentError: null,
+  editModalCommentUploadImageLoading: false,
+  editModalCommentUploadImageDone: false,
+  editModalCommentUploadImageError: null,
   deleteModalCommentLoading: false,
   deleteModalCommentDone: false,
   deleteModalCommentError: null,
@@ -564,6 +579,143 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
       case MODAL_COMMENT_REMOVE_UPLOADED_IMAGE:
         draft.modalCommentImagePath = [];
         break;
+      case EDIT_MODAL_COMMENT_REQUEST:
+        draft.editModalCommentLoading = true;
+        draft.editModalCommentDone = false;
+        draft.editModalCommentError = null;
+        break;
+      case EDIT_MODAL_COMMENT_SUCCESS: {
+        draft.editModalCommentLoading = false;
+        draft.editModalCommentDone = true;
+        draft.editModalCommentImagePath = [];
+        draft.lastChangedModalCommentId = action.data.comment.id;
+
+        const modalPostIndex = draft.singlePost!.id === action.data.comment.PostId ? 0 : -1;
+        if (modalPostIndex !== -1) {
+          const modalComments = draft.singlePost!.Comments || [];
+          const modalParentId = action.data.parentId ? parseInt(action.data.parentId, 10) : null;
+
+          if (modalParentId) {
+            const modalParentComment = modalComments.find(comment => comment.id === modalParentId);
+            if (modalParentComment) {
+              const replyIndex = modalParentComment.Replies.findIndex(reply => reply.id === action.data.comment.id);
+              if (replyIndex !== -1) {
+                modalParentComment.Replies[replyIndex] = {
+                  ...modalParentComment.Replies[replyIndex],
+                  ...action.data.comment
+                };
+
+                const modalMainParentComment = draft.modalComments?.find(comment => comment.id === modalParentId);
+                if (modalMainParentComment) {
+                  const modalMainReplyIndex = modalMainParentComment.Replies.findIndex(
+                    reply => reply.id === action.data.comment.id
+                  );
+                  if (modalMainReplyIndex !== -1) {
+                    modalMainParentComment.Replies[modalMainReplyIndex] = {
+                      ...modalMainParentComment.Replies[modalMainReplyIndex],
+                      ...action.data.comment
+                    };
+                  }
+                }
+              }
+            }
+          } else {
+            const modalCommentIndex = modalComments.findIndex(comment => comment.id === action.data.comment.id);
+            if (modalCommentIndex !== -1) {
+              modalComments[modalCommentIndex] = {
+                ...modalComments[modalCommentIndex],
+                ...action.data.comment
+              };
+
+              const modalMainCommentIndex =
+                draft.modalComments?.findIndex(comment => comment.id === action.data.comment.id) ?? -1;
+              if (modalMainCommentIndex !== -1 && modalMainCommentIndex !== undefined) {
+                draft.modalComments![modalMainCommentIndex] = {
+                  ...draft.modalComments![modalMainCommentIndex],
+                  ...action.data.comment
+                };
+              }
+            }
+          }
+          draft.singlePost!.Comments = modalComments;
+        }
+
+        const mainPostIndex = draft.mainPosts.findIndex(post => post.id === action.data.comment.PostId);
+        if (mainPostIndex !== -1) {
+          const mainComments = draft.mainPosts[mainPostIndex].Comments;
+          const mainParentId = action.data.parentId ? parseInt(action.data.parentId, 10) : null;
+
+          if (mainParentId) {
+            const mainParentComment = mainComments.find(comment => comment.id === mainParentId);
+            if (mainParentComment) {
+              const mainReplyIndex = mainParentComment.Replies.findIndex(reply => reply.id === action.data.comment.id);
+              if (mainReplyIndex !== -1) {
+                mainParentComment.Replies[mainReplyIndex] = {
+                  ...mainParentComment.Replies[mainReplyIndex],
+                  ...action.data.comment
+                };
+
+                if (draft.commentVisiblePostId === action.data.comment.PostId) {
+                  const mainModalParentComment = draft.mainComments?.find(comment => comment.id === mainParentId);
+                  if (mainModalParentComment) {
+                    const mainModalReplyIndex = mainModalParentComment.Replies.findIndex(
+                      reply => reply.id === action.data.comment.id
+                    );
+                    if (mainModalReplyIndex !== -1) {
+                      mainModalParentComment.Replies[mainModalReplyIndex] = {
+                        ...mainModalParentComment.Replies[mainModalReplyIndex],
+                        ...action.data.comment
+                      };
+                    }
+                  }
+                }
+              }
+            }
+          } else {
+            const mainCommentIndex = mainComments.findIndex(comment => comment.id === action.data.comment.id);
+            if (mainCommentIndex !== -1) {
+              mainComments[mainCommentIndex] = {
+                ...mainComments[mainCommentIndex],
+                ...action.data.comment
+              };
+
+              if (draft.commentVisiblePostId === action.data.comment.PostId) {
+                const mainCommentIndex =
+                  draft.mainComments?.findIndex(comment => comment.id === action.data.comment.id) ?? -1;
+                if (mainCommentIndex !== -1 && mainCommentIndex !== undefined) {
+                  draft.mainComments![mainCommentIndex] = {
+                    ...draft.mainComments![mainCommentIndex],
+                    ...action.data.comment
+                  };
+                }
+              }
+            }
+          }
+          draft.mainPosts[mainPostIndex].Comments = mainComments;
+        }
+        break;
+      }
+      case EDIT_MODAL_COMMENT_FAILURE:
+        draft.editCommentLoading = false;
+        draft.editCommentError = action.error;
+        break;
+      case EDIT_MODAL_COMMENT_UPLOAD_IMAGE_REQUEST:
+        draft.editModalCommentUploadImageLoading = true;
+        draft.editModalCommentUploadImageDone = false;
+        draft.editModalCommentUploadImageError = null;
+        break;
+      case EDIT_MODAL_COMMENT_UPLOAD_IMAGE_SUCCESS:
+        draft.editModalCommentUploadImageLoading = false;
+        draft.editModalCommentUploadImageDone = true;
+        draft.editModalCommentImagePath = action.data;
+        break;
+      case EDIT_MODAL_COMMENT_UPLOAD_IMAGE_FAILURE:
+        draft.editModalCommentUploadImageLoading = false;
+        draft.editModalCommentUploadImageError = action.error;
+        break;
+      case EDIT_MODAL_COMMENT_REMOVE_UPLOADED_IMAGE:
+        draft.editModalCommentImagePath = [];
+        break;
       case DELETE_MODAL_COMMENT_REQUEST:
         draft.deleteModalCommentLoading = true;
         draft.deleteModalCommentDone = false;
@@ -718,6 +870,9 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
         break;
       case EXECUTE_COMMENT_EDIT:
         draft.editCommentImagePath = [action.data];
+        break;
+      case EXECUTE_MODAL_COMMENT_EDIT:
+        draft.editModalCommentImagePath = [action.data];
         break;
       default:
         return state;

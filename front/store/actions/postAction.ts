@@ -34,7 +34,11 @@ import {
   ADD_MODAL_COMMENT_REQUEST,
   SHOW_MODAL_COMMENT_LIST,
   HIDE_MODAL_COMMENT_LIST,
-  DELETE_MODAL_COMMENT_REQUEST
+  DELETE_MODAL_COMMENT_REQUEST,
+  EDIT_MODAL_COMMENT_UPLOAD_IMAGE_REQUEST,
+  EDIT_MODAL_COMMENT_REMOVE_UPLOADED_IMAGE,
+  EXECUTE_MODAL_COMMENT_EDIT,
+  EDIT_MODAL_COMMENT_REQUEST
 } from 'store/types/postType';
 
 export const loadPostsRequest = (lastId?: number) => ({
@@ -134,6 +138,20 @@ export const modalCommentRemoveUploadedImage = () => ({
   type: MODAL_COMMENT_REMOVE_UPLOADED_IMAGE
 });
 
+export const editModalCommentUploadImageRequest = (data: FormData) => ({
+  type: EDIT_MODAL_COMMENT_UPLOAD_IMAGE_REQUEST,
+  data
+});
+
+export const editModalCommentRequest = (data: FormData) => ({
+  type: EDIT_MODAL_COMMENT_REQUEST,
+  data
+});
+
+export const editModalCommentRemoveUploadedImage = () => ({
+  type: EDIT_MODAL_COMMENT_REMOVE_UPLOADED_IMAGE
+});
+
 export const deleteModalCommentRequest = (data: DeleteInfo) => ({
   type: DELETE_MODAL_COMMENT_REQUEST,
   data
@@ -192,5 +210,10 @@ export const hideDeleteModal = () => ({
 
 export const executeCommentEdit = (data: string) => ({
   type: EXECUTE_COMMENT_EDIT,
+  data
+});
+
+export const executeModalCommentEdit = (data: string) => ({
+  type: EXECUTE_MODAL_COMMENT_EDIT,
   data
 });

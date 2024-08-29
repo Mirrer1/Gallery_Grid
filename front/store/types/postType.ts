@@ -66,6 +66,16 @@ export const MODAL_COMMENT_UPLOAD_IMAGE_SUCCESS = 'MODAL_COMMENT_UPLOAD_IMAGE_SU
 export const MODAL_COMMENT_UPLOAD_IMAGE_FAILURE = 'MODAL_COMMENT_UPLOAD_IMAGE_FAILURE' as const;
 export const MODAL_COMMENT_REMOVE_UPLOADED_IMAGE = 'MODAL_COMMENT_REMOVE_UPLOADED_IMAGE' as const;
 
+export const EDIT_MODAL_COMMENT_REQUEST = 'EDIT_MODAL_COMMENT_REQUEST' as const;
+export const EDIT_MODAL_COMMENT_SUCCESS = 'EDIT_MODAL_COMMENT_SUCCESS' as const;
+export const EDIT_MODAL_COMMENT_FAILURE = 'EDIT_MODAL_COMMENT_FAILURE' as const;
+
+export const EXECUTE_MODAL_COMMENT_EDIT = 'EXECUTE_MODAL_COMMENT_EDIT' as const;
+export const EDIT_MODAL_COMMENT_UPLOAD_IMAGE_REQUEST = 'EDIT_MODAL_COMMENT_UPLOAD_IMAGE_REQUEST' as const;
+export const EDIT_MODAL_COMMENT_UPLOAD_IMAGE_SUCCESS = 'EDIT_MODAL_COMMENT_UPLOAD_IMAGE_SUCCESS' as const;
+export const EDIT_MODAL_COMMENT_UPLOAD_IMAGE_FAILURE = 'EDIT_MODAL_COMMENT_UPLOAD_IMAGE_FAILURE' as const;
+export const EDIT_MODAL_COMMENT_REMOVE_UPLOADED_IMAGE = 'EDIT_MODAL_COMMENT_REMOVE_UPLOADED_IMAGE' as const;
+
 export const DELETE_MODAL_COMMENT_REQUEST = 'DELETE_MODAL_COMMENT_REQUEST' as const;
 export const DELETE_MODAL_COMMENT_SUCCESS = 'DELETE_MODAL_COMMENT_SUCCESS' as const;
 export const DELETE_MODAL_COMMENT_FAILURE = 'DELETE_MODAL_COMMENT_FAILURE' as const;
@@ -158,6 +168,7 @@ export type PostState = {
   commentImagePath: string[];
   editCommentImagePath: string[];
   modalCommentImagePath: string[];
+  editModalCommentImagePath: string[];
   postEditMode: boolean;
   deleteInfo: DeleteInfo | null;
   mainComments: Comment[] | null;
@@ -211,6 +222,12 @@ export type PostState = {
   modalCommentUploadImageLoading: boolean;
   modalCommentUploadImageDone: boolean;
   modalCommentUploadImageError: null | string;
+  editModalCommentLoading: boolean;
+  editModalCommentDone: boolean;
+  editModalCommentError: null | string;
+  editModalCommentUploadImageLoading: boolean;
+  editModalCommentUploadImageDone: boolean;
+  editModalCommentUploadImageError: null | string;
   deleteModalCommentLoading: boolean;
   deleteModalCommentDone: boolean;
   deleteModalCommentError: null | string;
@@ -468,6 +485,40 @@ export interface modalCommentRemoveUploadedImageAction {
   type: typeof MODAL_COMMENT_REMOVE_UPLOADED_IMAGE;
 }
 
+export interface editModalCommentRequestAction {
+  type: typeof EDIT_MODAL_COMMENT_REQUEST;
+  data: FormData;
+}
+
+export interface editModalCommentSuccessAction {
+  type: typeof EDIT_MODAL_COMMENT_SUCCESS;
+  data: ResponseComment;
+}
+
+export interface editModalCommentFailureAction {
+  type: typeof EDIT_MODAL_COMMENT_FAILURE;
+  error: string;
+}
+
+export interface editModalCommentUploadImageRequestAction {
+  type: typeof EDIT_MODAL_COMMENT_UPLOAD_IMAGE_REQUEST;
+  data: FormData;
+}
+
+export interface editModalCommentUploadImageSuccessAction {
+  type: typeof EDIT_MODAL_COMMENT_UPLOAD_IMAGE_SUCCESS;
+  data: string[];
+}
+
+export interface editModalCommentUploadImageFailureAction {
+  type: typeof EDIT_MODAL_COMMENT_UPLOAD_IMAGE_FAILURE;
+  error: string;
+}
+
+export interface editModalCommentRemoveUploadedImageAction {
+  type: typeof EDIT_MODAL_COMMENT_REMOVE_UPLOADED_IMAGE;
+}
+
 export interface deleteModalCommentRequestAction {
   type: typeof DELETE_MODAL_COMMENT_REQUEST;
   data: DeleteInfo;
@@ -539,6 +590,11 @@ export interface executeCommentEditAction {
   data: string;
 }
 
+export interface executeModalCommentEditAction {
+  type: typeof EXECUTE_MODAL_COMMENT_EDIT;
+  data: string;
+}
+
 export type PostAction =
   | ShowCommentListAction
   | HideCommentListAction
@@ -605,4 +661,12 @@ export type PostAction =
   | hideModalCommentListAction
   | deleteModalCommentRequestAction
   | deleteModalCommentSuccessAction
-  | deleteModalCommentFailureAction;
+  | deleteModalCommentFailureAction
+  | editModalCommentUploadImageRequestAction
+  | editModalCommentUploadImageSuccessAction
+  | editModalCommentUploadImageFailureAction
+  | editModalCommentRemoveUploadedImageAction
+  | executeModalCommentEditAction
+  | editModalCommentRequestAction
+  | editModalCommentSuccessAction
+  | editModalCommentFailureAction;

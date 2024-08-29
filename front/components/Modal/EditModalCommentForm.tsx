@@ -11,22 +11,22 @@ import useEmojiPicker from 'utils/useEmojiPicker';
 import { RootState } from 'store/reducers';
 import { Comment, IReplyComment } from 'store/types/postType';
 import {
-  editCommentRemoveUploadedImage,
-  editCommentRequest,
-  editCommentUploadImageRequest,
-  executeCommentEdit
+  editModalCommentRemoveUploadedImage,
+  editModalCommentRequest,
+  editModalCommentUploadImageRequest,
+  executeModalCommentEdit
 } from 'store/actions/postAction';
 import { slideInTooltip, slideInUploadImage } from 'styles/Common/animation';
 import {
-  EditCommentFormSection,
-  EditCommentEmojiPicker,
-  EditCommentBtn,
-  EditCancelBtn,
-  EditCommentImageWrapper,
-  EditCommentImage,
-  EditCommentHeader,
-  EditCommentWrapper
-} from 'styles/Timeline/editCommentForm';
+  EditModalCancelBtn,
+  EditModalCommentBtn,
+  EditModalCommentEmojiPicker,
+  EditModalCommentFormSection,
+  EditModalCommentHeader,
+  EditModalCommentImage,
+  EditModalCommentImageWrapper,
+  EditModalCommentWrapper
+} from 'styles/Modal/editModalCommentForm';
 
 type EditCommentFormProps = {
   reply: boolean;
@@ -36,12 +36,12 @@ type EditCommentFormProps = {
   showImagePreview: (src: string) => void;
 };
 
-const EditCommentForm = ({ reply, comment, replyId, cancelEdit, showImagePreview }: EditCommentFormProps) => {
+const EditModalCommentForm = ({ reply, comment, replyId, cancelEdit, showImagePreview }: EditCommentFormProps) => {
   const dispatch = useDispatch();
   const [text, onChangeText, setText] = useInput<string>('');
   const { showEmoji, showEmojiPicker, closeEmojiPicker, onEmojiClick } = useEmojiPicker(setText);
-  const { fileInputRef, onFileChange } = useFileUpload(editCommentUploadImageRequest, { showWarning: false });
-  const { editCommentUploadImageLoading, commentVisiblePostId, editCommentImagePath, editCommentLoading } = useSelector(
+  const { fileInputRef, onFileChange } = useFileUpload(editModalCommentUploadImageRequest, { showWarning: false });
+  const { editModalCommentUploadImageLoading, editModalCommentImagePath, editModalCommentLoading } = useSelector(
     (state: RootState) => state.post
   );
 
@@ -50,7 +50,7 @@ const EditCommentForm = ({ reply, comment, replyId, cancelEdit, showImagePreview
   }, []);
 
   const handleRemoveImage = useCallback(() => {
-    dispatch(editCommentRemoveUploadedImage());
+    dispatch(editModalCommentRemoveUploadedImage());
   }, []);
 
   const onSubmitForm = useCallback(
@@ -68,8 +68,8 @@ const EditCommentForm = ({ reply, comment, replyId, cancelEdit, showImagePreview
       }
 
       const formData = new FormData();
-      if (editCommentImagePath.length > 0) {
-        editCommentImagePath.forEach((image: string) => {
+      if (editModalCommentImagePath.length > 0) {
+        editModalCommentImagePath.forEach((image: string) => {
           formData.append('image', image);
         });
       }
@@ -77,23 +77,23 @@ const EditCommentForm = ({ reply, comment, replyId, cancelEdit, showImagePreview
       formData.append('commentId', comment.id.toString());
       if (replyId) formData.append('parentId', replyId.toString());
 
-      dispatch(editCommentRequest(formData));
+      dispatch(editModalCommentRequest(formData));
     },
-    [text, editCommentImagePath, commentVisiblePostId, replyId]
+    [text, editModalCommentImagePath, replyId]
   );
 
   useEffect(() => {
     const imageSrc = reply ? (comment as IReplyComment).ReplyImage?.src : (comment as Comment).CommentImage?.src;
 
-    if (imageSrc) dispatch(executeCommentEdit(imageSrc));
-    else dispatch(editCommentRemoveUploadedImage());
+    if (imageSrc) dispatch(executeModalCommentEdit(imageSrc));
+    else dispatch(editModalCommentRemoveUploadedImage());
 
     setText(comment.content);
   }, []);
 
   return (
-    <EditCommentWrapper $reply={reply}>
-      <EditCommentHeader>
+    <EditModalCommentWrapper $reply={reply}>
+      <EditModalCommentHeader>
         <img
           src={comment.User.ProfileImage ? `http://localhost:3065/${comment.User.ProfileImage.src}` : '/user.jpg'}
           alt={`${comment.User.nickname}의 프로필 이미지`}
@@ -107,62 +107,66 @@ const EditCommentForm = ({ reply, comment, replyId, cancelEdit, showImagePreview
 
           <p>{formatDate(comment.createdAt)}</p>
         </div>
-      </EditCommentHeader>
+      </EditModalCommentHeader>
 
-      <EditCommentFormSection {...slideInTooltip} encType="multipart/form-data" onSubmit={onSubmitForm}>
+      <EditModalCommentFormSection {...slideInTooltip} encType="multipart/form-data" onSubmit={onSubmitForm}>
         <textarea rows={6} maxLength={500} placeholder="댓글을 작성해주세요." value={text} onChange={onChangeText} />
         <p>{text.length} / 500</p>
 
-        {editCommentImagePath.length !== 0 && (
-          <EditCommentImageWrapper>
-            <EditCommentImage key={editCommentImagePath} {...slideInUploadImage}>
+        {editModalCommentImagePath.length !== 0 && (
+          <EditModalCommentImageWrapper>
+            <EditModalCommentImage key={editModalCommentImagePath} {...slideInUploadImage}>
               <img
-                src={`http://localhost:3065/${editCommentImagePath}`}
+                src={`http://localhost:3065/${editModalCommentImagePath}`}
                 alt="입력한 댓글의 첨부 이미지"
-                onClick={() => showImagePreview(`http://localhost:3065/${editCommentImagePath}`)}
+                onClick={() => showImagePreview(`http://localhost:3065/${editModalCommentImagePath}`)}
               />
               <DeleteOutlined onClick={handleRemoveImage} />
-            </EditCommentImage>
-          </EditCommentImageWrapper>
+            </EditModalCommentImage>
+          </EditModalCommentImageWrapper>
         )}
 
         <div>
           <div>
-            {editCommentUploadImageLoading ? <LoadingOutlined /> : <PaperClipOutlined onClick={onClickImageUpload} />}
+            {editModalCommentUploadImageLoading ? (
+              <LoadingOutlined />
+            ) : (
+              <PaperClipOutlined onClick={onClickImageUpload} />
+            )}
             <input
               type="file"
               name="image"
               multiple
               ref={fileInputRef}
-              onChange={e => onFileChange(e, editCommentImagePath)}
+              onChange={e => onFileChange(e, editModalCommentImagePath)}
             />
 
             <SmileOutlined onClick={showEmojiPicker} />
           </div>
 
           {showEmoji && EmojiPicker && (
-            <EditCommentEmojiPicker>
+            <EditModalCommentEmojiPicker>
               <div onClick={closeEmojiPicker} />
 
               <div>
                 <EmojiPicker onEmojiClick={onEmojiClick} />
               </div>
-            </EditCommentEmojiPicker>
+            </EditModalCommentEmojiPicker>
           )}
 
           <div>
-            <EditCommentBtn type="submit" $active={text.length !== 0}>
-              {editCommentLoading ? <LoadingOutlined /> : <p>수정</p>}
-            </EditCommentBtn>
+            <EditModalCommentBtn type="submit" $active={text.length !== 0}>
+              {editModalCommentLoading ? <LoadingOutlined /> : <p>수정</p>}
+            </EditModalCommentBtn>
 
-            <EditCancelBtn type="button" onClick={cancelEdit}>
+            <EditModalCancelBtn type="button" onClick={cancelEdit}>
               <p>취소</p>
-            </EditCancelBtn>
+            </EditModalCancelBtn>
           </div>
         </div>
-      </EditCommentFormSection>
-    </EditCommentWrapper>
+      </EditModalCommentFormSection>
+    </EditModalCommentWrapper>
   );
 };
 
-export default EditCommentForm;
+export default EditModalCommentForm;

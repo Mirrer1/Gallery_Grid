@@ -34,15 +34,16 @@ const CommentList = () => {
     editCommentDone
   } = useSelector((state: RootState) => state.post);
 
-  const [translateY, setTranslateY] = useState(0);
-  const [touchStartY, setTouchStartY] = useState<number | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [replyId, setReplyId] = useState<number | null>(null);
   const [replyUser, setReplyUser] = useState<string | null>(null);
   const [editingComment, setEditingComment] = useState<{ id: number | null; type: 'comment' | 'reply' | null }>({
     id: null,
     type: null
   });
+
+  const [translateY, setTranslateY] = useState(0);
+  const [touchStartY, setTouchStartY] = useState<number | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const onHideComment = useCallback(() => {
     dispatch(hideCommentList());

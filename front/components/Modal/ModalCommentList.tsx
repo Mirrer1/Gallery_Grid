@@ -9,7 +9,11 @@ import ModalCommentForm from './ModalCommentForm';
 
 import { RootState } from 'store/reducers';
 import { Comment, IReplyComment } from 'store/types/postType';
-import { hideModalCommentList, loadModalCommentsRequest } from 'store/actions/postAction';
+import {
+  editModalCommentRemoveUploadedImage,
+  hideModalCommentList,
+  loadModalCommentsRequest
+} from 'store/actions/postAction';
 import { slideInFromBottom } from 'styles/Common/animation';
 import {
   ModalCommentListHeader,
@@ -19,14 +23,26 @@ import {
   ModalNoCommentsContainer,
   DeleteModalCommentText
 } from 'styles/Modal/modalCommentList';
+import EditModalCommentForm from './EditModalCommentForm';
 
 const ModalCommentList = () => {
   const dispatch = useDispatch();
   const commentRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
-  const { singlePost, modalComments, loadModalCommentsLoading, addModalCommentDone, lastChangedModalCommentId } =
-    useSelector((state: RootState) => state.post);
+  const {
+    singlePost,
+    modalComments,
+    loadModalCommentsLoading,
+    addModalCommentDone,
+    lastChangedModalCommentId,
+    editModalCommentDone
+  } = useSelector((state: RootState) => state.post);
+
   const [replyId, setReplyId] = useState<number | null>(null);
   const [replyUser, setReplyUser] = useState<string | null>(null);
+  const [editingComment, setEditingComment] = useState<{ id: number | null; type: 'comment' | 'reply' | null }>({
+    id: null,
+    type: null
+  });
 
   const [translateY, setTranslateY] = useState(0);
   const [touchStartY, setTouchStartY] = useState<number | null>(null);
@@ -42,6 +58,15 @@ const ModalCommentList = () => {
 
   const hideImagePreview = useCallback(() => {
     setImagePreview(null);
+  }, []);
+
+  const handleEditClick = useCallback((id: number, type: 'comment' | 'reply') => {
+    setEditingComment({ id, type });
+  }, []);
+
+  const cancelEdit = useCallback(() => {
+    setEditingComment({ id: null, type: null });
+    dispatch(editModalCommentRemoveUploadedImage());
   }, []);
 
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -70,6 +95,10 @@ const ModalCommentList = () => {
     }
     setTouchStartY(null);
   };
+
+  useEffect(() => {
+    if (editModalCommentDone) cancelEdit();
+  }, [editModalCommentDone]);
 
   useEffect(() => {
     setReplyId(null);
@@ -101,26 +130,44 @@ const ModalCommentList = () => {
             <div key={comment.id} ref={el => (commentRefs.current[comment.id] = el)}>
               {comment.isDeleted ? (
                 <DeleteModalCommentText>삭제된 댓글입니다.</DeleteModalCommentText>
+              ) : editingComment.id === comment.id && editingComment.type === 'comment' ? (
+                <EditModalCommentForm
+                  reply={false}
+                  comment={comment}
+                  replyId={null}
+                  cancelEdit={cancelEdit}
+                  showImagePreview={showImagePreview}
+                />
               ) : (
                 <ModalCommentListItem
                   comment={comment}
                   setReplyId={setReplyId}
                   setReplyUser={setReplyUser}
                   showImagePreview={showImagePreview}
-                  // onEditClick={() => handleEditClick(comment.id, 'comment')}
+                  onEditClick={() => handleEditClick(comment.id, 'comment')}
                 />
               )}
 
               {comment.Replies.map((reply: IReplyComment) => (
                 <div key={reply.id} ref={el => (commentRefs.current[reply.id] = el)}>
-                  <ModalReplyComment
-                    comment={reply}
-                    replyId={comment.id}
-                    setReplyId={setReplyId}
-                    setReplyUser={setReplyUser}
-                    showImagePreview={showImagePreview}
-                    // onEditClick={() => handleEditClick(reply.id, 'reply')}
-                  />
+                  {editingComment.id === reply.id && editingComment.type === 'reply' ? (
+                    <EditModalCommentForm
+                      reply={true}
+                      comment={reply}
+                      replyId={comment.id}
+                      cancelEdit={cancelEdit}
+                      showImagePreview={showImagePreview}
+                    />
+                  ) : (
+                    <ModalReplyComment
+                      comment={reply}
+                      replyId={comment.id}
+                      setReplyId={setReplyId}
+                      setReplyUser={setReplyUser}
+                      showImagePreview={showImagePreview}
+                      onEditClick={() => handleEditClick(reply.id, 'reply')}
+                    />
+                  )}
                 </div>
               ))}
             </div>

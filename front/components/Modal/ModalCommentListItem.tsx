@@ -13,15 +13,15 @@ type ModalCommentListItemProps = {
   setReplyId: (id: number | null) => void;
   setReplyUser: (user: string | null) => void;
   showImagePreview: (src: string) => void;
-  // onEditClick: () => void;
+  onEditClick: () => void;
 };
 
 const ModalCommentListItem = ({
   comment,
   setReplyId,
   setReplyUser,
-  showImagePreview
-  // onEditClick
+  showImagePreview,
+  onEditClick
 }: ModalCommentListItemProps) => {
   const dispatch = useDispatch();
   const { me } = useSelector((state: RootState) => state.user);
@@ -65,8 +65,9 @@ const ModalCommentListItem = ({
 
         {comment.User.id === me?.id ? (
           <div>
-            {/* onClick={onEditClick} */}
-            <button type="button">수정</button>
+            <button type="button" onClick={onEditClick}>
+              수정
+            </button>
 
             <button type="button" onClick={() => openDeleteModal(comment.id)}>
               삭제
