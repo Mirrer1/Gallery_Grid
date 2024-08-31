@@ -77,35 +77,40 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
           </NavbarProfile>
 
           <NavbarItems $firstmargin="true">
-            <NavbarItem href="/timeline" $selected={pathname === '/timeline'}>
+            <NavbarItem href="/timeline" $selected={pathname === '/timeline'} $message={false}>
+              <div />
               <FieldTimeOutlined />
               <p>Timeline</p>
             </NavbarItem>
 
-            <NavbarItem href="/activity" $selected={pathname === '/activity'}>
+            <NavbarItem href="/activity" $selected={pathname === '/activity'} $message={false}>
+              <div />
               <NotificationOutlined />
               <p>Activity</p>
             </NavbarItem>
 
             <NavbarMessage $selected={pathname === '/message'}>
-              <NavbarItem href="/message" $selected={pathname === '/message'}>
+              <NavbarItem href="/message" $selected={pathname === '/message'} $message={true}>
+                <div />
                 <MessageOutlined />
                 <p>Message</p>
               </NavbarItem>
 
               <div>
                 <button type="button" onClick={onClickMessage}>
-                  5
+                  <p>5</p>
                 </button>
               </div>
             </NavbarMessage>
 
-            <NavbarItem href="/gallery" $selected={pathname === '/gallery'}>
+            <NavbarItem href="/gallery" $selected={pathname === '/gallery'} $message={false}>
+              <div />
               <PictureOutlined />
               <p>Gallery</p>
             </NavbarItem>
 
-            <NavbarItem href="/user" $selected={pathname === '/user'}>
+            <NavbarItem href="/user" $selected={pathname === '/user'} $message={false}>
+              <div />
               <AreaChartOutlined />
               <p>Profile</p>
             </NavbarItem>
@@ -113,12 +118,14 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
         </div>
 
         <NavbarItems $firstmargin="false">
-          <NavbarItem href="/settings" $selected={pathname === '/settings'}>
+          <NavbarItem href="/settings" $selected={pathname === '/settings'} $message={false}>
+            <div />
             <SettingOutlined />
             <p>Settings</p>
           </NavbarItem>
 
           <NavbarLogout type="button" onClick={onClickLogout}>
+            <div />
             <LogoutOutlined />
             <p>Logout</p>
           </NavbarLogout>
