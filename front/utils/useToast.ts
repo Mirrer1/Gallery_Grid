@@ -19,7 +19,15 @@ const useToastStatus = () => {
     editCommentDone,
     editCommentError,
     deleteCommentDone,
-    deleteCommentError
+    deleteCommentError,
+    addModalCommentDone,
+    addModalCommentError,
+    addReplyModalCommentDone,
+    addReplyModalCommentError,
+    editModalCommentDone,
+    editModalCommentError,
+    deleteModalCommentDone,
+    deleteModalCommentError
   } = useSelector((state: RootState) => state.post);
   const {} = useSelector((state: RootState) => state.user);
 
@@ -65,6 +73,30 @@ const useToastStatus = () => {
       error: deleteCommentError,
       successMessage: '댓글이 삭제되었습니다.',
       errorMessage: deleteCommentError
+    },
+    {
+      done: addModalCommentDone,
+      error: addModalCommentError,
+      successMessage: '댓글이 작성되었습니다.',
+      errorMessage: addModalCommentError
+    },
+    {
+      done: addReplyModalCommentDone,
+      error: addReplyModalCommentError,
+      successMessage: '댓글이 작성되었습니다.',
+      errorMessage: addReplyModalCommentError
+    },
+    {
+      done: editModalCommentDone,
+      error: editModalCommentError,
+      successMessage: '댓글이 수정되었습니다.',
+      errorMessage: editModalCommentError
+    },
+    {
+      done: deleteModalCommentDone,
+      error: deleteModalCommentError,
+      successMessage: '댓글이 삭제되었습니다.',
+      errorMessage: deleteModalCommentError
     }
   ];
   // const userStatusList = [];

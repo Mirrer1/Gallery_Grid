@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { DeleteOutlined, LoadingOutlined, PaperClipOutlined, SmileOutlined } from '@ant-design/icons';
 import { toast } from 'react-toastify';
@@ -34,10 +34,19 @@ type EditCommentFormProps = {
   replyId: number | null;
   cancelEdit: () => void;
   showImagePreview: (src: string) => void;
+  isLastChild: boolean;
 };
 
-const EditCommentForm = ({ reply, comment, replyId, cancelEdit, showImagePreview }: EditCommentFormProps) => {
+const EditCommentForm = ({
+  reply,
+  comment,
+  replyId,
+  cancelEdit,
+  showImagePreview,
+  isLastChild
+}: EditCommentFormProps) => {
   const dispatch = useDispatch();
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [text, onChangeText, setText] = useInput<string>('');
   const { showEmoji, showEmojiPicker, closeEmojiPicker, onEmojiClick } = useEmojiPicker(setText);
   const { fileInputRef, onFileChange } = useFileUpload(editCommentUploadImageRequest, { showWarning: false });
@@ -83,12 +92,20 @@ const EditCommentForm = ({ reply, comment, replyId, cancelEdit, showImagePreview
   );
 
   useEffect(() => {
+    if (text.length === 500) toast.warning('댓글은 500자 이하로 작성해주세요.');
+  }, [text]);
+
+  useEffect(() => {
     const imageSrc = reply ? (comment as IReplyComment).ReplyImage?.src : (comment as Comment).CommentImage?.src;
 
     if (imageSrc) dispatch(executeCommentEdit(imageSrc));
     else dispatch(editCommentRemoveUploadedImage());
 
     setText(comment.content);
+
+    if (textareaRef.current) {
+      textareaRef.current.focus();
+    }
   }, []);
 
   return (
@@ -110,7 +127,14 @@ const EditCommentForm = ({ reply, comment, replyId, cancelEdit, showImagePreview
       </EditCommentHeader>
 
       <EditCommentFormSection {...slideInTooltip} encType="multipart/form-data" onSubmit={onSubmitForm}>
-        <textarea rows={6} maxLength={500} placeholder="댓글을 작성해주세요." value={text} onChange={onChangeText} />
+        <textarea
+          ref={textareaRef}
+          rows={6}
+          maxLength={500}
+          placeholder="댓글을 작성해주세요."
+          value={text}
+          onChange={onChangeText}
+        />
         <p>{text.length} / 500</p>
 
         {editCommentImagePath.length !== 0 && (
@@ -138,17 +162,16 @@ const EditCommentForm = ({ reply, comment, replyId, cancelEdit, showImagePreview
             />
 
             <SmileOutlined onClick={showEmojiPicker} />
+            {showEmoji && EmojiPicker && (
+              <EditCommentEmojiPicker $reply={reply} $isLastChild={isLastChild}>
+                <div onClick={closeEmojiPicker} />
+
+                <div>
+                  <EmojiPicker onEmojiClick={onEmojiClick} />
+                </div>
+              </EditCommentEmojiPicker>
+            )}
           </div>
-
-          {showEmoji && EmojiPicker && (
-            <EditCommentEmojiPicker>
-              <div onClick={closeEmojiPicker} />
-
-              <div>
-                <EmojiPicker onEmojiClick={onEmojiClick} />
-              </div>
-            </EditCommentEmojiPicker>
-          )}
 
           <div>
             <EditCommentBtn type="submit" $active={text.length !== 0}>

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { DeleteOutlined, LoadingOutlined, PaperClipOutlined, SmileOutlined } from '@ant-design/icons';
 import { toast } from 'react-toastify';
@@ -34,10 +34,19 @@ type EditCommentFormProps = {
   replyId: number | null;
   cancelEdit: () => void;
   showImagePreview: (src: string) => void;
+  isLastChild: boolean;
 };
 
-const EditModalCommentForm = ({ reply, comment, replyId, cancelEdit, showImagePreview }: EditCommentFormProps) => {
+const EditModalCommentForm = ({
+  reply,
+  comment,
+  replyId,
+  cancelEdit,
+  showImagePreview,
+  isLastChild
+}: EditCommentFormProps) => {
   const dispatch = useDispatch();
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [text, onChangeText, setText] = useInput<string>('');
   const { showEmoji, showEmojiPicker, closeEmojiPicker, onEmojiClick } = useEmojiPicker(setText);
   const { fileInputRef, onFileChange } = useFileUpload(editModalCommentUploadImageRequest, { showWarning: false });
@@ -83,12 +92,20 @@ const EditModalCommentForm = ({ reply, comment, replyId, cancelEdit, showImagePr
   );
 
   useEffect(() => {
+    if (text.length === 500) toast.warning('댓글은 500자 이하로 작성해주세요.');
+  }, [text]);
+
+  useEffect(() => {
     const imageSrc = reply ? (comment as IReplyComment).ReplyImage?.src : (comment as Comment).CommentImage?.src;
 
     if (imageSrc) dispatch(executeModalCommentEdit(imageSrc));
     else dispatch(editModalCommentRemoveUploadedImage());
 
     setText(comment.content);
+
+    if (textareaRef.current) {
+      textareaRef.current.focus();
+    }
   }, []);
 
   return (
@@ -110,7 +127,14 @@ const EditModalCommentForm = ({ reply, comment, replyId, cancelEdit, showImagePr
       </EditModalCommentHeader>
 
       <EditModalCommentFormSection {...slideInTooltip} encType="multipart/form-data" onSubmit={onSubmitForm}>
-        <textarea rows={6} maxLength={500} placeholder="댓글을 작성해주세요." value={text} onChange={onChangeText} />
+        <textarea
+          ref={textareaRef}
+          rows={6}
+          maxLength={500}
+          placeholder="댓글을 작성해주세요."
+          value={text}
+          onChange={onChangeText}
+        />
         <p>{text.length} / 500</p>
 
         {editModalCommentImagePath.length !== 0 && (
@@ -145,7 +169,7 @@ const EditModalCommentForm = ({ reply, comment, replyId, cancelEdit, showImagePr
           </div>
 
           {showEmoji && EmojiPicker && (
-            <EditModalCommentEmojiPicker>
+            <EditModalCommentEmojiPicker $reply={reply} $isLastChild={isLastChild}>
               <div onClick={closeEmojiPicker} />
 
               <div>

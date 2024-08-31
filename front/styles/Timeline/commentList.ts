@@ -410,8 +410,9 @@ export const CommentEmojiPicker = styled.div`
 
   ${media.mobile} {
     & > div:last-child {
+      transform: scale(0.7);
       left: -6%;
-      bottom: -15%;
+      bottom: -45%;
     }
   }
 `;

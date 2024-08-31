@@ -60,20 +60,6 @@ export const EditCommentFormSection = styled(motion.form)`
         cursor: pointer;
         ${HoverStyle('&')}
       }
-
-      & > div {
-        display: inline-block;
-        opacity: 70%;
-        ${HoverStyle('&')}
-        cursor: pointer;
-
-        & > span {
-          position: absolute;
-          top: -35%;
-          right: -13%;
-          font-size: 0.5rem;
-        }
-      }
     }
   }
 
@@ -175,7 +161,7 @@ export const EditCommentImage = styled(motion.div)`
   }
 `;
 
-export const EditCommentEmojiPicker = styled.div`
+export const EditCommentEmojiPicker = styled.div<{ $reply: boolean; $isLastChild: boolean }>`
   & > div:first-child {
     position: fixed;
     top: 0;
@@ -186,25 +172,25 @@ export const EditCommentEmojiPicker = styled.div`
   }
 
   & > div:last-child {
-    transform: scale(0.8);
+    transform: scale(0.7);
     position: absolute;
-    bottom: -20%;
-    right: -5%;
+    top: ${props => (props.$isLastChild ? '-1000%' : props.$reply ? '-570%' : '-500%')};
+    left: ${props => (props.$isLastChild ? '-20%' : props.$reply ? '-1%' : '-1%')};
     z-index: 50;
   }
 
   ${media.tablet} {
     & > div:last-child {
-      bottom: -16%;
-      left: -15%;
-      right: 0;
+      top: ${props => (props.$isLastChild ? '-930%' : props.$reply ? '-530%' : '-500%')};
+      left: ${props => (props.$isLastChild ? '-7%' : props.$reply ? '1%' : '1%')};
     }
   }
 
   ${media.mobile} {
     & > div:last-child {
-      bottom: -14%;
-      left: -25%;
+      transform: scale(0.6);
+      top: ${props => (props.$isLastChild ? '-875%' : props.$reply ? '-530%' : '-500%')};
+      left: ${props => (props.$isLastChild ? '-25%' : props.$reply ? '-4%' : '-4%')};
     }
   }
 `;

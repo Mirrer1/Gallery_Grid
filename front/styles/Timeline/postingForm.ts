@@ -209,7 +209,8 @@ export const PostingEmojiPicker = styled.div`
 
   ${media.mobile} {
     & > div:last-child {
-      top: 6%;
+      transform: scale(0.7);
+      top: -40%;
       left: -8%;
     }
   }

@@ -61,20 +61,6 @@ export const EditModalCommentFormSection = styled(motion.form)`
         cursor: pointer;
         ${HoverStyle('&')}
       }
-
-      & > div {
-        display: inline-block;
-        opacity: 70%;
-        ${HoverStyle('&')}
-        cursor: pointer;
-
-        & > span {
-          position: absolute;
-          top: -35%;
-          right: -13%;
-          font-size: 0.5rem;
-        }
-      }
     }
   }
 
@@ -176,7 +162,7 @@ export const EditModalCommentImage = styled(motion.div)`
   }
 `;
 
-export const EditModalCommentEmojiPicker = styled.div`
+export const EditModalCommentEmojiPicker = styled.div<{ $reply: boolean; $isLastChild: boolean }>`
   & > div:first-child {
     position: fixed;
     top: 0;
@@ -187,25 +173,25 @@ export const EditModalCommentEmojiPicker = styled.div`
   }
 
   & > div:last-child {
-    transform: scale(0.8);
-    position: fixed;
-    top: 25%;
-    left: 55%;
+    transform: scale(0.7);
+    position: absolute;
+    top: ${props => (props.$isLastChild ? '-1000%' : props.$reply ? '-570%' : '-500%')};
+    left: ${props => (props.$isLastChild ? '-11%' : props.$reply ? '-1%' : '-1%')};
     z-index: 50;
   }
 
   ${media.tablet} {
     & > div:last-child {
-      position: absolute;
-      left: 4%;
-      top: -22vh;
+      top: ${props => (props.$isLastChild ? '-930%' : props.$reply ? '-530%' : '-500%')};
+      left: ${props => (props.$isLastChild ? '-7%' : props.$reply ? '1%' : '1%')};
     }
   }
 
   ${media.mobile} {
     & > div:last-child {
-      left: 5%;
-      bottom: -500%;
+      transform: scale(0.6);
+      top: ${props => (props.$isLastChild ? '-875%' : props.$reply ? '-530%' : '-500%')};
+      left: ${props => (props.$isLastChild ? '-25%' : props.$reply ? '-4%' : '-4%')};
     }
   }
 `;

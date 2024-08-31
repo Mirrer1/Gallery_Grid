@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CaretDownOutlined, CloseSquareTwoTone, LoadingOutlined } from '@ant-design/icons';
 
@@ -36,6 +36,15 @@ const ModalCommentList = () => {
     lastChangedModalCommentId,
     editModalCommentDone
   } = useSelector((state: RootState) => state.post);
+  const lastCommentId = useMemo(() => {
+    if (modalComments.length === 0) return null;
+
+    const lastMainComment = modalComments[modalComments.length - 1];
+    if (lastMainComment.Replies.length > 0) {
+      return lastMainComment.Replies[lastMainComment.Replies.length - 1].id;
+    }
+    return lastMainComment.id;
+  }, [modalComments]);
 
   const [replyId, setReplyId] = useState<number | null>(null);
   const [replyUser, setReplyUser] = useState<string | null>(null);
@@ -62,6 +71,12 @@ const ModalCommentList = () => {
 
   const handleEditClick = useCallback((id: number, type: 'comment' | 'reply') => {
     setEditingComment({ id, type });
+
+    setTimeout(() => {
+      if (commentRefs.current[id]) {
+        commentRefs.current[id]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 0);
   }, []);
 
   const cancelEdit = useCallback(() => {
@@ -137,6 +152,7 @@ const ModalCommentList = () => {
                   replyId={null}
                   cancelEdit={cancelEdit}
                   showImagePreview={showImagePreview}
+                  isLastChild={comment.id === lastCommentId}
                 />
               ) : (
                 <ModalCommentListItem
@@ -157,6 +173,7 @@ const ModalCommentList = () => {
                       replyId={comment.id}
                       cancelEdit={cancelEdit}
                       showImagePreview={showImagePreview}
+                      isLastChild={reply.id === lastCommentId}
                     />
                   ) : (
                     <ModalReplyComment
