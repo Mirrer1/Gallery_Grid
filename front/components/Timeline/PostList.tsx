@@ -77,7 +77,7 @@ const PostList = () => {
   const openEditModal = useCallback((post: Post) => {
     setIsTooltipVisible(null);
     dispatch(showPostModal(post));
-    // dispatch(executePostEdit());
+    dispatch(executePostEdit());
   }, []);
 
   const handleTooltip = useCallback(
