@@ -15,14 +15,62 @@ import {
   LOAD_POSTS_REQUEST,
   LOAD_POSTS_SUCCESS,
   Post,
-  UPLOAD_IMAGES_FAILURE,
-  UPLOAD_IMAGES_REQUEST,
-  UPLOAD_IMAGES_SUCCESS,
+  POST_UPLOAD_IMAGES_FAILURE,
+  POST_UPLOAD_IMAGES_REQUEST,
+  POST_UPLOAD_IMAGES_SUCCESS,
+  EDIT_POST_UPLOAD_IMAGES_FAILURE,
+  EDIT_POST_UPLOAD_IMAGES_REQUEST,
+  EDIT_POST_UPLOAD_IMAGES_SUCCESS,
   addPostRequestAction,
   deletePostRequestAction,
   editPostRequestAction,
   loadPostsRequestAction,
-  uploadImagesRequestAction
+  postUploadImagesRequestAction,
+  COMMENT_UPLOAD_IMAGE_REQUEST,
+  commentUploadImageRequestAction,
+  COMMENT_UPLOAD_IMAGE_SUCCESS,
+  COMMENT_UPLOAD_IMAGE_FAILURE,
+  MODAL_COMMENT_UPLOAD_IMAGE_REQUEST,
+  modalCommentUploadImageRequestAction,
+  MODAL_COMMENT_UPLOAD_IMAGE_SUCCESS,
+  MODAL_COMMENT_UPLOAD_IMAGE_FAILURE,
+  ADD_COMMENT_REQUEST,
+  addCommentRequestAction,
+  ADD_COMMENT_SUCCESS,
+  ADD_COMMENT_FAILURE,
+  LOAD_COMMENTS_REQUEST,
+  loadCommentsRequestAction,
+  LOAD_COMMENTS_SUCCESS,
+  LOAD_COMMENTS_FAILURE,
+  ResponseComment,
+  EDIT_COMMENT_UPLOAD_IMAGE_REQUEST,
+  EDIT_COMMENT_UPLOAD_IMAGE_SUCCESS,
+  EDIT_COMMENT_UPLOAD_IMAGE_FAILURE,
+  EDIT_COMMENT_REQUEST,
+  EDIT_COMMENT_SUCCESS,
+  EDIT_COMMENT_FAILURE,
+  DELETE_COMMENT_REQUEST,
+  deleteCommentRequestAction,
+  ResponseDeleteComment,
+  DELETE_COMMENT_SUCCESS,
+  DELETE_COMMENT_FAILURE,
+  DeleteInfo,
+  LOAD_MODAL_COMMENTS_REQUEST,
+  LOAD_MODAL_COMMENTS_FAILURE,
+  LOAD_MODAL_COMMENTS_SUCCESS,
+  ADD_MODAL_COMMENT_REQUEST,
+  addModalCommentRequestAction,
+  ADD_MODAL_COMMENT_SUCCESS,
+  ADD_MODAL_COMMENT_FAILURE,
+  DELETE_MODAL_COMMENT_REQUEST,
+  DELETE_MODAL_COMMENT_SUCCESS,
+  DELETE_MODAL_COMMENT_FAILURE,
+  EDIT_MODAL_COMMENT_UPLOAD_IMAGE_REQUEST,
+  EDIT_MODAL_COMMENT_UPLOAD_IMAGE_SUCCESS,
+  EDIT_MODAL_COMMENT_UPLOAD_IMAGE_FAILURE,
+  EDIT_MODAL_COMMENT_REQUEST,
+  EDIT_MODAL_COMMENT_SUCCESS,
+  EDIT_MODAL_COMMENT_FAILURE
 } from 'store/types/postType';
 
 function loadPostsAPI(lastId?: number) {
@@ -109,17 +157,245 @@ function uploadImagesAPI(data: FormData) {
   return axios.post('/post/images', data);
 }
 
-function* uploadImages(action: uploadImagesRequestAction) {
+function* uploadPostImages(action: postUploadImagesRequestAction) {
   try {
     const result: AxiosResponse<string[]> = yield call(uploadImagesAPI, action.data);
 
     yield put({
-      type: UPLOAD_IMAGES_SUCCESS,
+      type: POST_UPLOAD_IMAGES_SUCCESS,
       data: result.data
     });
   } catch (error: any) {
     yield put({
-      type: UPLOAD_IMAGES_FAILURE,
+      type: POST_UPLOAD_IMAGES_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
+function* uploadEditPostImages(action: postUploadImagesRequestAction) {
+  try {
+    const result: AxiosResponse<string[]> = yield call(uploadImagesAPI, action.data);
+
+    yield put({
+      type: EDIT_POST_UPLOAD_IMAGES_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: EDIT_POST_UPLOAD_IMAGES_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
+function loadCommentsAPI(data: number) {
+  return axios.get(`/post/comment/${data}`);
+}
+
+function* loadComments(action: loadCommentsRequestAction) {
+  try {
+    const result: AxiosResponse<Post> = yield call(() => loadCommentsAPI(action.data));
+
+    yield put({
+      type: LOAD_COMMENTS_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: LOAD_COMMENTS_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
+function addCommentAPI(data: FormData) {
+  return axios.post('/post/comment', data);
+}
+
+function* addComment(action: addCommentRequestAction) {
+  try {
+    const result: AxiosResponse<ResponseComment> = yield call(addCommentAPI, action.data);
+
+    yield put({
+      type: ADD_COMMENT_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: ADD_COMMENT_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
+function editCommentAPI(data: FormData) {
+  return axios.patch('/post/comment/edit', data);
+}
+
+function* editComment(action: addCommentRequestAction) {
+  try {
+    const result: AxiosResponse<ResponseComment> = yield call(editCommentAPI, action.data);
+
+    yield put({
+      type: EDIT_COMMENT_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: EDIT_COMMENT_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
+function deleteCommentAPI(data: DeleteInfo) {
+  return axios.post('/post/comment/delete', data);
+}
+
+function* deleteComment(action: deleteCommentRequestAction) {
+  try {
+    const result: AxiosResponse<ResponseDeleteComment> = yield call(deleteCommentAPI, action.data);
+
+    yield put({
+      type: DELETE_COMMENT_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: DELETE_COMMENT_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
+function* uploadCommentImage(action: commentUploadImageRequestAction) {
+  try {
+    const result: AxiosResponse<string[]> = yield call(uploadImagesAPI, action.data);
+
+    yield put({
+      type: COMMENT_UPLOAD_IMAGE_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: COMMENT_UPLOAD_IMAGE_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
+function* uploadEditCommentImage(action: commentUploadImageRequestAction) {
+  try {
+    const result: AxiosResponse<string[]> = yield call(uploadImagesAPI, action.data);
+
+    yield put({
+      type: EDIT_COMMENT_UPLOAD_IMAGE_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: EDIT_COMMENT_UPLOAD_IMAGE_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
+function* loadModalComments(action: loadCommentsRequestAction) {
+  try {
+    const result: AxiosResponse<Post> = yield call(() => loadCommentsAPI(action.data));
+
+    yield put({
+      type: LOAD_MODAL_COMMENTS_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: LOAD_MODAL_COMMENTS_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
+function addModalCommentAPI(data: FormData) {
+  return axios.post('/post/comment', data);
+}
+
+function* addModalComment(action: addModalCommentRequestAction) {
+  try {
+    const result: AxiosResponse<ResponseComment> = yield call(addModalCommentAPI, action.data);
+
+    yield put({
+      type: ADD_MODAL_COMMENT_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: ADD_MODAL_COMMENT_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
+function* uploadModalCommentImage(action: modalCommentUploadImageRequestAction) {
+  try {
+    const result: AxiosResponse<string[]> = yield call(uploadImagesAPI, action.data);
+
+    yield put({
+      type: MODAL_COMMENT_UPLOAD_IMAGE_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: MODAL_COMMENT_UPLOAD_IMAGE_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
+function* editModalComment(action: addCommentRequestAction) {
+  try {
+    const result: AxiosResponse<ResponseComment> = yield call(editCommentAPI, action.data);
+
+    yield put({
+      type: EDIT_MODAL_COMMENT_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: EDIT_MODAL_COMMENT_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
+function* uploadEditModalCommentImage(action: commentUploadImageRequestAction) {
+  try {
+    const result: AxiosResponse<string[]> = yield call(uploadImagesAPI, action.data);
+
+    yield put({
+      type: EDIT_MODAL_COMMENT_UPLOAD_IMAGE_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: EDIT_MODAL_COMMENT_UPLOAD_IMAGE_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
+function* deleteModalComment(action: deleteCommentRequestAction) {
+  try {
+    const result: AxiosResponse<ResponseDeleteComment> = yield call(deleteCommentAPI, action.data);
+
+    yield put({
+      type: DELETE_MODAL_COMMENT_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: DELETE_MODAL_COMMENT_FAILURE,
       error: error.response.data.message
     });
   }
@@ -141,8 +417,60 @@ function* watchDeletePost() {
   yield takeLatest(DELETE_POST_REQUEST, deletePost);
 }
 
-function* watchUploadImages() {
-  yield takeLatest(UPLOAD_IMAGES_REQUEST, uploadImages);
+function* watchPostUploadImages() {
+  yield takeLatest(POST_UPLOAD_IMAGES_REQUEST, uploadPostImages);
+}
+
+function* watchEditPostUploadImages() {
+  yield takeLatest(EDIT_POST_UPLOAD_IMAGES_REQUEST, uploadEditPostImages);
+}
+
+function* watchLoadComments() {
+  yield takeLatest(LOAD_COMMENTS_REQUEST, loadComments);
+}
+
+function* watchAddComment() {
+  yield takeLatest(ADD_COMMENT_REQUEST, addComment);
+}
+
+function* watchCommentUploadImage() {
+  yield takeLatest(COMMENT_UPLOAD_IMAGE_REQUEST, uploadCommentImage);
+}
+
+function* watchEditComment() {
+  yield takeLatest(EDIT_COMMENT_REQUEST, editComment);
+}
+
+function* watchEditCommentUploadImage() {
+  yield takeLatest(EDIT_COMMENT_UPLOAD_IMAGE_REQUEST, uploadEditCommentImage);
+}
+
+function* watchDeleteComment() {
+  yield takeLatest(DELETE_COMMENT_REQUEST, deleteComment);
+}
+
+function* watchLoadModalComments() {
+  yield takeLatest(LOAD_MODAL_COMMENTS_REQUEST, loadModalComments);
+}
+
+function* watchAddModalComment() {
+  yield takeLatest(ADD_MODAL_COMMENT_REQUEST, addModalComment);
+}
+
+function* watchModalCommentUploadImage() {
+  yield takeLatest(MODAL_COMMENT_UPLOAD_IMAGE_REQUEST, uploadModalCommentImage);
+}
+
+function* watchEditModalComment() {
+  yield takeLatest(EDIT_MODAL_COMMENT_REQUEST, editModalComment);
+}
+
+function* watchEditModalCommentUploadImage() {
+  yield takeLatest(EDIT_MODAL_COMMENT_UPLOAD_IMAGE_REQUEST, uploadEditModalCommentImage);
+}
+
+function* watchDeleteModalComment() {
+  yield takeLatest(DELETE_MODAL_COMMENT_REQUEST, deleteModalComment);
 }
 
 export default function* postSaga() {
@@ -151,6 +479,19 @@ export default function* postSaga() {
     fork(watchAddPost),
     fork(watchEditPost),
     fork(watchDeletePost),
-    fork(watchUploadImages)
+    fork(watchPostUploadImages),
+    fork(watchEditPostUploadImages),
+    fork(watchLoadComments),
+    fork(watchAddComment),
+    fork(watchCommentUploadImage),
+    fork(watchEditComment),
+    fork(watchEditCommentUploadImage),
+    fork(watchDeleteComment),
+    fork(watchLoadModalComments),
+    fork(watchAddModalComment),
+    fork(watchModalCommentUploadImage),
+    fork(watchEditModalComment),
+    fork(watchEditModalCommentUploadImage),
+    fork(watchDeleteModalComment)
   ]);
 }

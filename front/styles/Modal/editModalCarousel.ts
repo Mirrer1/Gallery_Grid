@@ -12,6 +12,7 @@ export const EditModalCarouselWrapper = styled.div`
   padding: 0.5em;
   overflow: hidden;
   z-index: 30;
+  ${({ theme }) => theme.flexColumnSet('space-between', 'normal')};
 
   ${media.mobile} {
     width: 100%;
@@ -22,7 +23,6 @@ export const EditModalCarouselWrapper = styled.div`
 export const EditModalSelectedImage = styled(motion.div)`
   width: 100%;
   height: 63.5%;
-  margin-bottom: 0.5em;
 
   & > img {
     width: 100%;
@@ -31,16 +31,17 @@ export const EditModalSelectedImage = styled(motion.div)`
 
   ${media.tablet} {
     height: 63%;
+    margin-bottom: 1.8%;
   }
 
   ${media.mobile} {
-    height: 61%;
+    height: 60.5%;
+    margin-bottom: 2.2%;
   }
 `;
 
 export const EditModalSwiperImages = styled.div`
   height: 29%;
-  margin-bottom: 0.5em;
 
   .swiper {
     padding: 0;
@@ -50,6 +51,31 @@ export const EditModalSwiperImages = styled.div`
   .swiper-slide {
     height: 100%;
     position: relative;
+  }
+
+  .swiper-button-prev,
+  .swiper-button-next {
+    width: 25px;
+    height: 25px;
+    transform: translateY(50%);
+  }
+
+  .swiper-button-prev {
+    left: 0.7%;
+  }
+
+  .swiper-button-next {
+    right: 0.7%;
+  }
+
+  .swiper-button-next::after,
+  .swiper-button-prev::after {
+    width: 23px;
+    height: 23px;
+  }
+
+  .swiper-pagination {
+    bottom: 1.5%;
   }
 
   .swiper-slide img {
@@ -67,8 +93,26 @@ export const EditModalSwiperImages = styled.div`
     ${ReverseHoverStyle('&')}
   }
 
+  ${media.tablet} {
+    height: 30.5%;
+    margin-bottom: 1.8%;
+  }
+
   ${media.mobile} {
     height: 27%;
+    margin-bottom: 2.2%;
+
+    .swiper-button-prev,
+    .swiper-button-next {
+      width: 20px;
+      height: 20px;
+    }
+
+    .swiper-button-next::after,
+    .swiper-button-prev::after {
+      width: 18px;
+      height: 18px;
+    }
   }
 `;
 

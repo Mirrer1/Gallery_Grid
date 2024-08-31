@@ -7,12 +7,12 @@ import SignUpForm from './SignUpForm';
 import { slideInFromBottom } from 'styles/Common/animation';
 import { ContentsText, ContentsWrapper, HeaderBreak } from 'styles/Landing/menuContents';
 
-export type IMenuProps = {
+export type MenuProps = {
   selectMenu: string;
   onClickMenu: (menu: string) => void;
 };
 
-const MenuContents = ({ selectMenu, onClickMenu }: IMenuProps) => {
+const MenuContents = ({ selectMenu, onClickMenu }: MenuProps) => {
   const onClickMore = useCallback(() => {
     toast.warning('로그인이 필요한 서비스입니다.');
     onClickMenu('login');

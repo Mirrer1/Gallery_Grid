@@ -185,8 +185,8 @@ export const PostContents = styled.div`
   }
 
   & > div > p {
+    color: ${({ theme }) => theme.colors.font};
     font-size: 0.8rem;
-    opacity: 60%;
     line-height: 1.5;
     margin-bottom: 1em;
     padding: 0 0.3em;
@@ -202,12 +202,12 @@ export const PostContents = styled.div`
   }
 `;
 
-export const PostOptions = styled.div<{ $isCommentListVisible: boolean }>`
+export const PostOptions = styled.div<{ $commentVisiblePostId: boolean }>`
   ${({ theme }) => theme.flexSet('start')}
   padding: 0 0.3em;
 
   & > div {
-    font-size: 0.7rem;
+    font-size: 0.85rem;
     ${HoverStyle('&')}
     cursor: pointer;
   }
@@ -217,7 +217,7 @@ export const PostOptions = styled.div<{ $isCommentListVisible: boolean }>`
   }
 
   & > div:last-child {
-    color: ${props => (props.$isCommentListVisible ? '#6BA2E6' : 'black')};
+    color: ${props => (props.$commentVisiblePostId ? '#6BA2E6' : 'black')};
   }
 
   & > div > span > svg {

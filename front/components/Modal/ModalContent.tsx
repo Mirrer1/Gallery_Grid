@@ -7,20 +7,18 @@ import {
   EditOutlined,
   LikeOutlined,
   MoreOutlined,
-  SendOutlined,
-  ShareAltOutlined,
-  SmileOutlined
+  ShareAltOutlined
 } from '@ant-design/icons';
 
-import useInput from 'utils/useInput';
 import ModalCommentList from './ModalCommentList';
+import formatDate from 'utils/useListTimes';
 import { RootState } from 'store/reducers';
-import { formatDate } from 'utils/useListTimes';
-import { executePostEdit, hideCommentList, showCommentList, showDeleteModal } from 'store/actions/postAction';
+import { Comment } from 'store/types/postType';
+import { executePostEdit, hideModalCommentList, showDeleteModal, showModalCommentList } from 'store/actions/postAction';
+
 import { slideInTooltip } from 'styles/Common/animation';
 import { Tooltip, TooltipBtn, TooltipOutsideArea } from 'styles/Common/tooltip';
 import {
-  ModalCommentInput,
   ModalContentHeader,
   ModalContentOptions,
   ModalContentText,
@@ -29,10 +27,11 @@ import {
 
 const ModalContent = () => {
   const dispatch = useDispatch();
-  const [comment, onChangeComment] = useInput('');
-  const [isTooltipVisible, setIsTooltipVisible] = useState<boolean>(false);
-  const { isCommentListVisible, singlePost, isPostModalVisible } = useSelector((state: RootState) => state.post);
   const { me } = useSelector((state: RootState) => state.user);
+  const { singlePost, modalCommentImagePath, isModalCommentListVisible } = useSelector(
+    (state: RootState) => state.post
+  );
+  const [isTooltipVisible, setIsTooltipVisible] = useState<boolean>(false);
 
   const handleTooltip = useCallback(() => {
     setIsTooltipVisible(true);
@@ -43,28 +42,19 @@ const ModalContent = () => {
   }, []);
 
   const openDeleteModal = useCallback((postId: number) => {
-    dispatch(showDeleteModal(postId));
+    dispatch(showDeleteModal({ type: '게시글', id: postId }));
+    setIsTooltipVisible(false);
   }, []);
 
   const onToggleComment = useCallback(() => {
-    if (isCommentListVisible) dispatch(hideCommentList());
-    else dispatch(showCommentList());
-  }, [isCommentListVisible]);
+    if (isModalCommentListVisible) dispatch(hideModalCommentList());
+    else dispatch(showModalCommentList());
+  }, [isModalCommentListVisible, modalCommentImagePath]);
 
   const openEditModal = useCallback(() => {
     setIsTooltipVisible(false);
-    // dispatch(showPostModal(post));
     dispatch(executePostEdit());
   }, []);
-
-  const handleKeyDown = useCallback(
-    (event: React.KeyboardEvent<HTMLInputElement>) => {
-      if (event.key === 'Enter') {
-        console.log(comment);
-      }
-    },
-    [comment]
-  );
 
   return (
     <ModalContentWrapper>
@@ -74,7 +64,7 @@ const ModalContent = () => {
             src={
               singlePost.User.ProfileImage ? `http://localhost:3065/${singlePost.User.ProfileImage.src}` : '/user.jpg'
             }
-            alt="author profile image"
+            alt="유저 프로필 이미지"
           />
 
           <div>
@@ -122,13 +112,10 @@ const ModalContent = () => {
         </div>
       </ModalContentHeader>
 
-      {isCommentListVisible && isPostModalVisible ? (
-        <ModalCommentList />
-      ) : (
-        <ModalContentText>{singlePost.content}</ModalContentText>
-      )}
+      <ModalContentText $isModalCommentListVisible={isModalCommentListVisible}>{singlePost.content}</ModalContentText>
+      {isModalCommentListVisible && <ModalCommentList />}
 
-      <ModalContentOptions $isCommentListVisible={isCommentListVisible}>
+      <ModalContentOptions $isModalCommentListVisible={isModalCommentListVisible}>
         <div>
           <LikeOutlined />
           <CommentOutlined onClick={onToggleComment} />
@@ -136,29 +123,21 @@ const ModalContent = () => {
 
         <div>
           <p>좋아요 114개</p>
-          {/* 좋아요 없으면 "가장 먼저 좋아요를 눌러보세요" 문구로 대체 */}
-          <p>댓글 29개</p>
+          <p>
+            댓글{' '}
+            {singlePost.Comments.reduce((total: number, comment: Comment) => {
+              const repliesCount = comment.Replies ? comment.Replies.length : 0;
+
+              if (comment.isDeleted) {
+                return total + repliesCount;
+              }
+
+              return total + 1 + repliesCount;
+            }, 0)}
+            개
+          </p>
         </div>
       </ModalContentOptions>
-
-      {isCommentListVisible && (
-        <ModalCommentInput $active={comment.length === 0}>
-          <div>
-            <SmileOutlined />
-            <input
-              type="text"
-              placeholder="Type a Comment..."
-              value={comment}
-              onChange={onChangeComment}
-              onKeyDown={handleKeyDown}
-            />
-          </div>
-
-          <div>
-            <SendOutlined />
-          </div>
-        </ModalCommentInput>
-      )}
     </ModalContentWrapper>
   );
 };

@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 
 import media from 'styles/media';
 import { HoverStyle } from 'styles/Common/hover';
-import { DarkShadowStyle } from 'styles/Common/shadow';
+import { ModalShadowStyle } from 'styles/Common/shadow';
 
 export const DeleteModalWrapper = styled.section`
   width: 100%;
@@ -12,7 +12,7 @@ export const DeleteModalWrapper = styled.section`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 99;
+  z-index: 599;
 `;
 
 export const DeleteModalOutsideArea = styled.div`
@@ -21,7 +21,7 @@ export const DeleteModalOutsideArea = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 99;
+  z-index: 599;
 `;
 
 export const DeleteModalContent = styled(motion.div)`
@@ -32,11 +32,11 @@ export const DeleteModalContent = styled(motion.div)`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) !important;
-  z-index: 100;
+  z-index: 600;
   background-color: white;
   border-radius: 10px;
   padding: 1em;
-  ${DarkShadowStyle};
+  ${ModalShadowStyle};
 
   & > div:first-child {
     width: fit-content;

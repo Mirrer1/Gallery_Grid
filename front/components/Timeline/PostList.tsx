@@ -16,7 +16,7 @@ import DeleteModal from 'components/Modal/DeleteModal';
 import PostModal from 'components/Modal/PostModal';
 
 import useScroll from 'utils/useScroll';
-import useListTimes from 'utils/useListTimes';
+import formatDate from 'utils/useListTimes';
 import { RootState } from 'store/reducers';
 import { Image, Post } from 'store/types/postType';
 import {
@@ -47,15 +47,14 @@ const PostList = () => {
   const { me } = useSelector((state: RootState) => state.user);
   const {
     mainPosts,
-    imagePaths,
-    isCommentListVisible,
+    postImagePaths,
     isCarouselVisible,
     isDeleteModalVisible,
     addPostDone,
-    isPostModalVisible
+    isPostModalVisible,
+    commentVisiblePostId
   } = useSelector((state: RootState) => state.post);
 
-  const postTimes = useListTimes(mainPosts);
   const [category, setCategory] = useState('best');
   const [modalImages, setModalImages] = useState<Image[]>([]);
   const [isTooltipVisible, setIsTooltipVisible] = useState<number | null>(null);
@@ -71,7 +70,7 @@ const PostList = () => {
   }, []);
 
   const openDeleteModal = useCallback((postId: number) => {
-    dispatch(showDeleteModal(postId));
+    dispatch(showDeleteModal({ type: '게시글', id: postId }));
     setIsTooltipVisible(null);
   }, []);
 
@@ -92,10 +91,13 @@ const PostList = () => {
     setIsTooltipVisible(null);
   }, []);
 
-  const onToggleComment = useCallback(() => {
-    if (isCommentListVisible) dispatch(hideCommentList());
-    else dispatch(showCommentList());
-  }, [isCommentListVisible]);
+  const onToggleComment = useCallback(
+    (postId: number) => {
+      if (commentVisiblePostId === postId) dispatch(hideCommentList());
+      else dispatch(showCommentList(postId));
+    },
+    [commentVisiblePostId]
+  );
 
   useEffect(() => {
     if (firstPostRef.current) {
@@ -107,7 +109,7 @@ const PostList = () => {
   }, [category, addPostDone]);
 
   return (
-    <PostContainer ref={postContainerRef} $uploading={imagePaths.length > 0}>
+    <PostContainer ref={postContainerRef} $uploading={postImagePaths.length > 0}>
       <div ref={firstPostRef} />
 
       <PostCategory>
@@ -124,19 +126,19 @@ const PostList = () => {
         </CategoryItem>
       </PostCategory>
 
-      {mainPosts.map((post: Post, i: number) => (
+      {mainPosts.map((post: Post) => (
         <PostWrapper key={post.id} {...slideInList}>
           <PostHeader>
             <div>
               <img
                 src={post.User.ProfileImage ? `http://localhost:3065/${post.User.ProfileImage.src}` : '/user.jpg'}
-                alt="author profile image"
+                alt="유저 프로필 이미지"
               />
 
               <div>
                 <h1>{post.User.nickname}</h1>
                 <p>
-                  {postTimes[i]}
+                  {formatDate(post.createdAt)}
                   {post.location && ` - ${post.location}`}
                 </p>
               </div>
@@ -182,7 +184,7 @@ const PostList = () => {
             <div>
               <img
                 src={`http://localhost:3065/${post.Images[0].src}`}
-                alt="post image"
+                alt="게시글의 첫번째 이미지"
                 onClick={() => showCarousel(post.Images)}
               />
 
@@ -198,15 +200,23 @@ const PostList = () => {
             <div>
               <p>{post.content}</p>
 
-              <PostOptions $isCommentListVisible={isCommentListVisible}>
+              <PostOptions $commentVisiblePostId={commentVisiblePostId === post.id}>
                 <div>
                   <LikeOutlined />
                   <span>24</span>
                 </div>
 
-                <div onClick={onToggleComment}>
+                <div onClick={() => onToggleComment(post.id)}>
                   <CommentOutlined />
-                  <span>13</span>
+                  {post.Comments.reduce((total, comment) => {
+                    const repliesCount = comment.Replies ? comment.Replies.length : 0;
+
+                    if (comment.isDeleted) {
+                      return total + repliesCount;
+                    }
+
+                    return total + 1 + repliesCount;
+                  }, 0)}
                 </div>
               </PostOptions>
             </div>
@@ -216,7 +226,7 @@ const PostList = () => {
 
       {isCarouselVisible && <PostImageCarousel images={modalImages} />}
       {isPostModalVisible && <PostModal />}
-      {isDeleteModalVisible && <DeleteModal type="게시글" />}
+      {isDeleteModalVisible && <DeleteModal />}
     </PostContainer>
   );
 };

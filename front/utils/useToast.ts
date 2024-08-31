@@ -5,9 +5,30 @@ import { toast } from 'react-toastify';
 import { RootState } from 'store/reducers';
 
 const useToastStatus = () => {
-  const { addPostDone, addPostError, deletePostDone, deletePostError, editPostDone, editPostError } = useSelector(
-    (state: RootState) => state.post
-  );
+  const {
+    addPostDone,
+    addPostError,
+    deletePostDone,
+    deletePostError,
+    editPostDone,
+    editPostError,
+    addCommentDone,
+    addCommentError,
+    addReplyCommentDone,
+    addReplyCommentError,
+    editCommentDone,
+    editCommentError,
+    deleteCommentDone,
+    deleteCommentError,
+    addModalCommentDone,
+    addModalCommentError,
+    addReplyModalCommentDone,
+    addReplyModalCommentError,
+    editModalCommentDone,
+    editModalCommentError,
+    deleteModalCommentDone,
+    deleteModalCommentError
+  } = useSelector((state: RootState) => state.post);
   const {} = useSelector((state: RootState) => state.user);
 
   const postStatusList = [
@@ -28,6 +49,54 @@ const useToastStatus = () => {
       error: editPostError,
       successMessage: '작업물이 수정되었습니다.',
       errorMessage: editPostError
+    },
+    {
+      done: addCommentDone,
+      error: addCommentError,
+      successMessage: '댓글이 작성되었습니다.',
+      errorMessage: addCommentError
+    },
+    {
+      done: addReplyCommentDone,
+      error: addReplyCommentError,
+      successMessage: '댓글이 작성되었습니다.',
+      errorMessage: addReplyCommentError
+    },
+    {
+      done: editCommentDone,
+      error: editCommentError,
+      successMessage: '댓글이 수정되었습니다.',
+      errorMessage: editCommentError
+    },
+    {
+      done: deleteCommentDone,
+      error: deleteCommentError,
+      successMessage: '댓글이 삭제되었습니다.',
+      errorMessage: deleteCommentError
+    },
+    {
+      done: addModalCommentDone,
+      error: addModalCommentError,
+      successMessage: '댓글이 작성되었습니다.',
+      errorMessage: addModalCommentError
+    },
+    {
+      done: addReplyModalCommentDone,
+      error: addReplyModalCommentError,
+      successMessage: '댓글이 작성되었습니다.',
+      errorMessage: addReplyModalCommentError
+    },
+    {
+      done: editModalCommentDone,
+      error: editModalCommentError,
+      successMessage: '댓글이 수정되었습니다.',
+      errorMessage: editModalCommentError
+    },
+    {
+      done: deleteModalCommentDone,
+      error: deleteModalCommentError,
+      successMessage: '댓글이 삭제되었습니다.',
+      errorMessage: deleteModalCommentError
     }
   ];
   // const userStatusList = [];

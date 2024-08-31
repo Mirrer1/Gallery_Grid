@@ -23,7 +23,7 @@ const PostPreview = ({ post }: any) => {
       {post.map((post: any, i: any) => (
         <article key={i} onClick={onClickPost}>
           <PostPreviewImage>
-            <img src={post.img[0]} alt={`${post.user}의 게시글 이미지`} />
+            <img src={post.img[0]} alt={`${post.user}의 ${i}번째 게시글 이미지`} />
 
             <div>
               {post.img.map((_: any, i: any) => (

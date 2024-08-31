@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { motion } from 'framer-motion';
 
 import media from 'styles/media';
 import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
@@ -31,7 +30,7 @@ export const PostingWrapper = styled.form<{ $uploading: boolean }>`
     position: relative;
     ${({ theme }) => theme.flexSet('space-between')};
     width: 100%;
-    height: ${props => (props.$uploading ? '15%' : '30%')};
+    height: ${props => (props.$uploading ? '15%' : '28%')};
     background-color: ${({ theme }) => theme.colors.darkBg};
     padding: 0 1.2em;
 
@@ -184,43 +183,6 @@ export const UploadImages = styled.section`
   }
 `;
 
-export const UploadImagePreview = styled.div`
-  & > div:first-child {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
-    z-index: 99;
-
-    & > span {
-      position: absolute;
-      top: 12px;
-      right: 12px;
-      color: white;
-      font-size: 1.2rem;
-      opacity: 85%;
-      z-index: 100;
-      margin-right: 0 !important;
-      cursor: pointer;
-      ${HoverStyle('&')};
-    }
-  }
-`;
-
-export const UploadImage = styled(motion.div)`
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) !important;
-  z-index: 100;
-
-  & > img {
-    border-radius: 5px;
-  }
-`;
-
 export const PostingEmojiPicker = styled.div`
   & > div:first-child {
     position: fixed;
@@ -232,10 +194,25 @@ export const PostingEmojiPicker = styled.div`
   }
 
   & > div:last-child {
+    transform: scale(0.8);
     position: absolute;
-    top: 75%;
-    left: 5%;
+    top: 10%;
+    left: 0;
     z-index: 50;
+  }
+
+  ${media.tablet} {
+    & > div:last-child {
+      left: -4%;
+    }
+  }
+
+  ${media.mobile} {
+    & > div:last-child {
+      transform: scale(0.7);
+      top: -40%;
+      left: -8%;
+    }
   }
 `;
 

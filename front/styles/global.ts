@@ -165,20 +165,22 @@ const GlobalStyles = createGlobalStyle`
     0 10px 10px -5px rgba(0, 0, 0, 0.04);
   }
 
+  .swiper-pagination-bullet,
   .swiper-pagination-bullet-active {
+    width: 6px;
+    height: 6px;
     background: #6BA2E6;
   }
 
   .swiper-button-prev, .swiper-button-next {
     display: flex;
     justify-content: center;
-    align-items: center;
-    width: 40px;
-    height: 40px;    
+    align-items: center;    
+    width: 32px;
+    height: 32px;
     color: black !important;    
     background-color: rgba(255, 255, 255, 0.35);
-    border-radius: 50%;    
-    transform: scale(0.8);
+    border-radius: 50%;        
     transition: opacity 200ms ease-in-out;    
 
     &:hover {
@@ -190,12 +192,26 @@ const GlobalStyles = createGlobalStyle`
     }
   }
 
-  .swiper-button-prev:after,
-  .swiper-button-next:after {
-    font-size: 1.1rem !important;
-    font-weight: 600 !important;
+  .swiper-button-next::after,
+  .swiper-button-prev::after {
+    content: '';
+    display: block;
+    width: 30px;
+    height: 30px;
+    background-image: url('/arrow.png');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 70%;
   }
 
+  .swiper-button-next::after {    
+    transform: rotate(270deg);    
+  }
+
+  .swiper-button-prev::after {    
+    transform: rotate(90deg);
+  }
   
   @media screen and (min-width: 1200px) {
     .body {

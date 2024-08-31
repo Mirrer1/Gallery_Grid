@@ -27,22 +27,26 @@ export const slideInCarousel = {
 export const slideInModal = {
   initial: {
     opacity: 0,
-    scale: 0.75
+    scale: 0.9
   },
   animate: {
     opacity: 1,
     scale: 1,
     transition: {
-      ease: 'easeOut',
-      duration: 0.35
+      type: 'spring',
+      stiffness: 120,
+      damping: 20,
+      duration: 0.5
     }
   },
   exit: {
     opacity: 0,
-    scale: 0.75,
+    scale: 0.9,
     transition: {
-      ease: 'easeIn',
-      duration: 0.35
+      type: 'spring',
+      stiffness: 120,
+      damping: 20,
+      duration: 0.4
     }
   }
 };

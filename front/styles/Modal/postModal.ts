@@ -13,7 +13,7 @@ export const PostModalWrapper = styled.section`
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.6);
-  z-index: 50;
+  z-index: 499;
 
   ${media.mobile} {
     ${({ theme }) => theme.flexColumnSet()};
@@ -26,6 +26,7 @@ export const ModalOutsideArea = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
+  z-index: 499;
 `;
 
 export const PostModalBtn = styled(CloseOutlined)`
@@ -50,15 +51,18 @@ export const PostModalContentsWrapper = styled(motion.div)`
   justify-content: center;
   align-items: center;
   position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) !important;
-  width: 55%;
-  height: 70%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  width: 60%;
+  height: 75%;
+  z-index: 500;
 
   ${media.tablet} {
     width: 90%;
-    height: 58%;
+    height: 70%;
   }
 
   ${media.mobile} {

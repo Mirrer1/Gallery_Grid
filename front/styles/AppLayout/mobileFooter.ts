@@ -27,4 +27,5 @@ export const MobileFooterItem = styled.span<{ $selected: boolean }>`
   color: ${props => props.$selected && '#6BA2E6'};
   transform: ${props => props.$selected && 'scale( 1.2 )'};
   opacity: ${props => (props.$selected ? '100%' : '40%')};
+  font-weight: ${props => props.$selected && '700'};
 `;

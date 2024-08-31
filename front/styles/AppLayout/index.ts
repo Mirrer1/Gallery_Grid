@@ -17,7 +17,7 @@ export const LayoutWrapper = styled.div`
     width: 20%;
     height: 100%;
     background-color: white;
-    padding: 1.2em 1.8em 1.5em 1.8em;
+    padding: 1.5em 0;
     border-radius: 5px 0 0 5px;
   }
 
@@ -41,7 +41,7 @@ export const LayoutWrapper = styled.div`
       top: 0%;
       left: 0%;
       width: 25%;
-      padding: 1.5em 1.2em 2em 1.2em;
+      padding: 1.2em 0;
     }
 
     & > div {
@@ -74,6 +74,7 @@ export const LayoutWrapper = styled.div`
 `;
 
 export const NavbarProfile = styled.div`
+  padding: 0 2em;
   margin-bottom: 3em;
 
   & > img {
@@ -103,7 +104,8 @@ export const NavbarProfile = styled.div`
   }
 
   ${media.tablet} {
-    padding: 0;
+    padding: 0 1em;
+    margin-bottom: 2em;
 
     & > img {
       width: 45px;
@@ -127,36 +129,46 @@ export const NavbarItems = styled.div<{ $firstmargin: string }>`
   margin-bottom: ${props => props.$firstmargin === 'true' && '6em'};
 `;
 
-export const NavbarItem = styled(Link)<{ $selected: boolean }>`
+export const NavbarItem = styled(Link)<{ $selected: boolean; $message: boolean }>`
   ${ReverseHoverStyle('&')}
   ${({ theme }) => theme.flexSet('start')};
   opacity: ${props => (props.$selected ? '100%' : '40%')};
   color: ${props => props.$selected && '#6BA2E6'};
   font-weight: ${props => (props.$selected ? '700' : '500')};
   font-size: 0.9rem;
-  margin-bottom: 1.8em;
+  margin-bottom: ${props => (props.$message ? '0' : '1em')};
+
+  & > div {
+    visibility: ${props => (props.$selected ? 'visible' : 'hidden')};
+    width: 4px;
+    height: 25px;
+    background-color: ${({ theme }) => theme.colors.primary};
+    margin-right: 2em;
+  }
 
   & > span {
     margin-right: 0.7em;
+  }
+
+  ${media.tablet} {
+    & > div {
+      margin-right: 1em;
+    }
   }
 `;
 
 export const NavbarMessage = styled.div<{ $selected: boolean }>`
   ${({ theme }) => theme.flexSet('space-between')};
+  margin: 0 1em 1em 0;
 
   & > a {
     flex-grow: 1;
   }
 
-  & > div {
-    ${ReverseHoverStyle('&')}
-    padding-bottom: 20px;
-    opacity: ${props => (props.$selected ? '100%' : '40%')};
-  }
-
   & > div > button {
-    width: 23px;
-    height: 23px;
+    ${({ theme }) => theme.flexSet()};
+    width: 22px;
+    height: 22px;
     color: white;
     font-size: 0.8rem;
     border-radius: 50%;
@@ -165,11 +177,7 @@ export const NavbarMessage = styled.div<{ $selected: boolean }>`
   }
 
   ${media.tablet} {
-    & > div > button {
-      width: 20px;
-      height: 20px;
-      font-size: 0.6rem;
-    }
+    margin-right: 0.5em;
   }
 `;
 
@@ -180,11 +188,19 @@ export const NavbarLogout = styled.button`
   opacity: 40%;
   font-weight: 500;
 
+  & > div {
+    width: 4px;
+    height: 25px;
+    margin-right: 2em;
+  }
+
   & > span {
     margin-right: 0.7em;
   }
 
   ${media.tablet} {
-    font-size: 0.8rem;
+    & > div {
+      margin-right: 1em;
+    }
   }
 `;
