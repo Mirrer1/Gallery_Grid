@@ -1,10 +1,12 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 
 import { RootState } from 'store/reducers';
 
 const useToastStatus = () => {
+  const [isInitialRender, setIsInitialRender] = useState(true);
+
   const {
     addPostDone,
     addPostError,
@@ -110,17 +112,25 @@ const useToastStatus = () => {
 
   postStatusList.forEach(({ done, error, successMessage, errorMessage }) => {
     useEffect(() => {
-      if (done) toast.success(successMessage);
-      if (error) toast.error(errorMessage);
+      if (!isInitialRender) {
+        if (done) toast.success(successMessage);
+        if (error) toast.error(errorMessage);
+      }
     }, [done, error]);
   });
 
   userStatusList.forEach(({ done, error, successMessage, errorMessage }) => {
     useEffect(() => {
-      if (done) toast.success(successMessage);
-      if (error) toast.error(errorMessage);
+      if (!isInitialRender) {
+        if (done) toast.success(successMessage);
+        if (error) toast.error(errorMessage);
+      }
     }, [done, error]);
   });
+
+  useEffect(() => {
+    setIsInitialRender(false);
+  }, []);
 };
 
 export default useToastStatus;
