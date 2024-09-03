@@ -26,8 +26,8 @@ export const SettingFormWrapper = styled(motion.form)`
   ${media.tablet} {
     position: absolute;
     top: 41%;
-    left: 27%;
-    width: 70%;
+    left: 30%;
+    width: 68%;
     height: 57%;
   }
 
@@ -280,7 +280,7 @@ export const SettingRecommendation = styled.div`
     }
 
     [type='checkbox'] {
-      height: 1.3em;
+      height: 1.35em;
     }
   }
 
@@ -308,6 +308,10 @@ export const SettingBtn = styled.div`
     padding: 0.7em 1.2em;
     border-radius: 5px;
     ${HoverStyle('&')};
+
+    & > span {
+      padding: 0 2.67em;
+    }
   }
 
   ${media.tablet} {

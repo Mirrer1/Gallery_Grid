@@ -6,7 +6,10 @@ import {
   RESET_LOGIN_MESSAGE,
   LOGOUT_REQUEST,
   LOGIN_GOOGLE_REQUEST,
-  LOAD_MY_INFO_REQUEST
+  LOAD_MY_INFO_REQUEST,
+  USER_UPLOAD_IMAGE_REQUEST,
+  USER_REMOVE_UPLOADED_IMAGE,
+  EDIT_MY_INFO_REQUEST
 } from 'store/types/userType';
 
 export const loginRequest = (data: AuthResponse) => ({
@@ -37,4 +40,18 @@ export const signUpRequest = (data: AuthResponse) => ({
 
 export const resetSignUpMessage = () => ({
   type: RESET_SIGNUP_MESSAGE
+});
+
+export const editMyInfoRequest = (data: FormData) => ({
+  type: EDIT_MY_INFO_REQUEST,
+  data
+});
+
+export const userUploadImageRequest = (data: FormData) => ({
+  type: USER_UPLOAD_IMAGE_REQUEST,
+  data
+});
+
+export const userRemoveUploadedImage = () => ({
+  type: USER_REMOVE_UPLOADED_IMAGE
 });

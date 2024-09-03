@@ -20,7 +20,15 @@ import {
   LOGIN_GOOGLE_FAILURE,
   LOAD_MY_INFO_SUCCESS,
   LOAD_MY_INFO_FAILURE,
-  LOAD_MY_INFO_REQUEST
+  LOAD_MY_INFO_REQUEST,
+  USER_UPLOAD_IMAGE_REQUEST,
+  userUploadImageRequestAction,
+  USER_UPLOAD_IMAGE_SUCCESS,
+  USER_UPLOAD_IMAGE_FAILURE,
+  EDIT_MY_INFO_REQUEST,
+  editMyInfoRequestAction,
+  EDIT_MY_INFO_SUCCESS,
+  EDIT_MY_INFO_FAILURE
 } from 'store/types/userType';
 
 function signUpAPI(data: AuthResponse) {
@@ -119,6 +127,46 @@ function* logout() {
   }
 }
 
+function editMyInfoAPI(data: FormData) {
+  return axios.patch('/user/edit', data);
+}
+
+function* editMyInfo(action: editMyInfoRequestAction) {
+  try {
+    const result: AxiosResponse<User> = yield call(editMyInfoAPI, action.data);
+
+    yield put({
+      type: EDIT_MY_INFO_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: EDIT_MY_INFO_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
+function uploadImagesAPI(data: FormData) {
+  return axios.post('/post/images', data);
+}
+
+function* uploadUserImage(action: userUploadImageRequestAction) {
+  try {
+    const result: AxiosResponse<string[]> = yield call(uploadImagesAPI, action.data);
+
+    yield put({
+      type: USER_UPLOAD_IMAGE_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: USER_UPLOAD_IMAGE_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
 function* watchSignUp() {
   yield takeLatest(SIGNUP_REQUEST, signUp);
 }
@@ -139,6 +187,22 @@ function* watchLogout() {
   yield takeLatest(LOGOUT_REQUEST, logout);
 }
 
+function* watchEditMyInfo() {
+  yield takeLatest(EDIT_MY_INFO_REQUEST, editMyInfo);
+}
+
+function* watchUserUploadImage() {
+  yield takeLatest(USER_UPLOAD_IMAGE_REQUEST, uploadUserImage);
+}
+
 export default function* userSaga() {
-  yield all([fork(watchLogin), fork(watchLoginGoogle), fork(watchLoadMyInfo), fork(watchLogout), fork(watchSignUp)]);
+  yield all([
+    fork(watchLogin),
+    fork(watchLoginGoogle),
+    fork(watchLoadMyInfo),
+    fork(watchLogout),
+    fork(watchSignUp),
+    fork(watchEditMyInfo),
+    fork(watchUserUploadImage)
+  ]);
 }

@@ -29,7 +29,7 @@ const useToastStatus = () => {
     deleteModalCommentDone,
     deleteModalCommentError
   } = useSelector((state: RootState) => state.post);
-  const {} = useSelector((state: RootState) => state.user);
+  const { editMyInfoDone, editMyInfoError } = useSelector((state: RootState) => state.user);
 
   const postStatusList = [
     {
@@ -99,7 +99,14 @@ const useToastStatus = () => {
       errorMessage: deleteModalCommentError
     }
   ];
-  // const userStatusList = [];
+  const userStatusList = [
+    {
+      done: editMyInfoDone,
+      error: editMyInfoError,
+      successMessage: '유저 정보가 변경되었습니다.',
+      errorMessage: editMyInfoError
+    }
+  ];
 
   postStatusList.forEach(({ done, error, successMessage, errorMessage }) => {
     useEffect(() => {
@@ -108,12 +115,12 @@ const useToastStatus = () => {
     }, [done, error]);
   });
 
-  // userStatusList.forEach(({ done, error, successMessage, errorMessage }) => {
-  //   useEffect(() => {
-  //     if (done) toast.success(successMessage);
-  //     if (error) toast.error(errorMessage);
-  //   }, [done, error]);
-  // });
+  userStatusList.forEach(({ done, error, successMessage, errorMessage }) => {
+    useEffect(() => {
+      if (done) toast.success(successMessage);
+      if (error) toast.error(errorMessage);
+    }, [done, error]);
+  });
 };
 
 export default useToastStatus;

@@ -78,10 +78,11 @@ export const NavbarProfile = styled.div`
   margin-bottom: 3em;
 
   & > img {
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     margin-bottom: 1.5em;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   }
 
   & > h1 {
@@ -108,8 +109,8 @@ export const NavbarProfile = styled.div`
     margin-bottom: 2em;
 
     & > img {
-      width: 45px;
-      height: 45px;
+      width: 50px;
+      height: 50px;
       margin-bottom: 1em;
     }
 
