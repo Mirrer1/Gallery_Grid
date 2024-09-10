@@ -19,7 +19,6 @@ export const EditCommentFormSection = styled(motion.form)`
     font-size: 0.7rem;
     line-height: 1.5;
     padding: 1em 0.8em;
-    margin-bottom: 0.5em;
     border: none;
     outline: none;
     resize: none;
@@ -30,17 +29,7 @@ export const EditCommentFormSection = styled(motion.form)`
     }
   }
 
-  & > p {
-    text-align: end;
-    font-size: 0.75rem;
-    font-weight: 500;
-    opacity: 40%;
-    padding: 0 1em;
-    margin-bottom: 0.5em;
-  }
-
   & > div {
-    position: relative;
     ${({ theme }) => theme.flexSet('space-between')};
     width: 100%;
     border-top: 1px solid ${({ theme }) => theme.colors.darkBg};
@@ -55,10 +44,16 @@ export const EditCommentFormSection = styled(motion.form)`
 
       & > span {
         font-size: 0.95rem;
-        opacity: 70%;
+        opacity: 40%;
         margin-right: 0.5em;
         cursor: pointer;
-        ${HoverStyle('&')}
+        ${ReverseHoverStyle('&')}
+      }
+
+      & > p {
+        font-size: 0.75rem;
+        font-weight: 500;
+        opacity: 40%;
       }
     }
   }
@@ -84,6 +79,7 @@ export const EditCommentHeader = styled.header`
     height: 40px;
     border-radius: 50%;
     margin-right: 0.4em;
+    cursor: pointer;
   }
 
   & > div {
@@ -96,13 +92,6 @@ export const EditCommentHeader = styled.header`
         font-weight: 500;
         margin-right: 0.3em;
         cursor: pointer;
-
-        @media (min-width: 992px) {
-          &:hover {
-            text-decoration: underline;
-            text-underline-offset: 1.5px;
-          }
-        }
       }
 
       & > p {
@@ -157,40 +146,6 @@ export const EditCommentImage = styled(motion.div)`
       top: 10%;
       right: 8%;
       opacity: 70%;
-    }
-  }
-`;
-
-export const EditCommentEmojiPicker = styled.div<{ $reply: boolean; $isLastChild: boolean }>`
-  & > div:first-child {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 49;
-  }
-
-  & > div:last-child {
-    transform: scale(0.7);
-    position: absolute;
-    top: ${props => (props.$isLastChild ? '-1000%' : props.$reply ? '-570%' : '-500%')};
-    left: ${props => (props.$isLastChild ? '-20%' : props.$reply ? '-1%' : '-1%')};
-    z-index: 50;
-  }
-
-  ${media.tablet} {
-    & > div:last-child {
-      top: ${props => (props.$isLastChild ? '-930%' : props.$reply ? '-530%' : '-500%')};
-      left: ${props => (props.$isLastChild ? '-7%' : props.$reply ? '1%' : '1%')};
-    }
-  }
-
-  ${media.mobile} {
-    & > div:last-child {
-      transform: scale(0.6);
-      top: ${props => (props.$isLastChild ? '-875%' : props.$reply ? '-530%' : '-500%')};
-      left: ${props => (props.$isLastChild ? '-25%' : props.$reply ? '-4%' : '-4%')};
     }
   }
 `;

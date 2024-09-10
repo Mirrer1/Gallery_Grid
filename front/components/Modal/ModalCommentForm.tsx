@@ -122,6 +122,12 @@ const ModalCommentForm = ({ replyId, replyUser, setReplyId, showImagePreview }: 
     if (comment.length === 500) toast.warning('댓글은 500자 이하로 작성해주세요.');
   }, [comment]);
 
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.focus();
+    }
+  }, []);
+
   return (
     <ModalCommentFormWrapper>
       {(replyId || modalCommentImagePath.length !== 0) && (

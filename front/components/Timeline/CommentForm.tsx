@@ -119,6 +119,12 @@ const CommentForm = ({ showImagePreview, replyId, replyUser, setReplyId }: Comme
     if (comment.length === 500) toast.warning('댓글은 500자 이하로 작성해주세요.');
   }, [comment]);
 
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.focus();
+    }
+  }, []);
+
   return (
     <CommentFormWrapper>
       {(replyId || commentImagePath.length !== 0) && (

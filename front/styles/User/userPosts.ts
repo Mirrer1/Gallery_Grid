@@ -13,7 +13,7 @@ export const UserPostsWrapper = styled(PostPreviewWrapper)`
   height: 100%;
   overflow-y: scroll;
   grid-template-columns: repeat(2, 1fr);
-  padding: 0.7em 1em 0.7em 0em;
+  padding: 0 1em 0.7em 0em;
 
   ${media.tablet} {
     width: 100%;

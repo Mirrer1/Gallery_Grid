@@ -26,7 +26,8 @@ import {
   USER_UPLOAD_IMAGE_REQUEST,
   USER_UPLOAD_IMAGE_SUCCESS,
   UserAction,
-  UserState
+  UserState,
+  EXECUTE_USER_EDIT
 } from 'store/types/userType';
 
 export const initialState: UserState = {
@@ -135,6 +136,10 @@ const reducer = (state: UserState = initialState, action: UserAction): UserState
       case RESET_SIGNUP_MESSAGE:
         draft.signUpMessage = { type: null, message: null };
         break;
+      case EXECUTE_USER_EDIT:
+        if (draft.me?.ProfileImage) draft.userImagePath = [draft.me.ProfileImage.src];
+        else draft.userImagePath = [];
+        break;
       case EDIT_MY_INFO_REQUEST:
         draft.editMyInfoLoading = true;
         draft.editMyInfoDone = false;
@@ -144,7 +149,8 @@ const reducer = (state: UserState = initialState, action: UserAction): UserState
         draft.editMyInfoLoading = false;
         draft.editMyInfoDone = true;
         draft.me = action.data;
-        draft.userImagePath = [];
+        if (draft.me?.ProfileImage) draft.userImagePath = [draft.me.ProfileImage.src];
+        else draft.userImagePath = [];
         break;
       case EDIT_MY_INFO_FAILURE:
         draft.editMyInfoLoading = false;

@@ -56,17 +56,19 @@ export const PostModalContentsWrapper = styled(motion.div)`
   right: 0;
   bottom: 0;
   margin: auto;
-  width: 60%;
-  height: 75%;
+  width: 65%;
+  height: 90%;
   z-index: 500;
 
   ${media.tablet} {
-    width: 90%;
-    height: 70%;
+    width: 100%;
+    height: 95%;
+    top: 5%;
   }
 
   ${media.mobile} {
     flex-direction: column;
-    height: 40%;
+    justify-content: start;
+    overflow-y: auto;
   }
 `;

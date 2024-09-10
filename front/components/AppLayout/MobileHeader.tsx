@@ -65,15 +65,15 @@ const MobileHeader = ({ showInput, showSearch, hideSearch }: ISearch) => {
           <h1>Gallery Grid</h1>
 
           <MobileHeaderContent>
-            <div onClick={showSearch}>
-              <SearchOutlined />
-            </div>
-
             <div onClick={onClickProfile}>
               <img
                 src={me?.ProfileImage ? `http://localhost:3065/${me.ProfileImage.src}` : '/user.jpg'}
                 alt="유저 프로필 이미지"
               />
+            </div>
+
+            <div onClick={showSearch}>
+              <SearchOutlined />
             </div>
 
             <div>

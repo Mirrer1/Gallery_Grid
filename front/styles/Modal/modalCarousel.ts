@@ -60,8 +60,13 @@ export const ModalCarouselWrapper = styled.div`
     }
   }
 
+  ${media.tablet} {
+    border-radius: 15px 0 0 0;
+  }
+
   ${media.mobile} {
     width: 100%;
+    height: 50%;
     border-radius: 5px 5px 0 0;
   }
 `;

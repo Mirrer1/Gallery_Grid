@@ -8,7 +8,7 @@ import { DarkShadowStyle } from 'styles/Common/shadow';
 export const UserInfoWrapper = styled(motion.section)`
   width: 40%;
   height: 100%;
-  ${({ theme }) => theme.flexColumnSet()};
+  ${({ theme }) => theme.flexColumnSet('space-between')};
   margin-right: 1em;
   padding: 0 1em;
 
@@ -25,8 +25,7 @@ export const UserInfoWrapper = styled(motion.section)`
 export const UserInfoImage = styled.div`
   position: relative;
   width: 100%;
-  height: 350px;
-  margin-bottom: 4em;
+  height: 56%;
 
   & > img:first-child {
     width: 100%;
@@ -46,13 +45,28 @@ export const UserInfoImage = styled.div`
   }
 
   ${media.tablet} {
-    margin-bottom: 3em;
+    height: 410px;
+    margin-bottom: 5em;
+
+    & > img:last-child {
+      bottom: -15%;
+      width: 125px;
+      height: 125px;
+    }
+  }
+
+  ${media.mobile} {
+    height: 340px;
+    margin-bottom: 4em;
+
+    & > img:last-child {
+      width: 110px;
+      height: 110px;
+    }
   }
 `;
 
 export const UserInfoText = styled.div`
-  margin-bottom: 4em;
-
   & > div {
     ${({ theme }) => theme.flexSet('space-between')};
     margin-bottom: 0.8em;
@@ -81,18 +95,14 @@ export const UserInfoText = styled.div`
 
   ${media.tablet} {
     margin-bottom: 2em;
+
+    & > div {
+      margin-bottom: 1em;
+    }
   }
 
   ${media.mobile} {
-    & > div {
-      & > h1 {
-        font-size: 1.1rem;
-      }
-    }
-
-    & > p {
-      font-size: 0.7rem;
-    }
+    margin-bottom: 1em;
   }
 `;
 
@@ -103,7 +113,7 @@ export const UserActivityWrapper = styled.div`
 
 export const UserActivityItem = styled.div<{ $selected: boolean }>`
   text-align: center;
-  padding: 1em 2em;
+  padding: 4% 8%;
   transition: box-shadow 200ms ease-in-out;
   box-shadow: ${props => (props.$selected ? 'rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px' : 'none')};
 
@@ -124,7 +134,7 @@ export const UserActivityItem = styled.div<{ $selected: boolean }>`
   }
 
   ${media.tablet} {
-    margin-bottom: 2.5em;
+    margin-bottom: 1.5em;
   }
 
   ${media.mobile} {
@@ -132,12 +142,12 @@ export const UserActivityItem = styled.div<{ $selected: boolean }>`
     margin-bottom: 0.5em;
 
     & > h2 {
-      font-size: 0.7rem;
+      font-size: 0.75rem;
       margin-bottom: 0.4em;
     }
 
     & > p {
-      font-size: 1rem;
+      font-size: 1.2rem;
     }
   }
 `;

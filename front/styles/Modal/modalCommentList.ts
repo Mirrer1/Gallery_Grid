@@ -127,6 +127,7 @@ export const ModalCommentContainer = styled.div<{ $reply: boolean }>`
         height: 40px;
         border-radius: 50%;
         margin-right: 0.4em;
+        cursor: pointer;
       }
 
       & > div {
@@ -139,13 +140,6 @@ export const ModalCommentContainer = styled.div<{ $reply: boolean }>`
             font-weight: 500;
             margin-right: 0.3em;
             cursor: pointer;
-
-            @media (min-width: 992px) {
-              &:hover {
-                text-decoration: underline;
-                text-underline-offset: 1.5px;
-              }
-            }
           }
 
           & > p {
@@ -255,14 +249,17 @@ export const ModalCommentFormItem = styled.form<{ $active: boolean }>`
   border-bottom: 1.5px solid ${({ theme }) => theme.colors.darkBg};
 
   & > div:first-child {
-    width: 95%;
+    flex-grow: 1;
     ${({ theme }) => theme.flexSet('start')}
 
     & > span {
-      width: 6%;
       font-size: 1rem;
       opacity: 40%;
       ${ReverseHoverStyle('&')}
+    }
+
+    & > span:first-child {
+      margin-right: 0.5em;
     }
 
     & > input:nth-child(2) {
@@ -270,11 +267,13 @@ export const ModalCommentFormItem = styled.form<{ $active: boolean }>`
     }
 
     & > textarea {
-      width: 88%;
+      flex-grow: 1;
       min-height: 34px;
       max-height: 700px;
       font-size: 0.8rem;
+      line-height: 1.5;
       padding: 0.8em 0.5em;
+      margin-left: 0.2em;
       border: none;
       resize: none;
       overflow-y: auto;
@@ -291,7 +290,6 @@ export const ModalCommentFormItem = styled.form<{ $active: boolean }>`
   }
 
   & > button {
-    width: 5%;
     ${({ theme }) => theme.flexSet('end')}
 
     & > span {
@@ -311,18 +309,19 @@ export const ModalCommentFormItem = styled.form<{ $active: boolean }>`
   }
 
   ${media.tablet} {
-    height: 100%;
-
     & > div:first-child {
-      width: 89%;
-
       & > span {
         font-size: 1.4rem;
-        width: 5%;
       }
 
       & > textarea {
-        width: 98%;
+        margin-left: 0.5em;
+      }
+    }
+
+    & > button {
+      & > span {
+        font-size: 1rem;
       }
     }
   }
@@ -331,11 +330,6 @@ export const ModalCommentFormItem = styled.form<{ $active: boolean }>`
     & > div:first-child {
       & > span {
         font-size: 1.2rem;
-        width: 9%;
-      }
-
-      & > textarea {
-        width: 85%;
       }
     }
   }

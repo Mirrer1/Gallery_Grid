@@ -1,16 +1,16 @@
 import styled from 'styled-components';
 
 import media from 'styles/media';
-import { ReverseHoverStyle } from 'styles/Common/hover';
+import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
 import { ShadowStyle } from 'styles/Common/shadow';
 
 export const SuggestedWrapper = styled.div<{ $listvisible: boolean; $commentvisible: boolean }>`
   ${({ theme }) => theme.flexColumnSet('center', 'start')}
   visibility: ${props => (props.$commentvisible ? 'hidden' : 'visible')};
   opacity: ${props => (props.$commentvisible ? '0' : '1')};
-  height: 38%;
+  flex-grow: 1;
   background-color: white;
-  padding: 2em 1.5em;
+  padding: 6%;
   border-radius: 5px;
   transition: opacity 0.3s;
   ${ShadowStyle}
@@ -23,6 +23,7 @@ export const SuggestedWrapper = styled.div<{ $listvisible: boolean; $commentvisi
     right: 2%;
     width: 55%;
     height: auto;
+    padding: 3%;
     border: 1px solid ${({ theme }) => theme.colors.darkBg};
     z-index: 50;
   }
@@ -31,6 +32,7 @@ export const SuggestedWrapper = styled.div<{ $listvisible: boolean; $commentvisi
     bottom: 7.5%;
     right: 2%;
     width: 85%;
+    padding: 5%;
   }
 `;
 
@@ -50,63 +52,105 @@ export const SuggestedOutsideArea = styled.div<{ $listvisible: boolean }>`
 `;
 
 export const SuggestedHeader = styled.div`
+  width: 100%;
+  ${({ theme }) => theme.flexSet('space-between')};
   font-size: 0.9rem;
   font-weight: 500;
-  margin-bottom: 2em;
+  margin-bottom: 5%;
 
-  & > span {
+  & > div {
+    ${({ theme }) => theme.flexSet()};
+  }
+
+  & > div > span {
+    position: relative;
+    top: 3px;
+    font-size: 1rem;
+    ${HoverStyle('&')};
+  }
+
+  & > div > span:last-child {
     display: none;
   }
 
   ${media.tablet} {
-    width: 100%;
-    ${({ theme }) => theme.flexSet('space-between')};
-
-    & > span {
+    & > div > span:last-child {
       display: block;
+      margin-left: 0.3em;
+    }
+  }
+
+  ${media.mobile} {
+    margin-bottom: 10%;
+  }
+`;
+
+export const SuggestedInfoWrapper = styled.div`
+  flex-grow: 1;
+  width: 100%;
+  ${({ theme }) => theme.flexColumnSet('space-between')};
+
+  & > div {
+    margin-bottom: 2%;
+  }
+
+  & > div:last-child {
+    margin-bottom: 0;
+  }
+
+  ${media.tablet} {
+    & > div {
+      margin-bottom: 5%;
+    }
+  }
+
+  ${media.mobile} {
+    & > div {
+      margin-bottom: 7%;
     }
   }
 `;
 
-export const SuggestedInfo = styled.div<{ $islast: boolean }>`
+export const SuggestedInfo = styled.div`
+  flex: 1;
+  width: 100%;
   ${({ theme }) => theme.flexSet('start')}
-  margin-bottom: ${props => (props.$islast ? '0' : '1.2em')};
 
-  & > img {
-    width: 17%;
+  & > div:first-child {
+    width: 50px;
     height: 50px;
     border-radius: 50%;
-    margin-right: 1em;
-  }
-
-  & > div {
-    width: 80%;
-  }
-
-  & > div > div {
-    ${({ theme }) => theme.flexSet('space-between')}
-    padding-right: 0.5em;
-    margin-bottom: 0.3em;
-  }
-
-  & > div > div > h2 {
-    color: ${({ theme }) => theme.colors.primary};
-    font-size: 0.9rem;
-    font-weight: 500;
+    margin-right: 3%;
     cursor: pointer;
 
-    @media (min-width: 992px) {
-      &:hover {
-        text-decoration: underline;
-        text-underline-offset: 1.5px;
-      }
+    & > img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
     }
   }
 
-  & > div > div > span {
-    ${ReverseHoverStyle('&')}
-    opacity: 40%;
-    font-size: 0.8rem;
+  & > div:last-child {
+    width: 1px;
+    flex-grow: 1;
+
+    & > div {
+      ${({ theme }) => theme.flexSet('space-between')}
+      padding-right: 0.5em;
+      margin-bottom: 0.3em;
+
+      & > h2 {
+        color: ${({ theme }) => theme.colors.primary};
+        font-size: 0.9rem;
+        font-weight: 500;
+        cursor: pointer;
+      }
+
+      & > span {
+        ${ReverseHoverStyle('&')}
+        opacity: 40%;
+      }
+    }
   }
 
   & > div > p {

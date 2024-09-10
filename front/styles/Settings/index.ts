@@ -23,7 +23,7 @@ export const SettingWrapper = styled.section`
   }
 `;
 
-export const SettingProfile = styled(motion.div)<{ $upload: boolean }>`
+export const SettingProfile = styled(motion.div)`
   width: 47%;
   height: 74%;
   position: absolute;
@@ -36,7 +36,6 @@ export const SettingProfile = styled(motion.div)<{ $upload: boolean }>`
     border-radius: 5px;
     cursor: pointer;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-    filter: ${props => props.$upload && 'blur(5px)'};
   }
 
   & > div {
@@ -66,24 +65,28 @@ export const SettingProfile = styled(motion.div)<{ $upload: boolean }>`
     }
   }
 
-  & > span {
+  & > div:nth-child(3) {
     position: absolute;
     left: 1%;
     bottom: 1%;
-    font-size: 1.7rem;
-    opacity: 40%;
-    cursor: pointer;
-    ${ReverseHoverStyle('&')};
-  }
+    top: auto;
 
-  & > label > span {
-    position: absolute;
-    left: 1%;
-    bottom: 1%;
-    font-size: 1.7rem;
-    opacity: 40%;
-    cursor: pointer;
-    ${ReverseHoverStyle('&')};
+    & > span,
+    & > label > span {
+      font-size: 1.2rem;
+      opacity: 40%;
+      cursor: pointer;
+      padding: 0.4em;
+      background-color: #fff;
+      border: none;
+      border-radius: 45px;
+      box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+      ${ReverseHoverStyle('&')};
+    }
+
+    & > label > span {
+      margin-right: 0.3em;
+    }
   }
 
   & > input {
@@ -117,10 +120,6 @@ export const SettingProfile = styled(motion.div)<{ $upload: boolean }>`
     & > span {
       font-size: 1.5rem;
     }
-
-    & > label > span {
-      font-size: 1.5rem;
-    }
   }
 
   ${media.mobile} {
@@ -144,22 +143,18 @@ export const SettingProfile = styled(motion.div)<{ $upload: boolean }>`
       flex-grow: 1;
 
       & > h1 {
-        font-size: 0.9rem;
+        font-size: 1.2rem;
         margin-bottom: 0.3em;
       }
 
       & > p {
-        font-size: 0.65rem;
+        font-size: 0.75rem;
         -webkit-line-clamp: 3;
         padding-left: 0.1em;
       }
     }
 
-    & > span {
-      display: none;
-    }
-
-    & > label > span {
+    & > div:nth-child(3) {
       display: none;
     }
   }
@@ -186,11 +181,11 @@ export const MobileRemoveImageBtn = styled.span`
   ${media.mobile} {
     ${({ theme }) => theme.flexSet()};
     font-size: 0.6rem;
-    background-color: ${({ theme }) => theme.colors.primary};
-    color: white;
+    color: #ee6b6e;
+    border: 1px #ee6b6e solid;
     font-weight: 500;
     padding: 0.7em 1.2em;
     border-radius: 5px;
-    margin-top: 1em;
+    margin-top: 0.3em;
   }
 `;

@@ -10,8 +10,10 @@ import {
   ShareAltOutlined
 } from '@ant-design/icons';
 
+import ImagePreview from './ImagePreviewModal';
 import ModalCommentList from './ModalCommentList';
 import formatDate from 'utils/useListTimes';
+import useImagePreview from 'utils/useImagePreview';
 import { RootState } from 'store/reducers';
 import { Comment } from 'store/types/postType';
 import { executePostEdit, hideModalCommentList, showDeleteModal, showModalCommentList } from 'store/actions/postAction';
@@ -27,6 +29,7 @@ import {
 
 const ModalContent = () => {
   const dispatch = useDispatch();
+  const { imagePreview, showImagePreview, hideImagePreview } = useImagePreview();
   const { me } = useSelector((state: RootState) => state.user);
   const { singlePost, modalCommentImagePath, isModalCommentListVisible } = useSelector(
     (state: RootState) => state.post
@@ -65,6 +68,11 @@ const ModalContent = () => {
               singlePost.User.ProfileImage ? `http://localhost:3065/${singlePost.User.ProfileImage.src}` : '/user.jpg'
             }
             alt="유저 프로필 이미지"
+            onClick={() =>
+              showImagePreview(
+                singlePost.User.ProfileImage ? `http://localhost:3065/${singlePost.User.ProfileImage.src}` : '/user.jpg'
+              )
+            }
           />
 
           <div>
@@ -138,6 +146,8 @@ const ModalContent = () => {
           </p>
         </div>
       </ModalContentOptions>
+
+      <ImagePreview imagePreview={imagePreview} hideImagePreview={hideImagePreview} />
     </ModalContentWrapper>
   );
 };

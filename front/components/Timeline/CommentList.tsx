@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CaretDownOutlined, CloseSquareTwoTone, LoadingOutlined } from '@ant-design/icons';
 
@@ -8,6 +8,7 @@ import EditCommentForm from './EditCommentForm';
 import ReplyComment from './ReplyComment';
 import ImagePreview from 'components/Modal/ImagePreviewModal';
 
+import useImagePreview from 'utils/useImagePreview';
 import { RootState } from 'store/reducers';
 import { Comment, IReplyComment } from 'store/types/postType';
 import { editCommentRemoveUploadedImage, hideCommentList, loadCommentsRequest } from 'store/actions/postAction';
@@ -24,6 +25,7 @@ import {
 const CommentList = () => {
   const dispatch = useDispatch();
   const commentRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
+  const { imagePreview, showImagePreview, hideImagePreview } = useImagePreview();
   const {
     isCommentListVisible,
     commentVisiblePostId,
@@ -33,15 +35,6 @@ const CommentList = () => {
     lastChangedCommentId,
     editCommentDone
   } = useSelector((state: RootState) => state.post);
-  const lastCommentId = useMemo(() => {
-    if (mainComments.length === 0) return null;
-
-    const lastMainComment = mainComments[mainComments.length - 1];
-    if (lastMainComment.Replies.length > 0) {
-      return lastMainComment.Replies[lastMainComment.Replies.length - 1].id;
-    }
-    return lastMainComment.id;
-  }, [mainComments]);
 
   const [replyId, setReplyId] = useState<number | null>(null);
   const [replyUser, setReplyUser] = useState<string | null>(null);
@@ -52,18 +45,9 @@ const CommentList = () => {
 
   const [translateY, setTranslateY] = useState(0);
   const [touchStartY, setTouchStartY] = useState<number | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const onHideComment = useCallback(() => {
     dispatch(hideCommentList());
-  }, []);
-
-  const showImagePreview = useCallback((image: string) => {
-    setImagePreview(image);
-  }, []);
-
-  const hideImagePreview = useCallback(() => {
-    setImagePreview(null);
   }, []);
 
   const handleEditClick = useCallback((id: number, type: 'comment' | 'reply') => {
@@ -156,7 +140,6 @@ const CommentList = () => {
                       replyId={null}
                       cancelEdit={cancelEdit}
                       showImagePreview={showImagePreview}
-                      isLastChild={comment.id === lastCommentId}
                     />
                   ) : (
                     <CommentListItem
@@ -177,7 +160,6 @@ const CommentList = () => {
                           replyId={comment.id}
                           cancelEdit={cancelEdit}
                           showImagePreview={showImagePreview}
-                          isLastChild={reply.id === lastCommentId}
                         />
                       ) : (
                         <ReplyComment

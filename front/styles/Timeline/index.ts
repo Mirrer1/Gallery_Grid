@@ -20,7 +20,7 @@ export const TimelineWrapper = styled.section`
 
 export const PostsSection = styled(motion.article)`
   width: 65%;
-  padding: 2em 1em 0 2em;
+  padding: 2% 1% 0 2%;
 
   ${media.tablet} {
     order: 2;
@@ -33,7 +33,9 @@ export const PostsSection = styled(motion.article)`
 export const CommunitySection = styled(motion.article)`
   position: relative;
   width: 35%;
-  padding: 2em 2em 2em 1em;
+  padding: 2% 2% 2% 1%;
+  display: flex;
+  flex-direction: column;
 
   ${media.tablet} {
     order: 1;

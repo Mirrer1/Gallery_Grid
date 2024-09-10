@@ -24,6 +24,7 @@ export const EDIT_MY_INFO_REQUEST = 'EDIT_MY_INFO_REQUEST' as const;
 export const EDIT_MY_INFO_SUCCESS = 'EDIT_MY_INFO_SUCCESS' as const;
 export const EDIT_MY_INFO_FAILURE = 'EDIT_MY_INFO_FAILURE' as const;
 
+export const EXECUTE_USER_EDIT = 'EXECUTE_USER_EDIT' as const;
 export const USER_UPLOAD_IMAGE_REQUEST = 'USER_UPLOAD_IMAGE_REQUEST' as const;
 export const USER_UPLOAD_IMAGE_SUCCESS = 'USER_UPLOAD_IMAGE_SUCCESS' as const;
 export const USER_UPLOAD_IMAGE_FAILURE = 'USER_UPLOAD_IMAGE_FAILURE' as const;
@@ -161,6 +162,10 @@ export interface resetSignUpMessageAction {
   type: typeof RESET_SIGNUP_MESSAGE;
 }
 
+export interface executeUserEditAction {
+  type: typeof EXECUTE_USER_EDIT;
+}
+
 export interface editMyInfoRequestAction {
   type: typeof EDIT_MY_INFO_REQUEST;
   data: FormData;
@@ -213,6 +218,7 @@ export type UserAction =
   | signUpSuccessAction
   | signUpFailureAction
   | resetSignUpMessageAction
+  | executeUserEditAction
   | editMyInfoRequestAction
   | editMyInfoSuccessAction
   | editMyInfoFailureAction

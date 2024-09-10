@@ -9,7 +9,8 @@ import {
   LOAD_MY_INFO_REQUEST,
   USER_UPLOAD_IMAGE_REQUEST,
   USER_REMOVE_UPLOADED_IMAGE,
-  EDIT_MY_INFO_REQUEST
+  EDIT_MY_INFO_REQUEST,
+  EXECUTE_USER_EDIT
 } from 'store/types/userType';
 
 export const loginRequest = (data: AuthResponse) => ({
@@ -40,6 +41,10 @@ export const signUpRequest = (data: AuthResponse) => ({
 
 export const resetSignUpMessage = () => ({
   type: RESET_SIGNUP_MESSAGE
+});
+
+export const executeUserEdit = () => ({
+  type: EXECUTE_USER_EDIT
 });
 
 export const editMyInfoRequest = (data: FormData) => ({

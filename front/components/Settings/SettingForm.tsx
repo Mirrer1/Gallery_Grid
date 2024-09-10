@@ -1,5 +1,6 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { LoadingOutlined } from '@ant-design/icons';
 import { toast } from 'react-toastify';
 
 import useInput from 'utils/useInput';
@@ -14,7 +15,6 @@ import {
   SettingNickname,
   SettingRecommendation
 } from 'styles/Settings/settingForm';
-import { LoadingOutlined } from '@ant-design/icons';
 
 const SettingForm = () => {
   const dispatch = useDispatch();
@@ -22,10 +22,16 @@ const SettingForm = () => {
   const [nickname, onChangeNickname, setNickname] = useInput('');
   const [desc, onChangeDesc, setDesc] = useInput('');
   const [isRecommended, onChangeIsRecommended, setIsRecommended] = useInput(false);
+  const [isChanged, setIsChanged] = useState(false);
 
   const onSubmitForm = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
+
+      if (!isChanged) {
+        toast.info('변경된 사항이 없습니다.');
+        return;
+      }
 
       if (!nickname.trim()) {
         toast.warning('닉네임을 입력해주세요.');
@@ -49,8 +55,19 @@ const SettingForm = () => {
 
       dispatch(editMyInfoRequest(formData));
     },
-    [nickname, desc, isRecommended, userImagePath]
+    [nickname, desc, isRecommended, userImagePath, isChanged]
   );
+
+  useEffect(() => {
+    const isUnchanged =
+      nickname === me.nickname &&
+      desc === me.desc &&
+      isRecommended === me.isRecommended &&
+      userImagePath.length > 0 &&
+      userImagePath[0] === me?.ProfileImage?.src;
+
+    setIsChanged(!isUnchanged);
+  }, [nickname, desc, isRecommended, userImagePath, me]);
 
   useEffect(() => {
     setNickname(me.nickname);
@@ -99,7 +116,7 @@ const SettingForm = () => {
         </div>
       </SettingRecommendation>
 
-      <SettingBtn>
+      <SettingBtn $isChanged={isChanged}>
         <button type="submit">{editMyInfoLoading ? <LoadingOutlined /> : <>Save Changes</>}</button>
       </SettingBtn>
     </SettingFormWrapper>

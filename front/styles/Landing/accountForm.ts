@@ -220,12 +220,6 @@ export const AuthOptionsWrapper = styled.div<{ $menu: string }>`
     font-weight: 500;
   }
 
-  @media (min-width: 992px) {
-    & > button:hover {
-      text-decoration: underline;
-    }
-  }
-
   ${media.tablet} {
     & > div > label {
       font-size: 0.65rem;

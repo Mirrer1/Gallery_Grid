@@ -191,6 +191,14 @@ router.patch('/edit', isLoggedIn, upload.none(), async (req, res, next) => {
     const { nickname, desc, isRecommended, image } = req.body;
     const userId = req.user!.id;
 
+    const existingUser = await User.findOne({
+      where: { nickname, id: { [Op.ne]: userId } }
+    });
+
+    if (existingUser) {
+      return res.status(400).json({ message: '이미 사용 중인 닉네임입니다.' });
+    }
+
     await User.update(
       {
         nickname,
@@ -200,9 +208,9 @@ router.patch('/edit', isLoggedIn, upload.none(), async (req, res, next) => {
       { where: { id: userId } }
     );
 
-    if (image) {
-      const existingImage = await Image.findOne({ where: { UserId: userId, type: 'user' } });
+    const existingImage = await Image.findOne({ where: { UserId: userId, type: 'user' } });
 
+    if (image) {
       if (existingImage) {
         await existingImage.update({ src: image });
       } else {
@@ -211,6 +219,10 @@ router.patch('/edit', isLoggedIn, upload.none(), async (req, res, next) => {
           type: 'user',
           UserId: userId
         });
+      }
+    } else {
+      if (existingImage) {
+        await existingImage.update({ UserId: null });
       }
     }
 

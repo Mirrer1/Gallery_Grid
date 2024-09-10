@@ -6,7 +6,7 @@ export const SearchWrapper = styled.div`
   ${({ theme }) => theme.flexSet('start')}
   width: 100%;
   padding: 0 2em;
-  margin-bottom: 3em;
+  margin-bottom: 15%;
 
   & > label > span {
     font-size: 0.9rem;
@@ -31,7 +31,7 @@ export const SearchWrapper = styled.div`
 
   ${media.tablet} {
     padding: 0 1em;
-    margin-bottom: 2em;
+    margin-bottom: 17%;
 
     & > label > span {
       font-size: 0.8rem;
