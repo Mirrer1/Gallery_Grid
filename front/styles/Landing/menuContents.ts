@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 
 export const ContentsWrapper = styled.main<{ $selected: string }>`
   ${({ theme }) => theme.flexSet('space-between', 'start')};
-  padding: 2em 10em 0 10em;
+  padding: 2em 8%;
 
   ${media.tablet} {
     ${({ theme }) => theme.flexColumnSet('center', 'center')};

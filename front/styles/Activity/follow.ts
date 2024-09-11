@@ -11,7 +11,6 @@ export const FollowTableWrapper = styled.section<{ $type: string; $visible: bool
   background-color: white;
   border-radius: ${props => (props.$visible ? '5px 5px 0 0' : '5px')};
   margin-right: ${props => (props.$type === 'follower' ? '1em' : '0')};
-  margin-bottom: 1em;
   z-index: 35;
   ${ShadowStyle}
 
@@ -29,7 +28,6 @@ export const FollowTableWrapper = styled.section<{ $type: string; $visible: bool
 
 export const FollowTableInfo = styled.div`
   ${({ theme }) => theme.flexSet('space-between')}
-  border-bottom: 1px solid ${({ theme }) => theme.colors.darkBg};
   padding: 1em 1.5em;
 
   & > h1 {
@@ -132,19 +130,14 @@ export const FollowTableBody = styled.tbody<{ $visible: boolean }>`
         width: 55px;
         height: 55px;
         border-radius: 50%;
+        cursor: pointer;
       }
     }
 
     &:nth-child(2) {
       color: ${({ theme }) => theme.colors.primary};
       font-weight: 700;
-
-      @media (min-width: 992px) {
-        &:hover {
-          text-decoration: underline;
-          text-underline-offset: 1.5px;
-        }
-      }
+      cursor: pointer;
     }
 
     &:last-child > button {

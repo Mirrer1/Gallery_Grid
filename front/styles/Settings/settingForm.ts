@@ -6,12 +6,13 @@ import { HoverStyle } from 'styles/Common/hover';
 import { ShadowStyle } from 'styles/Common/shadow';
 
 export const SettingFormWrapper = styled(motion.form)`
+  ${({ theme }) => theme.flexColumnSet('space-between', 'normal')};
   position: absolute;
   right: 3%;
   bottom: 3%;
   width: 50%;
-  height: 64%;
-  padding: 1.5em;
+  height: 70%;
+  padding: 2%;
   border-radius: 5px;
   background-color: white;
   z-index: 10;
@@ -20,15 +21,15 @@ export const SettingFormWrapper = styled(motion.form)`
   & > h2 {
     font-size: 1.1rem;
     font-weight: 700;
-    margin-bottom: 2em;
   }
 
   ${media.tablet} {
     position: absolute;
     top: 41%;
-    left: 27%;
-    width: 70%;
+    left: 29%;
+    width: 68%;
     height: 57%;
+    padding: 3%;
   }
 
   ${media.mobile} {
@@ -38,17 +39,17 @@ export const SettingFormWrapper = styled(motion.form)`
     width: 100%;
     padding: 1em;
     box-shadow: none;
+    justify-content: start;
 
     & > h2 {
       font-size: 1.3rem;
-      margin-bottom: 1.5em;
+      margin-bottom: 1em;
     }
   }
 `;
 
 export const SettingNickname = styled.div`
   ${({ theme }) => theme.flexColumnSet('center', 'start')};
-  margin-bottom: 1.5em;
 
   & > label {
     font-size: 0.7rem;
@@ -100,30 +101,12 @@ export const SettingNickname = styled.div`
   }
 
   ${media.mobile} {
-    margin-bottom: 2em;
-
-    & > label {
-      font-size: 0.6rem;
-    }
-
-    & > input {
-      font-size: 0.7rem;
-
-      &::placeholder {
-        font-size: 0.7rem;
-      }
-    }
-
-    & > div {
-      font-size: 0.55rem;
-      padding-left: 0.3em;
-    }
+    margin-bottom: 1em;
   }
 `;
 
 export const SettingIntro = styled.div`
   ${({ theme }) => theme.flexColumnSet('center', 'start')};
-  margin-bottom: 1em;
 
   & > label {
     font-size: 0.8rem;
@@ -176,29 +159,11 @@ export const SettingIntro = styled.div`
   }
 
   ${media.mobile} {
-    margin-bottom: 1.5em;
-
-    & > label {
-      font-size: 0.6rem;
-    }
-
-    & > textarea {
-      font-size: 0.7rem;
-
-      &::placeholder {
-        font-size: 0.7rem;
-      }
-    }
-
-    & > div {
-      font-size: 0.65rem;
-    }
+    margin-bottom: 1em;
   }
 `;
 
 export const SettingRecommendation = styled.div`
-  margin-bottom: 2em;
-
   & > h3 {
     font-size: 0.8rem;
     font-weight: 700;
@@ -280,24 +245,16 @@ export const SettingRecommendation = styled.div`
     }
 
     [type='checkbox'] {
-      height: 1.3em;
+      height: 1.35em;
     }
   }
 
   ${media.mobile} {
-    margin-bottom: 2.5em;
-
-    & > h3 {
-      font-size: 0.6rem;
-    }
-
-    & > div {
-      font-size: 0.7rem;
-    }
+    margin-bottom: 1em;
   }
 `;
 
-export const SettingBtn = styled.div`
+export const SettingBtn = styled.div<{ $isChanged: boolean }>`
   ${({ theme }) => theme.flexSet('end')};
 
   & > button {
@@ -307,7 +264,12 @@ export const SettingBtn = styled.div`
     font-weight: 500;
     padding: 0.7em 1.2em;
     border-radius: 5px;
+    opacity: ${props => (props.$isChanged ? '100%' : '40%')};
     ${HoverStyle('&')};
+
+    & > span {
+      padding: 0 2.67em;
+    }
   }
 
   ${media.tablet} {

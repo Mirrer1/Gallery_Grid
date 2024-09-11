@@ -5,9 +5,11 @@ import { toast } from 'react-toastify';
 import EmojiPicker from 'emoji-picker-react';
 import Router from 'next/router';
 
+import ImagePreview from './ImagePreviewModal';
 import useInput from 'utils/useInput';
 import formatDate from 'utils/useListTimes';
 import useEmojiPicker from 'utils/useEmojiPicker';
+import useImagePreview from 'utils/useImagePreview';
 import { useLocation } from 'utils/useLocation';
 import { RootState } from 'store/reducers';
 import { cancelPostEdit, editPostRequest, hidePostModal } from 'store/actions/postAction';
@@ -24,6 +26,7 @@ const EditModalContent = () => {
   const { singlePost, editPostImagePaths, editPostLoading } = useSelector((state: RootState) => state.post);
   const [content, onChangeContent, setContent] = useInput<string>('');
   const { location, getLocation, setLocation, loading } = useLocation();
+  const { imagePreview, showImagePreview, hideImagePreview } = useImagePreview();
   const { showEmoji, showEmojiPicker, closeEmojiPicker, onEmojiClick } = useEmojiPicker(setContent);
 
   const onClickCancel = useCallback(() => {
@@ -63,6 +66,10 @@ const EditModalContent = () => {
   );
 
   useEffect(() => {
+    if (content.length === 2000) toast.warning('게시글은 2000자 이하로 작성해주세요.');
+  }, [content]);
+
+  useEffect(() => {
     setContent(singlePost.content);
     setLocation(singlePost.location);
   }, []);
@@ -76,6 +83,11 @@ const EditModalContent = () => {
               singlePost.User.ProfileImage ? `http://localhost:3065/${singlePost.User.ProfileImage.src}` : '/user.jpg'
             }
             alt="유저 프로필 이미지"
+            onClick={() =>
+              showImagePreview(
+                singlePost.User.ProfileImage ? `http://localhost:3065/${singlePost.User.ProfileImage.src}` : '/user.jpg'
+              )
+            }
           />
 
           <div>
@@ -135,6 +147,8 @@ const EditModalContent = () => {
           </div>
         </EditModalEmojiPicker>
       )}
+
+      <ImagePreview imagePreview={imagePreview} hideImagePreview={hideImagePreview} />
     </EditModalContentWrapper>
   );
 };

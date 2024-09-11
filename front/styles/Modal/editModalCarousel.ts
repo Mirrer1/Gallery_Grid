@@ -14,34 +14,32 @@ export const EditModalCarouselWrapper = styled.div`
   z-index: 30;
   ${({ theme }) => theme.flexColumnSet('space-between', 'normal')};
 
+  ${media.tablet} {
+    border-radius: 15px 0 0 0;
+  }
+
   ${media.mobile} {
     width: 100%;
-    border-radius: 5px 5px 0 0;
+    height: 65%;
+    border-radius: 15px 15px 0 0;
   }
 `;
 
 export const EditModalSelectedImage = styled(motion.div)`
   width: 100%;
-  height: 63.5%;
+  height: 1px;
+  flex-grow: 1;
+  margin-bottom: 0.5em;
 
   & > img {
     width: 100%;
     height: 100%;
   }
-
-  ${media.tablet} {
-    height: 63%;
-    margin-bottom: 1.8%;
-  }
-
-  ${media.mobile} {
-    height: 60.5%;
-    margin-bottom: 2.2%;
-  }
 `;
 
 export const EditModalSwiperImages = styled.div`
   height: 29%;
+  margin-bottom: 0.5em;
 
   .swiper {
     padding: 0;
@@ -94,13 +92,11 @@ export const EditModalSwiperImages = styled.div`
   }
 
   ${media.tablet} {
-    height: 30.5%;
-    margin-bottom: 1.8%;
+    height: 27%;
   }
 
   ${media.mobile} {
-    height: 27%;
-    margin-bottom: 2.2%;
+    height: 30%;
 
     .swiper-button-prev,
     .swiper-button-next {
@@ -127,6 +123,7 @@ export const EditModalUploadBtn = styled.div`
 
   & > div {
     ${({ theme }) => theme.flexSet()};
+    height: 100%;
     font-size: 0.7rem;
     background-color: #6ba2e6;
     color: white;
@@ -148,7 +145,13 @@ export const EditModalUploadBtn = styled.div`
     display: none;
   }
 
+  ${media.tablet} {
+    height: 3.5%;
+  }
+
   ${media.mobile} {
+    height: 5%;
+
     & > div {
       padding: 0.5em;
       font-size: 0.65rem;

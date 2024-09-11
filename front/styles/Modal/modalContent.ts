@@ -16,10 +16,12 @@ export const ModalContentWrapper = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    border-radius: 0 15px 0 0;
   }
 
   ${media.mobile} {
     width: 100%;
+    height: 50%;
     border-radius: 0 0 5px 5px;
   }
 `;
@@ -45,13 +47,6 @@ export const ModalContentHeader = styled.div`
       font-weight: 500;
       margin-bottom: 0.3em;
       cursor: pointer;
-
-      @media (min-width: 992px) {
-        &:hover {
-          text-decoration: underline;
-          text-underline-offset: 1.5px;
-        }
-      }
     }
 
     & > div > p {
@@ -176,7 +171,7 @@ export const ModalContentOptions = styled.div<{ $isModalCommentListVisible: bool
 
   ${media.mobile} {
     ${({ theme }) => theme.flexSet('space-between')};
-    padding: 0.6em;
+    padding: 1em 0.5em;
     border-radius: 0 0 5px 5px;
 
     & > div:first-child {

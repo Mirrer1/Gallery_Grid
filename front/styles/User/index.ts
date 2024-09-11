@@ -14,4 +14,9 @@ export const UserWrapper = styled.div`
     ${({ theme }) => theme.flexColumnSet()};
     margin: 0;
   }
+
+  ${media.mobile} {
+    padding: 0.75em;
+    margin-bottom: 2%;
+  }
 `;

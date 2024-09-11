@@ -18,9 +18,10 @@ export const PostCategory = styled.div`
   position: sticky;
   top: 0;
   ${({ theme }) => theme.flexSet('end')}
-  padding: 0.7em 1em;
   z-index: 9;
   background-color: white;
+  border-bottom: 1px solid #eeeff3;
+  padding-right: 0.5em;
 `;
 
 export const CategoryItem = styled.p<{ $selected: boolean }>`
@@ -29,15 +30,15 @@ export const CategoryItem = styled.p<{ $selected: boolean }>`
   font-size: 0.75rem;
   cursor: pointer;
   opacity: ${props => (props.$selected ? '100%' : '40%')};
-  margin-right: 1em;
+  padding: 0.7em 1em;
+  border-bottom: ${props => props.$selected && '2px solid black'};
 
   &:last-child {
     margin-right: 0;
   }
 
   ${media.mobile} {
-    font-size: 0.65rem;
-    margin-right: 0.8em;
+    font-size: 0.7rem;
   }
 `;
 
@@ -75,13 +76,6 @@ export const PostHeader = styled.div`
       font-weight: 500;
       margin-bottom: 0.4em;
       cursor: pointer;
-
-      @media (min-width: 992px) {
-        &:hover {
-          text-decoration: underline;
-          text-underline-offset: 1.5px;
-        }
-      }
     }
 
     & > div > p {

@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef } from 'react';
 import { CaretDownOutlined, PaperClipOutlined, SendOutlined, SmileOutlined } from '@ant-design/icons';
 
 import useInput from 'utils/useInput';
+import { slideInFromBottom } from 'styles/Common/animation';
 import { ChatHeader, ChatInputWrapper, ChatItemWrapper, ChatWrapper, ReceiveChat, SendChat } from 'styles/Message/chat';
 
 type ChatProps = {
@@ -35,7 +36,9 @@ const Chat = ({ visibleChat, setVisibleChat }: ChatProps) => {
   }, [visibleChat]);
 
   return (
-    <ChatWrapper $visible={visibleChat}>
+    // key={visibleChat}
+    // 추후 chat id 로 key값 적용
+    <ChatWrapper $visible={visibleChat} {...slideInFromBottom()}>
       <div>
         <ChatHeader>
           <div>
@@ -182,6 +185,7 @@ const Chat = ({ visibleChat, setVisibleChat }: ChatProps) => {
 
         <ChatInputWrapper $active={chat.length === 0}>
           <div>
+            <PaperClipOutlined />
             <SmileOutlined />
             <input
               type="text"
@@ -193,7 +197,6 @@ const Chat = ({ visibleChat, setVisibleChat }: ChatProps) => {
           </div>
 
           <div>
-            <PaperClipOutlined />
             <SendOutlined />
           </div>
         </ChatInputWrapper>

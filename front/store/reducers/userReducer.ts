@@ -18,12 +18,21 @@ import {
   SIGNUP_FAILURE,
   SIGNUP_REQUEST,
   SIGNUP_SUCCESS,
+  USER_REMOVE_UPLOADED_IMAGE,
+  EDIT_MY_INFO_FAILURE,
+  EDIT_MY_INFO_REQUEST,
+  EDIT_MY_INFO_SUCCESS,
+  USER_UPLOAD_IMAGE_FAILURE,
+  USER_UPLOAD_IMAGE_REQUEST,
+  USER_UPLOAD_IMAGE_SUCCESS,
   UserAction,
-  UserState
+  UserState,
+  EXECUTE_USER_EDIT
 } from 'store/types/userType';
 
 export const initialState: UserState = {
   me: null,
+  userImagePath: [],
   loginLoading: false,
   loginDone: false,
   loginError: null,
@@ -39,7 +48,13 @@ export const initialState: UserState = {
   signUpLoading: false,
   signUpDone: false,
   signUpError: null,
-  signUpMessage: { type: null, message: null }
+  signUpMessage: { type: null, message: null },
+  editMyInfoLoading: false,
+  editMyInfoDone: false,
+  editMyInfoError: null,
+  userUploadImageLoading: false,
+  userUploadImageDone: false,
+  userUploadImageError: null
 };
 
 const reducer = (state: UserState = initialState, action: UserAction): UserState => {
@@ -120,6 +135,43 @@ const reducer = (state: UserState = initialState, action: UserAction): UserState
         break;
       case RESET_SIGNUP_MESSAGE:
         draft.signUpMessage = { type: null, message: null };
+        break;
+      case EXECUTE_USER_EDIT:
+        if (draft.me?.ProfileImage) draft.userImagePath = [draft.me.ProfileImage.src];
+        else draft.userImagePath = [];
+        break;
+      case EDIT_MY_INFO_REQUEST:
+        draft.editMyInfoLoading = true;
+        draft.editMyInfoDone = false;
+        draft.editMyInfoError = null;
+        break;
+      case EDIT_MY_INFO_SUCCESS:
+        draft.editMyInfoLoading = false;
+        draft.editMyInfoDone = true;
+        draft.me = action.data;
+        if (draft.me?.ProfileImage) draft.userImagePath = [draft.me.ProfileImage.src];
+        else draft.userImagePath = [];
+        break;
+      case EDIT_MY_INFO_FAILURE:
+        draft.editMyInfoLoading = false;
+        draft.editMyInfoError = action.error;
+        break;
+      case USER_UPLOAD_IMAGE_REQUEST:
+        draft.userUploadImageLoading = true;
+        draft.userUploadImageDone = false;
+        draft.userUploadImageError = null;
+        break;
+      case USER_UPLOAD_IMAGE_SUCCESS:
+        draft.userUploadImageLoading = false;
+        draft.userUploadImageDone = true;
+        draft.userImagePath = action.data;
+        break;
+      case USER_UPLOAD_IMAGE_FAILURE:
+        draft.userUploadImageLoading = false;
+        draft.userUploadImageError = action.error;
+        break;
+      case USER_REMOVE_UPLOADED_IMAGE:
+        draft.userImagePath = [];
         break;
       default:
         return state;

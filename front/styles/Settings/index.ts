@@ -23,11 +23,11 @@ export const SettingWrapper = styled.section`
   }
 `;
 
-export const SettingProfile = styled(motion.div)`
+export const SettingProfile = styled(motion.div)<{ $loading: boolean }>`
   width: 47%;
   height: 74%;
   position: absolute;
-  top: 10%;
+  top: 3%;
   left: 3%;
 
   & > label > img {
@@ -36,6 +36,7 @@ export const SettingProfile = styled(motion.div)`
     border-radius: 5px;
     cursor: pointer;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    filter: ${props => props.$loading && 'blur(4px)'};
   }
 
   & > div {
@@ -47,7 +48,7 @@ export const SettingProfile = styled(motion.div)`
     & > h1 {
       font-size: 1.8rem;
       font-weight: 700;
-      margin-bottom: 0.5em;
+      margin-bottom: 0.3em;
     }
 
     & > p {
@@ -59,19 +60,34 @@ export const SettingProfile = styled(motion.div)`
       white-space: normal;
       font-size: 0.9rem;
       font-weight: 500;
+      line-height: 1.2;
       opacity: 60%;
-      padding-left: 0.5em;
+      padding-left: 0.3em;
     }
   }
 
-  & > label > span {
+  & > div:nth-child(3) {
     position: absolute;
-    left: 2%;
+    left: 1%;
     bottom: 1%;
-    font-size: 1.7rem;
-    opacity: 40%;
-    cursor: pointer;
-    ${ReverseHoverStyle('&')};
+    top: auto;
+
+    & > span,
+    & > label > span {
+      font-size: 1.2rem;
+      opacity: 40%;
+      cursor: pointer;
+      padding: 0.4em;
+      background-color: #fff;
+      border: none;
+      border-radius: 45px;
+      box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+      ${ReverseHoverStyle('&')};
+    }
+
+    & > label > span {
+      margin-right: 0.3em;
+    }
   }
 
   & > input {
@@ -83,28 +99,26 @@ export const SettingProfile = styled(motion.div)`
     top: 0;
     left: 0;
     width: 100%;
-    height: 43%;
+    height: 55%;
 
     & > label > img {
-      width: 70%;
+      width: 75%;
     }
 
     & > div {
-      width: 50%;
-      left: 50%;
+      width: 48%;
+      left: 53%;
 
       & > h1 {
         font-size: 1.6rem;
-        margin-bottom: 0.35em;
       }
 
       & > p {
         font-size: 0.8rem;
-        padding-left: 0;
       }
     }
 
-    & > label > span {
+    & > span {
       font-size: 1.5rem;
     }
   }
@@ -128,20 +142,20 @@ export const SettingProfile = styled(motion.div)`
       top: 0;
       left: 0;
       flex-grow: 1;
-      margin-right: 1em;
 
       & > h1 {
-        font-size: 0.9rem;
+        font-size: 1.2rem;
         margin-bottom: 0.3em;
       }
 
       & > p {
-        font-size: 0.65rem;
+        font-size: 0.75rem;
         -webkit-line-clamp: 3;
+        padding-left: 0.1em;
       }
     }
 
-    & > label > span {
+    & > div:nth-child(3) {
       display: none;
     }
   }
@@ -151,12 +165,28 @@ export const MobileImageBtn = styled.label`
   display: none;
 
   ${media.mobile} {
-    display: block;
+    ${({ theme }) => theme.flexSet()};
     font-size: 0.6rem;
-    background-color: #6ba2e6;
+    background-color: ${({ theme }) => theme.colors.primary};
     color: white;
     font-weight: 500;
     padding: 0.7em 1.2em;
     border-radius: 5px;
+    margin-top: 1em;
+  }
+`;
+
+export const MobileRemoveImageBtn = styled.span`
+  display: none;
+
+  ${media.mobile} {
+    ${({ theme }) => theme.flexSet()};
+    font-size: 0.6rem;
+    color: #ee6b6e;
+    border: 1px #ee6b6e solid;
+    font-weight: 500;
+    padding: 0.7em 1.2em;
+    border-radius: 5px;
+    margin-top: 0.3em;
   }
 `;

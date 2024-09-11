@@ -1,4 +1,7 @@
 import express from 'express';
+import multer from 'multer';
+import path from 'path';
+import fs from 'fs';
 import bcrypt from 'bcrypt';
 import { Op } from 'sequelize';
 
@@ -9,6 +12,29 @@ import Post from '../models/post';
 import { isLoggedIn, isNotLoggedIn } from './middleware';
 
 const router = express.Router();
+
+try {
+  fs.accessSync('uploads');
+} catch (err) {
+  console.log('uploads 폴더가 없으므로 생성합니다.');
+  fs.mkdirSync('uploads');
+}
+
+const upload = multer({
+  storage: multer.diskStorage({
+    destination(req, file, done) {
+      done(null, 'uploads');
+    },
+    filename(req, file, done) {
+      const ext = path.extname(file.originalname);
+      let basename = Buffer.from(path.basename(file.originalname, ext), 'latin1').toString('utf8');
+      basename = basename.replace(/[^가-힣a-zA-Z0-9]/g, '');
+
+      done(null, basename + '_' + new Date().getTime() + ext);
+    }
+  }),
+  limits: { fileSize: 20 * 1024 * 1024 }
+});
 
 router.post('/', isNotLoggedIn, async (req, res, next) => {
   try {
@@ -80,7 +106,7 @@ router.post('/login', isNotLoggedIn, async (req, res, next) => {
           }
         ],
         attributes: {
-          exclude: ['password', 'isRecommended', 'snsId', 'provider']
+          exclude: ['password', 'snsId', 'provider']
         }
       });
 
@@ -115,7 +141,7 @@ router.get('/', async (req, res, next) => {
           }
         ],
         attributes: {
-          exclude: ['password', 'isRecommended', 'snsId', 'provider']
+          exclude: ['password', 'snsId', 'provider']
         }
       });
       res.status(200).json(user);
@@ -158,6 +184,80 @@ router.post('/logout', isLoggedIn, (req, res, next) => {
       res.send('정상적으로 로그아웃 되었습니다.');
     });
   });
+});
+
+router.patch('/edit', isLoggedIn, upload.none(), async (req, res, next) => {
+  try {
+    const { nickname, desc, isRecommended, image } = req.body;
+    const userId = req.user!.id;
+
+    const existingUser = await User.findOne({
+      where: { nickname, id: { [Op.ne]: userId } }
+    });
+
+    if (existingUser) {
+      return res.status(400).json({ message: '이미 사용 중인 닉네임입니다.' });
+    }
+
+    await User.update(
+      {
+        nickname,
+        desc,
+        isRecommended: isRecommended === 'true'
+      },
+      { where: { id: userId } }
+    );
+
+    const existingImage = await Image.findOne({ where: { UserId: userId, type: 'user' } });
+
+    if (image) {
+      if (existingImage) {
+        await existingImage.update({ src: image });
+      } else {
+        await Image.create({
+          src: image,
+          type: 'user',
+          UserId: userId
+        });
+      }
+    } else {
+      if (existingImage) {
+        await existingImage.update({ UserId: null });
+      }
+    }
+
+    const user = await User.findOne({
+      where: { id: req.user!.id },
+      include: [
+        { model: Post, attributes: ['id'] },
+        {
+          model: User,
+          as: 'Followings',
+          attributes: ['id']
+        },
+        {
+          model: User,
+          as: 'Followers',
+          attributes: ['id']
+        },
+        {
+          model: Image,
+          as: 'ProfileImage',
+          where: { type: 'user' },
+          attributes: ['id', 'src'],
+          required: false
+        }
+      ],
+      attributes: {
+        exclude: ['password', 'snsId', 'provider']
+      }
+    });
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
 });
 
 export default router;

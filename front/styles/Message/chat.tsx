@@ -1,33 +1,34 @@
 import styled from 'styled-components';
+import { motion } from 'framer-motion';
 
 import media from 'styles/media';
 import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
 
-export const ChatWrapper = styled.article<{ $visible: boolean }>`
+export const ChatWrapper = styled(motion.article)<{ $visible: boolean }>`
   display: ${props => (props.$visible ? 'block' : 'none')};
   width: 65%;
   height: 100%;
-  padding: 1em 1.5em 1em 0.75em;
+  padding: 0 1em 0 1.5em;
 
   & > div {
     height: 100%;
+    display: flex;
+    flex-direction: column;
   }
 
   ${media.tablet} {
     width: 100%;
-    padding: 0.5em 0.5em 0 0.5em;
+    padding: 0;
   }
 `;
 
 export const ChatHeader = styled.header`
-  height: 5%;
-  margin-bottom: 0.7em;
-  padding-bottom: 3em;
+  padding: 0 0.5em 0.5em 0.5em;
   border-bottom: 2px solid ${({ theme }) => theme.colors.darkBg};
 
   & > div {
     ${({ theme }) => theme.flexSet('space-between')}
-    margin-bottom: 0.3em;
+    margin-bottom: 0.5em;
 
     & > h1 {
       font-size: 1.1rem;
@@ -51,63 +52,42 @@ export const ChatHeader = styled.header`
 
   ${media.tablet} {
     position: fixed;
-    top: 0;
     right: 0;
+    top: 0;
+    padding: 0.5em 1em;
     width: 75%;
-    z-index: 20;
     background-color: ${({ theme }) => theme.colors.bg};
-    padding: 0.7em 1em 3em 1em;
-
-    & > div {
-      margin-bottom: 0.5em;
-
-      & > h1 {
-        font-size: 1.2rem;
-      }
-
-      & > span {
-        display: block;
-      }
-    }
-
-    & > p {
-      font-size: 0.65rem;
-    }
+    z-index: 20;
   }
 
   ${media.mobile} {
+    position: sticky;
     width: 100%;
-
-    & > div {
-      & > h1 {
-        font-size: 1rem;
-      }
-
-      & > span {
-        font-size: 0.9rem;
-      }
-    }
+    padding: 0.5em;
   }
 `;
 
 export const ChatItemWrapper = styled.div`
-  height: 87%;
-  overflow-y: scroll;
+  height: 1px;
+  flex-grow: 1;
   padding: 0.5em 0.7em;
+  overflow-y: auto;
 
   ${media.tablet} {
-    padding: 3.5em 0 3em 0;
+    height: 100%;
+    padding: 0.5em 0;
+    margin: 5% 0;
   }
 
   ${media.mobile} {
-    padding: 0.2em;
+    margin: 0;
   }
 `;
 
 export const ReceiveChat = styled.div`
   width: 100%;
   ${({ theme }) => theme.flexSet('start')};
-  margin-bottom: 1em;
+  padding: 0.5em 0;
 
   & > div:first-child {
     width: 10%;
@@ -149,8 +129,6 @@ export const ReceiveChat = styled.div`
   }
 
   ${media.mobile} {
-    margin-bottom: 0.5em;
-
     & > div:first-child {
       width: 15%;
       margin-right: 0.5em;
@@ -174,7 +152,7 @@ export const ReceiveChat = styled.div`
 
 export const SendChat = styled.div`
   ${({ theme }) => theme.flexSet('end')}
-  margin-bottom: 1em;
+  padding: 0.5em 0;
 
   & > p {
     width: fit-content;
@@ -189,8 +167,6 @@ export const SendChat = styled.div`
   }
 
   ${media.mobile} {
-    margin-bottom: 0.5em;
-
     & > p {
       font-size: 0.8rem;
     }
@@ -198,7 +174,6 @@ export const SendChat = styled.div`
 `;
 
 export const ChatInputWrapper = styled.div<{ $active: boolean }>`
-  height: 6%;
   ${({ theme }) => theme.flexSet('space-between')}
   background-color: white;
   border-radius: 5px;
@@ -206,18 +181,21 @@ export const ChatInputWrapper = styled.div<{ $active: boolean }>`
   padding: 0.5em 0.8em;
 
   & > div:first-child {
-    width: 88%;
     ${({ theme }) => theme.flexSet('start')}
+    flex-grow: 1;
 
     & > span {
-      width: 5%;
       font-size: 1.2rem;
       opacity: 40%;
       ${ReverseHoverStyle('&')}
     }
 
+    & > span:first-child {
+      margin-right: 0.3em;
+    }
+
     & > input {
-      width: 95%;
+      flex-grow: 1;
       font-size: 0.9rem;
       padding: 0.5em 1em 0.5em 0.5em;
       border: none;
@@ -233,7 +211,6 @@ export const ChatInputWrapper = styled.div<{ $active: boolean }>`
   }
 
   & > div:last-child {
-    width: 12%;
     ${({ theme }) => theme.flexSet('end')}
 
     & > span:first-child {

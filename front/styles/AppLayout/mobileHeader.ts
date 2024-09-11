@@ -32,34 +32,27 @@ export const MobileHeaderContent = styled.div`
 
   & > div {
     ${({ theme }) => theme.flexSet()}
+    width: 35px;
     height: 35px;
-    padding: 0.3em;
+    margin-right: 0.3em;
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
     border: 1px solid rgba(99, 99, 99, 0.2);
     ${HoverStyle('&')}
 
     &:first-child {
-      width: 30px;
-      height: 30px;
-      margin-right: 0.3em;
     }
 
     &:nth-child(2) {
-      width: 30px;
-      height: 30px;
-      margin-right: 0.3em;
     }
 
     &:last-child {
-      width: 30px;
-      height: 30px;
+      margin-right: 0;
     }
   }
 
   & > div > img {
     width: 100%;
-    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-    border: 1px solid rgba(99, 99, 99, 0.2);
+    height: 100%;
   }
 
   & > div > span {

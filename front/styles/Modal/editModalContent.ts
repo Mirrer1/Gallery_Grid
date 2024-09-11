@@ -12,9 +12,14 @@ export const EditModalContentWrapper = styled.div`
   border-radius: 0 5px 5px 0;
   z-index: 30;
 
+  ${media.tablet} {
+    border-radius: 0 15px 0 0;
+  }
+
   ${media.mobile} {
     width: 100%;
-    border-radius: 0 0 5px 5px;
+    height: 50%;
+    border-radius: 0;
   }
 `;
 
@@ -39,13 +44,6 @@ export const EditModalContentHeader = styled.div`
       font-weight: 500;
       margin-bottom: 0.3em;
       cursor: pointer;
-
-      @media (min-width: 992px) {
-        &:hover {
-          text-decoration: underline;
-          text-underline-offset: 1.5px;
-        }
-      }
     }
 
     & > div > p {
@@ -74,12 +72,13 @@ export const EditModalContentHeader = styled.div`
   }
 
   ${media.mobile} {
-    height: 17%;
-    padding: 0.5em;
+    padding: 1em 0.5em;
   }
 `;
 
 export const EditModalForm = styled.form`
+  display: flex;
+  flex-direction: column;
   flex-grow: 1;
   height: 1px;
   color: ${({ theme }) => theme.colors.font};
@@ -89,7 +88,8 @@ export const EditModalForm = styled.form`
 
   & > textarea {
     width: 100%;
-    height: 96%;
+    height: 1px;
+    flex-grow: 1;
     font-size: 0.85rem;
     line-height: 1.5;
     margin-bottom: 0.5em;
@@ -104,7 +104,6 @@ export const EditModalForm = styled.form`
   }
 
   & > p {
-    height: 3%;
     font-size: 0.85rem;
     font-weight: 500;
     opacity: 40%;
@@ -112,8 +111,6 @@ export const EditModalForm = styled.form`
   }
 
   ${media.tablet} {
-    height: 82%;
-
     & > textarea {
       font-size: 0.75rem;
     }
@@ -124,12 +121,11 @@ export const EditModalForm = styled.form`
   }
 
   ${media.mobile} {
-    height: 71%;
-    padding: 0.5em;
+    padding: 0.7em;
 
     & > textarea {
       font-size: 0.7rem;
-      margin-bottom: 0;
+      margin-bottom: 1em;
     }
 
     & > p {
@@ -200,7 +196,6 @@ export const EditModalBtn = styled.div<{ $active: boolean; $edit: boolean }>`
   }
 
   ${media.tablet} {
-    height: 8%;
     padding: 0.6em;
 
     & > div:last-child {
@@ -211,8 +206,7 @@ export const EditModalBtn = styled.div<{ $active: boolean; $edit: boolean }>`
   }
 
   ${media.mobile} {
-    height: 12%;
-    padding: 0.6em;
+    padding: 0.7em 0.5em;
     border-radius: 0 0 5px 5px;
 
     & > div:first-child {
@@ -248,23 +242,21 @@ export const EditModalEmojiPicker = styled.div`
   & > div:last-child {
     transform: scale(0.8);
     position: absolute;
-    bottom: 17%;
-    right: 25%;
+    bottom: 18.5%;
+    right: 29%;
     z-index: 100;
   }
 
   ${media.tablet} {
     & > div:last-child {
       right: 22%;
+      bottom: 16.5%;
     }
   }
 
   ${media.mobile} {
-    height: 450%;
-
     & > div:last-child {
-      bottom: 16%;
-      right: 17.5%;
+      right: 20.5%;
     }
   }
 `;

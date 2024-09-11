@@ -18,7 +18,8 @@ const Message = ({ visibleChat, setVisibleChat }: ChatProps) => {
       id: 1,
       profile: 'https://i.pinimg.com/564x/ed/30/6c/ed306c69bf2cd486a926babf2912bef9.jpg',
       nickname: 'asd231',
-      lastChat: '가나다라마자가나다라마자가나다라마자',
+      lastChat:
+        '가나다라마자가나다라마자가나다라마자가나다라마자가나다라마자가나다라마자가나다라마자가나다라마자가나다라마자가나다라마자가나다라마자가나다라마자가나다라마자가나다라마자가나다라마자가나다라마자가나다라마자가나다라마자가나다라마자가나다라마자가나다라마자가나다라마자가나다라마자가나다라마자가나다라마자가나다라마자가나다라마자가나다라마자가나다라마자가나다라마자',
       createdAt: '02 March'
     },
     {
@@ -115,7 +116,7 @@ const Message = ({ visibleChat, setVisibleChat }: ChatProps) => {
 
   return (
     <ChatListWrapper $visible={visibleChat}>
-      <ChatListHeader>
+      <ChatListHeader $visible={visibleChat}>
         <div>
           <label htmlFor="chatSearch">
             <SearchOutlined />
@@ -136,7 +137,7 @@ const Message = ({ visibleChat, setVisibleChat }: ChatProps) => {
 
       <ChatListItemWrapper {...slideInFromBottom()}>
         {list.map(chat => (
-          <ChatListItem key={chat.id} onClick={onVisibleChat}>
+          <ChatListItem key={chat.id} onClick={onVisibleChat} $visible={visibleChat}>
             <div>
               <img src={chat.profile} alt={`${chat.nickname}의 프로필 이미지`} />
 

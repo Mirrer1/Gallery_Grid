@@ -10,7 +10,7 @@ export const LayoutWrapper = styled.div`
   width: 100%;
   height: 100%;
   flex-grow: 1;
-  padding: 3em 13%;
+  padding: 2.5% 13%;
 
   & > aside {
     ${({ theme }) => theme.flexColumnSet('space-between', 'start')};
@@ -19,10 +19,18 @@ export const LayoutWrapper = styled.div`
     background-color: white;
     padding: 1.5em 0;
     border-radius: 5px 0 0 5px;
-  }
 
-  & > aside > div {
-    width: 100%;
+    & > div {
+      width: 100%;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+
+      & > div:first-child {
+        flex-grow: 1;
+      }
+    }
   }
 
   & > main {
@@ -75,13 +83,15 @@ export const LayoutWrapper = styled.div`
 
 export const NavbarProfile = styled.div`
   padding: 0 2em;
-  margin-bottom: 3em;
+  margin-bottom: 10%;
 
   & > img {
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     margin-bottom: 1.5em;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    cursor: pointer;
   }
 
   & > h1 {
@@ -105,11 +115,11 @@ export const NavbarProfile = styled.div`
 
   ${media.tablet} {
     padding: 0 1em;
-    margin-bottom: 2em;
+    margin-bottom: 17%;
 
     & > img {
-      width: 45px;
-      height: 45px;
+      width: 50px;
+      height: 50px;
       margin-bottom: 1em;
     }
 
@@ -124,9 +134,8 @@ export const NavbarProfile = styled.div`
   }
 `;
 
-export const NavbarItems = styled.div<{ $firstmargin: string }>`
+export const NavbarItems = styled.div`
   width: 100%;
-  margin-bottom: ${props => props.$firstmargin === 'true' && '6em'};
 `;
 
 export const NavbarItem = styled(Link)<{ $selected: boolean; $message: boolean }>`
@@ -151,6 +160,8 @@ export const NavbarItem = styled(Link)<{ $selected: boolean; $message: boolean }
   }
 
   ${media.tablet} {
+    font-size: 0.8rem;
+
     & > div {
       margin-right: 1em;
     }
@@ -174,10 +185,18 @@ export const NavbarMessage = styled.div<{ $selected: boolean }>`
     border-radius: 50%;
     font-weight: 500;
     background-color: ${({ theme }) => theme.colors.primary};
+
+    & > p {
+      line-height: 0;
+    }
   }
 
   ${media.tablet} {
     margin-right: 0.5em;
+
+    & > div > button {
+      transform: scale(0.95);
+    }
   }
 `;
 
@@ -199,6 +218,8 @@ export const NavbarLogout = styled.button`
   }
 
   ${media.tablet} {
+    font-size: 0.8rem;
+
     & > div {
       margin-right: 1em;
     }

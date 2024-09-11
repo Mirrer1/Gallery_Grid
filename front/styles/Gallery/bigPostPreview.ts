@@ -122,16 +122,18 @@ export const BigPostPreviewContent = styled.div`
     & > h1 {
       font-size: 1rem;
       -webkit-line-clamp: 2;
+      margin-bottom: 0.25em;
     }
 
     & > p {
       font-size: 0.6rem;
+      margin-bottom: 0.8em;
     }
   }
 
   ${media.mobile} {
-    left: 57%;
-    width: 40%;
+    left: 50%;
+    width: 45%;
 
     & > h1 {
       font-size: 0.8rem;
@@ -148,7 +150,7 @@ export const BigPostPreviewOption = styled.div`
 
   & > div {
     opacity: 60%;
-    font-size: 0.7rem;
+    font-size: 0.9rem;
   }
 
   & > div:first-child {
@@ -161,13 +163,7 @@ export const BigPostPreviewOption = styled.div`
 
   ${media.tablet} {
     & > div {
-      font-size: 0.65rem;
-    }
-  }
-
-  ${media.mobile} {
-    & > div {
-      font-size: 0.6rem;
+      font-size: 0.75rem;
     }
   }
 `;

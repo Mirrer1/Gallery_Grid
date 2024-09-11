@@ -5,14 +5,16 @@ import media from 'styles/media';
 import { HoverStyle } from 'styles/Common/hover';
 
 export const AlertWrapper = styled(motion.section)`
-  height: 81%;
+  height: 1px;
+  flex-grow: 1;
   overflow-y: scroll;
   background-color: white;
-  border-radius: 5px;
+  border-radius: 5px 5px 0 0;
 
   ${media.tablet} {
     height: 100%;
     overflow-y: visible;
+    border-radius: 5px;
   }
 `;
 
@@ -33,6 +35,10 @@ export const AlertDivider = styled.div`
     padding: 1px;
     background-color: rgba(0, 0, 0, 0.06);
     margin: 15px 10px;
+  }
+
+  ${media.tablet} {
+    border-radius: 5px 5px 0 0;
   }
 
   ${media.mobile} {
@@ -57,6 +63,7 @@ export const AlertHeader = styled.div<{ $type: string }>`
     height: 50px;
     border-radius: 50%;
     margin-right: 1em;
+    cursor: pointer;
   }
 
   & > p {
@@ -77,13 +84,6 @@ export const AlertHeader = styled.div<{ $type: string }>`
       color: ${({ theme }) => theme.colors.primary};
       font-weight: 600;
       cursor: pointer;
-
-      @media (min-width: 992px) {
-        &:hover {
-          text-decoration: underline;
-          text-underline-offset: 1.5px;
-        }
-      }
     }
 
     & > span:last-child {

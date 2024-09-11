@@ -5,7 +5,9 @@ import media from 'styles/media';
 
 export const ActivityWrapper = styled.div`
   height: 100%;
-  padding: 1em 2em;
+  padding: 1% 2% 0 2%;
+  display: flex;
+  flex-direction: column;
 
   ${media.tablet} {
     padding: 0;
@@ -18,8 +20,7 @@ export const ActivityWrapper = styled.div`
 `;
 
 export const ActivityHeader = styled.header`
-  height: 11%;
-  padding: 1.5em 0.5em;
+  padding: 1.5em 1em;
 
   & > div {
     ${({ theme }) => theme.flexSet('start')};
@@ -41,14 +42,10 @@ export const ActivityHeader = styled.header`
   ${media.tablet} {
     padding: 0.5em;
     margin-bottom: 1em;
-
-    & > div {
-      justify-content: center;
-    }
   }
 
   ${media.mobile} {
-    padding: 0.5em 0.8em;
+    padding: 0.5em 1.5em;
     margin-bottom: 0.7em;
 
     & > div {
@@ -87,8 +84,8 @@ export const HeaderItem = styled.div`
 `;
 
 export const FollowWrapper = styled(motion.div)`
-  height: 8%;
   ${({ theme }) => theme.flexSet('center', 'start')};
+  margin-bottom: 0.5em;
 
   ${media.mobile} {
     ${({ theme }) => theme.flexColumnSet()};

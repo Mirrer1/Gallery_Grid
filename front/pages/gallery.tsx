@@ -164,14 +164,6 @@ const Gallery = () => {
 
                 <GalleryCategoryBtn
                   type="button"
-                  onClick={() => onClickCategory('board')}
-                  $selected={selectMenu === 'board'}
-                >
-                  Board
-                </GalleryCategoryBtn>
-
-                <GalleryCategoryBtn
-                  type="button"
                   onClick={() => onClickCategory('like')}
                   $selected={selectMenu === 'like'}
                 >

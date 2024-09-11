@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import {
   CloseOutlined,
   CompassOutlined,
@@ -12,10 +12,11 @@ import { motion } from 'framer-motion';
 import { toast } from 'react-toastify';
 import EmojiPicker from 'emoji-picker-react';
 
+import ImagePreview from 'components/Modal/ImagePreviewModal';
 import useInput from 'utils/useInput';
 import useFileUpload from 'utils/useFileUpload';
 import useEmojiPicker from 'utils/useEmojiPicker';
-import ImagePreview from 'components/Modal/ImagePreviewModal';
+import useImagePreview from 'utils/useImagePreview';
 import { useLocation } from 'utils/useLocation';
 import { RootState } from 'store/reducers';
 import { addPostRequest, postRemoveUploadedImage, postUploadImagesRequest } from 'store/actions/postAction';
@@ -26,10 +27,10 @@ const PostingForm = () => {
   const dispatch = useDispatch();
   const [content, onChangeContent, setContent] = useInput<string>('');
   const { location, getLocation, setLocation, loading } = useLocation();
+  const { imagePreview, showImagePreview, hideImagePreview } = useImagePreview();
   const { showEmoji, showEmojiPicker, closeEmojiPicker, onEmojiClick } = useEmojiPicker(setContent);
   const { fileInputRef, onFileChange } = useFileUpload(postUploadImagesRequest, { maxFiles: 5, showWarning: true });
 
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
   const { postImagePaths, postUploadImagesLoading, addPostLoading, addPostDone } = useSelector(
     (state: RootState) => state.post
   );
@@ -67,14 +68,6 @@ const PostingForm = () => {
     },
     [content, location, postImagePaths]
   );
-
-  const showImagePreview = useCallback((image: string) => {
-    setImagePreview(image);
-  }, []);
-
-  const hideImagePreview = useCallback(() => {
-    setImagePreview(null);
-  }, []);
 
   const handleRemoveImage = useCallback((image: string) => {
     dispatch(postRemoveUploadedImage(image));
@@ -135,7 +128,7 @@ const PostingForm = () => {
         </div>
 
         {showEmoji && EmojiPicker && (
-          <PostingEmojiPicker>
+          <PostingEmojiPicker $uploading={postImagePaths.length > 0}>
             <div onClick={closeEmojiPicker} />
 
             <div>

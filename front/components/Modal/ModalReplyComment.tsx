@@ -53,6 +53,11 @@ const ModalReplyComment = ({
           <img
             src={comment.User.ProfileImage ? `http://localhost:3065/${comment.User.ProfileImage.src}` : '/user.jpg'}
             alt={`${comment.User.nickname}의 프로필 이미지`}
+            onClick={() =>
+              showImagePreview(
+                comment.User.ProfileImage ? `http://localhost:3065/${comment.User.ProfileImage.src}` : '/user.jpg'
+              )
+            }
           />
 
           <div>

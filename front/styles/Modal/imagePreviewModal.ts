@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { motion } from 'framer-motion';
 
 import { HoverStyle } from 'styles/Common/hover';
+import media from 'styles/media';
 
 export const UploadImagePreview = styled.div`
   & > div:first-child {
@@ -41,5 +42,15 @@ export const UploadImage = styled(motion.div)`
     border-radius: 5px;
     width: 100%;
     height: 100%;
+  }
+
+  ${media.tablet} {
+    width: 90%;
+    height: 70%;
+  }
+
+  ${media.mobile} {
+    width: 100%;
+    height: 50%;
   }
 `;

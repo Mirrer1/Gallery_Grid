@@ -20,8 +20,19 @@ export const SIGNUP_SUCCESS = 'SIGNUP_SUCCESS' as const;
 export const SIGNUP_FAILURE = 'SIGNUP_FAILURE' as const;
 export const RESET_SIGNUP_MESSAGE = 'RESET_SIGNUP_MESSAGE' as const;
 
+export const EDIT_MY_INFO_REQUEST = 'EDIT_MY_INFO_REQUEST' as const;
+export const EDIT_MY_INFO_SUCCESS = 'EDIT_MY_INFO_SUCCESS' as const;
+export const EDIT_MY_INFO_FAILURE = 'EDIT_MY_INFO_FAILURE' as const;
+
+export const EXECUTE_USER_EDIT = 'EXECUTE_USER_EDIT' as const;
+export const USER_UPLOAD_IMAGE_REQUEST = 'USER_UPLOAD_IMAGE_REQUEST' as const;
+export const USER_UPLOAD_IMAGE_SUCCESS = 'USER_UPLOAD_IMAGE_SUCCESS' as const;
+export const USER_UPLOAD_IMAGE_FAILURE = 'USER_UPLOAD_IMAGE_FAILURE' as const;
+export const USER_REMOVE_UPLOADED_IMAGE = 'USER_REMOVE_UPLOADED_IMAGE' as const;
+
 export type UserState = {
-  me: any;
+  me: User | null;
+  userImagePath: string[];
   loginLoading: boolean;
   loginDone: boolean;
   loginError: null | string;
@@ -41,6 +52,12 @@ export type UserState = {
     message: string | null;
     type: 'success' | 'error' | null;
   };
+  editMyInfoLoading: boolean;
+  editMyInfoDone: boolean;
+  editMyInfoError: null | string;
+  userUploadImageLoading: boolean;
+  userUploadImageDone: boolean;
+  userUploadImageError: null | string;
 };
 
 export interface ResponseMessage {
@@ -73,7 +90,7 @@ export interface loginRequestAction {
 
 export interface loginSuccessAction {
   type: typeof LOGIN_SUCCESS;
-  data: string;
+  data: User;
 }
 
 export interface loginFailureAction {
@@ -87,7 +104,7 @@ export interface loginGoogleRequestAction {
 
 export interface loginGoogleSuccessAction {
   type: typeof LOGIN_GOOGLE_SUCCESS;
-  data: string;
+  data: User;
 }
 
 export interface loginGoogleFailureAction {
@@ -101,7 +118,7 @@ export interface loadMyInfoRequestAction {
 
 export interface loadMyInfoSuccessAction {
   type: typeof LOAD_MY_INFO_SUCCESS;
-  data: string;
+  data: User;
 }
 
 export interface loadMyInfoFailureAction {
@@ -145,6 +162,44 @@ export interface resetSignUpMessageAction {
   type: typeof RESET_SIGNUP_MESSAGE;
 }
 
+export interface executeUserEditAction {
+  type: typeof EXECUTE_USER_EDIT;
+}
+
+export interface editMyInfoRequestAction {
+  type: typeof EDIT_MY_INFO_REQUEST;
+  data: FormData;
+}
+
+export interface editMyInfoSuccessAction {
+  type: typeof EDIT_MY_INFO_SUCCESS;
+  data: User;
+}
+
+export interface editMyInfoFailureAction {
+  type: typeof EDIT_MY_INFO_FAILURE;
+  error: string;
+}
+
+export interface userUploadImageRequestAction {
+  type: typeof USER_UPLOAD_IMAGE_REQUEST;
+  data: FormData;
+}
+
+export interface userUploadImageSuccessAction {
+  type: typeof USER_UPLOAD_IMAGE_SUCCESS;
+  data: string[];
+}
+
+export interface userUploadImageFailureAction {
+  type: typeof USER_UPLOAD_IMAGE_FAILURE;
+  error: string;
+}
+
+export interface userRemoveUploadedImageAction {
+  type: typeof USER_REMOVE_UPLOADED_IMAGE;
+}
+
 export type UserAction =
   | loginRequestAction
   | loginSuccessAction
@@ -162,4 +217,13 @@ export type UserAction =
   | signUpRequestAction
   | signUpSuccessAction
   | signUpFailureAction
-  | resetSignUpMessageAction;
+  | resetSignUpMessageAction
+  | executeUserEditAction
+  | editMyInfoRequestAction
+  | editMyInfoSuccessAction
+  | editMyInfoFailureAction
+  | userUploadImageRequestAction
+  | userUploadImageRequestAction
+  | userUploadImageSuccessAction
+  | userUploadImageFailureAction
+  | userRemoveUploadedImageAction;

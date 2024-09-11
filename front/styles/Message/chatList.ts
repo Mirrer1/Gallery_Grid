@@ -6,37 +6,39 @@ import { ReverseHoverStyle } from 'styles/Common/hover';
 import { ShadowStyle } from 'styles/Common/shadow';
 
 export const ChatListWrapper = styled.article<{ $visible: boolean }>`
-  ${({ theme }) => theme.flexColumnSet()};
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: ${props => (props.$visible ? '35%' : '100%')};
-  height: 100%;
-  padding: 2em 0.75em 2em 1.5em;
 
   ${media.tablet} {
     display: ${props => (props.$visible ? 'none' : 'flex')};
     width: 100%;
-    padding: 0.5em 0.5em 0 0.5em;
+    height: 100%;
+    padding: 0;
   }
 `;
 
-export const ChatListHeader = styled.header`
+export const ChatListHeader = styled.header<{ $visible: boolean }>`
+  width: ${props => (props.$visible ? '88%' : '95%')};
   ${({ theme }) => theme.flexSet('space-between')}
-  width: 96%;
-  height: 7.5%;
-  margin-bottom: 0.7em;
   border-bottom: 2px solid ${({ theme }) => theme.colors.darkBg};
 
   & > div {
     flex-grow: 1;
-    width: 90%;
+    display: flex;
+    align-items: center;
 
     & > label > span {
-      width: 3%;
+      position: relative;
+      top: 2px;
       font-size: 1.1rem;
       opacity: 40%;
+      cursor: pointer;
     }
 
     & > input {
-      width: 94%;
+      flex-grow: 1;
       font-size: 0.9rem;
       padding: 0.5em;
       border: none;
@@ -58,68 +60,56 @@ export const ChatListHeader = styled.header`
     ${ReverseHoverStyle('&')}
     font-size: 1.1rem;
     opacity: 40%;
-    padding-right: 0.5em;
   }
 
   ${media.tablet} {
-    padding-bottom: 0.5em;
+    width: 98%;
+    margin-bottom: 0.8em;
 
     & > div {
       & > label > span {
-        width: 4%;
-      }
-
-      & > input {
-        width: 93%;
+        top: 0;
       }
     }
   }
-
   ${media.mobile} {
-    width: 100%;
-    padding-bottom: 0.3em;
-    margin-bottom: 0.7em;
-
-    & > div {
-      & > input {
-        font-size: 0.8rem;
-        padding: 0.5em;
-
-        &::placeholder {
-          font-size: 0.8rem;
-        }
-      }
-    }
-
-    & > span {
-      font-size: 1rem;
-    }
+    width: 97%;
+    margin-bottom: 0.5em;
   }
 `;
 
 export const ChatListItemWrapper = styled(motion.div)`
   width: 100%;
-  height: 95%;
+  height: 1px;
+  flex-grow: 1;
   overflow-y: scroll;
-  padding: 0 1em;
+  padding: 0.5em 1em;
+
+  & > div:last-child {
+    margin-bottom: 0;
+  }
 
   ${media.tablet} {
     padding: 0;
+    height: 100%;
+  }
+
+  ${media.mobile} {
+    margin-bottom: 2%;
   }
 `;
 
-export const ChatListItem = styled.div`
+export const ChatListItem = styled.div<{ $visible: boolean }>`
   ${({ theme }) => theme.flexSet('space-between')}
   background-color: white;
   border-radius: 5px;
   padding: 1em 0.3em 1em 0.7em;
   margin-bottom: 0.5em;
-  overflow-y: scroll;
   transition: transform 250ms ease-in-out;
   ${ShadowStyle}
 
   &:hover {
-    transform: scale(1.03);
+    transform: scale(1.02);
   }
 
   &:active {
@@ -127,8 +117,9 @@ export const ChatListItem = styled.div`
   }
 
   & > div:first-child {
-    width: 65%;
+    width: ${props => (props.$visible ? '75%' : '93%')};
     ${({ theme }) => theme.flexSet('start')}
+    flex-shrink: 1;
 
     & > img {
       width: 40px;
@@ -138,38 +129,43 @@ export const ChatListItem = styled.div`
     }
 
     & > div {
-      width: 80%;
-    }
+      flex-shrink: 1;
 
-    & > div > h1 {
-      font-size: 0.9rem;
-      font-weight: 500;
-      margin-bottom: 0.5em;
-    }
+      & > h1 {
+        font-size: 0.9rem;
+        font-weight: 500;
+        margin-bottom: 0.5em;
+      }
 
-    & > div > p {
-      font-size: 0.75rem;
-      opacity: 70%;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      & > p {
+        font-size: 0.75rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: normal;
+        opacity: 60%;
+        line-height: 1.5;
+        width: 100%;
+      }
     }
   }
 
   & > div:last-child {
-    width: 20%;
+    width: ${props => (props.$visible ? '25%' : '7%')};
     ${({ theme }) => theme.flexColumnSet()}
 
     & > p {
-      font-size: 0.65rem;
+      font-size: 0.7rem;
       opacity: 70%;
       margin-bottom: 0.7em;
     }
 
     & > div {
       ${({ theme }) => theme.flexSet()}
-      width: 15px;
-      height: 15px;
+      width: 20px;
+      height: 20px;
       font-size: 0.7rem;
       font-weight: 700;
       color: white;
@@ -182,30 +178,23 @@ export const ChatListItem = styled.div`
     margin-bottom: 0.7em;
 
     & > div:first-child {
-      width: 83%;
+      width: 85%;
+    }
+
+    & > div:last-child {
+      width: 15%;
     }
   }
 
   ${media.mobile} {
-    padding: 0.8em 0.3em 0.8em 0.7em;
-    margin-bottom: 0.5em;
+    margin-bottom: 0.7em;
 
     & > div:first-child {
-      & > img {
-        margin-right: 0.7em;
-      }
+      width: 75%;
+    }
 
-      & > div {
-        width: 70%;
-      }
-
-      & > div > h1 {
-        font-size: 0.8rem;
-      }
-
-      & > div > p {
-        font-size: 0.7rem;
-      }
+    & > div:last-child {
+      width: 25%;
     }
   }
 `;

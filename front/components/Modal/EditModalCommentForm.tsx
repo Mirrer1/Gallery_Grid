@@ -1,13 +1,11 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { DeleteOutlined, LoadingOutlined, PaperClipOutlined, SmileOutlined } from '@ant-design/icons';
+import { DeleteOutlined, LoadingOutlined, PaperClipOutlined } from '@ant-design/icons';
 import { toast } from 'react-toastify';
-import EmojiPicker from 'emoji-picker-react';
 
 import useInput from 'utils/useInput';
 import formatDate from 'utils/useListTimes';
 import useFileUpload from 'utils/useFileUpload';
-import useEmojiPicker from 'utils/useEmojiPicker';
 import { RootState } from 'store/reducers';
 import { Comment, IReplyComment } from 'store/types/postType';
 import {
@@ -20,7 +18,6 @@ import { slideInTooltip, slideInUploadImage } from 'styles/Common/animation';
 import {
   EditModalCancelBtn,
   EditModalCommentBtn,
-  EditModalCommentEmojiPicker,
   EditModalCommentFormSection,
   EditModalCommentHeader,
   EditModalCommentImage,
@@ -34,21 +31,12 @@ type EditCommentFormProps = {
   replyId: number | null;
   cancelEdit: () => void;
   showImagePreview: (src: string) => void;
-  isLastChild: boolean;
 };
 
-const EditModalCommentForm = ({
-  reply,
-  comment,
-  replyId,
-  cancelEdit,
-  showImagePreview,
-  isLastChild
-}: EditCommentFormProps) => {
+const EditModalCommentForm = ({ reply, comment, replyId, cancelEdit, showImagePreview }: EditCommentFormProps) => {
   const dispatch = useDispatch();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [text, onChangeText, setText] = useInput<string>('');
-  const { showEmoji, showEmojiPicker, closeEmojiPicker, onEmojiClick } = useEmojiPicker(setText);
   const { fileInputRef, onFileChange } = useFileUpload(editModalCommentUploadImageRequest, { showWarning: false });
   const { editModalCommentUploadImageLoading, editModalCommentImagePath, editModalCommentLoading } = useSelector(
     (state: RootState) => state.post
@@ -68,11 +56,6 @@ const EditModalCommentForm = ({
 
       if (!text.trim()) {
         toast.warning('댓글 내용을 입력해주세요.');
-        return;
-      }
-
-      if (text.length > 500) {
-        toast.warning('댓글은 500자 이하로 작성해주세요.');
         return;
       }
 
@@ -114,6 +97,11 @@ const EditModalCommentForm = ({
         <img
           src={comment.User.ProfileImage ? `http://localhost:3065/${comment.User.ProfileImage.src}` : '/user.jpg'}
           alt={`${comment.User.nickname}의 프로필 이미지`}
+          onClick={() =>
+            showImagePreview(
+              comment.User.ProfileImage ? `http://localhost:3065/${comment.User.ProfileImage.src}` : '/user.jpg'
+            )
+          }
         />
 
         <div>
@@ -135,7 +123,6 @@ const EditModalCommentForm = ({
           value={text}
           onChange={onChangeText}
         />
-        <p>{text.length} / 500</p>
 
         {editModalCommentImagePath.length !== 0 && (
           <EditModalCommentImageWrapper>
@@ -165,18 +152,8 @@ const EditModalCommentForm = ({
               onChange={e => onFileChange(e, editModalCommentImagePath)}
             />
 
-            <SmileOutlined onClick={showEmojiPicker} />
+            <p>{text.length} / 500</p>
           </div>
-
-          {showEmoji && EmojiPicker && (
-            <EditModalCommentEmojiPicker $reply={reply} $isLastChild={isLastChild}>
-              <div onClick={closeEmojiPicker} />
-
-              <div>
-                <EmojiPicker onEmojiClick={onEmojiClick} />
-              </div>
-            </EditModalCommentEmojiPicker>
-          )}
 
           <div>
             <EditModalCommentBtn type="submit" $active={text.length !== 0}>

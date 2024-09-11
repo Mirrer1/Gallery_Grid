@@ -1,9 +1,15 @@
 import React, { useCallback } from 'react';
-import { CaretDownOutlined, UserAddOutlined } from '@ant-design/icons';
+import { CaretDownOutlined, SyncOutlined, UserAddOutlined } from '@ant-design/icons';
 import { useSelector } from 'react-redux';
 
 import { RootState } from 'store/reducers';
-import { SuggestedHeader, SuggestedInfo, SuggestedOutsideArea, SuggestedWrapper } from 'styles/Timeline/suggestedList';
+import {
+  SuggestedHeader,
+  SuggestedInfo,
+  SuggestedInfoWrapper,
+  SuggestedOutsideArea,
+  SuggestedWrapper
+} from 'styles/Timeline/suggestedList';
 
 type SuggestedProps = {
   suggestedListVisible: boolean;
@@ -41,23 +47,32 @@ const SuggestedList = ({ suggestedListVisible, setSuggestedListVisible }: Sugges
       <SuggestedWrapper $listvisible={suggestedListVisible} $commentvisible={isCommentListVisible}>
         <SuggestedHeader>
           <h1>Suggested people</h1>
-          <CaretDownOutlined onClick={hideSuggestedList} />
+
+          <div>
+            {/* <SyncOutlined spin /> */}
+            <SyncOutlined />
+            <CaretDownOutlined onClick={hideSuggestedList} />
+          </div>
         </SuggestedHeader>
 
-        {SuggestedUsers.map((user, i) => (
-          <SuggestedInfo key={i} $islast={i === SuggestedUsers.length - 1}>
-            <img src={user.profile} alt={`${user.nickname}의 프로필 이미지`} />
-
-            <div>
+        <SuggestedInfoWrapper>
+          {SuggestedUsers.map((user, i) => (
+            <SuggestedInfo key={i}>
               <div>
-                <h2>{user.nickname}</h2>
-                <UserAddOutlined />
+                <img src={user.profile} alt={`${user.nickname}의 프로필 이미지`} />
               </div>
 
-              <p>{user.desc}</p>
-            </div>
-          </SuggestedInfo>
-        ))}
+              <div>
+                <div>
+                  <h2>{user.nickname}</h2>
+                  <UserAddOutlined />
+                </div>
+
+                <p>{user.desc}</p>
+              </div>
+            </SuggestedInfo>
+          ))}
+        </SuggestedInfoWrapper>
       </SuggestedWrapper>
     </>
   );

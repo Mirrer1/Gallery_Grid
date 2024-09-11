@@ -7,12 +7,12 @@ import media from 'styles/media';
 
 export const CommentListWrapper = styled(motion.article)<{ $isCommentListVisible: boolean }>`
   position: absolute;
-  top: 3.9%;
+  top: 2.9%;
   left: 3.9%;
   display: flex;
   flex-direction: column;
   width: 88%;
-  height: 96%;
+  height: 97%;
   background-color: white;
   border-radius: 5px;
   z-index: 200;
@@ -136,6 +136,7 @@ export const CommentContainer = styled.div<{ $reply: boolean }>`
         height: 40px;
         border-radius: 50%;
         margin-right: 0.4em;
+        cursor: pointer;
       }
 
       & > div {
@@ -148,13 +149,6 @@ export const CommentContainer = styled.div<{ $reply: boolean }>`
             font-weight: 500;
             margin-right: 0.3em;
             cursor: pointer;
-
-            @media (min-width: 992px) {
-              &:hover {
-                text-decoration: underline;
-                text-underline-offset: 1.5px;
-              }
-            }
           }
 
           & > p {
@@ -290,14 +284,17 @@ export const CommentFormInput = styled.form<{ $active: boolean }>`
   padding: 0.5em;
 
   & > div:first-child {
-    width: 90%;
+    flex-grow: 1;
     ${({ theme }) => theme.flexSet('start')}
 
     & > span {
-      width: 8%;
       font-size: 1rem;
       opacity: 40%;
       ${ReverseHoverStyle('&')}
+    }
+
+    & > span:first-child {
+      margin-right: 0.5em;
     }
 
     & > input:nth-child(2) {
@@ -305,11 +302,13 @@ export const CommentFormInput = styled.form<{ $active: boolean }>`
     }
 
     & > textarea {
-      width: 87%;
+      flex-grow: 1;
       min-height: 34px;
       max-height: 700px;
       font-size: 0.8rem;
+      line-height: 1.5;
       padding: 0.8em 0.5em;
+      margin-left: 0.2em;
       border: none;
       resize: none;
       overflow-y: auto;
@@ -326,7 +325,6 @@ export const CommentFormInput = styled.form<{ $active: boolean }>`
   }
 
   & > button {
-    width: 10%;
     ${({ theme }) => theme.flexSet('end')}
 
     & > span {
@@ -347,17 +345,16 @@ export const CommentFormInput = styled.form<{ $active: boolean }>`
 
   ${media.tablet} {
     & > div:first-child {
-      width: 96%;
-
       & > span {
         font-size: 1.4rem;
-        width: 4.5%;
+      }
+
+      & > textarea {
+        margin-left: 0.5em;
       }
     }
 
     & > button {
-      width: 4%;
-
       & > span {
         font-size: 1rem;
       }
@@ -366,20 +363,9 @@ export const CommentFormInput = styled.form<{ $active: boolean }>`
 
   ${media.mobile} {
     & > div:first-child {
-      width: 92%;
-
       & > span {
         font-size: 1.2rem;
-        width: 8%;
       }
-
-      & > textarea {
-        width: 84%;
-      }
-    }
-
-    & > button {
-      width: 8%;
     }
   }
 `;

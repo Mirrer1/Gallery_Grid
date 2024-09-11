@@ -39,9 +39,9 @@ export const PopularUserWrapper = styled.div<{ $commentvisible: boolean }>`
   position: relative;
   background-color: ${({ theme }) => theme.colors.lightBg};
   border-radius: 5px;
-  margin-bottom: 1em;
   overflow: hidden;
-  height: 60%;
+  height: 55%;
+  margin-bottom: 1em;
   transition: opacity 0.3s;
   ${ShadowStyle}
 
@@ -115,14 +115,7 @@ export const PopularUserContents = styled.div`
     font-size: 0.9rem;
     font-weight: 500;
     margin-bottom: 1em;
-
-    @media (min-width: 992px) {
-      &:hover {
-        cursor: pointer;
-        text-decoration: underline;
-        text-underline-offset: 1.5px;
-      }
-    }
+    cursor: pointer;
   }
 
   & > div > p {

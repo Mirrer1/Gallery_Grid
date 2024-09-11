@@ -14,9 +14,11 @@ import {
 import PostImageCarousel from './PostImageCarousel';
 import DeleteModal from 'components/Modal/DeleteModal';
 import PostModal from 'components/Modal/PostModal';
+import ImagePreview from 'components/Modal/ImagePreviewModal';
 
 import useScroll from 'utils/useScroll';
 import formatDate from 'utils/useListTimes';
+import useImagePreview from 'utils/useImagePreview';
 import { RootState } from 'store/reducers';
 import { Image, Post } from 'store/types/postType';
 import {
@@ -54,11 +56,12 @@ const PostList = () => {
     isPostModalVisible,
     commentVisiblePostId
   } = useSelector((state: RootState) => state.post);
+  const { imagePreview, showImagePreview, hideImagePreview } = useImagePreview();
+  useScroll({ type: 'timeline', ref: postContainerRef });
 
   const [category, setCategory] = useState('best');
   const [modalImages, setModalImages] = useState<Image[]>([]);
   const [isTooltipVisible, setIsTooltipVisible] = useState<number | null>(null);
-  useScroll({ type: 'timeline', ref: postContainerRef });
 
   const onClickCategory = useCallback((category: string) => {
     setCategory(category);
@@ -133,6 +136,11 @@ const PostList = () => {
               <img
                 src={post.User.ProfileImage ? `http://localhost:3065/${post.User.ProfileImage.src}` : '/user.jpg'}
                 alt="유저 프로필 이미지"
+                onClick={() =>
+                  showImagePreview(
+                    post.User.ProfileImage ? `http://localhost:3065/${post.User.ProfileImage.src}` : '/user.jpg'
+                  )
+                }
               />
 
               <div>
@@ -227,6 +235,7 @@ const PostList = () => {
       {isCarouselVisible && <PostImageCarousel images={modalImages} />}
       {isPostModalVisible && <PostModal />}
       {isDeleteModalVisible && <DeleteModal />}
+      <ImagePreview imagePreview={imagePreview} hideImagePreview={hideImagePreview} />
     </PostContainer>
   );
 };

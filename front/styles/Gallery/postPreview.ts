@@ -123,23 +123,24 @@ export const PostPreviewContent = styled.div`
   }
 
   ${media.tablet} {
+    opacity: 100%;
+
     & > h1 {
       font-size: 0.8rem;
-      -webkit-line-clamp: 2;
+      -webkit-line-clamp: 1;
+      margin-bottom: 0.25em;
     }
 
     & > p {
-      font-size: 0.55rem;
+      margin-bottom: 0.8em;
     }
   }
 
   ${media.mobile} {
-    & > h1 {
-      font-size: 0.7rem;
-    }
+    width: 60%;
 
-    & > p {
-      font-size: 0.5rem;
+    & > h1 {
+      font-size: 0.75rem;
     }
   }
 `;
@@ -149,7 +150,7 @@ export const PostPreviewOption = styled.div`
 
   & > div {
     opacity: 60%;
-    font-size: 0.6rem;
+    font-size: 0.8rem;
   }
 
   & > div:first-child {
@@ -160,9 +161,15 @@ export const PostPreviewOption = styled.div`
     margin-right: 0.2em;
   }
 
+  ${media.tablet} {
+    & > div {
+      font-size: 0.7rem;
+    }
+  }
+
   ${media.mobile} {
     & > div {
-      font-size: 0.55rem;
+      font-size: 0.65rem;
     }
   }
 `;

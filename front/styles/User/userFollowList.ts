@@ -90,6 +90,7 @@ export const UserFollowListItem = styled.div`
       height: 50px;
       border-radius: 50%;
       margin-right: 0.7em;
+      cursor: pointer;
     }
 
     & > div {
@@ -99,13 +100,6 @@ export const UserFollowListItem = styled.div`
         font-weight: 600;
         cursor: pointer;
         margin-bottom: 0.3em;
-
-        @media (min-width: 992px) {
-          &:hover {
-            text-decoration: underline;
-            text-underline-offset: 1.5px;
-          }
-        }
       }
 
       & > p {
