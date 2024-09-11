@@ -23,9 +23,10 @@ import {
 
 const LoginForm = ({ selectMenu, onClickMenu }: MenuProps) => {
   const dispatch = useDispatch();
-  const { loginLoading, loginError, loginGoogleLoading } = useSelector((state: RootState) => state.user);
-  const [email, onChangeEmail] = useInput('');
+  const { loginLoading, loginError, loginGoogleLoading, loginDone } = useSelector((state: RootState) => state.user);
+  const [email, onChangeEmail, setEmail] = useInput('');
   const [password, onChangePassword] = useInput('');
+  const [rememberId, onChangeRememberId, setRememberId] = useInput(false);
 
   const onMoveSignup = useCallback(() => {
     onClickMenu('signup');
@@ -61,6 +62,24 @@ const LoginForm = ({ selectMenu, onClickMenu }: MenuProps) => {
     }
   }, [loginError]);
 
+  useEffect(() => {
+    if (loginDone) {
+      if (rememberId) {
+        localStorage.setItem('rememberedEmail', email);
+      } else {
+        localStorage.removeItem('rememberedEmail');
+      }
+    }
+  }, [loginDone, email, rememberId]);
+
+  useEffect(() => {
+    const savedEmail = localStorage.getItem('rememberedEmail');
+    if (savedEmail) {
+      setEmail(savedEmail);
+      setRememberId(true);
+    }
+  }, []);
+
   return (
     <AccountWrapper {...slideInFromBottom(0.3)}>
       <AccountGoogle onClick={onClickGoogleLogin}>
@@ -85,6 +104,17 @@ const LoginForm = ({ selectMenu, onClickMenu }: MenuProps) => {
         <AccountAlert $login="true">8~16자 영문 대 소문자, 숫자를 사용하세요.</AccountAlert>
 
         <AuthOptionsWrapper $menu={selectMenu}>
+          <div>
+            <input
+              type="checkbox"
+              id="rememberId"
+              name="rememberId"
+              checked={rememberId}
+              onChange={onChangeRememberId}
+            />
+            <label htmlFor="rememberId">아이디 저장</label>
+          </div>
+
           <button type="button">Forget your password?</button>
         </AuthOptionsWrapper>
 

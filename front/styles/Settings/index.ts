@@ -23,7 +23,7 @@ export const SettingWrapper = styled.section`
   }
 `;
 
-export const SettingProfile = styled(motion.div)`
+export const SettingProfile = styled(motion.div)<{ $loading: boolean }>`
   width: 47%;
   height: 74%;
   position: absolute;
@@ -36,6 +36,7 @@ export const SettingProfile = styled(motion.div)`
     border-radius: 5px;
     cursor: pointer;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    filter: ${props => props.$loading && 'blur(4px)'};
   }
 
   & > div {

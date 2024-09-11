@@ -181,7 +181,7 @@ export const AccountAlert = styled.p<{ $login: string }>`
   font-size: 0.7rem;
   opacity: 50%;
   padding-left: 5px;
-  margin-bottom: ${props => (props.$login === 'true' ? '1em' : '2.5em')};
+  margin-bottom: ${props => (props.$login === 'true' ? '2em' : '2.5em')};
 
   ${media.tablet} {
     font-size: 0.6rem;
@@ -194,24 +194,25 @@ export const AccountAlert = styled.p<{ $login: string }>`
 
 export const AuthOptionsWrapper = styled.div<{ $menu: string }>`
   ${({ theme }) => theme.flexSet()};
-  justify-content: ${props => (props.$menu === 'login' ? 'end' : 'center')};
+  justify-content: ${props => (props.$menu === 'login' ? 'space-between' : 'center')};
   margin-bottom: 1em;
+  padding: 0 0.3em;
 
   & > div {
-    padding-bottom: 0.2em;
-  }
+    ${({ theme }) => theme.flexSet()};
 
-  & > div > input {
-    cursor: pointer;
-    width: 11px;
-    height: 9px;
-    margin-right: 0.3em;
-  }
+    & > input {
+      cursor: pointer;
+      width: 12px;
+      height: 12px;
+      margin-right: 0.3em;
+    }
 
-  & > div > label {
-    cursor: pointer;
-    font-size: 0.8rem;
-    font-weight: 500;
+    & > label {
+      font-size: 0.75rem;
+      font-weight: 500;
+      cursor: pointer;
+    }
   }
 
   & > button {
@@ -222,32 +223,25 @@ export const AuthOptionsWrapper = styled.div<{ $menu: string }>`
 
   ${media.tablet} {
     & > div > label {
-      font-size: 0.65rem;
+      position: relative;
+      top: 1px;
+      font-size: 0.7rem;
     }
 
     & > button {
-      font-size: 0.65rem;
+      font-size: 0.75rem;
     }
   }
 
   ${media.mobile} {
     margin-bottom: 1.5em;
 
-    & > div {
-      padding-bottom: 0;
-    }
-
-    & > div > input {
-      margin-right: 0.15em;
-    }
-
     & > div > label {
-      font-size: 0.55rem;
+      font-size: 0.65rem;
     }
 
     & > button {
-      padding-top: 0.9em;
-      font-size: 0.55rem;
+      font-size: 0.7rem;
     }
   }
 `;

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import {
   CloseOutlined,
   CompassOutlined,
@@ -128,7 +128,7 @@ const PostingForm = () => {
         </div>
 
         {showEmoji && EmojiPicker && (
-          <PostingEmojiPicker>
+          <PostingEmojiPicker $uploading={postImagePaths.length > 0}>
             <div onClick={closeEmojiPicker} />
 
             <div>

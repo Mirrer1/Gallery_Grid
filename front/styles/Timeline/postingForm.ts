@@ -183,7 +183,7 @@ export const UploadImages = styled.section`
   }
 `;
 
-export const PostingEmojiPicker = styled.div`
+export const PostingEmojiPicker = styled.div<{ $uploading: boolean }>`
   & > div:first-child {
     position: fixed;
     top: 0;
@@ -196,7 +196,7 @@ export const PostingEmojiPicker = styled.div`
   & > div:last-child {
     transform: scale(0.8);
     position: absolute;
-    top: 10%;
+    top: ${props => (props.$uploading ? '-10%' : '5%')};
     left: 0;
     z-index: 50;
   }
@@ -210,7 +210,7 @@ export const PostingEmojiPicker = styled.div`
   ${media.mobile} {
     & > div:last-child {
       transform: scale(0.7);
-      top: -40%;
+      top: ${props => (props.$uploading ? '-80%' : '-40%')};
       left: -8%;
     }
   }
