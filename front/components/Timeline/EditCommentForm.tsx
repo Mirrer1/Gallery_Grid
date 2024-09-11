@@ -59,11 +59,6 @@ const EditCommentForm = ({ reply, comment, replyId, cancelEdit, showImagePreview
         return;
       }
 
-      if (text.length > 500) {
-        toast.warning('댓글은 500자 이하로 작성해주세요.');
-        return;
-      }
-
       const formData = new FormData();
       if (editCommentImagePath.length > 0) {
         editCommentImagePath.forEach((image: string) => {

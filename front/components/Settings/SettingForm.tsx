@@ -70,6 +70,14 @@ const SettingForm = () => {
   }, [nickname, desc, isRecommended, userImagePath, me]);
 
   useEffect(() => {
+    if (nickname.length === 16) toast.warning('닉네임은 2~16자로 작성해주세요.');
+  }, [nickname]);
+
+  useEffect(() => {
+    if (desc.length === 200) toast.warning('소개글은 200자 이하로 작성해주세요.');
+  }, [desc]);
+
+  useEffect(() => {
     setNickname(me.nickname);
     setDesc(me.desc);
     setIsRecommended(me.isRecommended);
@@ -87,6 +95,7 @@ const SettingForm = () => {
           placeholder="변경될 닉네임을 입력해주세요."
           value={nickname}
           onChange={onChangeNickname}
+          maxLength={16}
         />
         <div>2~16자 영문 대 소문자, 한글, 숫자를 사용하세요.</div>
       </SettingNickname>

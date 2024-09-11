@@ -66,6 +66,10 @@ const EditModalContent = () => {
   );
 
   useEffect(() => {
+    if (content.length === 2000) toast.warning('게시글은 2000자 이하로 작성해주세요.');
+  }, [content]);
+
+  useEffect(() => {
     setContent(singlePost.content);
     setLocation(singlePost.location);
   }, []);
