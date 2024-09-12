@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
-import { ArrowsAltOutlined, CommentOutlined, LikeOutlined } from '@ant-design/icons';
+import { ArrowsAltOutlined, CommentOutlined, HeartOutlined } from '@ant-design/icons';
 
 import { slideInFromBottom } from 'styles/Common/animation';
 import {
@@ -38,7 +38,7 @@ const BigPostPreview = ({ post }: any) => {
 
         <BigPostPreviewOption>
           <div>
-            <LikeOutlined />
+            <HeartOutlined />
             <span>24</span>
           </div>
 

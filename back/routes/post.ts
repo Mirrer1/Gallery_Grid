@@ -649,4 +649,44 @@ router.post('/comment/delete', isLoggedIn, async (req, res, next) => {
   }
 });
 
+router.patch('/like/:postId', isLoggedIn, async (req, res, next) => {
+  try {
+    const { postId } = req.params;
+
+    const post = await Post.findOne({
+      where: { id: postId }
+    });
+
+    if (!post) {
+      return res.status(403).send('게시글이 존재하지 않습니다.');
+    }
+
+    await post.addLiker(req.user!.id);
+    res.status(200).json({ PostId: post.id, UserId: req.user!.id });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+router.delete('/like/:postId', isLoggedIn, async (req, res, next) => {
+  try {
+    const { postId } = req.params;
+
+    const post = await Post.findOne({
+      where: { id: postId }
+    });
+
+    if (!post) {
+      return res.status(403).send('게시글이 존재하지 않습니다.');
+    }
+
+    await post.removeLiker(req.user!.id);
+    res.status(200).json({ PostId: post.id, UserId: req.user!.id });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
 export default router;

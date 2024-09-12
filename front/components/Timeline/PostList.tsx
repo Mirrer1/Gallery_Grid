@@ -6,7 +6,7 @@ import {
   CommentOutlined,
   DeleteOutlined,
   EditOutlined,
-  LikeOutlined,
+  HeartOutlined,
   MoreOutlined,
   ShareAltOutlined
 } from '@ant-design/icons';
@@ -20,14 +20,16 @@ import useScroll from 'utils/useScroll';
 import formatDate from 'utils/useListTimes';
 import useImagePreview from 'utils/useImagePreview';
 import { RootState } from 'store/reducers';
-import { Image, Post } from 'store/types/postType';
+import { Image, Post, PostLike } from 'store/types/postType';
 import {
   hideCommentList,
   showCommentList,
   showPostCarousel,
   showDeleteModal,
   showPostModal,
-  executePostEdit
+  executePostEdit,
+  likePostRequest,
+  unLikePostRequest
 } from 'store/actions/postAction';
 import { slideInList, slideInTooltip } from 'styles/Common/animation';
 import { Tooltip, TooltipBtn, TooltipOutsideArea } from 'styles/Common/tooltip';
@@ -100,6 +102,17 @@ const PostList = () => {
       else dispatch(showCommentList(postId));
     },
     [commentVisiblePostId]
+  );
+
+  const onToggleLike = useCallback(
+    (postId: number) => {
+      const post = mainPosts.find((post: Post) => post.id === postId);
+      if (!post) return;
+
+      if (post.Likers.some((liker: PostLike) => liker.id === me?.id)) dispatch(unLikePostRequest(postId));
+      else dispatch(likePostRequest(postId));
+    },
+    [mainPosts]
   );
 
   useEffect(() => {
@@ -208,10 +221,13 @@ const PostList = () => {
             <div>
               <p>{post.content}</p>
 
-              <PostOptions $commentVisiblePostId={commentVisiblePostId === post.id}>
-                <div>
-                  <LikeOutlined />
-                  <span>24</span>
+              <PostOptions
+                $liked={post.Likers.some(liker => liker.id === me?.id)}
+                $commentVisiblePostId={commentVisiblePostId === post.id}
+              >
+                <div onClick={() => onToggleLike(post.id)}>
+                  <HeartOutlined />
+                  <span>{post.Likers.length}</span>
                 </div>
 
                 <div onClick={() => onToggleComment(post.id)}>

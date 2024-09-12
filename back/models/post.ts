@@ -1,4 +1,6 @@
 import Sequelize, {
+  BelongsToManyAddAssociationMixin,
+  BelongsToManyRemoveAssociationMixin,
   CreationOptional,
   HasManyAddAssociationMixin,
   HasManyAddAssociationsMixin,
@@ -23,6 +25,8 @@ class Post extends Model<InferAttributes<Post>, InferCreationAttributes<Post>> {
 
   public addImages!: HasManyAddAssociationsMixin<Image, number>;
   public addImage!: HasManyAddAssociationMixin<Image, number>;
+  public addLiker!: BelongsToManyAddAssociationMixin<User, number>;
+  public removeLiker!: BelongsToManyRemoveAssociationMixin<User, number>;
 
   static initiate(sequelize: Sequelize.Sequelize) {
     Post.init(

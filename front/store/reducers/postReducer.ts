@@ -71,6 +71,12 @@ import {
   DELETE_MODAL_COMMENT_REQUEST,
   DELETE_MODAL_COMMENT_SUCCESS,
   DELETE_MODAL_COMMENT_FAILURE,
+  LIKE_POST_REQUEST,
+  LIKE_POST_SUCCESS,
+  LIKE_POST_FAILURE,
+  UNLIKE_POST_REQUEST,
+  UNLIKE_POST_SUCCESS,
+  UNLIKE_POST_FAILURE,
   SHOW_MODAL_COMMENT_LIST,
   HIDE_MODAL_COMMENT_LIST,
   EXECUTE_MODAL_COMMENT_EDIT,
@@ -151,6 +157,12 @@ export const initialState: PostState = {
   deleteModalCommentLoading: false,
   deleteModalCommentDone: false,
   deleteModalCommentError: null,
+  likePostLoading: false,
+  likePostDone: false,
+  likePostError: null,
+  unLikePostLoading: false,
+  unLikePostDone: false,
+  unLikePostError: null,
   isCommentListVisible: false,
   isModalCommentListVisible: false,
   isCarouselVisible: false,
@@ -815,6 +827,46 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
         draft.deleteModalCommentLoading = false;
         draft.deleteModalCommentError = action.error;
         break;
+      case LIKE_POST_REQUEST:
+        draft.likePostLoading = true;
+        draft.likePostDone = false;
+        draft.likePostError = null;
+        break;
+      case LIKE_POST_SUCCESS: {
+        draft.likePostLoading = false;
+        draft.likePostDone = true;
+
+        const post = draft.mainPosts.find(post => post.id === action.data.PostId);
+        if (post) post.Likers.push({ id: action.data.UserId });
+        if (draft.singlePost && draft.singlePost.id === action.data.PostId) {
+          draft.singlePost.Likers.push({ id: action.data.UserId });
+        }
+        break;
+      }
+      case LIKE_POST_FAILURE:
+        draft.likePostLoading = false;
+        draft.likePostError = action.error;
+        break;
+      case UNLIKE_POST_REQUEST:
+        draft.unLikePostLoading = true;
+        draft.unLikePostDone = false;
+        draft.unLikePostError = null;
+        break;
+      case UNLIKE_POST_SUCCESS: {
+        draft.unLikePostLoading = false;
+        draft.unLikePostDone = true;
+
+        const post = draft.mainPosts.find(post => post.id === action.data.PostId);
+        if (post) post.Likers = post.Likers.filter(liker => liker.id !== action.data.UserId);
+        if (draft.singlePost && draft.singlePost.id === action.data.PostId) {
+          draft.singlePost.Likers = draft.singlePost.Likers.filter(liker => liker.id !== action.data.UserId);
+        }
+        break;
+      }
+      case UNLIKE_POST_FAILURE:
+        draft.unLikePostLoading = false;
+        draft.unLikePostError = action.error;
+        break;
       case SHOW_COMMENT_LIST:
         draft.isCommentListVisible = true;
         draft.commentVisiblePostId = action.data;
@@ -829,7 +881,6 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
       case SHOW_MODAL_COMMENT_LIST:
         draft.isModalCommentListVisible = true;
         draft.modalCommentImagePath = [];
-        // draft.editModalCommentImagePath = [];
         break;
       case HIDE_MODAL_COMMENT_LIST:
         draft.isModalCommentListVisible = false;

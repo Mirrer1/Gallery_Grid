@@ -38,7 +38,9 @@ import {
   EDIT_MODAL_COMMENT_UPLOAD_IMAGE_REQUEST,
   EDIT_MODAL_COMMENT_REMOVE_UPLOADED_IMAGE,
   EXECUTE_MODAL_COMMENT_EDIT,
-  EDIT_MODAL_COMMENT_REQUEST
+  EDIT_MODAL_COMMENT_REQUEST,
+  LIKE_POST_REQUEST,
+  UNLIKE_POST_REQUEST
 } from 'store/types/postType';
 
 export const loadPostsRequest = (lastId?: number) => ({
@@ -154,6 +156,16 @@ export const editModalCommentRemoveUploadedImage = () => ({
 
 export const deleteModalCommentRequest = (data: DeleteInfo) => ({
   type: DELETE_MODAL_COMMENT_REQUEST,
+  data
+});
+
+export const likePostRequest = (data: number) => ({
+  type: LIKE_POST_REQUEST,
+  data
+});
+
+export const unLikePostRequest = (data: number) => ({
+  type: UNLIKE_POST_REQUEST,
   data
 });
 

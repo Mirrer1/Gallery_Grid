@@ -70,7 +70,16 @@ import {
   EDIT_MODAL_COMMENT_UPLOAD_IMAGE_FAILURE,
   EDIT_MODAL_COMMENT_REQUEST,
   EDIT_MODAL_COMMENT_SUCCESS,
-  EDIT_MODAL_COMMENT_FAILURE
+  EDIT_MODAL_COMMENT_FAILURE,
+  LIKE_POST_REQUEST,
+  UNLIKE_POST_REQUEST,
+  likePostRequestAction,
+  ResponseLike,
+  LIKE_POST_SUCCESS,
+  LIKE_POST_FAILURE,
+  unLikePostRequestAction,
+  UNLIKE_POST_SUCCESS,
+  UNLIKE_POST_FAILURE
 } from 'store/types/postType';
 
 function loadPostsAPI(lastId?: number) {
@@ -401,6 +410,46 @@ function* deleteModalComment(action: deleteCommentRequestAction) {
   }
 }
 
+function likePostAPI(data: number) {
+  return axios.patch(`/post/like/${data}`);
+}
+
+function* likePost(action: likePostRequestAction) {
+  try {
+    const result: AxiosResponse<ResponseLike> = yield call(likePostAPI, action.data);
+
+    yield put({
+      type: LIKE_POST_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: LIKE_POST_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
+function unLikePostAPI(data: number) {
+  return axios.delete(`/post/like/${data}`);
+}
+
+function* unLikePost(action: unLikePostRequestAction) {
+  try {
+    const result: AxiosResponse<ResponseLike> = yield call(unLikePostAPI, action.data);
+
+    yield put({
+      type: UNLIKE_POST_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: UNLIKE_POST_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
 function* watchLoadPosts() {
   yield takeLatest(LOAD_POSTS_REQUEST, loadPosts);
 }
@@ -473,6 +522,14 @@ function* watchDeleteModalComment() {
   yield takeLatest(DELETE_MODAL_COMMENT_REQUEST, deleteModalComment);
 }
 
+function* watchLikePost() {
+  yield takeLatest(LIKE_POST_REQUEST, likePost);
+}
+
+function* watchUnLikePost() {
+  yield takeLatest(UNLIKE_POST_REQUEST, unLikePost);
+}
+
 export default function* postSaga() {
   yield all([
     fork(watchLoadPosts),
@@ -492,6 +549,8 @@ export default function* postSaga() {
     fork(watchModalCommentUploadImage),
     fork(watchEditModalComment),
     fork(watchEditModalCommentUploadImage),
-    fork(watchDeleteModalComment)
+    fork(watchDeleteModalComment),
+    fork(watchLikePost),
+    fork(watchUnLikePost)
   ]);
 }

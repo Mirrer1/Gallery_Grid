@@ -196,7 +196,7 @@ export const PostContents = styled.div`
   }
 `;
 
-export const PostOptions = styled.div<{ $commentVisiblePostId: boolean }>`
+export const PostOptions = styled.div<{ $liked: boolean; $commentVisiblePostId: boolean }>`
   ${({ theme }) => theme.flexSet('start')}
   padding: 0 0.3em;
 
@@ -207,7 +207,8 @@ export const PostOptions = styled.div<{ $commentVisiblePostId: boolean }>`
   }
 
   & > div:first-child {
-    margin-right: 1em;
+    color: ${props => (props.$liked ? '#EE6B6E' : 'black')};
+    margin-right: 0.7em;
   }
 
   & > div:last-child {
@@ -216,11 +217,5 @@ export const PostOptions = styled.div<{ $commentVisiblePostId: boolean }>`
 
   & > div > span > svg {
     margin-right: 0.3em;
-  }
-
-  ${media.mobile} {
-    & > div:first-child {
-      margin-right: 0.7em;
-    }
   }
 `;

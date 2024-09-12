@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { CaretLeftOutlined, CaretRightOutlined, CommentOutlined, LikeOutlined } from '@ant-design/icons';
+import { CaretLeftOutlined, CaretRightOutlined, CommentOutlined, HeartOutlined } from '@ant-design/icons';
 import { useSelector } from 'react-redux';
 
 import { RootState } from 'store/reducers';
@@ -10,7 +10,7 @@ const PopularUser = () => {
     {
       nickname: 'user1',
       profile: 'https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg',
-      desc: 'asdfasdg53',
+      desc: 'asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53asdfasdg53',
       likeCount: 24,
       commentCount: 10
     },
@@ -79,7 +79,7 @@ const PopularUser = () => {
 
               <PopularOptions>
                 <div>
-                  <LikeOutlined />
+                  <HeartOutlined />
                   <span>{user.likeCount}</span>
                 </div>
 

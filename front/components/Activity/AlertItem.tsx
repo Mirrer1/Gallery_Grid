@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
-import { CommentOutlined, LikeOutlined, LikeTwoTone } from '@ant-design/icons';
+import { CommentOutlined, HeartOutlined, HeartTwoTone } from '@ant-design/icons';
 
 import { showCommentList, showPostModal } from 'store/actions/postAction';
 import {
@@ -59,7 +59,7 @@ const AlertItem = ({ type }: { type: string }) => {
               </p>
 
               <div>
-                {type === 'like' ? <LikeTwoTone /> : <LikeOutlined />}
+                {type === 'like' ? <HeartTwoTone /> : <HeartOutlined />}
                 <span>21</span>
               </div>
 

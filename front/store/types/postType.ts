@@ -80,6 +80,14 @@ export const DELETE_MODAL_COMMENT_REQUEST = 'DELETE_MODAL_COMMENT_REQUEST' as co
 export const DELETE_MODAL_COMMENT_SUCCESS = 'DELETE_MODAL_COMMENT_SUCCESS' as const;
 export const DELETE_MODAL_COMMENT_FAILURE = 'DELETE_MODAL_COMMENT_FAILURE' as const;
 
+export const LIKE_POST_REQUEST = 'LIKE_POST_REQUEST';
+export const LIKE_POST_SUCCESS = 'LIKE_POST_SUCCESS';
+export const LIKE_POST_FAILURE = 'LIKE_POST_FAILURE';
+
+export const UNLIKE_POST_REQUEST = 'UNLIKE_POST_REQUEST';
+export const UNLIKE_POST_SUCCESS = 'UNLIKE_POST_SUCCESS';
+export const UNLIKE_POST_FAILURE = 'UNLIKE_POST_FAILURE';
+
 export const SHOW_COMMENT_LIST = 'SHOW_COMMENT_LIST' as const;
 export const HIDE_COMMENT_LIST = 'HIDE_COMMENT_LIST' as const;
 
@@ -108,6 +116,11 @@ export interface DeleteInfo {
 export interface Image {
   id: number;
   src: string;
+}
+
+export interface ResponseLike {
+  PostId: number;
+  UserId: number;
 }
 
 export interface ResponseComment {
@@ -148,6 +161,10 @@ export interface PostComment {
   Replies: { id: number }[];
 }
 
+export interface PostLike {
+  id: number;
+}
+
 export interface Post {
   id: number;
   content: string;
@@ -157,6 +174,7 @@ export interface Post {
   updatedAt: string;
   User: User;
   Images: Image[];
+  Likers: PostLike[];
   Comments: PostComment[];
 }
 
@@ -231,6 +249,12 @@ export type PostState = {
   deleteModalCommentLoading: boolean;
   deleteModalCommentDone: boolean;
   deleteModalCommentError: null | string;
+  likePostLoading: boolean;
+  likePostDone: boolean;
+  likePostError: null | string;
+  unLikePostLoading: boolean;
+  unLikePostDone: boolean;
+  unLikePostError: null | string;
   isCommentListVisible: boolean;
   isModalCommentListVisible: boolean;
   isCarouselVisible: boolean;
@@ -534,6 +558,36 @@ export interface deleteModalCommentFailureAction {
   error: string;
 }
 
+export interface likePostRequestAction {
+  type: typeof LIKE_POST_REQUEST;
+  data: number;
+}
+
+export interface likePostSuccessAction {
+  type: typeof LIKE_POST_SUCCESS;
+  data: ResponseLike;
+}
+
+export interface likePostFailureAction {
+  type: typeof LIKE_POST_FAILURE;
+  error: string;
+}
+
+export interface unLikePostRequestAction {
+  type: typeof UNLIKE_POST_REQUEST;
+  data: number;
+}
+
+export interface unLikePostSuccessAction {
+  type: typeof UNLIKE_POST_SUCCESS;
+  data: ResponseLike;
+}
+
+export interface unLikePostFailureAction {
+  type: typeof UNLIKE_POST_FAILURE;
+  error: string;
+}
+
 export interface ShowCommentListAction {
   type: typeof SHOW_COMMENT_LIST;
   data: number;
@@ -666,6 +720,12 @@ export type PostAction =
   | editModalCommentUploadImageSuccessAction
   | editModalCommentUploadImageFailureAction
   | editModalCommentRemoveUploadedImageAction
+  | likePostRequestAction
+  | likePostSuccessAction
+  | likePostFailureAction
+  | unLikePostRequestAction
+  | unLikePostSuccessAction
+  | unLikePostFailureAction
   | executeModalCommentEditAction
   | editModalCommentRequestAction
   | editModalCommentSuccessAction
