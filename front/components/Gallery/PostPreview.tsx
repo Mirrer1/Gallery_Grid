@@ -8,20 +8,32 @@ import {
   PostPreviewContent,
   PostPreviewImage,
   PostPreviewWrapper,
-  PostPreviewOption
+  PostPreviewOption,
+  PostPreviewCheckbox
 } from 'styles/Gallery/postPreview';
 
-const PostPreview = ({ post }: any) => {
+type PostPreviewProps = {
+  post: any;
+  selectMode: boolean;
+};
+
+const PostPreview = ({ post, selectMode }: PostPreviewProps) => {
   const dispatch = useDispatch();
 
   const onClickPost = useCallback(() => {
-    dispatch(showPostModal());
+    // dispatch(showPostModal());
   }, []);
 
   return (
     <PostPreviewWrapper {...slideInFromBottom(0.3)}>
       {post.map((post: any, i: any) => (
         <article key={i} onClick={onClickPost}>
+          {selectMode && (
+            <PostPreviewCheckbox>
+              <input type="checkbox" />
+            </PostPreviewCheckbox>
+          )}
+
           <PostPreviewImage>
             <img src={post.img[0]} alt={`${post.user}의 ${i}번째 게시글 이미지`} />
 

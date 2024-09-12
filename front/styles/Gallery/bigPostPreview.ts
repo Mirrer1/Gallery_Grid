@@ -28,6 +28,18 @@ export const BigPostPreviewWrapper = styled(motion.section)`
   }
 `;
 
+export const BigPostPreviewCheckbox = styled.div`
+  position: absolute;
+  top: 7px;
+  left: 7px;
+  z-index: 20;
+
+  & > input {
+    transform: scale(1.2);
+    opacity: 70%;
+  }
+`;
+
 export const BigPostPreviewImage = styled.div`
   position: relative;
   width: 100%;

@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { SwapOutlined } from '@ant-design/icons';
+import { CheckSquareOutlined, CloseSquareOutlined, DeleteOutlined, SwapOutlined } from '@ant-design/icons';
 import { END } from 'redux-saga';
 import Head from 'next/head';
 import axios from 'axios';
@@ -13,12 +13,13 @@ import PostModal from 'components/Modal/PostModal';
 import wrapper from 'store/configureStore';
 import { RootState } from 'store/reducers';
 import { loadMyInfoRequest } from 'store/actions/userAction';
-import { GalleryCategoryBtn, GalleryCategoryWrapper, GalleryWrapper } from 'styles/Gallery';
+import { GalleryActionBtn, GalleryCategoryBtn, GalleryCategoryWrapper, GalleryWrapper } from 'styles/Gallery';
 
 const Gallery = () => {
   const { isPostModalVisible } = useSelector((state: RootState) => state.post);
   const [selectMenu, setSelectMenu] = useState('all');
   const [selectSort, setSelectSort] = useState('best');
+  const [selectMode, setSelectMode] = useState(false);
 
   const postList = [
     {
@@ -141,6 +142,14 @@ const Gallery = () => {
     setSelectSort(sort);
   }, []);
 
+  const onExecuteSelectMode = useCallback(() => {
+    setSelectMode(true);
+  }, []);
+
+  const onCancelSelectMode = useCallback(() => {
+    setSelectMode(false);
+  }, []);
+
   return (
     <>
       <Head>
@@ -153,51 +162,67 @@ const Gallery = () => {
             <h1>FILTER:</h1>
 
             <GalleryCategoryWrapper>
-              <div>
-                <GalleryCategoryBtn
-                  type="button"
-                  onClick={() => onClickCategory('all')}
-                  $selected={selectMenu === 'all'}
-                >
-                  All
-                </GalleryCategoryBtn>
+              <GalleryCategoryBtn type="button" onClick={() => onClickCategory('all')} $selected={selectMenu === 'all'}>
+                All
+              </GalleryCategoryBtn>
 
-                <GalleryCategoryBtn
-                  type="button"
-                  onClick={() => onClickCategory('like')}
-                  $selected={selectMenu === 'like'}
-                >
-                  Like
-                </GalleryCategoryBtn>
+              <GalleryCategoryBtn
+                type="button"
+                onClick={() => onClickCategory('like')}
+                $selected={selectMenu === 'like'}
+              >
+                Like
+              </GalleryCategoryBtn>
 
-                <GalleryCategoryBtn
-                  type="button"
-                  onClick={() => onClickCategory('comment')}
-                  $selected={selectMenu === 'comment'}
-                >
-                  Comment
-                </GalleryCategoryBtn>
-              </div>
-
-              <div>
-                {selectSort === 'best' ? (
-                  <button type="button" onClick={() => onClickSort('new')}>
-                    인기순
-                  </button>
-                ) : (
-                  <button type="button" onClick={() => onClickSort('best')}>
-                    최신순
-                  </button>
-                )}
-
-                <SwapOutlined />
-              </div>
+              <GalleryCategoryBtn
+                type="button"
+                onClick={() => onClickCategory('comment')}
+                $selected={selectMenu === 'comment'}
+              >
+                Comment
+              </GalleryCategoryBtn>
             </GalleryCategoryWrapper>
           </div>
 
+          <GalleryActionBtn $selectMode={selectMode}>
+            {selectMode ? (
+              <>
+                <button>
+                  <DeleteOutlined />
+                  선택삭제
+                </button>
+                <button>
+                  <DeleteOutlined />
+                  전체삭제
+                </button>
+                <button onClick={onCancelSelectMode}>
+                  <CloseSquareOutlined />
+                  취소
+                </button>
+              </>
+            ) : (
+              <button onClick={onExecuteSelectMode}>
+                <CheckSquareOutlined />
+                선택
+              </button>
+            )}
+
+            {selectSort === 'best' ? (
+              <button type="button" onClick={() => onClickSort('new')}>
+                <SwapOutlined />
+                인기순
+              </button>
+            ) : (
+              <button type="button" onClick={() => onClickSort('best')}>
+                <SwapOutlined />
+                최신순
+              </button>
+            )}
+          </GalleryActionBtn>
+
           <div>
-            <BigPostPreview post={postList[0]} />
-            <PostPreview post={postList} />
+            <BigPostPreview post={postList[0]} selectMode={selectMode} />
+            <PostPreview post={postList} selectMode={selectMode} />
           </div>
         </GalleryWrapper>
 

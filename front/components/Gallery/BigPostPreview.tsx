@@ -7,19 +7,31 @@ import {
   BigPostPreviewContent,
   BigPostPreviewImage,
   BigPostPreviewWrapper,
-  BigPostPreviewOption
+  BigPostPreviewOption,
+  BigPostPreviewCheckbox
 } from 'styles/Gallery/bigPostPreview';
 import { showPostModal } from 'store/actions/postAction';
 
-const BigPostPreview = ({ post }: any) => {
+type BigPostPreviewProps = {
+  post: any;
+  selectMode: boolean;
+};
+
+const BigPostPreview = ({ post, selectMode }: BigPostPreviewProps) => {
   const dispatch = useDispatch();
 
   const onClickPost = useCallback(() => {
-    dispatch(showPostModal());
+    // dispatch(showPostModal());
   }, []);
 
   return (
     <BigPostPreviewWrapper {...slideInFromBottom()} onClick={onClickPost}>
+      {selectMode && (
+        <BigPostPreviewCheckbox>
+          <input type="checkbox" />
+        </BigPostPreviewCheckbox>
+      )}
+
       <BigPostPreviewImage>
         <img src={post.img[0]} alt={`${post.user}의 첫번째 게시글 이미지`} />
 

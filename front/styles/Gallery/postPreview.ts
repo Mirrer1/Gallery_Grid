@@ -42,6 +42,17 @@ export const PostPreviewWrapper = styled(motion.section)`
   }
 `;
 
+export const PostPreviewCheckbox = styled.div`
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  z-index: 20;
+
+  & > input {
+    opacity: 70%;
+  }
+`;
+
 export const PostPreviewImage = styled.div`
   position: relative;
   cursor: pointer;
