@@ -50,7 +50,7 @@ const PostList = () => {
   const postContainerRef = useRef<HTMLDivElement>(null);
   const { me } = useSelector((state: RootState) => state.user);
   const {
-    mainPosts,
+    timelinePosts,
     postImagePaths,
     isCarouselVisible,
     isDeleteModalVisible,
@@ -106,13 +106,13 @@ const PostList = () => {
 
   const onToggleLike = useCallback(
     (postId: number) => {
-      const post = mainPosts.find((post: Post) => post.id === postId);
+      const post = timelinePosts.find((post: Post) => post.id === postId);
       if (!post) return;
 
       if (post.Likers.some((liker: PostLike) => liker.id === me?.id)) dispatch(unLikePostRequest(postId));
       else dispatch(likePostRequest(postId));
     },
-    [mainPosts]
+    [timelinePosts]
   );
 
   useEffect(() => {
@@ -142,7 +142,7 @@ const PostList = () => {
         </CategoryItem>
       </PostCategory>
 
-      {mainPosts.map((post: Post) => (
+      {timelinePosts.map((post: Post) => (
         <PostWrapper key={post.id} {...slideInList}>
           <PostHeader>
             <div>

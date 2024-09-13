@@ -4,6 +4,10 @@ export const LOAD_NEW_POSTS_REQUEST = 'LOAD_NEW_POSTS_REQUEST' as const;
 export const LOAD_NEW_POSTS_SUCCESS = 'LOAD_NEW_POSTS_SUCCESS' as const;
 export const LOAD_NEW_POSTS_FAILURE = 'LOAD_NEW_POSTS_FAILURE' as const;
 
+export const LOAD_MY_INTERACTIONS_POSTS_REQUEST = 'LOAD_MY_INTERACTIONS_POSTS_REQUEST' as const;
+export const LOAD_MY_INTERACTIONS_POSTS_SUCCESS = 'LOAD_MY_INTERACTIONS_POSTS_SUCCESS' as const;
+export const LOAD_MY_INTERACTIONS_POSTS_FAILURE = 'LOAD_MY_INTERACTIONS_POSTS_FAILURE' as const;
+
 export const ADD_POST_REQUEST = 'ADD_POST_REQUEST' as const;
 export const ADD_POST_SUCCESS = 'ADD_POST_SUCCESS' as const;
 export const ADD_POST_FAILURE = 'ADD_POST_FAILURE' as const;
@@ -179,7 +183,8 @@ export interface Post {
 }
 
 export type PostState = {
-  mainPosts: Post[];
+  timelinePosts: Post[];
+  galleryPosts: Post[];
   singlePost: Post | null;
   postImagePaths: string[];
   editPostImagePaths: string[];
@@ -198,6 +203,9 @@ export type PostState = {
   loadNewPostsLoading: boolean;
   loadNewPostsDone: boolean;
   loadNewPostsError: null | string;
+  loadMyInteractionsPostsLoading: boolean;
+  loadMyInteractionsPostsDone: boolean;
+  loadMyInteractionsPostsError: null | string;
   addPostLoading: boolean;
   addPostDone: boolean;
   addPostError: null | string;
@@ -274,6 +282,22 @@ export interface loadNewPostsSuccessAction {
 
 export interface loadNewPostsFailureAction {
   type: typeof LOAD_NEW_POSTS_FAILURE;
+  error: string;
+}
+
+export interface loadMyInteractionsPostsRequestAction {
+  type: typeof LOAD_MY_INTERACTIONS_POSTS_REQUEST;
+  sortBy: 'best' | 'new';
+  lastId?: number;
+}
+
+export interface loadMyInteractionsPostsSuccessAction {
+  type: typeof LOAD_MY_INTERACTIONS_POSTS_SUCCESS;
+  data: Post[];
+}
+
+export interface loadMyInteractionsPostsFailureAction {
+  type: typeof LOAD_MY_INTERACTIONS_POSTS_FAILURE;
   error: string;
 }
 
@@ -659,6 +683,9 @@ export type PostAction =
   | loadNewPostsRequestAction
   | loadNewPostsSuccessAction
   | loadNewPostsFailureAction
+  | loadMyInteractionsPostsRequestAction
+  | loadMyInteractionsPostsSuccessAction
+  | loadMyInteractionsPostsFailureAction
   | addPostRequestAction
   | addPostSuccessAction
   | addPostFailureAction

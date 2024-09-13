@@ -10,7 +10,7 @@ import Sequelize, {
 } from 'sequelize';
 import Image from './image';
 import Comment from './comment';
-import Alert from './alert';
+import Alert from './userHistory';
 import User from './user';
 import Report from './report';
 import ReplyComment from './replyComment';

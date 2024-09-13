@@ -1,5 +1,5 @@
-import React, { useCallback, useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { CheckSquareOutlined, CloseSquareOutlined, DeleteOutlined, SwapOutlined } from '@ant-design/icons';
 import { END } from 'redux-saga';
 import Head from 'next/head';
@@ -14,8 +14,10 @@ import wrapper from 'store/configureStore';
 import { RootState } from 'store/reducers';
 import { loadMyInfoRequest } from 'store/actions/userAction';
 import { GalleryActionBtn, GalleryCategoryBtn, GalleryCategoryWrapper, GalleryWrapper } from 'styles/Gallery';
+import { loadMyInteractionsPostsRequest } from 'store/actions/postAction';
 
 const Gallery = () => {
+  const dispatch = useDispatch();
   const { isPostModalVisible } = useSelector((state: RootState) => state.post);
   const [selectMenu, setSelectMenu] = useState('all');
   const [selectSort, setSelectSort] = useState('best');
@@ -150,6 +152,10 @@ const Gallery = () => {
     setSelectMode(false);
   }, []);
 
+  useEffect(() => {
+    dispatch(loadMyInteractionsPostsRequest('best'));
+  }, []);
+
   return (
     <>
       <Head>
@@ -239,7 +245,7 @@ export const getServerSideProps = wrapper.getServerSideProps(async context => {
   if (context.req && cookie) axios.defaults.headers.Cookie = cookie;
 
   context.store.dispatch(loadMyInfoRequest());
-  // context.store.dispatch(loadPostsRequest());
+  // context.store.dispatch(loadMyInteractionsPostsRequest('best'));
 
   context.store.dispatch(END);
   await context.store.sagaTask?.toPromise();

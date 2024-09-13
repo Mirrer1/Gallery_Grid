@@ -3,7 +3,7 @@ import Sequelize from 'sequelize';
 import configObj from '../config/config';
 import User from './user';
 import Post from './post';
-import Alert from './alert';
+import UserHistory from './userHistory';
 import Auth from './auth';
 import Chat from './chat';
 import Comment from './comment';
@@ -18,7 +18,7 @@ export const sequelize = new Sequelize.Sequelize(config.database, config.usernam
 
 User.initiate(sequelize);
 Post.initiate(sequelize);
-Alert.initiate(sequelize);
+UserHistory.initiate(sequelize);
 Auth.initiate(sequelize);
 Chat.initiate(sequelize);
 Comment.initiate(sequelize);
@@ -28,7 +28,7 @@ ReplyComment.initiate(sequelize);
 
 User.associate();
 Post.associate();
-Alert.associate();
+UserHistory.associate();
 Auth.associate();
 Chat.associate();
 Comment.associate();

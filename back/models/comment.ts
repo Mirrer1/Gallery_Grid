@@ -1,7 +1,7 @@
 import Sequelize, { CreationOptional, InferAttributes, InferCreationAttributes, Model } from 'sequelize';
 import User from './user';
 import Post from './post';
-import Alert from './alert';
+import Alert from './userHistory';
 import Report from './report';
 import Image from './image';
 import ReplyComment from './replyComment';

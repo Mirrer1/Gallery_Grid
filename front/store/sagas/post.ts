@@ -79,7 +79,11 @@ import {
   LIKE_POST_FAILURE,
   unLikePostRequestAction,
   UNLIKE_POST_SUCCESS,
-  UNLIKE_POST_FAILURE
+  UNLIKE_POST_FAILURE,
+  LOAD_MY_INTERACTIONS_POSTS_REQUEST,
+  loadMyInteractionsPostsRequestAction,
+  LOAD_MY_INTERACTIONS_POSTS_SUCCESS,
+  LOAD_MY_INTERACTIONS_POSTS_FAILURE
 } from 'store/types/postType';
 
 function loadNewPostsAPI(lastId?: number) {
@@ -97,6 +101,26 @@ function* loadNewPosts(action: loadNewPostsRequestAction) {
   } catch (error: any) {
     yield put({
       type: LOAD_NEW_POSTS_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
+function loadMyInteractionsPostsAPI(sortBy: 'best' | 'new', lastId?: number) {
+  return axios.get(`/posts/interactions?sortBy=${sortBy}&lastId=${lastId || 0}`);
+}
+
+function* loadMyInteractionsPosts(action: loadMyInteractionsPostsRequestAction) {
+  try {
+    const result: AxiosResponse<Post[]> = yield call(() => loadMyInteractionsPostsAPI(action.sortBy, action.lastId));
+
+    yield put({
+      type: LOAD_MY_INTERACTIONS_POSTS_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: LOAD_MY_INTERACTIONS_POSTS_FAILURE,
       error: error.response.data.message
     });
   }
@@ -454,6 +478,10 @@ function* watchLoadNewPosts() {
   yield takeLatest(LOAD_NEW_POSTS_REQUEST, loadNewPosts);
 }
 
+function* watchLoadMyInteractionsPosts() {
+  yield takeLatest(LOAD_MY_INTERACTIONS_POSTS_REQUEST, loadMyInteractionsPosts);
+}
+
 function* watchAddPost() {
   yield takeLatest(ADD_POST_REQUEST, addPost);
 }
@@ -533,6 +561,7 @@ function* watchUnLikePost() {
 export default function* postSaga() {
   yield all([
     fork(watchLoadNewPosts),
+    fork(watchLoadMyInteractionsPosts),
     fork(watchAddPost),
     fork(watchEditPost),
     fork(watchDeletePost),

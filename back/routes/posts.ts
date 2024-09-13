@@ -1,5 +1,5 @@
 import express from 'express';
-import { Op } from 'sequelize';
+import { Op, Sequelize } from 'sequelize';
 
 import Post from '../models/post';
 import User from '../models/user';
@@ -12,10 +12,10 @@ const router = express.Router();
 router.get('/new', async (req, res, next) => {
   try {
     const where: { id?: { [Op.lt]: number } } = {};
-    const lastId = req.query.lastId as string | undefined;
+    const lastId = req.query.lastId ? parseInt(req.query.lastId as string, 10) : 0;
 
-    if (lastId && parseInt(lastId, 10)) {
-      where.id = { [Op.lt]: parseInt(lastId, 10) };
+    if (lastId) {
+      where.id = { [Op.lt]: lastId };
     }
 
     const posts = await Post.findAll({
@@ -65,6 +65,24 @@ router.get('/new', async (req, res, next) => {
     });
 
     res.status(200).json(posts);
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+});
+
+router.get('/interactions', async (req, res, next) => {
+  try {
+    const where: { id?: { [Op.lt]: number } } = {};
+    const lastId = req.query.lastId ? parseInt(req.query.lastId as string, 10) : 0;
+    const sortBy = req.query.sortBy as 'best' | 'new';
+    const userId = req.user!.id;
+
+    if (lastId) {
+      where.id = { [Op.lt]: lastId };
+    }
+
+    // res.status(200).json(posts);
   } catch (err) {
     console.error(err);
     next(err);

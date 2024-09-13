@@ -40,11 +40,18 @@ import {
   EDIT_MODAL_COMMENT_REQUEST,
   LIKE_POST_REQUEST,
   UNLIKE_POST_REQUEST,
-  LOAD_NEW_POSTS_REQUEST
+  LOAD_NEW_POSTS_REQUEST,
+  LOAD_MY_INTERACTIONS_POSTS_REQUEST
 } from 'store/types/postType';
 
 export const loadNewPostsRequest = (lastId?: number) => ({
   type: LOAD_NEW_POSTS_REQUEST,
+  lastId
+});
+
+export const loadMyInteractionsPostsRequest = (sortBy: 'best' | 'new', lastId?: number) => ({
+  type: LOAD_MY_INTERACTIONS_POSTS_REQUEST,
+  sortBy,
   lastId
 });
 
