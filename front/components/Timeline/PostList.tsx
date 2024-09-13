@@ -59,7 +59,7 @@ const PostList = () => {
     commentVisiblePostId
   } = useSelector((state: RootState) => state.post);
   const { imagePreview, showImagePreview, hideImagePreview } = useImagePreview();
-  useScroll({ type: 'timeline', ref: postContainerRef });
+  useScroll({ type: 'timeline-new', ref: postContainerRef });
 
   const [category, setCategory] = useState('best');
   const [modalImages, setModalImages] = useState<Image[]>([]);
@@ -133,8 +133,8 @@ const PostList = () => {
           Best
         </CategoryItem>
 
-        <CategoryItem onClick={() => onClickCategory('recent')} $selected={category === 'recent'}>
-          Recent
+        <CategoryItem onClick={() => onClickCategory('new')} $selected={category === 'new'}>
+          New
         </CategoryItem>
 
         <CategoryItem onClick={() => onClickCategory('follow')} $selected={category === 'follow'}>

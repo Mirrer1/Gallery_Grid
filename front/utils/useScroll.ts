@@ -4,10 +4,10 @@ import { AnyAction } from 'redux';
 
 import { Post } from 'store/types/postType';
 import { RootState } from 'store/reducers';
-import { loadPostsRequest } from 'store/actions/postAction';
+import { loadNewPostsRequest } from 'store/actions/postAction';
 
 type UseScrollParams = {
-  type: 'timeline';
+  type: 'timeline-new';
   ref: RefObject<HTMLDivElement>;
 };
 
@@ -17,6 +17,7 @@ type ScrollParams = {
   loading: boolean;
   action: (lastId: number) => AnyAction;
   thresholds: number[];
+  useRefForAllScreens: boolean;
 };
 
 const breakpoints = {
@@ -27,17 +28,18 @@ const breakpoints = {
 
 const useScroll = ({ type, ref }: UseScrollParams) => {
   const dispatch = useDispatch();
-  const { mainPosts, hasMorePosts, loadPostsLoading } = useSelector((state: RootState) => state.post);
+  const { mainPosts, hasMorePosts, loadNewPostsLoading } = useSelector((state: RootState) => state.post);
 
   const getScrollParams = (type: string): ScrollParams => {
     switch (type) {
-      case 'timeline':
+      case 'timeline-new':
         return {
           items: mainPosts,
           hasMore: hasMorePosts,
-          loading: loadPostsLoading,
-          action: loadPostsRequest,
-          thresholds: [350, 900, 1700]
+          loading: loadNewPostsLoading,
+          action: loadNewPostsRequest,
+          thresholds: [350, 900, 1700],
+          useRefForAllScreens: false
         };
       default:
         return {
@@ -45,27 +47,36 @@ const useScroll = ({ type, ref }: UseScrollParams) => {
           hasMore: false,
           loading: false,
           action: () => ({ type: 'UNKNOWN_ACTION' }),
-          thresholds: [0, 0, 0]
+          thresholds: [0, 0, 0],
+          useRefForAllScreens: false
         };
     }
   };
 
-  const { items, hasMore, loading, action, thresholds } = getScrollParams(type);
+  const { items, hasMore, loading, action, thresholds, useRefForAllScreens } = getScrollParams(type);
 
   useEffect(() => {
     const handleScroll = () => {
       const lastId = items[items.length - 1]?.id;
 
-      if (window.innerWidth >= breakpoints.web) {
+      if (useRefForAllScreens || window.innerWidth >= breakpoints.web) {
         if (ref.current) {
-          if (ref.current.scrollTop + ref.current.clientHeight > ref.current.scrollHeight - thresholds[0]) {
+          const { scrollTop, clientHeight, scrollHeight } = ref.current;
+          if (scrollTop + clientHeight > scrollHeight - thresholds[0]) {
             if (hasMore && !loading) {
               dispatch(action(lastId));
             }
           }
         }
       } else if (window.innerWidth >= breakpoints.tablet) {
-        if (
+        if (useRefForAllScreens && ref.current) {
+          const { scrollTop, clientHeight, scrollHeight } = ref.current;
+          if (scrollTop + clientHeight > scrollHeight - thresholds[1]) {
+            if (hasMore && !loading) {
+              dispatch(action(lastId));
+            }
+          }
+        } else if (
           window.scrollY + document.documentElement.clientHeight >
           document.documentElement.scrollHeight - thresholds[1]
         ) {
@@ -74,7 +85,14 @@ const useScroll = ({ type, ref }: UseScrollParams) => {
           }
         }
       } else if (window.innerWidth < breakpoints.tablet) {
-        if (
+        if (useRefForAllScreens && ref.current) {
+          const { scrollTop, clientHeight, scrollHeight } = ref.current;
+          if (scrollTop + clientHeight > scrollHeight - thresholds[2]) {
+            if (hasMore && !loading) {
+              dispatch(action(lastId));
+            }
+          }
+        } else if (
           window.scrollY + document.documentElement.clientHeight >
           document.documentElement.scrollHeight - thresholds[2]
         ) {
@@ -97,7 +115,7 @@ const useScroll = ({ type, ref }: UseScrollParams) => {
       }
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [hasMore, loading, items, dispatch, action, ref, thresholds]);
+  }, [hasMore, loading, items, dispatch, action, ref, thresholds, useRefForAllScreens]);
 };
 
 export default useScroll;

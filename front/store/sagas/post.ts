@@ -11,9 +11,9 @@ import {
   EDIT_POST_FAILURE,
   EDIT_POST_REQUEST,
   EDIT_POST_SUCCESS,
-  LOAD_POSTS_FAILURE,
-  LOAD_POSTS_REQUEST,
-  LOAD_POSTS_SUCCESS,
+  LOAD_NEW_POSTS_FAILURE,
+  LOAD_NEW_POSTS_REQUEST,
+  LOAD_NEW_POSTS_SUCCESS,
   Post,
   POST_UPLOAD_IMAGES_FAILURE,
   POST_UPLOAD_IMAGES_REQUEST,
@@ -24,7 +24,7 @@ import {
   addPostRequestAction,
   deletePostRequestAction,
   editPostRequestAction,
-  loadPostsRequestAction,
+  loadNewPostsRequestAction,
   postUploadImagesRequestAction,
   COMMENT_UPLOAD_IMAGE_REQUEST,
   commentUploadImageRequestAction,
@@ -82,21 +82,21 @@ import {
   UNLIKE_POST_FAILURE
 } from 'store/types/postType';
 
-function loadPostsAPI(lastId?: number) {
-  return axios.get(`/posts?lastId=${lastId || 0}`);
+function loadNewPostsAPI(lastId?: number) {
+  return axios.get(`/posts/new?lastId=${lastId || 0}`);
 }
 
-function* loadPosts(action: loadPostsRequestAction) {
+function* loadNewPosts(action: loadNewPostsRequestAction) {
   try {
-    const result: AxiosResponse<Post[]> = yield call(() => loadPostsAPI(action.lastId));
+    const result: AxiosResponse<Post[]> = yield call(() => loadNewPostsAPI(action.lastId));
 
     yield put({
-      type: LOAD_POSTS_SUCCESS,
+      type: LOAD_NEW_POSTS_SUCCESS,
       data: result.data
     });
   } catch (error: any) {
     yield put({
-      type: LOAD_POSTS_FAILURE,
+      type: LOAD_NEW_POSTS_FAILURE,
       error: error.response.data.message
     });
   }
@@ -450,8 +450,8 @@ function* unLikePost(action: unLikePostRequestAction) {
   }
 }
 
-function* watchLoadPosts() {
-  yield takeLatest(LOAD_POSTS_REQUEST, loadPosts);
+function* watchLoadNewPosts() {
+  yield takeLatest(LOAD_NEW_POSTS_REQUEST, loadNewPosts);
 }
 
 function* watchAddPost() {
@@ -532,7 +532,7 @@ function* watchUnLikePost() {
 
 export default function* postSaga() {
   yield all([
-    fork(watchLoadPosts),
+    fork(watchLoadNewPosts),
     fork(watchAddPost),
     fork(watchEditPost),
     fork(watchDeletePost),

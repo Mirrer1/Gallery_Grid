@@ -9,7 +9,7 @@ import ReplyComment from '../models/replyComment';
 
 const router = express.Router();
 
-router.get('/', async (req, res, next) => {
+router.get('/new', async (req, res, next) => {
   try {
     const where: { id?: { [Op.lt]: number } } = {};
     const lastId = req.query.lastId as string | undefined;

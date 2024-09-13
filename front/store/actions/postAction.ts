@@ -6,7 +6,6 @@ import {
   SHOW_COMMENT_LIST,
   SHOW_POST_CAROUSEL,
   SHOW_POST_MODAL,
-  LOAD_POSTS_REQUEST,
   DELETE_POST_REQUEST,
   SHOW_DELETE_MODAL,
   HIDE_DELETE_MODAL,
@@ -40,11 +39,12 @@ import {
   EXECUTE_MODAL_COMMENT_EDIT,
   EDIT_MODAL_COMMENT_REQUEST,
   LIKE_POST_REQUEST,
-  UNLIKE_POST_REQUEST
+  UNLIKE_POST_REQUEST,
+  LOAD_NEW_POSTS_REQUEST
 } from 'store/types/postType';
 
-export const loadPostsRequest = (lastId?: number) => ({
-  type: LOAD_POSTS_REQUEST,
+export const loadNewPostsRequest = (lastId?: number) => ({
+  type: LOAD_NEW_POSTS_REQUEST,
   lastId
 });
 

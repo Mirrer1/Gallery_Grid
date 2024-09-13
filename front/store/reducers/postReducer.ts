@@ -9,9 +9,9 @@ import {
   HIDE_POST_MODAL,
   SHOW_POST_CAROUSEL,
   HIDE_POST_CAROUSEL,
-  LOAD_POSTS_REQUEST,
-  LOAD_POSTS_SUCCESS,
-  LOAD_POSTS_FAILURE,
+  LOAD_NEW_POSTS_REQUEST,
+  LOAD_NEW_POSTS_SUCCESS,
+  LOAD_NEW_POSTS_FAILURE,
   ADD_POST_REQUEST,
   ADD_POST_SUCCESS,
   ADD_POST_FAILURE,
@@ -103,9 +103,9 @@ export const initialState: PostState = {
   lastChangedModalCommentId: null,
   commentVisiblePostId: null,
   hasMorePosts: true,
-  loadPostsLoading: false,
-  loadPostsDone: false,
-  loadPostsError: null,
+  loadNewPostsLoading: false,
+  loadNewPostsDone: false,
+  loadNewPostsError: null,
   addPostLoading: false,
   addPostDone: false,
   addPostError: null,
@@ -173,20 +173,20 @@ export const initialState: PostState = {
 const reducer = (state: PostState = initialState, action: PostAction): PostState => {
   return produce(state, draft => {
     switch (action.type) {
-      case LOAD_POSTS_REQUEST:
-        draft.loadPostsLoading = true;
-        draft.loadPostsDone = false;
-        draft.loadPostsError = null;
+      case LOAD_NEW_POSTS_REQUEST:
+        draft.loadNewPostsLoading = true;
+        draft.loadNewPostsDone = false;
+        draft.loadNewPostsError = null;
         break;
-      case LOAD_POSTS_SUCCESS:
-        draft.loadPostsLoading = false;
-        draft.loadPostsDone = true;
+      case LOAD_NEW_POSTS_SUCCESS:
+        draft.loadNewPostsLoading = false;
+        draft.loadNewPostsDone = true;
         draft.mainPosts = draft.mainPosts.concat(action.data);
         draft.hasMorePosts = action.data.length === 10;
         break;
-      case LOAD_POSTS_FAILURE:
-        draft.loadPostsLoading = false;
-        draft.loadPostsError = action.error;
+      case LOAD_NEW_POSTS_FAILURE:
+        draft.loadNewPostsLoading = false;
+        draft.loadNewPostsError = action.error;
         break;
       case ADD_POST_REQUEST:
         draft.addPostLoading = true;

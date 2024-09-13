@@ -1,8 +1,8 @@
 import { User } from './userType';
 
-export const LOAD_POSTS_REQUEST = 'LOAD_POSTS_REQUEST' as const;
-export const LOAD_POSTS_SUCCESS = 'LOAD_POSTS_SUCCESS' as const;
-export const LOAD_POSTS_FAILURE = 'LOAD_POSTS_FAILURE' as const;
+export const LOAD_NEW_POSTS_REQUEST = 'LOAD_NEW_POSTS_REQUEST' as const;
+export const LOAD_NEW_POSTS_SUCCESS = 'LOAD_NEW_POSTS_SUCCESS' as const;
+export const LOAD_NEW_POSTS_FAILURE = 'LOAD_NEW_POSTS_FAILURE' as const;
 
 export const ADD_POST_REQUEST = 'ADD_POST_REQUEST' as const;
 export const ADD_POST_SUCCESS = 'ADD_POST_SUCCESS' as const;
@@ -195,9 +195,9 @@ export type PostState = {
   lastChangedModalCommentId: number | null;
   commentVisiblePostId: number | null;
   hasMorePosts: boolean;
-  loadPostsLoading: boolean;
-  loadPostsDone: boolean;
-  loadPostsError: null | string;
+  loadNewPostsLoading: boolean;
+  loadNewPostsDone: boolean;
+  loadNewPostsError: null | string;
   addPostLoading: boolean;
   addPostDone: boolean;
   addPostError: null | string;
@@ -262,18 +262,18 @@ export type PostState = {
   isDeleteModalVisible: boolean;
 };
 
-export interface loadPostsRequestAction {
-  type: typeof LOAD_POSTS_REQUEST;
+export interface loadNewPostsRequestAction {
+  type: typeof LOAD_NEW_POSTS_REQUEST;
   lastId?: number;
 }
 
-export interface loadPostsSuccessAction {
-  type: typeof LOAD_POSTS_SUCCESS;
+export interface loadNewPostsSuccessAction {
+  type: typeof LOAD_NEW_POSTS_SUCCESS;
   data: Post[];
 }
 
-export interface loadPostsFailureAction {
-  type: typeof LOAD_POSTS_FAILURE;
+export interface loadNewPostsFailureAction {
+  type: typeof LOAD_NEW_POSTS_FAILURE;
   error: string;
 }
 
@@ -656,9 +656,9 @@ export type PostAction =
   | HidePostModalAction
   | ShowPostCarouselAction
   | HidePostCarouselAction
-  | loadPostsRequestAction
-  | loadPostsSuccessAction
-  | loadPostsFailureAction
+  | loadNewPostsRequestAction
+  | loadNewPostsSuccessAction
+  | loadNewPostsFailureAction
   | addPostRequestAction
   | addPostSuccessAction
   | addPostFailureAction
