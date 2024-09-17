@@ -156,7 +156,7 @@ export const PostPreviewContent = styled.div`
   }
 `;
 
-export const PostPreviewOption = styled.div`
+export const PostPreviewOption = styled.div<{ $liked: boolean; $hasCommented: boolean }>`
   ${({ theme }) => theme.flexSet('start')}
 
   & > div {
@@ -166,6 +166,11 @@ export const PostPreviewOption = styled.div`
 
   & > div:first-child {
     margin-right: 0.5em;
+    color: ${props => (props.$liked ? '#EE6B6E' : 'black')};
+  }
+
+  & > div:last-child {
+    color: ${props => (props.$hasCommented ? '#6BA2E6' : 'black')};
   }
 
   & > div > span > svg {

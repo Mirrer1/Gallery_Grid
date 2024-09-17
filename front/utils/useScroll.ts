@@ -28,14 +28,14 @@ const breakpoints = {
 
 const useScroll = ({ type, ref }: UseScrollParams) => {
   const dispatch = useDispatch();
-  const { timelinePosts, hasMorePosts, loadNewPostsLoading } = useSelector((state: RootState) => state.post);
+  const { timelinePosts, hasMoreTimelinePosts, loadNewPostsLoading } = useSelector((state: RootState) => state.post);
 
   const getScrollParams = (type: string): ScrollParams => {
     switch (type) {
       case 'timeline-new':
         return {
           items: timelinePosts,
-          hasMore: hasMorePosts,
+          hasMore: hasMoreTimelinePosts,
           loading: loadNewPostsLoading,
           action: loadNewPostsRequest,
           thresholds: [350, 900, 1700],

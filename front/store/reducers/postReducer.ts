@@ -106,7 +106,8 @@ export const initialState: PostState = {
   lastChangedCommentId: null,
   lastChangedModalCommentId: null,
   commentVisiblePostId: null,
-  hasMorePosts: true,
+  hasMoreTimelinePosts: true,
+  hasMoreGalleryPosts: true,
   loadNewPostsLoading: false,
   loadNewPostsDone: false,
   loadNewPostsError: null,
@@ -189,7 +190,7 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
         draft.loadNewPostsLoading = false;
         draft.loadNewPostsDone = true;
         draft.timelinePosts = draft.timelinePosts.concat(action.data);
-        draft.hasMorePosts = action.data.length === 10;
+        draft.hasMoreTimelinePosts = action.data.length === 10;
         break;
       case LOAD_NEW_POSTS_FAILURE:
         draft.loadNewPostsLoading = false;
@@ -203,8 +204,8 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
       case LOAD_MY_INTERACTIONS_POSTS_SUCCESS:
         draft.loadMyInteractionsPostsLoading = false;
         draft.loadMyInteractionsPostsDone = true;
-        draft.galleryPosts = draft.galleryPosts.concat(action.data);
-        // draft.hasMorePosts = action.data.length === 10;
+        draft.galleryPosts = action.data;
+        // draft.hasMoreGalleryPosts = action.data.length === 10;
         break;
       case LOAD_MY_INTERACTIONS_POSTS_FAILURE:
         draft.loadMyInteractionsPostsLoading = false;

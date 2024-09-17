@@ -21,24 +21,41 @@ export const PostCategory = styled.div`
   z-index: 9;
   background-color: white;
   border-bottom: 1px solid #eeeff3;
-  padding-right: 0.5em;
+
+  ${media.mobile} {
+    justify-content: center;
+  }
 `;
 
-export const CategoryItem = styled.p<{ $selected: boolean }>`
+export const CategoryItem = styled.button<{ $selected: boolean }>`
+  position: relative;
+  top: 1px;
+  ${({ theme }) => theme.flexColumnSet()};
   ${ReverseHoverStyle('&')};
-  font-weight: 500;
-  font-size: 0.75rem;
   cursor: pointer;
-  opacity: ${props => (props.$selected ? '100%' : '40%')};
-  padding: 0.7em 1em;
-  border-bottom: ${props => props.$selected && '2px solid black'};
 
-  &:last-child {
-    margin-right: 0;
+  & > p {
+    font-weight: 500;
+    font-size: 0.75rem;
+    opacity: ${props => (props.$selected ? '100%' : '40%')};
+    margin: 10px 0;
+  }
+
+  & > div {
+    visibility: ${props => (props.$selected ? 'visible' : 'hidden')};
+    width: 80px;
+    height: 2px;
+    background-color: black;
   }
 
   ${media.mobile} {
-    font-size: 0.7rem;
+    & > p {
+      font-size: 0.7rem;
+    }
+
+    & > div {
+      width: 70px;
+    }
   }
 `;
 

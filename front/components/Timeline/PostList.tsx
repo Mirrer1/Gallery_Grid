@@ -130,15 +130,18 @@ const PostList = () => {
 
       <PostCategory>
         <CategoryItem onClick={() => onClickCategory('best')} $selected={category === 'best'}>
-          Best
+          <p>Best</p>
+          <div />
         </CategoryItem>
 
         <CategoryItem onClick={() => onClickCategory('new')} $selected={category === 'new'}>
-          New
+          <p>New</p>
+          <div />
         </CategoryItem>
 
         <CategoryItem onClick={() => onClickCategory('follow')} $selected={category === 'follow'}>
-          Follow
+          <p>Follow</p>
+          <div />
         </CategoryItem>
       </PostCategory>
 

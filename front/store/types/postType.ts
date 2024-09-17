@@ -162,7 +162,8 @@ export interface IReplyComment extends Comment {
 export interface PostComment {
   id: number;
   isDeleted: boolean;
-  Replies: { id: number }[];
+  Replies: { id: number; User?: { id: number } }[];
+  User?: { id: number };
 }
 
 export interface PostLike {
@@ -199,7 +200,8 @@ export type PostState = {
   lastChangedCommentId: number | null;
   lastChangedModalCommentId: number | null;
   commentVisiblePostId: number | null;
-  hasMorePosts: boolean;
+  hasMoreTimelinePosts: boolean;
+  hasMoreGalleryPosts: boolean;
   loadNewPostsLoading: boolean;
   loadNewPostsDone: boolean;
   loadNewPostsError: null | string;

@@ -1,70 +1,79 @@
-import React, { useCallback } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useMemo } from 'react';
+import { useSelector } from 'react-redux';
 import { ArrowsAltOutlined, CommentOutlined, HeartOutlined } from '@ant-design/icons';
 
-import { showPostModal } from 'store/actions/postAction';
-import { slideInFromBottom } from 'styles/Common/animation';
+import { RootState } from 'store/reducers';
+import { Image, Post, PostComment, PostLike } from 'store/types/postType';
 import {
   PostPreviewContent,
   PostPreviewImage,
-  PostPreviewWrapper,
   PostPreviewOption,
   PostPreviewCheckbox
 } from 'styles/Gallery/postPreview';
 
 type PostPreviewProps = {
-  post: any;
+  post: Post;
   selectMode: boolean;
 };
 
 const PostPreview = ({ post, selectMode }: PostPreviewProps) => {
-  const dispatch = useDispatch();
-
-  const onClickPost = useCallback(() => {
-    // dispatch(showPostModal());
-  }, []);
+  const { me } = useSelector((state: RootState) => state.user);
+  const liked = useMemo(() => post.Likers.some((liker: PostLike) => liker.id === me?.id), [post.Likers]);
+  const hasCommented = useMemo(() => {
+    return post.Comments.some((comment: PostComment) => {
+      const isUserCommented = comment.User && comment.User.id === me?.id;
+      const isUserReplied = comment.Replies?.some(reply => reply.User?.id === me?.id);
+      return isUserCommented || isUserReplied;
+    });
+  }, [post.Comments, me?.id]);
 
   return (
-    <PostPreviewWrapper {...slideInFromBottom(0.3)}>
-      {post.map((post: any, i: any) => (
-        <article key={i} onClick={onClickPost}>
-          {selectMode && (
-            <PostPreviewCheckbox>
-              <input type="checkbox" />
-            </PostPreviewCheckbox>
-          )}
+    <>
+      {selectMode && (
+        <PostPreviewCheckbox>
+          <input type="checkbox" />
+        </PostPreviewCheckbox>
+      )}
 
-          <PostPreviewImage>
-            <img src={post.img[0]} alt={`${post.user}의 ${i}번째 게시글 이미지`} />
+      <PostPreviewImage>
+        <img src={`http://localhost:3065/${post.Images[0].src}`} alt="게시글의 첫번째 이미지" />
 
-            <div>
-              {post.img.map((_: any, i: any) => (
-                <div key={i}></div>
-              ))}
-            </div>
+        <div>
+          {post.Images.map((image: Image) => (
+            <div key={image.id} />
+          ))}
+        </div>
 
-            <ArrowsAltOutlined />
-          </PostPreviewImage>
+        <ArrowsAltOutlined />
+      </PostPreviewImage>
 
-          <PostPreviewContent>
-            <h1>{post.desc}</h1>
-            <p>{post.user}</p>
+      <PostPreviewContent>
+        <h1>{post.content}</h1>
+        <p>{post.User.nickname}</p>
 
-            <PostPreviewOption>
-              <div>
-                <HeartOutlined />
-                <span>24</span>
-              </div>
+        <PostPreviewOption $liked={liked} $hasCommented={hasCommented}>
+          <div>
+            <HeartOutlined />
+            <span>{post.Likers.length}</span>
+          </div>
 
-              <div>
-                <CommentOutlined />
-                <span>13</span>
-              </div>
-            </PostPreviewOption>
-          </PostPreviewContent>
-        </article>
-      ))}
-    </PostPreviewWrapper>
+          <div>
+            <CommentOutlined />
+            <span>
+              {post.Comments.reduce((total, comment) => {
+                const repliesCount = comment.Replies ? comment.Replies.length : 0;
+
+                if (comment.isDeleted) {
+                  return total + repliesCount;
+                }
+
+                return total + 1 + repliesCount;
+              }, 0)}
+            </span>
+          </div>
+        </PostPreviewOption>
+      </PostPreviewContent>
+    </>
   );
 };
 

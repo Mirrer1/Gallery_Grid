@@ -1,6 +1,14 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { CheckSquareOutlined, CloseSquareOutlined, DeleteOutlined, SwapOutlined } from '@ant-design/icons';
+import {
+  CheckSquareOutlined,
+  CloseSquareOutlined,
+  CloseSquareTwoTone,
+  DeleteOutlined,
+  LoadingOutlined,
+  SwapOutlined
+} from '@ant-design/icons';
+import { motion } from 'framer-motion';
 import { END } from 'redux-saga';
 import Head from 'next/head';
 import axios from 'axios';
@@ -11,138 +19,47 @@ import PostPreview from 'components/Gallery/PostPreview';
 import PostModal from 'components/Modal/PostModal';
 
 import wrapper from 'store/configureStore';
-import { RootState } from 'store/reducers';
 import { loadMyInfoRequest } from 'store/actions/userAction';
-import { GalleryActionBtn, GalleryCategoryBtn, GalleryCategoryWrapper, GalleryWrapper } from 'styles/Gallery';
-import { loadMyInteractionsPostsRequest } from 'store/actions/postAction';
+import { loadMyInteractionsPostsRequest, showPostModal } from 'store/actions/postAction';
+import { RootState } from 'store/reducers';
+import { Post } from 'store/types/postType';
+import { PostPreviewWrapper } from 'styles/Gallery/postPreview';
+import { slideInFromBottom, slideInList } from 'styles/Common/animation';
+import {
+  GalleryActionBtn,
+  GalleryCategoryBtn,
+  GalleryCategoryWrapper,
+  GalleryWrapper,
+  GalleryNoPostsContainer,
+  GalleryLoadingContainer
+} from 'styles/Gallery';
 
 const Gallery = () => {
   const dispatch = useDispatch();
-  const { isPostModalVisible } = useSelector((state: RootState) => state.post);
+  const galleryContainerRef = useRef<HTMLDivElement>(null);
+  const { isPostModalVisible, galleryPosts, loadMyInteractionsPostsLoading } = useSelector(
+    (state: RootState) => state.post
+  );
   const [selectMenu, setSelectMenu] = useState('all');
   const [selectSort, setSelectSort] = useState('best');
   const [selectMode, setSelectMode] = useState(false);
-
-  const postList = [
-    {
-      id: 'as1',
-      user: 'Lorem ipsum dolor',
-      profile: 'https://t3.ftcdn.net/jpg/05/16/27/58/360_F_516275801_f3Fsp17x6HQK0xQgDQEELoTuERO4SsWV.jpg',
-      img: [
-        'https://i.ibb.co/n70QqMG/drawing-series-by.jpg',
-        'https://i.ibb.co/BCsx9nZ/image.jpg',
-        'https://i.ibb.co/8bqzbyV/1.jpg',
-        'https://i.ibb.co/n70QqMG/drawing-series-by.jpg',
-        'https://i.ibb.co/BCsx9nZ/image.jpg',
-        'https://i.ibb.co/8bqzbyV/1.jpg',
-        'https://i.ibb.co/n70QqMG/drawing-series-by.jpg',
-        'https://i.ibb.co/BCsx9nZ/image.jpg',
-        'https://i.ibb.co/8bqzbyV/1.jpg'
-      ],
-      createdAt: '25 mins ago',
-      desc: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Praesentium harum in maiores delectus, illum nemo veritatis aut, ipsum ab odio reiciendis sed veniam eveniet quasi impedit mollitia natus tempora, cum deserunt iure eos quis esse quibusdam. Maxime sapiente, soluta reiciendis, nemo distinctio eveniet, libero facere ipsam ratione est hic voluptatibus?'
-    },
-    {
-      id: 'as2',
-      user: 'Lorem ipsum dolor',
-      profile: 'https://t3.ftcdn.net/jpg/05/16/27/58/360_F_516275801_f3Fsp17x6HQK0xQgDQEELoTuERO4SsWV.jpg',
-      img: [
-        'https://i.pinimg.com/564x/7b/8d/bc/7b8dbcac28aa4fb25c802eea7a97b8e5.jpg',
-        'https://i.pinimg.com/564x/77/29/2c/77292c31c7f08adaff7650798fef5ce0.jpg',
-        'https://i.pinimg.com/564x/af/ed/72/afed7289a2605bfa567229db5dfdbf5b.jpg'
-      ],
-      createdAt: '25 mins ago',
-      desc: 'Lorem ipsum do다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라lor sit amet consectetur adipisicing elit. Nostrum, quia. Iusto molestias perspiciatis incidunt a eveniet ullam porro facere ipsum, ipsam magni magnam exercitationem amet blanditiis eius repellendus aspernatur pariatur?'
-    },
-    {
-      id: 'as3',
-      user: 'Lorem ipsum dolor',
-      profile: 'https://t3.ftcdn.net/jpg/05/16/27/58/360_F_516275801_f3Fsp17x6HQK0xQgDQEELoTuERO4SsWV.jpg',
-      img: [
-        'https://i.pinimg.com/564x/27/14/b3/2714b3d09f0ad9ccdfaebdc195b4e67a.jpg',
-        'https://i.pinimg.com/564x/4a/82/40/4a8240c7d195d293d7b7d7b0e5bc5b66.jpg',
-        'https://i.pinimg.com/564x/91/c4/cb/91c4cb4531f6c3f91b1b3a1e2c4fc2fc.jpg'
-      ],
-      createdAt: '25 mins ago',
-      desc: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum, quia. Iusto molestias perspiciatis incidunt a eveniet ullam porro facere ipsum, ipsam magni magnam exercitationem amet blanditiis eius repellendus aspernatur pariatur?'
-    },
-    {
-      id: 'as4',
-      user: 'Lorem ipsum dolor',
-      profile: 'https://t3.ftcdn.net/jpg/05/16/27/58/360_F_516275801_f3Fsp17x6HQK0xQgDQEELoTuERO4SsWV.jpg',
-      img: [
-        'https://i.ibb.co/n70QqMG/drawing-series-by.jpg',
-        'https://i.ibb.co/BCsx9nZ/image.jpg',
-        'https://i.ibb.co/8bqzbyV/1.jpg'
-      ],
-      createdAt: '25 mins ago',
-      desc: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum, quia. Iusto molestias perspiciatis incidunt a eveniet ullam porro facere ipsum, ipsam magni magnam exercitationem amet blanditiis eius repellendus aspernatur pariatur?'
-    },
-    {
-      id: 'as5',
-      user: 'Lorem ipsum dolor',
-      profile: 'https://t3.ftcdn.net/jpg/05/16/27/58/360_F_516275801_f3Fsp17x6HQK0xQgDQEELoTuERO4SsWV.jpg',
-      img: [
-        'https://i.ibb.co/n70QqMG/drawing-series-by.jpg',
-        'https://i.ibb.co/BCsx9nZ/image.jpg',
-        'https://i.ibb.co/8bqzbyV/1.jpg'
-      ],
-      createdAt: '25 mins ago',
-      desc: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum, quia. Iusto molestias perspiciatis incidunt a eveniet ullam porro facere ipsum, ipsam magni magnam exercitationem amet blanditiis eius repellendus aspernatur pariatur?'
-    },
-    {
-      id: 'as6',
-      user: 'Lorem ipsum dolor',
-      profile: 'https://t3.ftcdn.net/jpg/05/16/27/58/360_F_516275801_f3Fsp17x6HQK0xQgDQEELoTuERO4SsWV.jpg',
-      img: ['https://i.ibb.co/n70QqMG/drawing-series-by.jpg'],
-      createdAt: '25 mins ago',
-      desc: '가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하'
-    },
-    {
-      id: 'as7',
-      user: 'Lorem ipsum dolor',
-      profile: 'https://t3.ftcdn.net/jpg/05/16/27/58/360_F_516275801_f3Fsp17x6HQK0xQgDQEELoTuERO4SsWV.jpg',
-      img: [
-        'https://i.ibb.co/n70QqMG/drawing-series-by.jpg',
-        'https://i.ibb.co/BCsx9nZ/image.jpg',
-        'https://i.ibb.co/8bqzbyV/1.jpg'
-      ],
-      createdAt: '25 mins ago',
-      desc: '가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하'
-    },
-    {
-      id: 'as8',
-      user: 'Lorem ipsum dolor',
-      profile: 'https://t3.ftcdn.net/jpg/05/16/27/58/360_F_516275801_f3Fsp17x6HQK0xQgDQEELoTuERO4SsWV.jpg',
-      img: [
-        'https://i.ibb.co/n70QqMG/drawing-series-by.jpg',
-        'https://i.ibb.co/BCsx9nZ/image.jpg',
-        'https://i.ibb.co/8bqzbyV/1.jpg'
-      ],
-      createdAt: '25 mins ago',
-      desc: '가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하'
-    },
-    {
-      id: 'as9',
-      user: 'Lorem ipsum dolor',
-      profile: 'https://t3.ftcdn.net/jpg/05/16/27/58/360_F_516275801_f3Fsp17x6HQK0xQgDQEELoTuERO4SsWV.jpg',
-      img: [
-        'https://i.ibb.co/n70QqMG/drawing-series-by.jpg',
-        'https://i.ibb.co/BCsx9nZ/image.jpg',
-        'https://i.ibb.co/8bqzbyV/1.jpg'
-      ],
-      createdAt: '25 mins ago',
-      desc: '가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하가나다라마바나다사하'
-    }
-  ];
 
   const onClickCategory = useCallback((category: string) => {
     setSelectMenu(category);
   }, []);
 
-  const onClickSort = useCallback((sort: string) => {
-    setSelectSort(sort);
-  }, []);
+  const onClickSort = useCallback(
+    (sort: 'best' | 'new') => {
+      setSelectSort(sort);
+
+      if (selectMenu === 'all') {
+        dispatch(loadMyInteractionsPostsRequest(sort));
+      } else if (selectMenu === 'like') {
+      } else if (selectMenu === 'comment') {
+      }
+    },
+    [selectSort, selectMenu]
+  );
 
   const onExecuteSelectMode = useCallback(() => {
     setSelectMode(true);
@@ -152,8 +69,8 @@ const Gallery = () => {
     setSelectMode(false);
   }, []);
 
-  useEffect(() => {
-    dispatch(loadMyInteractionsPostsRequest('best'));
+  const onClickPost = useCallback((post: Post) => {
+    dispatch(showPostModal(post));
   }, []);
 
   return (
@@ -169,7 +86,8 @@ const Gallery = () => {
 
             <GalleryCategoryWrapper>
               <GalleryCategoryBtn type="button" onClick={() => onClickCategory('all')} $selected={selectMenu === 'all'}>
-                All
+                <p>All</p>
+                <div />
               </GalleryCategoryBtn>
 
               <GalleryCategoryBtn
@@ -177,7 +95,8 @@ const Gallery = () => {
                 onClick={() => onClickCategory('like')}
                 $selected={selectMenu === 'like'}
               >
-                Like
+                <p>Like</p>
+                <div />
               </GalleryCategoryBtn>
 
               <GalleryCategoryBtn
@@ -185,7 +104,8 @@ const Gallery = () => {
                 onClick={() => onClickCategory('comment')}
                 $selected={selectMenu === 'comment'}
               >
-                Comment
+                <p>Comment</p>
+                <div />
               </GalleryCategoryBtn>
             </GalleryCategoryWrapper>
           </div>
@@ -226,9 +146,32 @@ const Gallery = () => {
             )}
           </GalleryActionBtn>
 
-          <div>
-            <BigPostPreview post={postList[0]} selectMode={selectMode} />
-            <PostPreview post={postList} selectMode={selectMode} />
+          <div ref={galleryContainerRef}>
+            {loadMyInteractionsPostsLoading ? (
+              <GalleryLoadingContainer>
+                <LoadingOutlined />
+              </GalleryLoadingContainer>
+            ) : galleryPosts.length > 0 ? (
+              <>
+                <BigPostPreview post={galleryPosts[0]} selectMode={selectMode} />
+
+                {galleryPosts.length > 1 && (
+                  <PostPreviewWrapper {...slideInFromBottom(0.3)}>
+                    {galleryPosts.slice(1).map((post: Post) => (
+                      <motion.article key={post.id} onClick={() => onClickPost(post)} {...slideInList}>
+                        <PostPreview post={post} selectMode={selectMode} />
+                      </motion.article>
+                    ))}
+                  </PostPreviewWrapper>
+                )}
+              </>
+            ) : (
+              <GalleryNoPostsContainer>
+                <CloseSquareTwoTone twoToneColor="#6BA2E6" />
+                <h1>No posts yet.</h1>
+                <p>게시글이 존재하지 않습니다.</p>
+              </GalleryNoPostsContainer>
+            )}
           </div>
         </GalleryWrapper>
 
@@ -245,7 +188,7 @@ export const getServerSideProps = wrapper.getServerSideProps(async context => {
   if (context.req && cookie) axios.defaults.headers.Cookie = cookie;
 
   context.store.dispatch(loadMyInfoRequest());
-  // context.store.dispatch(loadMyInteractionsPostsRequest('best'));
+  context.store.dispatch(loadMyInteractionsPostsRequest('best'));
 
   context.store.dispatch(END);
   await context.store.sagaTask?.toPromise();

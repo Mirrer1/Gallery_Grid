@@ -31,6 +31,7 @@ export const GalleryWrapper = styled.section`
     height: 100%;
     padding: 0.7em;
     margin: 0;
+    border-radius: 5px;
 
     & > div:first-child {
       & > h1 {
@@ -72,18 +73,33 @@ export const GalleryCategoryWrapper = styled.nav`
 export const GalleryCategoryBtn = styled.button<{ $selected: boolean }>`
   position: relative;
   top: 2px;
-  opacity: 40%;
-  font-size: 0.9rem;
-  font-weight: 500;
-  opacity: ${props => (props.$selected ? '100%' : '40%')};
-  color: ${props => (props.$selected ? '#6BA2E6' : '40%')};
-  border-bottom: ${props => props.$selected && '2px solid #6BA2E6'};
-  padding: 0.7em 1em;
-  cursor: pointer;
+  ${({ theme }) => theme.flexColumnSet()};
   ${ReverseHoverStyle('&')};
+  cursor: pointer;
+
+  & > p {
+    font-size: 0.9rem;
+    font-weight: 500;
+    opacity: ${props => (props.$selected ? '100%' : '40%')};
+    color: ${props => (props.$selected ? '#6BA2E6' : '40%')};
+    margin-bottom: 10px;
+  }
+
+  & > div {
+    visibility: ${props => (props.$selected ? 'visible' : 'hidden')};
+    width: 80px;
+    height: 2px;
+    background-color: ${({ theme }) => theme.colors.primary};
+  }
 
   ${media.tablet} {
-    font-size: 0.8rem;
+    & > p {
+      font-size: 0.8rem;
+    }
+
+    & > div {
+      width: 70px;
+    }
   }
 `;
 
@@ -126,5 +142,48 @@ export const GalleryActionBtn = styled.div<{ $selectMode: boolean }>`
     & > button {
       font-size: 0.55rem;
     }
+  }
+`;
+
+export const GalleryNoPostsContainer = styled.div`
+  ${({ theme }) => theme.flexColumnSet()};
+  flex-grow: 1;
+  height: 90%;
+
+  & > span {
+    font-size: 3rem;
+    margin-bottom: 0.25em;
+  }
+
+  & > h1 {
+    color: ${({ theme }) => theme.colors.font};
+    font-size: 1.4rem;
+    font-weight: 500;
+    margin-bottom: 0.2em;
+  }
+
+  & > p {
+    font-size: 0.8rem;
+    opacity: 60%;
+  }
+
+  ${media.tablet} {
+    height: 100vh;
+  }
+`;
+
+export const GalleryLoadingContainer = styled.div`
+  ${({ theme }) => theme.flexColumnSet()};
+  flex-grow: 1;
+  height: 90%;
+
+  & > span {
+    color: ${({ theme }) => theme.colors.primary};
+    font-size: 3rem;
+    margin-bottom: 0.25em;
+  }
+
+  ${media.tablet} {
+    height: 100vh;
   }
 `;
