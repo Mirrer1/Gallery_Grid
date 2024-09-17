@@ -9,6 +9,7 @@ import Image from '../models/image';
 import Comment from '../models/comment';
 import { isLoggedIn } from './middleware';
 import ReplyComment from '../models/replyComment';
+import UserHistory from '../models/userHistory';
 
 const router = express.Router();
 
@@ -367,6 +368,14 @@ router.post('/comment', isLoggedIn, upload.none(), async (req, res, next) => {
         ]
       });
 
+      UserHistory.create({
+        type: 'replyComment',
+        PostId,
+        ReplyCommentId: fullReplyComment?.id,
+        AlerterId: req.user!.id,
+        AlertedId: post.UserId
+      });
+
       return res.status(201).json({ comment: fullReplyComment, parentId });
     } else {
       const newComment = await Comment.create({
@@ -438,6 +447,14 @@ router.post('/comment', isLoggedIn, upload.none(), async (req, res, next) => {
             order: [['createdAt', 'ASC']]
           }
         ]
+      });
+
+      UserHistory.create({
+        type: 'comment',
+        PostId,
+        CommentId: fullComment?.id,
+        AlerterId: req.user!.id,
+        AlertedId: post.UserId
       });
 
       return res.status(201).json({ comment: fullComment, parentId });
@@ -609,6 +626,16 @@ router.post('/comment/delete', isLoggedIn, async (req, res, next) => {
 
       postId = replyComment.PostId;
 
+      await UserHistory.destroy({
+        where: {
+          type: 'replyComment',
+          PostId: postId,
+          ReplyCommentId: replyComment.id,
+          AlerterId: req.user!.id,
+          AlertedId: replyComment.UserId
+        }
+      });
+
       await Image.update({ ReplyCommentId: null }, { where: { ReplyCommentId: id } });
       await ReplyComment.destroy({ where: { id } });
 
@@ -633,6 +660,16 @@ router.post('/comment/delete', isLoggedIn, async (req, res, next) => {
       }
 
       postId = comment.PostId;
+
+      await UserHistory.destroy({
+        where: {
+          type: 'comment',
+          PostId: postId,
+          CommentId: comment.id,
+          AlerterId: req.user!.id,
+          AlertedId: comment.UserId
+        }
+      });
 
       if (hasChild) {
         await Comment.update({ isDeleted: true }, { where: { id } });
@@ -662,6 +699,14 @@ router.patch('/like/:postId', isLoggedIn, async (req, res, next) => {
     }
 
     await post.addLiker(req.user!.id);
+
+    UserHistory.create({
+      type: 'like',
+      PostId: post.id,
+      AlerterId: req.user!.id,
+      AlertedId: post.UserId
+    });
+
     res.status(200).json({ PostId: post.id, UserId: req.user!.id });
   } catch (error) {
     console.error(error);
@@ -682,6 +727,15 @@ router.delete('/like/:postId', isLoggedIn, async (req, res, next) => {
     }
 
     await post.removeLiker(req.user!.id);
+
+    await UserHistory.destroy({
+      where: {
+        type: 'like',
+        PostId: post.id,
+        AlerterId: req.user!.id,
+        AlertedId: post.UserId
+      }
+    });
     res.status(200).json({ PostId: post.id, UserId: req.user!.id });
   } catch (error) {
     console.error(error);
