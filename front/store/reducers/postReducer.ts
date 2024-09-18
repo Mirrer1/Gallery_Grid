@@ -107,7 +107,6 @@ export const initialState: PostState = {
   lastChangedModalCommentId: null,
   commentVisiblePostId: null,
   hasMoreTimelinePosts: true,
-  hasMoreGalleryPosts: true,
   loadNewPostsLoading: false,
   loadNewPostsDone: false,
   loadNewPostsError: null,
@@ -205,7 +204,6 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
         draft.loadMyInteractionsPostsLoading = false;
         draft.loadMyInteractionsPostsDone = true;
         draft.galleryPosts = action.data;
-        // draft.hasMoreGalleryPosts = action.data.length === 10;
         break;
       case LOAD_MY_INTERACTIONS_POSTS_FAILURE:
         draft.loadMyInteractionsPostsLoading = false;

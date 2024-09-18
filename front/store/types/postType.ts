@@ -207,7 +207,6 @@ export type PostState = {
   lastChangedModalCommentId: number | null;
   commentVisiblePostId: number | null;
   hasMoreTimelinePosts: boolean;
-  hasMoreGalleryPosts: boolean;
   loadNewPostsLoading: boolean;
   loadNewPostsDone: boolean;
   loadNewPostsError: null | string;
@@ -295,8 +294,8 @@ export interface loadNewPostsFailureAction {
 
 export interface loadMyInteractionsPostsRequestAction {
   type: typeof LOAD_MY_INTERACTIONS_POSTS_REQUEST;
+  menu: 'all' | 'like' | 'comment';
   sortBy: 'best' | 'new';
-  lastId?: number;
 }
 
 export interface loadMyInteractionsPostsSuccessAction {

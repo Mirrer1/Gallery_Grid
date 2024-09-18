@@ -49,10 +49,10 @@ export const loadNewPostsRequest = (lastId?: number) => ({
   lastId
 });
 
-export const loadMyInteractionsPostsRequest = (sortBy: 'best' | 'new', lastId?: number) => ({
+export const loadMyInteractionsPostsRequest = (menu: 'all' | 'like' | 'comment', sortBy: 'best' | 'new') => ({
   type: LOAD_MY_INTERACTIONS_POSTS_REQUEST,
-  sortBy,
-  lastId
+  menu,
+  sortBy
 });
 
 export const addPostRequest = (data: FormData) => ({

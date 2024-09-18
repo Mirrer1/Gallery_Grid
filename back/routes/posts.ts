@@ -75,11 +75,11 @@ router.get('/new', async (req, res, next) => {
 
 router.get('/interactions', async (req, res, next) => {
   try {
-    const lastId = req.query.lastId ? parseInt(req.query.lastId as string, 10) : 0;
+    const menu = req.query.menu as 'all' | 'like' | 'comment';
     const sortBy = req.query.sortBy as 'best' | 'new';
     const userId = req.user!.id;
 
-    let order: [string | any, string][] = [['createdAt', 'DESC']];
+    let order: any = [['Post', 'createdAt', 'DESC']];
     if (sortBy === 'best') {
       order = [
         [
@@ -93,17 +93,20 @@ router.get('/interactions', async (req, res, next) => {
       ];
     }
 
+    let where: any = { AlerterId: userId };
+    if (menu === 'like') {
+      where = { ...where, type: 'like' };
+    } else if (menu === 'comment') {
+      where = { ...where, type: { [Op.or]: ['comment', 'replyComment'] } };
+    }
+
     const posts = await UserHistory.findAll({
-      where: { AlerterId: userId },
+      where,
       attributes: ['id', 'type'],
       order,
       include: [
         {
           model: Post,
-          order: [
-            ['createdAt', 'DESC'],
-            [Comment, 'createdAt', 'DESC']
-          ],
           include: [
             {
               model: User,
@@ -144,15 +147,10 @@ router.get('/interactions', async (req, res, next) => {
             }
           ]
         }
-        // {
-        //   model: User,
-        //   as: 'Alerter'
-        // }
       ],
       group: ['Post.id', 'Post->Comments.id', 'Post->Comments->Replies.id', 'Post->Images.id', 'Post->Likers.id']
     });
 
-    // const divideAlert = posts.slice(0, parseInt(req.query.alertLimit, 10));
     res.status(200).json(posts);
   } catch (err) {
     console.error(err);

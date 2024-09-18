@@ -40,26 +40,17 @@ const Gallery = () => {
   const { isPostModalVisible, galleryPosts, loadMyInteractionsPostsLoading } = useSelector(
     (state: RootState) => state.post
   );
-  const [selectMenu, setSelectMenu] = useState('all');
-  const [selectSort, setSelectSort] = useState('best');
+  const [selectMenu, setSelectMenu] = useState<'all' | 'like' | 'comment'>('all');
+  const [selectSort, setSelectSort] = useState<'best' | 'new'>('best');
   const [selectMode, setSelectMode] = useState(false);
 
-  const onClickCategory = useCallback((category: string) => {
-    setSelectMenu(category);
+  const onClickMenu = useCallback((menu: 'all' | 'like' | 'comment') => {
+    setSelectMenu(menu);
   }, []);
 
-  const onClickSort = useCallback(
-    (sort: 'best' | 'new') => {
-      setSelectSort(sort);
-
-      if (selectMenu === 'all') {
-        dispatch(loadMyInteractionsPostsRequest(sort));
-      } else if (selectMenu === 'like') {
-      } else if (selectMenu === 'comment') {
-      }
-    },
-    [selectSort, selectMenu]
-  );
+  const onClickSort = useCallback((sort: 'best' | 'new') => {
+    setSelectSort(sort);
+  }, []);
 
   const onExecuteSelectMode = useCallback(() => {
     setSelectMode(true);
@@ -74,8 +65,8 @@ const Gallery = () => {
   }, []);
 
   useEffect(() => {
-    console.log(galleryPosts);
-  }, []);
+    dispatch(loadMyInteractionsPostsRequest(selectMenu, selectSort));
+  }, [selectMenu, selectSort]);
 
   return (
     <>
@@ -89,23 +80,19 @@ const Gallery = () => {
             <h1>FILTER:</h1>
 
             <GalleryCategoryWrapper>
-              <GalleryCategoryBtn type="button" onClick={() => onClickCategory('all')} $selected={selectMenu === 'all'}>
+              <GalleryCategoryBtn type="button" onClick={() => onClickMenu('all')} $selected={selectMenu === 'all'}>
                 <p>All</p>
                 <div />
               </GalleryCategoryBtn>
 
-              <GalleryCategoryBtn
-                type="button"
-                onClick={() => onClickCategory('like')}
-                $selected={selectMenu === 'like'}
-              >
+              <GalleryCategoryBtn type="button" onClick={() => onClickMenu('like')} $selected={selectMenu === 'like'}>
                 <p>Like</p>
                 <div />
               </GalleryCategoryBtn>
 
               <GalleryCategoryBtn
                 type="button"
-                onClick={() => onClickCategory('comment')}
+                onClick={() => onClickMenu('comment')}
                 $selected={selectMenu === 'comment'}
               >
                 <p>Comment</p>
@@ -196,7 +183,7 @@ export const getServerSideProps = wrapper.getServerSideProps(async context => {
   if (context.req && cookie) axios.defaults.headers.Cookie = cookie;
 
   context.store.dispatch(loadMyInfoRequest());
-  context.store.dispatch(loadMyInteractionsPostsRequest('best'));
+  context.store.dispatch(loadMyInteractionsPostsRequest('all', 'best'));
 
   context.store.dispatch(END);
   await context.store.sagaTask?.toPromise();

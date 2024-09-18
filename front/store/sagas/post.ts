@@ -107,14 +107,14 @@ function* loadNewPosts(action: loadNewPostsRequestAction) {
   }
 }
 
-function loadMyInteractionsPostsAPI(sortBy: 'best' | 'new', lastId?: number) {
-  return axios.get(`/posts/interactions?sortBy=${sortBy}&lastId=${lastId || 0}`);
+function loadMyInteractionsPostsAPI(menu: 'all' | 'like' | 'comment', sortBy: 'best' | 'new') {
+  return axios.get(`/posts/interactions?menu=${menu}&sortBy=${sortBy}`);
 }
 
 function* loadMyInteractionsPosts(action: loadMyInteractionsPostsRequestAction) {
   try {
     const result: AxiosResponse<UserHistoryPost[]> = yield call(() =>
-      loadMyInteractionsPostsAPI(action.sortBy, action.lastId)
+      loadMyInteractionsPostsAPI(action.menu, action.sortBy)
     );
 
     yield put({
