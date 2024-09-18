@@ -4,7 +4,7 @@ import { ArrowsAltOutlined, CommentOutlined, HeartOutlined } from '@ant-design/i
 
 import { RootState } from 'store/reducers';
 import { showPostModal } from 'store/actions/postAction';
-import { Image, Post, PostComment, PostLike } from 'store/types/postType';
+import { Image, PostComment, PostLike, UserHistoryPost } from 'store/types/postType';
 import { slideInFromBottom } from 'styles/Common/animation';
 import {
   BigPostPreviewContent,
@@ -15,24 +15,29 @@ import {
 } from 'styles/Gallery/bigPostPreview';
 
 type BigPostPreviewProps = {
-  post: Post;
+  userHistory: UserHistoryPost;
   selectMode: boolean;
 };
 
-const BigPostPreview = ({ post, selectMode }: BigPostPreviewProps) => {
+const BigPostPreview = ({ userHistory, selectMode }: BigPostPreviewProps) => {
   const dispatch = useDispatch();
   const { me } = useSelector((state: RootState) => state.user);
-  const liked = useMemo(() => post.Likers.some((liker: PostLike) => liker.id === me?.id), [post.Likers]);
+  const liked = useMemo(
+    () => userHistory.Post.Likers.some((liker: PostLike) => liker.id === me?.id),
+    [userHistory.Post.Likers]
+  );
   const hasCommented = useMemo(() => {
-    return post.Comments.some((comment: PostComment) => {
+    console.log(userHistory.Post.Comments);
+
+    return userHistory.Post.Comments.some((comment: PostComment) => {
       const isUserCommented = comment.User && comment.User.id === me?.id;
       const isUserReplied = comment.Replies?.some(reply => reply.User?.id === me?.id);
       return isUserCommented || isUserReplied;
     });
-  }, [post.Comments, me?.id]);
+  }, [userHistory.Post.Comments, me?.id]);
 
   const onClickPost = useCallback(() => {
-    dispatch(showPostModal(post));
+    dispatch(showPostModal(userHistory.Post));
   }, []);
 
   return (
@@ -44,10 +49,10 @@ const BigPostPreview = ({ post, selectMode }: BigPostPreviewProps) => {
       )}
 
       <BigPostPreviewImage>
-        <img src={`http://localhost:3065/${post.Images[0].src}`} alt="게시글의 첫번째 이미지" />
+        <img src={`http://localhost:3065/${userHistory.Post.Images[0].src}`} alt="게시글의 첫번째 이미지" />
 
         <div>
-          {post.Images.map((image: Image) => (
+          {userHistory.Post.Images.map((image: Image) => (
             <div key={image.id} />
           ))}
         </div>
@@ -56,19 +61,19 @@ const BigPostPreview = ({ post, selectMode }: BigPostPreviewProps) => {
       </BigPostPreviewImage>
 
       <BigPostPreviewContent>
-        <h1>{post.content}</h1>
-        <p>{post.User.nickname}</p>
+        <h1>{userHistory.Post.content}</h1>
+        <p>{userHistory.Post.User.nickname}</p>
 
         <BigPostPreviewOption $liked={liked} $hasCommented={hasCommented}>
           <div>
             <HeartOutlined />
-            <span>{post.Likers.length}</span>
+            <span>{userHistory.Post.Likers.length}</span>
           </div>
 
           <div>
             <CommentOutlined />
             <span>
-              {post.Comments.reduce((total, comment) => {
+              {userHistory.Post.Comments.reduce((total, comment) => {
                 const repliesCount = comment.Replies ? comment.Replies.length : 0;
 
                 if (comment.isDeleted) {

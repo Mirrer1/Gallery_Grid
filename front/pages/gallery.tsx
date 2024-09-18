@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   CheckSquareOutlined,
@@ -22,7 +22,7 @@ import wrapper from 'store/configureStore';
 import { loadMyInfoRequest } from 'store/actions/userAction';
 import { loadMyInteractionsPostsRequest, showPostModal } from 'store/actions/postAction';
 import { RootState } from 'store/reducers';
-import { Post } from 'store/types/postType';
+import { Post, UserHistoryPost } from 'store/types/postType';
 import { PostPreviewWrapper } from 'styles/Gallery/postPreview';
 import { slideInFromBottom, slideInList } from 'styles/Common/animation';
 import {
@@ -71,6 +71,10 @@ const Gallery = () => {
 
   const onClickPost = useCallback((post: Post) => {
     dispatch(showPostModal(post));
+  }, []);
+
+  useEffect(() => {
+    console.log(galleryPosts);
   }, []);
 
   return (
@@ -153,13 +157,17 @@ const Gallery = () => {
               </GalleryLoadingContainer>
             ) : galleryPosts.length > 0 ? (
               <>
-                <BigPostPreview post={galleryPosts[0]} selectMode={selectMode} />
+                <BigPostPreview userHistory={galleryPosts[0]} selectMode={selectMode} />
 
                 {galleryPosts.length > 1 && (
                   <PostPreviewWrapper {...slideInFromBottom(0.3)}>
-                    {galleryPosts.slice(1).map((post: Post) => (
-                      <motion.article key={post.id} onClick={() => onClickPost(post)} {...slideInList}>
-                        <PostPreview post={post} selectMode={selectMode} />
+                    {galleryPosts.slice(1).map((userHistory: UserHistoryPost) => (
+                      <motion.article
+                        key={userHistory.id}
+                        onClick={() => onClickPost(userHistory.Post)}
+                        {...slideInList}
+                      >
+                        <PostPreview userHistory={userHistory} selectMode={selectMode} />
                       </motion.article>
                     ))}
                   </PostPreviewWrapper>

@@ -83,7 +83,8 @@ import {
   LOAD_MY_INTERACTIONS_POSTS_REQUEST,
   loadMyInteractionsPostsRequestAction,
   LOAD_MY_INTERACTIONS_POSTS_SUCCESS,
-  LOAD_MY_INTERACTIONS_POSTS_FAILURE
+  LOAD_MY_INTERACTIONS_POSTS_FAILURE,
+  UserHistoryPost
 } from 'store/types/postType';
 
 function loadNewPostsAPI(lastId?: number) {
@@ -112,7 +113,9 @@ function loadMyInteractionsPostsAPI(sortBy: 'best' | 'new', lastId?: number) {
 
 function* loadMyInteractionsPosts(action: loadMyInteractionsPostsRequestAction) {
   try {
-    const result: AxiosResponse<Post[]> = yield call(() => loadMyInteractionsPostsAPI(action.sortBy, action.lastId));
+    const result: AxiosResponse<UserHistoryPost[]> = yield call(() =>
+      loadMyInteractionsPostsAPI(action.sortBy, action.lastId)
+    );
 
     yield put({
       type: LOAD_MY_INTERACTIONS_POSTS_SUCCESS,

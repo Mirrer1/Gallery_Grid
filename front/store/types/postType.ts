@@ -183,9 +183,15 @@ export interface Post {
   Comments: PostComment[];
 }
 
+export interface UserHistoryPost {
+  id: number;
+  type: string;
+  Post: Post;
+}
+
 export type PostState = {
   timelinePosts: Post[];
-  galleryPosts: Post[];
+  galleryPosts: UserHistoryPost[];
   singlePost: Post | null;
   postImagePaths: string[];
   editPostImagePaths: string[];
@@ -295,7 +301,7 @@ export interface loadMyInteractionsPostsRequestAction {
 
 export interface loadMyInteractionsPostsSuccessAction {
   type: typeof LOAD_MY_INTERACTIONS_POSTS_SUCCESS;
-  data: Post[];
+  data: UserHistoryPost[];
 }
 
 export interface loadMyInteractionsPostsFailureAction {

@@ -79,25 +79,6 @@ router.get('/interactions', async (req, res, next) => {
     const sortBy = req.query.sortBy as 'best' | 'new';
     const userId = req.user!.id;
 
-    const userHistory = await UserHistory.findAll({
-      where: {
-        AlerterId: userId,
-        type: ['like', 'comment', 'replyComment']
-      },
-      attributes: ['PostId'],
-      group: ['PostId']
-    });
-
-    const postIds = userHistory.map(history => history.PostId);
-
-    if (postIds.length === 0) {
-      return res.status(200).json([]);
-    }
-
-    const where: any = {
-      id: postIds
-    };
-
     let order: [string | any, string][] = [['createdAt', 'DESC']];
     if (sortBy === 'best') {
       order = [
@@ -112,50 +93,66 @@ router.get('/interactions', async (req, res, next) => {
       ];
     }
 
-    const posts = await Post.findAll({
-      where,
+    const posts = await UserHistory.findAll({
+      where: { AlerterId: userId },
+      attributes: ['id', 'type'],
       order,
       include: [
         {
-          model: User,
-          attributes: ['id', 'nickname'],
+          model: Post,
+          order: [
+            ['createdAt', 'DESC'],
+            [Comment, 'createdAt', 'DESC']
+          ],
           include: [
+            {
+              model: User,
+              attributes: ['id', 'nickname'],
+              include: [
+                {
+                  model: Image,
+                  as: 'ProfileImage',
+                  where: { type: 'user' },
+                  attributes: ['id', 'src'],
+                  required: false
+                }
+              ]
+            },
             {
               model: Image,
-              as: 'ProfileImage',
-              where: { type: 'user' },
-              attributes: ['id', 'src'],
-              required: false
-            }
-          ]
-        },
-        {
-          model: Image,
-          where: { type: 'post' },
-          attributes: ['id', 'src']
-        },
-        {
-          model: User,
-          as: 'Likers',
-          attributes: ['id'],
-          through: { attributes: [] }
-        },
-        {
-          model: Comment,
-          attributes: ['id', 'isDeleted'],
-          include: [
-            { model: User, attributes: ['id'] },
+              where: { type: 'post' },
+              attributes: ['id', 'src']
+            },
             {
-              model: ReplyComment,
-              as: 'Replies',
+              model: User,
+              as: 'Likers',
               attributes: ['id'],
-              include: [{ model: User, attributes: ['id'] }]
+              through: { attributes: [] }
+            },
+            {
+              model: Comment,
+              attributes: ['id', 'isDeleted'],
+              include: [
+                { model: User, attributes: ['id'] },
+                {
+                  model: ReplyComment,
+                  as: 'Replies',
+                  attributes: ['id'],
+                  include: [{ model: User, attributes: ['id'] }]
+                }
+              ]
             }
           ]
         }
-      ]
+        // {
+        //   model: User,
+        //   as: 'Alerter'
+        // }
+      ],
+      group: ['Post.id', 'Post->Comments.id', 'Post->Comments->Replies.id', 'Post->Images.id', 'Post->Likers.id']
     });
 
+    // const divideAlert = posts.slice(0, parseInt(req.query.alertLimit, 10));
     res.status(200).json(posts);
   } catch (err) {
     console.error(err);
