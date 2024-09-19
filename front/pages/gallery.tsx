@@ -97,8 +97,6 @@ const Gallery = () => {
   }, [selectMenu, selectSort]);
 
   useEffect(() => {
-    console.log(galleryPosts);
-
     setIsFirstRender(false);
   }, []);
 

@@ -217,6 +217,12 @@ router.delete('/:postId', isLoggedIn, async (req, res, next) => {
       return res.status(404).json({ message: '게시글이 존재하지 않습니다.' });
     }
 
+    await UserHistory.destroy({
+      where: {
+        PostId: req.params.postId
+      }
+    });
+
     await Post.destroy({
       where: {
         id: req.params.postId,

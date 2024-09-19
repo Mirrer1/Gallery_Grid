@@ -257,6 +257,8 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
         draft.singlePost = action.data;
         const postIndex = draft.timelinePosts.findIndex(post => post.id === action.data.id);
         if (postIndex !== -1) draft.timelinePosts[postIndex] = action.data;
+        const galleryPostIndex = draft.galleryPosts.findIndex(post => post.Post.id === action.data.id);
+        if (galleryPostIndex !== -1) draft.galleryPosts[galleryPostIndex].Post = action.data;
         break;
       case EDIT_POST_FAILURE:
         draft.editPostLoading = false;
@@ -279,6 +281,8 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
         }
         const index = draft.timelinePosts.findIndex(post => post.id === action.data);
         if (index !== -1) draft.timelinePosts.splice(index, 1);
+        const galleryIndex = draft.galleryPosts.findIndex(post => post.Post.id === action.data);
+        if (galleryIndex !== -1) draft.galleryPosts.splice(galleryIndex, 1);
         break;
       case DELETE_POST_FAILURE:
         draft.deletePostLoading = false;
@@ -551,7 +555,7 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
         draft.addModalCommentDone = false;
         draft.addModalCommentError = null;
         break;
-      case ADD_MODAL_COMMENT_SUCCESS:
+      case ADD_MODAL_COMMENT_SUCCESS: {
         draft.addModalCommentLoading = false;
         draft.addModalCommentDone = true;
         draft.modalCommentImagePath = [];
@@ -563,7 +567,6 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
 
           if (modalParentId) {
             const modalParentComment = modalComments.find(comment => comment.id === modalParentId);
-
             if (modalParentComment) {
               modalParentComment.Replies = modalParentComment.Replies || [];
               modalParentComment.Replies.push(action.data.comment);
@@ -603,7 +606,6 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
             }
           } else {
             mainComments.push({ id: action.data.comment.id, isDeleted: false, Replies: [] });
-
             if (draft.commentVisiblePostId === action.data.comment.PostId) {
               draft.mainComments?.push(action.data.comment);
             }
@@ -611,7 +613,34 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
 
           draft.timelinePosts[mainPostIndex].Comments = mainComments;
         }
+
+        const galleryPostIndex = draft.galleryPosts.findIndex(
+          userHistory => userHistory.Post.id === action.data.comment.PostId
+        );
+        if (galleryPostIndex !== -1) {
+          const galleryComments = draft.galleryPosts[galleryPostIndex].Post.Comments;
+          const galleryParentId = action.data.parentId ? parseInt(action.data.parentId, 10) : null;
+
+          if (galleryParentId) {
+            const galleryParentComment = galleryComments.find(comment => comment.id === galleryParentId);
+            if (galleryParentComment) {
+              galleryParentComment.Replies = galleryParentComment.Replies || [];
+              galleryParentComment.Replies.push(action.data.comment);
+            }
+          } else {
+            galleryComments.push({
+              id: action.data.comment.id,
+              isDeleted: false,
+              User: { id: action.data.comment.UserId },
+              Replies: []
+            });
+          }
+
+          draft.galleryPosts[galleryPostIndex].Post.Comments = galleryComments;
+        }
+
         break;
+      }
       case ADD_MODAL_COMMENT_FAILURE:
         draft.addModalCommentLoading = false;
         draft.addModalCommentError = action.error;
@@ -861,6 +890,31 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
             }
           }
         }
+
+        const galleryPostIndex = draft.galleryPosts.findIndex(userHistory => userHistory.Post.id === postId);
+        if (galleryPostIndex !== -1) {
+          const galleryComments = draft.galleryPosts[galleryPostIndex].Post.Comments;
+          if (replyId) {
+            const galleryParentComment = galleryComments.find(comment => comment.id === replyId);
+            if (galleryParentComment) {
+              galleryParentComment.Replies = galleryParentComment.Replies.filter(reply => reply.id !== id);
+
+              if (galleryParentComment.Replies.length === 0 && galleryParentComment.isDeleted) {
+                draft.galleryPosts[galleryPostIndex].Post.Comments = galleryComments.filter(
+                  comment => comment.id !== replyId
+                );
+              }
+            }
+          } else {
+            if (hasChild) {
+              const galleryCommentToUpdate = galleryComments.find(comment => comment.id === id);
+              if (galleryCommentToUpdate) galleryCommentToUpdate.isDeleted = true;
+            } else {
+              draft.galleryPosts[galleryPostIndex].Post.Comments = galleryComments.filter(comment => comment.id !== id);
+            }
+          }
+        }
+
         draft.isDeleteModalVisible = false;
         draft.deleteInfo = null;
         break;
@@ -883,6 +937,10 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
         if (draft.singlePost && draft.singlePost.id === action.data.PostId) {
           draft.singlePost.Likers.push({ id: action.data.UserId });
         }
+        const galleryPost = draft.galleryPosts.find(userHistory => userHistory.Post.id === action.data.PostId);
+        if (galleryPost) {
+          galleryPost.Post.Likers.push({ id: action.data.UserId });
+        }
         break;
       }
       case LIKE_POST_FAILURE:
@@ -902,6 +960,10 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
         if (post) post.Likers = post.Likers.filter(liker => liker.id !== action.data.UserId);
         if (draft.singlePost && draft.singlePost.id === action.data.PostId) {
           draft.singlePost.Likers = draft.singlePost.Likers.filter(liker => liker.id !== action.data.UserId);
+        }
+        const galleryPost = draft.galleryPosts.find(userHistory => userHistory.Post.id === action.data.PostId);
+        if (galleryPost) {
+          galleryPost.Post.Likers = galleryPost.Post.Likers.filter(liker => liker.id !== action.data.UserId);
         }
         break;
       }
