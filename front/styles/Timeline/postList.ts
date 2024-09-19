@@ -21,24 +21,45 @@ export const PostCategory = styled.div`
   z-index: 9;
   background-color: white;
   border-bottom: 1px solid #eeeff3;
-  padding-right: 0.5em;
+
+  ${media.mobile} {
+    justify-content: center;
+    margin: 0 0.5em;
+  }
 `;
 
-export const CategoryItem = styled.p<{ $selected: boolean }>`
+export const CategoryItem = styled.button<{ $selected: boolean }>`
+  position: relative;
+  top: 1px;
+  ${({ theme }) => theme.flexColumnSet()};
   ${ReverseHoverStyle('&')};
-  font-weight: 500;
-  font-size: 0.75rem;
   cursor: pointer;
-  opacity: ${props => (props.$selected ? '100%' : '40%')};
-  padding: 0.7em 1em;
-  border-bottom: ${props => props.$selected && '2px solid black'};
 
-  &:last-child {
-    margin-right: 0;
+  & > p {
+    font-weight: 500;
+    font-size: 0.75rem;
+    opacity: ${props => (props.$selected ? '100%' : '40%')};
+    margin: 10px 0;
+  }
+
+  & > div {
+    visibility: ${props => (props.$selected ? 'visible' : 'hidden')};
+    width: 80px;
+    height: 2px;
+    background-color: black;
   }
 
   ${media.mobile} {
-    font-size: 0.7rem;
+    flex: 1;
+
+    & > p {
+      font-size: 0.8rem;
+      margin: 12px 0;
+    }
+
+    & > div {
+      width: 100%;
+    }
   }
 `;
 
@@ -196,7 +217,7 @@ export const PostContents = styled.div`
   }
 `;
 
-export const PostOptions = styled.div<{ $commentVisiblePostId: boolean }>`
+export const PostOptions = styled.div<{ $liked: boolean; $commentVisiblePostId: boolean }>`
   ${({ theme }) => theme.flexSet('start')}
   padding: 0 0.3em;
 
@@ -207,7 +228,8 @@ export const PostOptions = styled.div<{ $commentVisiblePostId: boolean }>`
   }
 
   & > div:first-child {
-    margin-right: 1em;
+    color: ${props => (props.$liked ? '#EE6B6E' : 'black')};
+    margin-right: 0.7em;
   }
 
   & > div:last-child {
@@ -216,11 +238,5 @@ export const PostOptions = styled.div<{ $commentVisiblePostId: boolean }>`
 
   & > div > span > svg {
     margin-right: 0.3em;
-  }
-
-  ${media.mobile} {
-    & > div:first-child {
-      margin-right: 0.7em;
-    }
   }
 `;

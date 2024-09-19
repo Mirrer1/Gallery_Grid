@@ -6,7 +6,6 @@ import {
   SHOW_COMMENT_LIST,
   SHOW_POST_CAROUSEL,
   SHOW_POST_MODAL,
-  LOAD_POSTS_REQUEST,
   DELETE_POST_REQUEST,
   SHOW_DELETE_MODAL,
   HIDE_DELETE_MODAL,
@@ -38,12 +37,29 @@ import {
   EDIT_MODAL_COMMENT_UPLOAD_IMAGE_REQUEST,
   EDIT_MODAL_COMMENT_REMOVE_UPLOADED_IMAGE,
   EXECUTE_MODAL_COMMENT_EDIT,
-  EDIT_MODAL_COMMENT_REQUEST
+  EDIT_MODAL_COMMENT_REQUEST,
+  LIKE_POST_REQUEST,
+  UNLIKE_POST_REQUEST,
+  LOAD_NEW_POSTS_REQUEST,
+  LOAD_MY_INTERACTIONS_POSTS_REQUEST,
+  DELETE_MY_INTERACTIONS_POSTS_REQUEST
 } from 'store/types/postType';
 
-export const loadPostsRequest = (lastId?: number) => ({
-  type: LOAD_POSTS_REQUEST,
+export const loadNewPostsRequest = (lastId?: number) => ({
+  type: LOAD_NEW_POSTS_REQUEST,
   lastId
+});
+
+export const loadMyInteractionsPostsRequest = (menu: 'all' | 'like' | 'comment', sortBy: 'best' | 'new') => ({
+  type: LOAD_MY_INTERACTIONS_POSTS_REQUEST,
+  menu,
+  sortBy
+});
+
+export const deleteMyInteractionsPostsRequest = (menu: 'all' | 'like' | 'comment', id: number[]) => ({
+  type: DELETE_MY_INTERACTIONS_POSTS_REQUEST,
+  menu,
+  id
 });
 
 export const addPostRequest = (data: FormData) => ({
@@ -154,6 +170,16 @@ export const editModalCommentRemoveUploadedImage = () => ({
 
 export const deleteModalCommentRequest = (data: DeleteInfo) => ({
   type: DELETE_MODAL_COMMENT_REQUEST,
+  data
+});
+
+export const likePostRequest = (data: number) => ({
+  type: LIKE_POST_REQUEST,
+  data
+});
+
+export const unLikePostRequest = (data: number) => ({
+  type: UNLIKE_POST_REQUEST,
   data
 });
 

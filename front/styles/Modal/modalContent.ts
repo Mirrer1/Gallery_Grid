@@ -122,7 +122,7 @@ export const ModalContentText = styled.div<{ $isModalCommentListVisible: boolean
   }
 `;
 
-export const ModalContentOptions = styled.div<{ $isModalCommentListVisible: boolean }>`
+export const ModalContentOptions = styled.div<{ $liked: boolean; $isModalCommentListVisible: boolean }>`
   padding: 0.8em;
   border-radius: 0 0 5px 0;
 
@@ -136,6 +136,7 @@ export const ModalContentOptions = styled.div<{ $isModalCommentListVisible: bool
     }
 
     & > span:first-child {
+      color: ${props => (props.$liked ? '#EE6B6E' : 'black')};
       margin-right: 0.5rem;
     }
 

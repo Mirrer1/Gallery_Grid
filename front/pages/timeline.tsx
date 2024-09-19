@@ -15,7 +15,7 @@ import CommentList from 'components/Timeline/CommentList';
 import wrapper from 'store/configureStore';
 import useToastStatus from 'utils/useToast';
 import { RootState } from 'store/reducers';
-import { loadPostsRequest } from 'store/actions/postAction';
+import { loadNewPostsRequest } from 'store/actions/postAction';
 import { loadMyInfoRequest } from 'store/actions/userAction';
 import { slideInFromBottom } from 'styles/Common/animation';
 import { CommunitySection, MobileSuggestedBtn, PostsSection, TimelineWrapper } from 'styles/Timeline';
@@ -71,7 +71,7 @@ export const getServerSideProps = wrapper.getServerSideProps(async context => {
   if (context.req && cookie) axios.defaults.headers.Cookie = cookie;
 
   context.store.dispatch(loadMyInfoRequest());
-  context.store.dispatch(loadPostsRequest());
+  context.store.dispatch(loadNewPostsRequest());
 
   context.store.dispatch(END);
   await context.store.sagaTask?.toPromise();

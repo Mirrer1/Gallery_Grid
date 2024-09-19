@@ -206,6 +206,7 @@ export const AuthOptionsWrapper = styled.div<{ $menu: string }>`
       width: 12px;
       height: 12px;
       margin-right: 0.3em;
+      opacity: 70%;
     }
 
     & > label {

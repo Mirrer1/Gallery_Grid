@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 
 import media from 'styles/media';
-import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
+import { ReverseHoverStyle } from 'styles/Common/hover';
+import { motion } from 'framer-motion';
 
 export const GalleryWrapper = styled.section`
   background-color: white;
@@ -24,13 +25,14 @@ export const GalleryWrapper = styled.section`
     height: 1px;
     flex-grow: 1;
     overflow-y: auto;
-    padding: 0.7em 1em 0.7em 0em;
+    padding: 0 1em 0.7em 0em;
   }
 
   ${media.tablet} {
     height: 100%;
-    padding: 1.5em 1.5em 0.5em 1.5em;
+    padding: 0.7em;
     margin: 0;
+    border-radius: 5px;
 
     & > div:first-child {
       & > h1 {
@@ -40,67 +42,153 @@ export const GalleryWrapper = styled.section`
     }
 
     & > div:last-child {
-      padding: 0.7em 0 0.2em 0;
+      padding: 0;
       overflow-y: visible;
       height: 100%;
     }
   }
 
   ${media.mobile} {
-    padding: 0;
-    margin-bottom: 0.5em;
+    padding: 0.7em;
+    margin-bottom: 2.5%;
+    border-radius: 5px;
 
     & > div:first-child {
-      padding: 1em 1em 0.7em 1em;
-
       & > h1 {
-        margin-bottom: 0.3em;
+        /* margin-bottom: 0.5em; */
       }
     }
 
     & > div:last-child {
-      padding: 0 1em 0.7em 1em;
+      padding: 0;
     }
   }
 `;
 
 export const GalleryCategoryWrapper = styled.nav`
-  ${({ theme }) => theme.flexSet('space-between')}
+  ${({ theme }) => theme.flexSet('start')};
   border-bottom: 2px solid ${({ theme }) => theme.colors.darkBg};
-
-  & > div:last-child {
-    position: relative;
-    top: 2px;
-    font-size: 0.75rem;
-    ${HoverStyle('&')}
-
-    & > button {
-      margin-right: 0.5em;
-    }
-  }
-
-  ${media.tablet} {
-    & > div:last-child {
-      font-size: 0.65rem;
-    }
-  }
+  margin-bottom: 0.5em;
 `;
 
 export const GalleryCategoryBtn = styled.button<{ $selected: boolean }>`
   position: relative;
   top: 2px;
-  opacity: 40%;
-  font-size: 0.9rem;
+  ${({ theme }) => theme.flexColumnSet()};
   ${ReverseHoverStyle('&')};
-  opacity: ${props => (props.$selected ? '100%' : '40%')};
-  color: ${props => (props.$selected ? '#6BA2E6' : '40%')};
-  font-weight: ${props => (props.$selected ? '500' : '0')};
-  border-bottom: ${props => props.$selected && '2px solid #6BA2E6'};
-  font-weight: 500;
-  padding: 0.7em 1em;
   cursor: pointer;
 
+  & > p {
+    font-size: 0.9rem;
+    font-weight: 500;
+    opacity: ${props => (props.$selected ? '100%' : '40%')};
+    color: ${props => (props.$selected ? '#6BA2E6' : '40%')};
+    margin-bottom: 10px;
+  }
+
+  & > div {
+    visibility: ${props => (props.$selected ? 'visible' : 'hidden')};
+    width: 80px;
+    height: 2px;
+    background-color: ${({ theme }) => theme.colors.primary};
+  }
+
   ${media.tablet} {
+    & > p {
+      font-size: 0.8rem;
+    }
+
+    & > div {
+      width: 70px;
+    }
+  }
+`;
+
+export const GalleryActionBtnWrapper = styled(motion.div)``;
+
+export const GalleryActionBtn = styled.div<{ $selectMode: boolean }>`
+  ${({ theme }) => theme.flexSet('end')};
+  margin-bottom: 0.5em;
+
+  & > div > button {
+    font-size: 0.7rem;
+    font-weight: 500;
+    padding: 0.5em 1em;
+    color: ${props => (props.$selectMode ? '#EE6B6E' : '#6BA2E6')};
+    border: ${props => (props.$selectMode ? '1px solid #EE6B6E' : '1px solid #6BA2E6')};
+    border-radius: 5px;
+    margin-right: 0.5em;
+    transition: opacity 200ms ease-in-out !important;
+
+    &:hover {
+      opacity: 40% !important;
+    }
+
+    &:active {
+      opacity: 100% !important;
+    }
+
+    & > span {
+      margin-right: 0.5em;
+    }
+  }
+
+  ${media.tablet} {
+    & > div > button {
+      font-size: 0.6rem;
+
+      & > span {
+        margin-right: 0.3em;
+      }
+    }
+  }
+
+  ${media.mobile} {
+    & > div > button {
+      font-size: 0.55rem;
+    }
+  }
+`;
+
+export const GalleryNoPostsContainer = styled.div`
+  ${({ theme }) => theme.flexColumnSet()};
+  flex-grow: 1;
+  height: 90%;
+
+  & > span {
+    font-size: 3rem;
+    margin-bottom: 0.25em;
+  }
+
+  & > h1 {
+    color: ${({ theme }) => theme.colors.font};
+    font-size: 1.4rem;
+    font-weight: 500;
+    margin-bottom: 0.2em;
+  }
+
+  & > p {
     font-size: 0.8rem;
+    opacity: 60%;
+  }
+
+  ${media.tablet} {
+    height: 100vh;
+  }
+`;
+
+export const GalleryLoadingContainer = styled.div`
+  ${({ theme }) => theme.flexColumnSet()};
+  flex-grow: 1;
+  height: 90%;
+
+  & > span {
+    color: ${({ theme }) => theme.colors.primary};
+    font-size: 3rem;
+    margin-bottom: 0.25em;
+  }
+
+  ${media.tablet} {
+    height: 100vh;
   }
 `;

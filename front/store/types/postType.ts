@@ -1,8 +1,16 @@
 import { User } from './userType';
 
-export const LOAD_POSTS_REQUEST = 'LOAD_POSTS_REQUEST' as const;
-export const LOAD_POSTS_SUCCESS = 'LOAD_POSTS_SUCCESS' as const;
-export const LOAD_POSTS_FAILURE = 'LOAD_POSTS_FAILURE' as const;
+export const LOAD_NEW_POSTS_REQUEST = 'LOAD_NEW_POSTS_REQUEST' as const;
+export const LOAD_NEW_POSTS_SUCCESS = 'LOAD_NEW_POSTS_SUCCESS' as const;
+export const LOAD_NEW_POSTS_FAILURE = 'LOAD_NEW_POSTS_FAILURE' as const;
+
+export const LOAD_MY_INTERACTIONS_POSTS_REQUEST = 'LOAD_MY_INTERACTIONS_POSTS_REQUEST' as const;
+export const LOAD_MY_INTERACTIONS_POSTS_SUCCESS = 'LOAD_MY_INTERACTIONS_POSTS_SUCCESS' as const;
+export const LOAD_MY_INTERACTIONS_POSTS_FAILURE = 'LOAD_MY_INTERACTIONS_POSTS_FAILURE' as const;
+
+export const DELETE_MY_INTERACTIONS_POSTS_REQUEST = 'DELETE_MY_INTERACTIONS_POSTS_REQUEST' as const;
+export const DELETE_MY_INTERACTIONS_POSTS_SUCCESS = 'DELETE_MY_INTERACTIONS_POSTS_SUCCESS' as const;
+export const DELETE_MY_INTERACTIONS_POSTS_FAILURE = 'DELETE_MY_INTERACTIONS_POSTS_FAILURE' as const;
 
 export const ADD_POST_REQUEST = 'ADD_POST_REQUEST' as const;
 export const ADD_POST_SUCCESS = 'ADD_POST_SUCCESS' as const;
@@ -80,6 +88,14 @@ export const DELETE_MODAL_COMMENT_REQUEST = 'DELETE_MODAL_COMMENT_REQUEST' as co
 export const DELETE_MODAL_COMMENT_SUCCESS = 'DELETE_MODAL_COMMENT_SUCCESS' as const;
 export const DELETE_MODAL_COMMENT_FAILURE = 'DELETE_MODAL_COMMENT_FAILURE' as const;
 
+export const LIKE_POST_REQUEST = 'LIKE_POST_REQUEST';
+export const LIKE_POST_SUCCESS = 'LIKE_POST_SUCCESS';
+export const LIKE_POST_FAILURE = 'LIKE_POST_FAILURE';
+
+export const UNLIKE_POST_REQUEST = 'UNLIKE_POST_REQUEST';
+export const UNLIKE_POST_SUCCESS = 'UNLIKE_POST_SUCCESS';
+export const UNLIKE_POST_FAILURE = 'UNLIKE_POST_FAILURE';
+
 export const SHOW_COMMENT_LIST = 'SHOW_COMMENT_LIST' as const;
 export const HIDE_COMMENT_LIST = 'HIDE_COMMENT_LIST' as const;
 
@@ -99,8 +115,9 @@ export const SHOW_DELETE_MODAL = 'SHOW_DELETE_MODAL' as const;
 export const HIDE_DELETE_MODAL = 'HIDE_DELETE_MODAL' as const;
 
 export interface DeleteInfo {
-  type?: '댓글' | '게시글';
-  id: number;
+  type?: '댓글' | '게시글' | 'Gallery 게시글';
+  id: number | number[];
+  menu?: 'all' | 'like' | 'comment';
   hasChild?: boolean;
   replyId?: number | null;
 }
@@ -108,6 +125,11 @@ export interface DeleteInfo {
 export interface Image {
   id: number;
   src: string;
+}
+
+export interface ResponseLike {
+  PostId: number;
+  UserId: number;
 }
 
 export interface ResponseComment {
@@ -145,7 +167,12 @@ export interface IReplyComment extends Comment {
 export interface PostComment {
   id: number;
   isDeleted: boolean;
-  Replies: { id: number }[];
+  Replies: { id: number; User?: { id: number } }[];
+  User?: { id: number };
+}
+
+export interface PostLike {
+  id: number;
 }
 
 export interface Post {
@@ -157,11 +184,19 @@ export interface Post {
   updatedAt: string;
   User: User;
   Images: Image[];
+  Likers: PostLike[];
   Comments: PostComment[];
 }
 
+export interface UserHistoryPost {
+  id: number;
+  type: string;
+  Post: Post;
+}
+
 export type PostState = {
-  mainPosts: Post[];
+  timelinePosts: Post[];
+  galleryPosts: UserHistoryPost[];
   singlePost: Post | null;
   postImagePaths: string[];
   editPostImagePaths: string[];
@@ -176,10 +211,16 @@ export type PostState = {
   lastChangedCommentId: number | null;
   lastChangedModalCommentId: number | null;
   commentVisiblePostId: number | null;
-  hasMorePosts: boolean;
-  loadPostsLoading: boolean;
-  loadPostsDone: boolean;
-  loadPostsError: null | string;
+  hasMoreTimelinePosts: boolean;
+  loadNewPostsLoading: boolean;
+  loadNewPostsDone: boolean;
+  loadNewPostsError: null | string;
+  loadMyInteractionsPostsLoading: boolean;
+  loadMyInteractionsPostsDone: boolean;
+  loadMyInteractionsPostsError: null | string;
+  deleteMyInteractionsPostsLoading: boolean;
+  deleteMyInteractionsPostsDone: boolean;
+  deleteMyInteractionsPostsError: null | string;
   addPostLoading: boolean;
   addPostDone: boolean;
   addPostError: null | string;
@@ -231,6 +272,12 @@ export type PostState = {
   deleteModalCommentLoading: boolean;
   deleteModalCommentDone: boolean;
   deleteModalCommentError: null | string;
+  likePostLoading: boolean;
+  likePostDone: boolean;
+  likePostError: null | string;
+  unLikePostLoading: boolean;
+  unLikePostDone: boolean;
+  unLikePostError: null | string;
   isCommentListVisible: boolean;
   isModalCommentListVisible: boolean;
   isCarouselVisible: boolean;
@@ -238,18 +285,50 @@ export type PostState = {
   isDeleteModalVisible: boolean;
 };
 
-export interface loadPostsRequestAction {
-  type: typeof LOAD_POSTS_REQUEST;
+export interface loadNewPostsRequestAction {
+  type: typeof LOAD_NEW_POSTS_REQUEST;
   lastId?: number;
 }
 
-export interface loadPostsSuccessAction {
-  type: typeof LOAD_POSTS_SUCCESS;
+export interface loadNewPostsSuccessAction {
+  type: typeof LOAD_NEW_POSTS_SUCCESS;
   data: Post[];
 }
 
-export interface loadPostsFailureAction {
-  type: typeof LOAD_POSTS_FAILURE;
+export interface loadNewPostsFailureAction {
+  type: typeof LOAD_NEW_POSTS_FAILURE;
+  error: string;
+}
+
+export interface loadMyInteractionsPostsRequestAction {
+  type: typeof LOAD_MY_INTERACTIONS_POSTS_REQUEST;
+  menu: 'all' | 'like' | 'comment';
+  sortBy: 'best' | 'new';
+}
+
+export interface loadMyInteractionsPostsSuccessAction {
+  type: typeof LOAD_MY_INTERACTIONS_POSTS_SUCCESS;
+  data: UserHistoryPost[];
+}
+
+export interface loadMyInteractionsPostsFailureAction {
+  type: typeof LOAD_MY_INTERACTIONS_POSTS_FAILURE;
+  error: string;
+}
+
+export interface deleteMyInteractionsPostsRequestAction {
+  type: typeof DELETE_MY_INTERACTIONS_POSTS_REQUEST;
+  menu: 'all' | 'like' | 'comment';
+  id: number[];
+}
+
+export interface deleteMyInteractionsPostsSuccessAction {
+  type: typeof DELETE_MY_INTERACTIONS_POSTS_SUCCESS;
+  data: number[];
+}
+
+export interface deleteMyInteractionsPostsFailureAction {
+  type: typeof DELETE_MY_INTERACTIONS_POSTS_FAILURE;
   error: string;
 }
 
@@ -534,6 +613,36 @@ export interface deleteModalCommentFailureAction {
   error: string;
 }
 
+export interface likePostRequestAction {
+  type: typeof LIKE_POST_REQUEST;
+  data: number;
+}
+
+export interface likePostSuccessAction {
+  type: typeof LIKE_POST_SUCCESS;
+  data: ResponseLike;
+}
+
+export interface likePostFailureAction {
+  type: typeof LIKE_POST_FAILURE;
+  error: string;
+}
+
+export interface unLikePostRequestAction {
+  type: typeof UNLIKE_POST_REQUEST;
+  data: number;
+}
+
+export interface unLikePostSuccessAction {
+  type: typeof UNLIKE_POST_SUCCESS;
+  data: ResponseLike;
+}
+
+export interface unLikePostFailureAction {
+  type: typeof UNLIKE_POST_FAILURE;
+  error: string;
+}
+
 export interface ShowCommentListAction {
   type: typeof SHOW_COMMENT_LIST;
   data: number;
@@ -602,9 +711,15 @@ export type PostAction =
   | HidePostModalAction
   | ShowPostCarouselAction
   | HidePostCarouselAction
-  | loadPostsRequestAction
-  | loadPostsSuccessAction
-  | loadPostsFailureAction
+  | loadNewPostsRequestAction
+  | loadNewPostsSuccessAction
+  | loadNewPostsFailureAction
+  | loadMyInteractionsPostsRequestAction
+  | loadMyInteractionsPostsSuccessAction
+  | loadMyInteractionsPostsFailureAction
+  | deleteMyInteractionsPostsRequestAction
+  | deleteMyInteractionsPostsSuccessAction
+  | deleteMyInteractionsPostsFailureAction
   | addPostRequestAction
   | addPostSuccessAction
   | addPostFailureAction
@@ -666,6 +781,12 @@ export type PostAction =
   | editModalCommentUploadImageSuccessAction
   | editModalCommentUploadImageFailureAction
   | editModalCommentRemoveUploadedImageAction
+  | likePostRequestAction
+  | likePostSuccessAction
+  | likePostFailureAction
+  | unLikePostRequestAction
+  | unLikePostSuccessAction
+  | unLikePostFailureAction
   | executeModalCommentEditAction
   | editModalCommentRequestAction
   | editModalCommentSuccessAction

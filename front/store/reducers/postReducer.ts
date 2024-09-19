@@ -9,9 +9,12 @@ import {
   HIDE_POST_MODAL,
   SHOW_POST_CAROUSEL,
   HIDE_POST_CAROUSEL,
-  LOAD_POSTS_REQUEST,
-  LOAD_POSTS_SUCCESS,
-  LOAD_POSTS_FAILURE,
+  LOAD_NEW_POSTS_REQUEST,
+  LOAD_NEW_POSTS_SUCCESS,
+  LOAD_NEW_POSTS_FAILURE,
+  LOAD_MY_INTERACTIONS_POSTS_REQUEST,
+  LOAD_MY_INTERACTIONS_POSTS_SUCCESS,
+  LOAD_MY_INTERACTIONS_POSTS_FAILURE,
   ADD_POST_REQUEST,
   ADD_POST_SUCCESS,
   ADD_POST_FAILURE,
@@ -71,17 +74,27 @@ import {
   DELETE_MODAL_COMMENT_REQUEST,
   DELETE_MODAL_COMMENT_SUCCESS,
   DELETE_MODAL_COMMENT_FAILURE,
+  LIKE_POST_REQUEST,
+  LIKE_POST_SUCCESS,
+  LIKE_POST_FAILURE,
+  UNLIKE_POST_REQUEST,
+  UNLIKE_POST_SUCCESS,
+  UNLIKE_POST_FAILURE,
   SHOW_MODAL_COMMENT_LIST,
   HIDE_MODAL_COMMENT_LIST,
   EXECUTE_MODAL_COMMENT_EDIT,
   EDIT_MODAL_COMMENT_UPLOAD_IMAGE_REQUEST,
   EDIT_MODAL_COMMENT_UPLOAD_IMAGE_SUCCESS,
   EDIT_MODAL_COMMENT_UPLOAD_IMAGE_FAILURE,
-  EDIT_MODAL_COMMENT_REMOVE_UPLOADED_IMAGE
+  EDIT_MODAL_COMMENT_REMOVE_UPLOADED_IMAGE,
+  DELETE_MY_INTERACTIONS_POSTS_REQUEST,
+  DELETE_MY_INTERACTIONS_POSTS_SUCCESS,
+  DELETE_MY_INTERACTIONS_POSTS_FAILURE
 } from 'store/types/postType';
 
 export const initialState: PostState = {
-  mainPosts: [],
+  timelinePosts: [],
+  galleryPosts: [],
   singlePost: null,
   postImagePaths: [],
   editPostImagePaths: [],
@@ -96,10 +109,16 @@ export const initialState: PostState = {
   lastChangedCommentId: null,
   lastChangedModalCommentId: null,
   commentVisiblePostId: null,
-  hasMorePosts: true,
-  loadPostsLoading: false,
-  loadPostsDone: false,
-  loadPostsError: null,
+  hasMoreTimelinePosts: true,
+  loadNewPostsLoading: false,
+  loadNewPostsDone: false,
+  loadNewPostsError: null,
+  loadMyInteractionsPostsLoading: false,
+  loadMyInteractionsPostsDone: false,
+  loadMyInteractionsPostsError: null,
+  deleteMyInteractionsPostsLoading: false,
+  deleteMyInteractionsPostsDone: false,
+  deleteMyInteractionsPostsError: null,
   addPostLoading: false,
   addPostDone: false,
   addPostError: null,
@@ -151,6 +170,12 @@ export const initialState: PostState = {
   deleteModalCommentLoading: false,
   deleteModalCommentDone: false,
   deleteModalCommentError: null,
+  likePostLoading: false,
+  likePostDone: false,
+  likePostError: null,
+  unLikePostLoading: false,
+  unLikePostDone: false,
+  unLikePostError: null,
   isCommentListVisible: false,
   isModalCommentListVisible: false,
   isCarouselVisible: false,
@@ -161,20 +186,49 @@ export const initialState: PostState = {
 const reducer = (state: PostState = initialState, action: PostAction): PostState => {
   return produce(state, draft => {
     switch (action.type) {
-      case LOAD_POSTS_REQUEST:
-        draft.loadPostsLoading = true;
-        draft.loadPostsDone = false;
-        draft.loadPostsError = null;
+      case LOAD_NEW_POSTS_REQUEST:
+        draft.loadNewPostsLoading = true;
+        draft.loadNewPostsDone = false;
+        draft.loadNewPostsError = null;
         break;
-      case LOAD_POSTS_SUCCESS:
-        draft.loadPostsLoading = false;
-        draft.loadPostsDone = true;
-        draft.mainPosts = draft.mainPosts.concat(action.data);
-        draft.hasMorePosts = action.data.length === 10;
+      case LOAD_NEW_POSTS_SUCCESS:
+        draft.loadNewPostsLoading = false;
+        draft.loadNewPostsDone = true;
+        draft.timelinePosts = draft.timelinePosts.concat(action.data);
+        draft.hasMoreTimelinePosts = action.data.length === 10;
         break;
-      case LOAD_POSTS_FAILURE:
-        draft.loadPostsLoading = false;
-        draft.loadPostsError = action.error;
+      case LOAD_NEW_POSTS_FAILURE:
+        draft.loadNewPostsLoading = false;
+        draft.loadNewPostsError = action.error;
+        break;
+      case LOAD_MY_INTERACTIONS_POSTS_REQUEST:
+        draft.loadMyInteractionsPostsLoading = true;
+        draft.loadMyInteractionsPostsDone = false;
+        draft.loadMyInteractionsPostsError = null;
+        break;
+      case LOAD_MY_INTERACTIONS_POSTS_SUCCESS:
+        draft.loadMyInteractionsPostsLoading = false;
+        draft.loadMyInteractionsPostsDone = true;
+        draft.galleryPosts = action.data;
+        break;
+      case LOAD_MY_INTERACTIONS_POSTS_FAILURE:
+        draft.loadMyInteractionsPostsLoading = false;
+        draft.loadMyInteractionsPostsError = action.error;
+        break;
+      case DELETE_MY_INTERACTIONS_POSTS_REQUEST:
+        draft.deleteMyInteractionsPostsLoading = true;
+        draft.deleteMyInteractionsPostsDone = false;
+        draft.deleteMyInteractionsPostsError = null;
+        break;
+      case DELETE_MY_INTERACTIONS_POSTS_SUCCESS:
+        draft.deleteMyInteractionsPostsLoading = false;
+        draft.deleteMyInteractionsPostsDone = true;
+        draft.isDeleteModalVisible = false;
+        draft.galleryPosts = draft.galleryPosts.filter(post => !action.data.includes(post.id));
+        break;
+      case DELETE_MY_INTERACTIONS_POSTS_FAILURE:
+        draft.deleteMyInteractionsPostsLoading = false;
+        draft.deleteMyInteractionsPostsError = action.error;
         break;
       case ADD_POST_REQUEST:
         draft.addPostLoading = true;
@@ -184,7 +238,7 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
       case ADD_POST_SUCCESS:
         draft.addPostLoading = false;
         draft.addPostDone = true;
-        draft.mainPosts.unshift(action.data);
+        draft.timelinePosts.unshift(action.data);
         draft.postImagePaths = [];
         break;
       case ADD_POST_FAILURE:
@@ -201,8 +255,10 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
         draft.editPostDone = true;
         draft.postEditMode = false;
         draft.singlePost = action.data;
-        const postIndex = draft.mainPosts.findIndex(post => post.id === action.data.id);
-        if (postIndex !== -1) draft.mainPosts[postIndex] = action.data;
+        const postIndex = draft.timelinePosts.findIndex(post => post.id === action.data.id);
+        if (postIndex !== -1) draft.timelinePosts[postIndex] = action.data;
+        const galleryPostIndex = draft.galleryPosts.findIndex(post => post.Post.id === action.data.id);
+        if (galleryPostIndex !== -1) draft.galleryPosts[galleryPostIndex].Post = action.data;
         break;
       case EDIT_POST_FAILURE:
         draft.editPostLoading = false;
@@ -223,8 +279,10 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
           draft.commentVisiblePostId = null;
           draft.commentImagePath = [];
         }
-        const index = draft.mainPosts.findIndex(post => post.id === action.data);
-        if (index !== -1) draft.mainPosts.splice(index, 1);
+        const index = draft.timelinePosts.findIndex(post => post.id === action.data);
+        if (index !== -1) draft.timelinePosts.splice(index, 1);
+        const galleryIndex = draft.galleryPosts.findIndex(post => post.Post.id === action.data);
+        if (galleryIndex !== -1) draft.galleryPosts.splice(galleryIndex, 1);
         break;
       case DELETE_POST_FAILURE:
         draft.deletePostLoading = false;
@@ -291,10 +349,10 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
         draft.commentImagePath = [];
         draft.lastChangedCommentId = action.data.comment.id;
 
-        const commentPostIndex = draft.mainPosts.findIndex(post => post.id === action.data.comment.PostId);
+        const commentPostIndex = draft.timelinePosts.findIndex(post => post.id === action.data.comment.PostId);
         if (commentPostIndex === -1) break;
 
-        const comments = draft.mainPosts[commentPostIndex].Comments;
+        const comments = draft.timelinePosts[commentPostIndex].Comments;
         const parentId = action.data.parentId ? parseInt(action.data.parentId, 10) : null;
 
         if (!!action.data.parentId) {
@@ -347,10 +405,10 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
         draft.editCommentImagePath = [];
         draft.lastChangedCommentId = action.data.comment.id;
 
-        const commentPostIndex = draft.mainPosts.findIndex(post => post.id === action.data.comment.PostId);
+        const commentPostIndex = draft.timelinePosts.findIndex(post => post.id === action.data.comment.PostId);
         if (commentPostIndex === -1) break;
 
-        const comments = draft.mainPosts[commentPostIndex].Comments;
+        const comments = draft.timelinePosts[commentPostIndex].Comments;
         const parentId = action.data.parentId ? parseInt(action.data.parentId, 10) : null;
 
         if (!!action.data.parentId) {
@@ -428,10 +486,10 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
         draft.deleteCommentDone = true;
 
         const { id, replyId, hasChild, postId } = action.data;
-        const postIndex = draft.mainPosts.findIndex(post => post.id === postId);
+        const postIndex = draft.timelinePosts.findIndex(post => post.id === postId);
         if (postIndex === -1) break;
 
-        const postComments = draft.mainPosts[postIndex].Comments;
+        const postComments = draft.timelinePosts[postIndex].Comments;
         if (replyId) {
           const parentComment = postComments.find(comment => comment.id === replyId);
           if (parentComment) {
@@ -446,7 +504,7 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
             }
 
             if (parentComment.Replies.length === 0 && parentComment.isDeleted) {
-              draft.mainPosts[postIndex].Comments = postComments.filter(comment => comment.id !== replyId);
+              draft.timelinePosts[postIndex].Comments = postComments.filter(comment => comment.id !== replyId);
 
               if (draft.mainComments) {
                 draft.mainComments = draft.mainComments.filter(comment => comment.id !== replyId);
@@ -463,7 +521,7 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
               if (mainCommentToUpdate) mainCommentToUpdate.isDeleted = true;
             }
           } else {
-            draft.mainPosts[postIndex].Comments = postComments.filter(comment => comment.id !== id);
+            draft.timelinePosts[postIndex].Comments = postComments.filter(comment => comment.id !== id);
 
             if (draft.mainComments) {
               draft.mainComments = draft.mainComments.filter(comment => comment.id !== id);
@@ -497,7 +555,7 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
         draft.addModalCommentDone = false;
         draft.addModalCommentError = null;
         break;
-      case ADD_MODAL_COMMENT_SUCCESS:
+      case ADD_MODAL_COMMENT_SUCCESS: {
         draft.addModalCommentLoading = false;
         draft.addModalCommentDone = true;
         draft.modalCommentImagePath = [];
@@ -509,7 +567,6 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
 
           if (modalParentId) {
             const modalParentComment = modalComments.find(comment => comment.id === modalParentId);
-
             if (modalParentComment) {
               modalParentComment.Replies = modalParentComment.Replies || [];
               modalParentComment.Replies.push(action.data.comment);
@@ -528,9 +585,9 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
           draft.singlePost!.Comments = modalComments;
         }
 
-        const mainPostIndex = draft.mainPosts.findIndex(post => post.id === action.data.comment.PostId);
+        const mainPostIndex = draft.timelinePosts.findIndex(post => post.id === action.data.comment.PostId);
         if (mainPostIndex !== -1) {
-          const mainComments = draft.mainPosts[mainPostIndex].Comments;
+          const mainComments = draft.timelinePosts[mainPostIndex].Comments;
           const mainParentId = action.data.parentId ? parseInt(action.data.parentId, 10) : null;
 
           if (mainParentId) {
@@ -549,15 +606,41 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
             }
           } else {
             mainComments.push({ id: action.data.comment.id, isDeleted: false, Replies: [] });
-
             if (draft.commentVisiblePostId === action.data.comment.PostId) {
               draft.mainComments?.push(action.data.comment);
             }
           }
 
-          draft.mainPosts[mainPostIndex].Comments = mainComments;
+          draft.timelinePosts[mainPostIndex].Comments = mainComments;
         }
+
+        const galleryPostIndex = draft.galleryPosts.findIndex(
+          userHistory => userHistory.Post.id === action.data.comment.PostId
+        );
+        if (galleryPostIndex !== -1) {
+          const galleryComments = draft.galleryPosts[galleryPostIndex].Post.Comments;
+          const galleryParentId = action.data.parentId ? parseInt(action.data.parentId, 10) : null;
+
+          if (galleryParentId) {
+            const galleryParentComment = galleryComments.find(comment => comment.id === galleryParentId);
+            if (galleryParentComment) {
+              galleryParentComment.Replies = galleryParentComment.Replies || [];
+              galleryParentComment.Replies.push(action.data.comment);
+            }
+          } else {
+            galleryComments.push({
+              id: action.data.comment.id,
+              isDeleted: false,
+              User: { id: action.data.comment.UserId },
+              Replies: []
+            });
+          }
+
+          draft.galleryPosts[galleryPostIndex].Post.Comments = galleryComments;
+        }
+
         break;
+      }
       case ADD_MODAL_COMMENT_FAILURE:
         draft.addModalCommentLoading = false;
         draft.addModalCommentError = action.error;
@@ -640,9 +723,9 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
           draft.singlePost!.Comments = modalComments;
         }
 
-        const mainPostIndex = draft.mainPosts.findIndex(post => post.id === action.data.comment.PostId);
+        const mainPostIndex = draft.timelinePosts.findIndex(post => post.id === action.data.comment.PostId);
         if (mainPostIndex !== -1) {
-          const mainComments = draft.mainPosts[mainPostIndex].Comments;
+          const mainComments = draft.timelinePosts[mainPostIndex].Comments;
           const mainParentId = action.data.parentId ? parseInt(action.data.parentId, 10) : null;
 
           if (mainParentId) {
@@ -691,7 +774,7 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
               }
             }
           }
-          draft.mainPosts[mainPostIndex].Comments = mainComments;
+          draft.timelinePosts[mainPostIndex].Comments = mainComments;
         }
         break;
       }
@@ -766,9 +849,9 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
           }
         }
 
-        const mainPostIndex = draft.mainPosts.findIndex(post => post.id === postId);
+        const mainPostIndex = draft.timelinePosts.findIndex(post => post.id === postId);
         if (mainPostIndex !== -1) {
-          const postComments = draft.mainPosts[mainPostIndex].Comments;
+          const postComments = draft.timelinePosts[mainPostIndex].Comments;
           if (replyId) {
             const parentComment = postComments.find(comment => comment.id === replyId);
             if (parentComment) {
@@ -782,7 +865,7 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
               }
 
               if (parentComment.Replies.length === 0 && parentComment.isDeleted) {
-                draft.mainPosts[mainPostIndex].Comments = postComments.filter(comment => comment.id !== replyId);
+                draft.timelinePosts[mainPostIndex].Comments = postComments.filter(comment => comment.id !== replyId);
 
                 if (draft.mainComments) {
                   draft.mainComments = draft.mainComments.filter(comment => comment.id !== replyId);
@@ -799,7 +882,7 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
                 if (mainCommentToUpdate) mainCommentToUpdate.isDeleted = true;
               }
             } else {
-              draft.mainPosts[mainPostIndex].Comments = postComments.filter(comment => comment.id !== id);
+              draft.timelinePosts[mainPostIndex].Comments = postComments.filter(comment => comment.id !== id);
 
               if (draft.mainComments) {
                 draft.mainComments = draft.mainComments.filter(comment => comment.id !== id);
@@ -807,6 +890,31 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
             }
           }
         }
+
+        const galleryPostIndex = draft.galleryPosts.findIndex(userHistory => userHistory.Post.id === postId);
+        if (galleryPostIndex !== -1) {
+          const galleryComments = draft.galleryPosts[galleryPostIndex].Post.Comments;
+          if (replyId) {
+            const galleryParentComment = galleryComments.find(comment => comment.id === replyId);
+            if (galleryParentComment) {
+              galleryParentComment.Replies = galleryParentComment.Replies.filter(reply => reply.id !== id);
+
+              if (galleryParentComment.Replies.length === 0 && galleryParentComment.isDeleted) {
+                draft.galleryPosts[galleryPostIndex].Post.Comments = galleryComments.filter(
+                  comment => comment.id !== replyId
+                );
+              }
+            }
+          } else {
+            if (hasChild) {
+              const galleryCommentToUpdate = galleryComments.find(comment => comment.id === id);
+              if (galleryCommentToUpdate) galleryCommentToUpdate.isDeleted = true;
+            } else {
+              draft.galleryPosts[galleryPostIndex].Post.Comments = galleryComments.filter(comment => comment.id !== id);
+            }
+          }
+        }
+
         draft.isDeleteModalVisible = false;
         draft.deleteInfo = null;
         break;
@@ -814,6 +922,54 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
       case DELETE_MODAL_COMMENT_FAILURE:
         draft.deleteModalCommentLoading = false;
         draft.deleteModalCommentError = action.error;
+        break;
+      case LIKE_POST_REQUEST:
+        draft.likePostLoading = true;
+        draft.likePostDone = false;
+        draft.likePostError = null;
+        break;
+      case LIKE_POST_SUCCESS: {
+        draft.likePostLoading = false;
+        draft.likePostDone = true;
+
+        const post = draft.timelinePosts.find(post => post.id === action.data.PostId);
+        if (post) post.Likers.push({ id: action.data.UserId });
+        if (draft.singlePost && draft.singlePost.id === action.data.PostId) {
+          draft.singlePost.Likers.push({ id: action.data.UserId });
+        }
+        const galleryPost = draft.galleryPosts.find(userHistory => userHistory.Post.id === action.data.PostId);
+        if (galleryPost) {
+          galleryPost.Post.Likers.push({ id: action.data.UserId });
+        }
+        break;
+      }
+      case LIKE_POST_FAILURE:
+        draft.likePostLoading = false;
+        draft.likePostError = action.error;
+        break;
+      case UNLIKE_POST_REQUEST:
+        draft.unLikePostLoading = true;
+        draft.unLikePostDone = false;
+        draft.unLikePostError = null;
+        break;
+      case UNLIKE_POST_SUCCESS: {
+        draft.unLikePostLoading = false;
+        draft.unLikePostDone = true;
+
+        const post = draft.timelinePosts.find(post => post.id === action.data.PostId);
+        if (post) post.Likers = post.Likers.filter(liker => liker.id !== action.data.UserId);
+        if (draft.singlePost && draft.singlePost.id === action.data.PostId) {
+          draft.singlePost.Likers = draft.singlePost.Likers.filter(liker => liker.id !== action.data.UserId);
+        }
+        const galleryPost = draft.galleryPosts.find(userHistory => userHistory.Post.id === action.data.PostId);
+        if (galleryPost) {
+          galleryPost.Post.Likers = galleryPost.Post.Likers.filter(liker => liker.id !== action.data.UserId);
+        }
+        break;
+      }
+      case UNLIKE_POST_FAILURE:
+        draft.unLikePostLoading = false;
+        draft.unLikePostError = action.error;
         break;
       case SHOW_COMMENT_LIST:
         draft.isCommentListVisible = true;
@@ -829,7 +985,6 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
       case SHOW_MODAL_COMMENT_LIST:
         draft.isModalCommentListVisible = true;
         draft.modalCommentImagePath = [];
-        // draft.editModalCommentImagePath = [];
         break;
       case HIDE_MODAL_COMMENT_LIST:
         draft.isModalCommentListVisible = false;

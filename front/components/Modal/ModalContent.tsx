@@ -5,7 +5,7 @@ import {
   CommentOutlined,
   DeleteOutlined,
   EditOutlined,
-  LikeOutlined,
+  HeartOutlined,
   MoreOutlined,
   ShareAltOutlined
 } from '@ant-design/icons';
@@ -15,8 +15,15 @@ import ModalCommentList from './ModalCommentList';
 import formatDate from 'utils/useListTimes';
 import useImagePreview from 'utils/useImagePreview';
 import { RootState } from 'store/reducers';
-import { Comment } from 'store/types/postType';
-import { executePostEdit, hideModalCommentList, showDeleteModal, showModalCommentList } from 'store/actions/postAction';
+import { Comment, PostLike } from 'store/types/postType';
+import {
+  executePostEdit,
+  hideModalCommentList,
+  likePostRequest,
+  showDeleteModal,
+  showModalCommentList,
+  unLikePostRequest
+} from 'store/actions/postAction';
 
 import { slideInTooltip } from 'styles/Common/animation';
 import { Tooltip, TooltipBtn, TooltipOutsideArea } from 'styles/Common/tooltip';
@@ -53,6 +60,14 @@ const ModalContent = () => {
     if (isModalCommentListVisible) dispatch(hideModalCommentList());
     else dispatch(showModalCommentList());
   }, [isModalCommentListVisible, modalCommentImagePath]);
+
+  const onToggleLike = useCallback(
+    (postId: number) => {
+      if (singlePost.Likers.some((liker: PostLike) => liker.id === me?.id)) dispatch(unLikePostRequest(postId));
+      else dispatch(likePostRequest(postId));
+    },
+    [singlePost.Likers]
+  );
 
   const openEditModal = useCallback(() => {
     setIsTooltipVisible(false);
@@ -123,14 +138,17 @@ const ModalContent = () => {
       <ModalContentText $isModalCommentListVisible={isModalCommentListVisible}>{singlePost.content}</ModalContentText>
       {isModalCommentListVisible && <ModalCommentList />}
 
-      <ModalContentOptions $isModalCommentListVisible={isModalCommentListVisible}>
+      <ModalContentOptions
+        $liked={singlePost.Likers.some((liker: PostLike) => liker.id === me?.id)}
+        $isModalCommentListVisible={isModalCommentListVisible}
+      >
         <div>
-          <LikeOutlined />
+          <HeartOutlined onClick={() => onToggleLike(singlePost.id)} />
           <CommentOutlined onClick={onToggleComment} />
         </div>
 
         <div>
-          <p>좋아요 114개</p>
+          <p>좋아요 {singlePost.Likers.length}개</p>
           <p>
             댓글{' '}
             {singlePost.Comments.reduce((total: number, comment: Comment) => {

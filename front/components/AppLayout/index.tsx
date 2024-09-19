@@ -25,7 +25,7 @@ import { LayoutWrapper, NavbarItem, NavbarItems, NavbarLogout, NavbarMessage, Na
 
 const AppLayout = ({ children }: { children: ReactNode }) => {
   const dispatch = useDispatch();
-  const { me } = useSelector((state: RootState) => state.user);
+  const { me, logoutDone } = useSelector((state: RootState) => state.user);
   const { imagePreview, showImagePreview, hideImagePreview } = useImagePreview();
   const [showInput, setShowInput] = useState(false);
   const [pathname, setPathname] = useState<string | null>(null);
@@ -47,11 +47,11 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
   }, []);
 
   useEffect(() => {
-    if (!me) {
+    if (logoutDone) {
       Router.replace('/');
       toast.success('정상적으로 로그아웃 되었습니다.');
     }
-  }, [me]);
+  }, [logoutDone]);
 
   useEffect(() => {
     if (typeof window !== 'undefined') setPathname(Router.pathname);

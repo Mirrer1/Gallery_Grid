@@ -1,31 +1,75 @@
-import React, { useCallback } from 'react';
-import { useDispatch } from 'react-redux';
-import { ArrowsAltOutlined, CommentOutlined, LikeOutlined } from '@ant-design/icons';
+import React, { useCallback, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { ArrowsAltOutlined, CommentOutlined, HeartOutlined } from '@ant-design/icons';
 
-import { slideInFromBottom } from 'styles/Common/animation';
+import { RootState } from 'store/reducers';
+import { showPostModal } from 'store/actions/postAction';
+import { Image, PostComment, PostLike, UserHistoryPost } from 'store/types/postType';
+import { slideInFromBottom, slideInTooltip } from 'styles/Common/animation';
 import {
   BigPostPreviewContent,
   BigPostPreviewImage,
   BigPostPreviewWrapper,
-  BigPostPreviewOption
+  BigPostPreviewOption,
+  BigPostPreviewCheckbox
 } from 'styles/Gallery/bigPostPreview';
-import { showPostModal } from 'store/actions/postAction';
 
-const BigPostPreview = ({ post }: any) => {
+type BigPostPreviewProps = {
+  userHistory: UserHistoryPost;
+  selectMode: boolean;
+  selectedPostIds: number[];
+  setSelectedPostIds: React.Dispatch<React.SetStateAction<number[]>>;
+};
+
+const BigPostPreview = ({ userHistory, selectMode, selectedPostIds, setSelectedPostIds }: BigPostPreviewProps) => {
   const dispatch = useDispatch();
+  const { me } = useSelector((state: RootState) => state.user);
+
+  const liked = useMemo(
+    () => userHistory.Post.Likers.some((liker: PostLike) => liker.id === me?.id),
+    [userHistory.Post.Likers]
+  );
+
+  const hasCommented = useMemo(() => {
+    return userHistory.Post.Comments.some((comment: PostComment) => {
+      const isUserCommented = comment.User && comment.User.id === me?.id;
+      const isUserReplied = comment.Replies?.some(reply => reply.User?.id === me?.id);
+      return isUserCommented || isUserReplied;
+    });
+  }, [userHistory.Post.Comments, me?.id]);
+
+  const onToggleSelect = useCallback(() => {
+    setSelectedPostIds(prev => {
+      if (prev.includes(userHistory.id)) {
+        return prev.filter(id => id !== userHistory.id);
+      } else {
+        return [...prev, userHistory.id];
+      }
+    });
+  }, [userHistory.id, setSelectedPostIds]);
 
   const onClickPost = useCallback(() => {
-    dispatch(showPostModal());
-  }, []);
+    if (selectMode) {
+      onToggleSelect();
+    } else {
+      dispatch(showPostModal(userHistory.Post));
+    }
+  }, [selectMode, userHistory.Post, onToggleSelect]);
 
   return (
     <BigPostPreviewWrapper {...slideInFromBottom()} onClick={onClickPost}>
+      {selectMode && (
+        <BigPostPreviewCheckbox {...slideInTooltip}>
+          <input type="checkbox" checked={selectedPostIds.includes(userHistory.id)} onChange={onToggleSelect} />
+        </BigPostPreviewCheckbox>
+      )}
+
       <BigPostPreviewImage>
-        <img src={post.img[0]} alt={`${post.user}의 첫번째 게시글 이미지`} />
+        <img src={`http://localhost:3065/${userHistory.Post.Images[0].src}`} alt="게시글의 첫번째 이미지" />
 
         <div>
-          {post.img.map((_: any, i: any) => (
-            <div key={i} />
+          {userHistory.Post.Images.map((image: Image) => (
+            <div key={image.id} />
           ))}
         </div>
 
@@ -33,18 +77,28 @@ const BigPostPreview = ({ post }: any) => {
       </BigPostPreviewImage>
 
       <BigPostPreviewContent>
-        <h1>{post.desc}</h1>
-        <p>{post.user}</p>
+        <h1>{userHistory.Post.content}</h1>
+        <p>{userHistory.Post.User.nickname}</p>
 
-        <BigPostPreviewOption>
+        <BigPostPreviewOption $liked={liked} $hasCommented={hasCommented}>
           <div>
-            <LikeOutlined />
-            <span>24</span>
+            <HeartOutlined />
+            <span>{userHistory.Post.Likers.length}</span>
           </div>
 
           <div>
             <CommentOutlined />
-            <span>13</span>
+            <span>
+              {userHistory.Post.Comments.reduce((total, comment) => {
+                const repliesCount = comment.Replies ? comment.Replies.length : 0;
+
+                if (comment.isDeleted) {
+                  return total + repliesCount;
+                }
+
+                return total + 1 + repliesCount;
+              }, 0)}
+            </span>
           </div>
         </BigPostPreviewOption>
       </BigPostPreviewContent>

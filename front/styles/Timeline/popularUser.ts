@@ -59,13 +59,16 @@ export const PopularUserWrapper = styled.div<{ $commentvisible: boolean }>`
     }
 
     & > div {
+      position: relative;
+      display: flex;
+      flex-direction: column;
       width: 100%;
       height: 98%;
-      position: relative;
 
       & > img {
         width: 100%;
-        height: 60%;
+        height: 1px;
+        flex-grow: 1;
         border-radius: 5px 5px 0 0;
       }
     }
@@ -102,25 +105,25 @@ export const PopularUserContents = styled.div`
   height: 40%;
   background-color: white;
   border-radius: 0 0 5px 5px;
-  padding: 1em;
+  padding: 4%;
 
   & > div:first-child > div {
     color: ${({ theme }) => theme.colors.primary};
     font-size: 0.7rem;
     font-weight: 500;
-    margin-bottom: 0.7em;
+    margin-bottom: 2%;
   }
 
   & > div > h1 {
     font-size: 0.9rem;
     font-weight: 500;
-    margin-bottom: 1em;
+    margin-bottom: 4%;
     cursor: pointer;
   }
 
   & > div > p {
     display: -webkit-box;
-    -webkit-line-clamp: 3;
+    -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -128,7 +131,6 @@ export const PopularUserContents = styled.div`
     font-size: 0.8rem;
     opacity: 60%;
     line-height: 1.5;
-    margin-bottom: 1em;
   }
 
   ${media.tablet} {
@@ -169,15 +171,15 @@ export const PopularOptions = styled.div`
 
   & > div {
     opacity: 60%;
-    font-size: 0.7rem;
+    font-size: 0.8rem;
   }
 
   & > div:first-child {
-    margin-right: 1em;
+    margin-right: 0.7em;
   }
 
   & > div > span > svg {
-    margin-right: 0.4em;
+    margin-right: 0.2em;
   }
 
   ${media.mobile} {

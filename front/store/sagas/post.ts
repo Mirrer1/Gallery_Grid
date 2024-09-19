@@ -11,9 +11,9 @@ import {
   EDIT_POST_FAILURE,
   EDIT_POST_REQUEST,
   EDIT_POST_SUCCESS,
-  LOAD_POSTS_FAILURE,
-  LOAD_POSTS_REQUEST,
-  LOAD_POSTS_SUCCESS,
+  LOAD_NEW_POSTS_FAILURE,
+  LOAD_NEW_POSTS_REQUEST,
+  LOAD_NEW_POSTS_SUCCESS,
   Post,
   POST_UPLOAD_IMAGES_FAILURE,
   POST_UPLOAD_IMAGES_REQUEST,
@@ -24,7 +24,7 @@ import {
   addPostRequestAction,
   deletePostRequestAction,
   editPostRequestAction,
-  loadPostsRequestAction,
+  loadNewPostsRequestAction,
   postUploadImagesRequestAction,
   COMMENT_UPLOAD_IMAGE_REQUEST,
   commentUploadImageRequestAction,
@@ -70,24 +70,84 @@ import {
   EDIT_MODAL_COMMENT_UPLOAD_IMAGE_FAILURE,
   EDIT_MODAL_COMMENT_REQUEST,
   EDIT_MODAL_COMMENT_SUCCESS,
-  EDIT_MODAL_COMMENT_FAILURE
+  EDIT_MODAL_COMMENT_FAILURE,
+  LIKE_POST_REQUEST,
+  UNLIKE_POST_REQUEST,
+  likePostRequestAction,
+  ResponseLike,
+  LIKE_POST_SUCCESS,
+  LIKE_POST_FAILURE,
+  unLikePostRequestAction,
+  UNLIKE_POST_SUCCESS,
+  UNLIKE_POST_FAILURE,
+  LOAD_MY_INTERACTIONS_POSTS_REQUEST,
+  loadMyInteractionsPostsRequestAction,
+  LOAD_MY_INTERACTIONS_POSTS_SUCCESS,
+  LOAD_MY_INTERACTIONS_POSTS_FAILURE,
+  UserHistoryPost,
+  DELETE_MY_INTERACTIONS_POSTS_REQUEST,
+  deleteMyInteractionsPostsRequestAction,
+  DELETE_MY_INTERACTIONS_POSTS_FAILURE,
+  DELETE_MY_INTERACTIONS_POSTS_SUCCESS
 } from 'store/types/postType';
 
-function loadPostsAPI(lastId?: number) {
-  return axios.get(`/posts?lastId=${lastId || 0}`);
+function loadNewPostsAPI(lastId?: number) {
+  return axios.get(`/posts/new?lastId=${lastId || 0}`);
 }
 
-function* loadPosts(action: loadPostsRequestAction) {
+function* loadNewPosts(action: loadNewPostsRequestAction) {
   try {
-    const result: AxiosResponse<Post[]> = yield call(() => loadPostsAPI(action.lastId));
+    const result: AxiosResponse<Post[]> = yield call(() => loadNewPostsAPI(action.lastId));
 
     yield put({
-      type: LOAD_POSTS_SUCCESS,
+      type: LOAD_NEW_POSTS_SUCCESS,
       data: result.data
     });
   } catch (error: any) {
     yield put({
-      type: LOAD_POSTS_FAILURE,
+      type: LOAD_NEW_POSTS_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
+function loadMyInteractionsPostsAPI(menu: 'all' | 'like' | 'comment', sortBy: 'best' | 'new') {
+  return axios.get(`/posts/interactions?menu=${menu}&sortBy=${sortBy}`);
+}
+
+function* loadMyInteractionsPosts(action: loadMyInteractionsPostsRequestAction) {
+  try {
+    const result: AxiosResponse<UserHistoryPost[]> = yield call(() =>
+      loadMyInteractionsPostsAPI(action.menu, action.sortBy)
+    );
+
+    yield put({
+      type: LOAD_MY_INTERACTIONS_POSTS_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: LOAD_MY_INTERACTIONS_POSTS_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
+function deleteMyInteractionsPostsAPI(menu: 'all' | 'like' | 'comment', id: number[]) {
+  return axios.patch('/posts/interactions', { menu, id });
+}
+
+function* deleteMyInteractionsPosts(action: deleteMyInteractionsPostsRequestAction) {
+  try {
+    const result: AxiosResponse<number[]> = yield call(() => deleteMyInteractionsPostsAPI(action.menu, action.id));
+
+    yield put({
+      type: DELETE_MY_INTERACTIONS_POSTS_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: DELETE_MY_INTERACTIONS_POSTS_FAILURE,
       error: error.response.data.message
     });
   }
@@ -401,8 +461,56 @@ function* deleteModalComment(action: deleteCommentRequestAction) {
   }
 }
 
-function* watchLoadPosts() {
-  yield takeLatest(LOAD_POSTS_REQUEST, loadPosts);
+function likePostAPI(data: number) {
+  return axios.patch(`/post/like/${data}`);
+}
+
+function* likePost(action: likePostRequestAction) {
+  try {
+    const result: AxiosResponse<ResponseLike> = yield call(likePostAPI, action.data);
+
+    yield put({
+      type: LIKE_POST_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: LIKE_POST_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
+function unLikePostAPI(data: number) {
+  return axios.delete(`/post/like/${data}`);
+}
+
+function* unLikePost(action: unLikePostRequestAction) {
+  try {
+    const result: AxiosResponse<ResponseLike> = yield call(unLikePostAPI, action.data);
+
+    yield put({
+      type: UNLIKE_POST_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: UNLIKE_POST_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
+function* watchLoadNewPosts() {
+  yield takeLatest(LOAD_NEW_POSTS_REQUEST, loadNewPosts);
+}
+
+function* watchLoadMyInteractionsPosts() {
+  yield takeLatest(LOAD_MY_INTERACTIONS_POSTS_REQUEST, loadMyInteractionsPosts);
+}
+
+function* watchDeleteMyInteractionsPosts() {
+  yield takeLatest(DELETE_MY_INTERACTIONS_POSTS_REQUEST, deleteMyInteractionsPosts);
 }
 
 function* watchAddPost() {
@@ -473,9 +581,19 @@ function* watchDeleteModalComment() {
   yield takeLatest(DELETE_MODAL_COMMENT_REQUEST, deleteModalComment);
 }
 
+function* watchLikePost() {
+  yield takeLatest(LIKE_POST_REQUEST, likePost);
+}
+
+function* watchUnLikePost() {
+  yield takeLatest(UNLIKE_POST_REQUEST, unLikePost);
+}
+
 export default function* postSaga() {
   yield all([
-    fork(watchLoadPosts),
+    fork(watchLoadNewPosts),
+    fork(watchLoadMyInteractionsPosts),
+    fork(watchDeleteMyInteractionsPosts),
     fork(watchAddPost),
     fork(watchEditPost),
     fork(watchDeletePost),
@@ -492,6 +610,8 @@ export default function* postSaga() {
     fork(watchModalCommentUploadImage),
     fork(watchEditModalComment),
     fork(watchEditModalCommentUploadImage),
-    fork(watchDeleteModalComment)
+    fork(watchDeleteModalComment),
+    fork(watchLikePost),
+    fork(watchUnLikePost)
   ]);
 }

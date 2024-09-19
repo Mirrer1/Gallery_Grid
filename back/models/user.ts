@@ -1,6 +1,6 @@
 import Sequelize, { CreationOptional, InferAttributes, InferCreationAttributes, Model } from 'sequelize';
 import Post from './post';
-import Alert from './alert';
+import Alert from './userHistory';
 import Chat from './chat';
 import Report from './report';
 import Comment from './comment';

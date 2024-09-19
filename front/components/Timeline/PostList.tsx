@@ -6,7 +6,7 @@ import {
   CommentOutlined,
   DeleteOutlined,
   EditOutlined,
-  LikeOutlined,
+  HeartOutlined,
   MoreOutlined,
   ShareAltOutlined
 } from '@ant-design/icons';
@@ -20,14 +20,16 @@ import useScroll from 'utils/useScroll';
 import formatDate from 'utils/useListTimes';
 import useImagePreview from 'utils/useImagePreview';
 import { RootState } from 'store/reducers';
-import { Image, Post } from 'store/types/postType';
+import { Image, Post, PostLike } from 'store/types/postType';
 import {
   hideCommentList,
   showCommentList,
   showPostCarousel,
   showDeleteModal,
   showPostModal,
-  executePostEdit
+  executePostEdit,
+  likePostRequest,
+  unLikePostRequest
 } from 'store/actions/postAction';
 import { slideInList, slideInTooltip } from 'styles/Common/animation';
 import { Tooltip, TooltipBtn, TooltipOutsideArea } from 'styles/Common/tooltip';
@@ -48,7 +50,7 @@ const PostList = () => {
   const postContainerRef = useRef<HTMLDivElement>(null);
   const { me } = useSelector((state: RootState) => state.user);
   const {
-    mainPosts,
+    timelinePosts,
     postImagePaths,
     isCarouselVisible,
     isDeleteModalVisible,
@@ -57,7 +59,7 @@ const PostList = () => {
     commentVisiblePostId
   } = useSelector((state: RootState) => state.post);
   const { imagePreview, showImagePreview, hideImagePreview } = useImagePreview();
-  useScroll({ type: 'timeline', ref: postContainerRef });
+  useScroll({ type: 'timeline-new', ref: postContainerRef });
 
   const [category, setCategory] = useState('best');
   const [modalImages, setModalImages] = useState<Image[]>([]);
@@ -102,6 +104,17 @@ const PostList = () => {
     [commentVisiblePostId]
   );
 
+  const onToggleLike = useCallback(
+    (postId: number) => {
+      const post = timelinePosts.find((post: Post) => post.id === postId);
+      if (!post) return;
+
+      if (post.Likers.some((liker: PostLike) => liker.id === me?.id)) dispatch(unLikePostRequest(postId));
+      else dispatch(likePostRequest(postId));
+    },
+    [timelinePosts]
+  );
+
   useEffect(() => {
     if (firstPostRef.current) {
       firstPostRef.current.scrollIntoView({
@@ -117,19 +130,22 @@ const PostList = () => {
 
       <PostCategory>
         <CategoryItem onClick={() => onClickCategory('best')} $selected={category === 'best'}>
-          Best
+          <p>Best</p>
+          <div />
         </CategoryItem>
 
-        <CategoryItem onClick={() => onClickCategory('recent')} $selected={category === 'recent'}>
-          Recent
+        <CategoryItem onClick={() => onClickCategory('new')} $selected={category === 'new'}>
+          <p>New</p>
+          <div />
         </CategoryItem>
 
         <CategoryItem onClick={() => onClickCategory('follow')} $selected={category === 'follow'}>
-          Follow
+          <p>Follow</p>
+          <div />
         </CategoryItem>
       </PostCategory>
 
-      {mainPosts.map((post: Post) => (
+      {timelinePosts.map((post: Post) => (
         <PostWrapper key={post.id} {...slideInList}>
           <PostHeader>
             <div>
@@ -208,10 +224,13 @@ const PostList = () => {
             <div>
               <p>{post.content}</p>
 
-              <PostOptions $commentVisiblePostId={commentVisiblePostId === post.id}>
-                <div>
-                  <LikeOutlined />
-                  <span>24</span>
+              <PostOptions
+                $liked={post.Likers.some(liker => liker.id === me?.id)}
+                $commentVisiblePostId={commentVisiblePostId === post.id}
+              >
+                <div onClick={() => onToggleLike(post.id)}>
+                  <HeartOutlined />
+                  <span>{post.Likers.length}</span>
                 </div>
 
                 <div onClick={() => onToggleComment(post.id)}>

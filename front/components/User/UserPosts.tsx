@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
-import { ArrowsAltOutlined, CommentOutlined, LikeOutlined } from '@ant-design/icons';
+import { ArrowsAltOutlined, CommentOutlined, HeartOutlined } from '@ant-design/icons';
 
 import { showPostModal } from 'store/actions/postAction';
 import { slideInFromBottom } from 'styles/Common/animation';
@@ -148,7 +148,7 @@ const UserPosts = () => {
 
             <UserPostOption>
               <div>
-                <LikeOutlined />
+                <HeartOutlined />
                 <span>24</span>
               </div>
 

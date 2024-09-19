@@ -126,7 +126,7 @@ const LoginForm = ({ selectMenu, onClickMenu }: MenuProps) => {
       <AccountFooter>
         <hr />
         <p>
-          새로운 계정이 필요하신가요? <span onClick={onMoveSignup}>Sign up</span>
+          새로운 계정이 필요하신가요? <span onClick={onMoveSignup}> Sign up</span>
         </p>
       </AccountFooter>
     </AccountWrapper>

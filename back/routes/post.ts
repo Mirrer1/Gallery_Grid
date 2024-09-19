@@ -9,6 +9,7 @@ import Image from '../models/image';
 import Comment from '../models/comment';
 import { isLoggedIn } from './middleware';
 import ReplyComment from '../models/replyComment';
+import UserHistory from '../models/userHistory';
 
 const router = express.Router();
 
@@ -216,6 +217,12 @@ router.delete('/:postId', isLoggedIn, async (req, res, next) => {
       return res.status(404).json({ message: '게시글이 존재하지 않습니다.' });
     }
 
+    await UserHistory.destroy({
+      where: {
+        PostId: req.params.postId
+      }
+    });
+
     await Post.destroy({
       where: {
         id: req.params.postId,
@@ -367,6 +374,14 @@ router.post('/comment', isLoggedIn, upload.none(), async (req, res, next) => {
         ]
       });
 
+      UserHistory.create({
+        type: 'replyComment',
+        PostId,
+        ReplyCommentId: fullReplyComment?.id,
+        AlerterId: req.user!.id,
+        AlertedId: post.UserId
+      });
+
       return res.status(201).json({ comment: fullReplyComment, parentId });
     } else {
       const newComment = await Comment.create({
@@ -438,6 +453,14 @@ router.post('/comment', isLoggedIn, upload.none(), async (req, res, next) => {
             order: [['createdAt', 'ASC']]
           }
         ]
+      });
+
+      UserHistory.create({
+        type: 'comment',
+        PostId,
+        CommentId: fullComment?.id,
+        AlerterId: req.user!.id,
+        AlertedId: post.UserId
       });
 
       return res.status(201).json({ comment: fullComment, parentId });
@@ -609,6 +632,14 @@ router.post('/comment/delete', isLoggedIn, async (req, res, next) => {
 
       postId = replyComment.PostId;
 
+      await UserHistory.destroy({
+        where: {
+          type: 'replyComment',
+          PostId: postId,
+          ReplyCommentId: replyComment.id
+        }
+      });
+
       await Image.update({ ReplyCommentId: null }, { where: { ReplyCommentId: id } });
       await ReplyComment.destroy({ where: { id } });
 
@@ -634,6 +665,14 @@ router.post('/comment/delete', isLoggedIn, async (req, res, next) => {
 
       postId = comment.PostId;
 
+      await UserHistory.destroy({
+        where: {
+          type: 'comment',
+          PostId: postId,
+          CommentId: comment.id
+        }
+      });
+
       if (hasChild) {
         await Comment.update({ isDeleted: true }, { where: { id } });
       } else {
@@ -643,6 +682,61 @@ router.post('/comment/delete', isLoggedIn, async (req, res, next) => {
 
       return res.status(200).json({ id, hasChild, postId });
     }
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+router.patch('/like/:postId', isLoggedIn, async (req, res, next) => {
+  try {
+    const { postId } = req.params;
+
+    const post = await Post.findOne({
+      where: { id: postId }
+    });
+
+    if (!post) {
+      return res.status(403).send({ message: '게시글이 존재하지 않습니다.' });
+    }
+
+    await post.addLiker(req.user!.id);
+
+    UserHistory.create({
+      type: 'like',
+      PostId: post.id,
+      AlerterId: req.user!.id,
+      AlertedId: post.UserId
+    });
+
+    res.status(200).json({ PostId: post.id, UserId: req.user!.id });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+router.delete('/like/:postId', isLoggedIn, async (req, res, next) => {
+  try {
+    const { postId } = req.params;
+
+    const post = await Post.findOne({
+      where: { id: postId }
+    });
+
+    if (!post) {
+      return res.status(403).send({ message: '게시글이 존재하지 않습니다.' });
+    }
+
+    await post.removeLiker(req.user!.id);
+
+    await UserHistory.destroy({
+      where: {
+        type: 'like',
+        PostId: post.id
+      }
+    });
+    res.status(200).json({ PostId: post.id, UserId: req.user!.id });
   } catch (error) {
     console.error(error);
     next(error);

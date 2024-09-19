@@ -1,58 +1,107 @@
-import React, { useCallback } from 'react';
-import { useDispatch } from 'react-redux';
-import { ArrowsAltOutlined, CommentOutlined, LikeOutlined } from '@ant-design/icons';
+import React, { useCallback, useMemo } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { ArrowsAltOutlined, CommentOutlined, HeartOutlined } from '@ant-design/icons';
 
+import { RootState } from 'store/reducers';
 import { showPostModal } from 'store/actions/postAction';
-import { slideInFromBottom } from 'styles/Common/animation';
+import { Image, PostComment, PostLike, UserHistoryPost } from 'store/types/postType';
+import { slideInTooltip } from 'styles/Common/animation';
 import {
   PostPreviewContent,
   PostPreviewImage,
-  PostPreviewWrapper,
-  PostPreviewOption
+  PostPreviewOption,
+  PostPreviewCheckbox
 } from 'styles/Gallery/postPreview';
 
-const PostPreview = ({ post }: any) => {
+type PostPreviewProps = {
+  userHistory: UserHistoryPost;
+  selectMode: boolean;
+  selectedPostIds: number[];
+  setSelectedPostIds: React.Dispatch<React.SetStateAction<number[]>>;
+};
+
+const PostPreview = ({ userHistory, selectMode, selectedPostIds, setSelectedPostIds }: PostPreviewProps) => {
   const dispatch = useDispatch();
+  const { me } = useSelector((state: RootState) => state.user);
+
+  const liked = useMemo(
+    () => userHistory.Post.Likers.some((liker: PostLike) => liker.id === me?.id),
+    [userHistory.Post.Likers]
+  );
+
+  const hasCommented = useMemo(() => {
+    return userHistory.Post.Comments.some((comment: PostComment) => {
+      const isUserCommented = comment.User && comment.User.id === me?.id;
+      const isUserReplied = comment.Replies?.some(reply => reply.User?.id === me?.id);
+      return isUserCommented || isUserReplied;
+    });
+  }, [userHistory.Post.Comments, me?.id]);
+
+  const onToggleSelect = useCallback(() => {
+    setSelectedPostIds(prev => {
+      if (prev.includes(userHistory.id)) {
+        return prev.filter(id => id !== userHistory.id);
+      } else {
+        return [...prev, userHistory.id];
+      }
+    });
+  }, [userHistory.id, setSelectedPostIds]);
 
   const onClickPost = useCallback(() => {
-    dispatch(showPostModal());
-  }, []);
+    if (selectMode) {
+      onToggleSelect();
+    } else {
+      dispatch(showPostModal(userHistory.Post));
+    }
+  }, [selectMode, userHistory.Post, onToggleSelect]);
 
   return (
-    <PostPreviewWrapper {...slideInFromBottom(0.3)}>
-      {post.map((post: any, i: any) => (
-        <article key={i} onClick={onClickPost}>
-          <PostPreviewImage>
-            <img src={post.img[0]} alt={`${post.user}의 ${i}번째 게시글 이미지`} />
+    <>
+      {selectMode && (
+        <PostPreviewCheckbox {...slideInTooltip}>
+          <input type="checkbox" checked={selectedPostIds.includes(userHistory.id)} onChange={onToggleSelect} />
+        </PostPreviewCheckbox>
+      )}
 
-            <div>
-              {post.img.map((_: any, i: any) => (
-                <div key={i}></div>
-              ))}
-            </div>
+      <PostPreviewImage onClick={onClickPost}>
+        <img src={`http://localhost:3065/${userHistory.Post.Images[0].src}`} alt="게시글의 첫번째 이미지" />
 
-            <ArrowsAltOutlined />
-          </PostPreviewImage>
+        <div>
+          {userHistory.Post.Images.map((image: Image) => (
+            <div key={image.id} />
+          ))}
+        </div>
 
-          <PostPreviewContent>
-            <h1>{post.desc}</h1>
-            <p>{post.user}</p>
+        <ArrowsAltOutlined />
+      </PostPreviewImage>
 
-            <PostPreviewOption>
-              <div>
-                <LikeOutlined />
-                <span>24</span>
-              </div>
+      <PostPreviewContent>
+        <h1>{userHistory.Post.content}</h1>
+        <p>{userHistory.Post.User.nickname}</p>
 
-              <div>
-                <CommentOutlined />
-                <span>13</span>
-              </div>
-            </PostPreviewOption>
-          </PostPreviewContent>
-        </article>
-      ))}
-    </PostPreviewWrapper>
+        <PostPreviewOption $liked={liked} $hasCommented={hasCommented}>
+          <div>
+            <HeartOutlined />
+            <span>{userHistory.Post.Likers.length}</span>
+          </div>
+
+          <div>
+            <CommentOutlined />
+            <span>
+              {userHistory.Post.Comments.reduce((total, comment) => {
+                const repliesCount = comment.Replies ? comment.Replies.length : 0;
+
+                if (comment.isDeleted) {
+                  return total + repliesCount;
+                }
+
+                return total + 1 + repliesCount;
+              }, 0)}
+            </span>
+          </div>
+        </PostPreviewOption>
+      </PostPreviewContent>
+    </>
   );
 };
 
