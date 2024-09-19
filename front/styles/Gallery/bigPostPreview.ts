@@ -8,7 +8,7 @@ import media from 'styles/media';
 export const BigPostPreviewWrapper = styled(motion.section)`
   width: 100%;
   position: relative;
-  margin-bottom: 1em;
+  margin-bottom: 0.5em;
   cursor: pointer;
   ${ShadowStyle};
 
@@ -28,7 +28,7 @@ export const BigPostPreviewWrapper = styled(motion.section)`
   }
 `;
 
-export const BigPostPreviewCheckbox = styled.div`
+export const BigPostPreviewCheckbox = styled(motion.div)`
   position: absolute;
   top: 7px;
   left: 7px;
@@ -120,7 +120,7 @@ export const BigPostPreviewContent = styled.div`
   }
 
   & > p {
-    font-size: 0.7rem;
+    font-size: 0.9rem;
     text-decoration: underline;
     opacity: 70%;
     margin-bottom: 1.5em;
@@ -138,7 +138,7 @@ export const BigPostPreviewContent = styled.div`
     }
 
     & > p {
-      font-size: 0.6rem;
+      font-size: 0.8rem;
       margin-bottom: 0.8em;
     }
   }
@@ -149,10 +149,6 @@ export const BigPostPreviewContent = styled.div`
 
     & > h1 {
       font-size: 0.8rem;
-    }
-
-    & > p {
-      font-size: 0.6rem;
     }
   }
 `;

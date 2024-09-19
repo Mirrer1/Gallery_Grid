@@ -40,11 +40,11 @@ const LandingCarousel = () => {
       <CarouselBtn>
         <button onClick={handlePrev}>
           <LeftOutlined />
-          <span>Prev</span>
+          <span>PREV</span>
         </button>
 
         <button onClick={handleNext}>
-          <span>Next</span>
+          <span>NEXT</span>
           <RightOutlined />
         </button>
       </CarouselBtn>

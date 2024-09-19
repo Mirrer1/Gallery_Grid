@@ -33,7 +33,9 @@ const useToastStatus = () => {
     likePostDone,
     likePostError,
     unLikePostDone,
-    unLikePostError
+    unLikePostError,
+    deleteMyInteractionsPostsDone,
+    deleteMyInteractionsPostsError
   } = useSelector((state: RootState) => state.post);
   const { editMyInfoDone, editMyInfoError } = useSelector((state: RootState) => state.user);
 
@@ -115,6 +117,12 @@ const useToastStatus = () => {
       error: unLikePostError,
       successMessage: '게시글에 남긴 좋아요를 취소했습니다.',
       errorMessage: unLikePostError
+    },
+    {
+      done: deleteMyInteractionsPostsDone,
+      error: deleteMyInteractionsPostsError,
+      successMessage: '게시글이 삭제되었습니다.',
+      errorMessage: deleteMyInteractionsPostsError
     }
   ];
   const userStatusList = [

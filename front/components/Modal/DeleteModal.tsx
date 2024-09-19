@@ -6,6 +6,7 @@ import { RootState } from 'store/reducers';
 import {
   deleteCommentRequest,
   deleteModalCommentRequest,
+  deleteMyInteractionsPostsRequest,
   deletePostRequest,
   hideDeleteModal
 } from 'store/actions/postAction';
@@ -14,8 +15,14 @@ import { DeleteModalContent, DeleteModalOutsideArea, DeleteModalWrapper } from '
 
 const DeleteModal = () => {
   const dispatch = useDispatch();
-  const { deletePostLoading, deleteInfo, deleteCommentLoading, deleteModalCommentLoading, isModalCommentListVisible } =
-    useSelector((state: RootState) => state.post);
+  const {
+    deletePostLoading,
+    deleteInfo,
+    deleteCommentLoading,
+    deleteModalCommentLoading,
+    isModalCommentListVisible,
+    deleteMyInteractionsPostsLoading
+  } = useSelector((state: RootState) => state.post);
 
   const hideModal = useCallback(() => {
     dispatch(hideDeleteModal());
@@ -40,6 +47,8 @@ const DeleteModal = () => {
           replyId: deleteInfo.replyId
         })
       );
+    } else if (deleteInfo.type === 'Gallery 게시글') {
+      dispatch(deleteMyInteractionsPostsRequest(deleteInfo.menu, deleteInfo.id));
     }
   }, [deleteInfo]);
 
@@ -56,12 +65,19 @@ const DeleteModal = () => {
         <p>
           {deleteInfo.type}을 정말 삭제하시겠습니까?
           <br />
-          삭제된 {deleteInfo.type}은 복구할 수 없습니다.
+          삭제된 정보는 복구할 수 없습니다.
         </p>
 
         <div>
           <button type="button" onClick={onDeletePost}>
-            {deletePostLoading || deleteCommentLoading || deleteModalCommentLoading ? <LoadingOutlined /> : <>삭제</>}
+            {deletePostLoading ||
+            deleteCommentLoading ||
+            deleteModalCommentLoading ||
+            deleteMyInteractionsPostsLoading ? (
+              <LoadingOutlined />
+            ) : (
+              <>삭제</>
+            )}
           </button>
 
           <button type="button" onClick={hideModal}>

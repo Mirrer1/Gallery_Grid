@@ -8,6 +8,10 @@ export const LOAD_MY_INTERACTIONS_POSTS_REQUEST = 'LOAD_MY_INTERACTIONS_POSTS_RE
 export const LOAD_MY_INTERACTIONS_POSTS_SUCCESS = 'LOAD_MY_INTERACTIONS_POSTS_SUCCESS' as const;
 export const LOAD_MY_INTERACTIONS_POSTS_FAILURE = 'LOAD_MY_INTERACTIONS_POSTS_FAILURE' as const;
 
+export const DELETE_MY_INTERACTIONS_POSTS_REQUEST = 'DELETE_MY_INTERACTIONS_POSTS_REQUEST' as const;
+export const DELETE_MY_INTERACTIONS_POSTS_SUCCESS = 'DELETE_MY_INTERACTIONS_POSTS_SUCCESS' as const;
+export const DELETE_MY_INTERACTIONS_POSTS_FAILURE = 'DELETE_MY_INTERACTIONS_POSTS_FAILURE' as const;
+
 export const ADD_POST_REQUEST = 'ADD_POST_REQUEST' as const;
 export const ADD_POST_SUCCESS = 'ADD_POST_SUCCESS' as const;
 export const ADD_POST_FAILURE = 'ADD_POST_FAILURE' as const;
@@ -111,8 +115,9 @@ export const SHOW_DELETE_MODAL = 'SHOW_DELETE_MODAL' as const;
 export const HIDE_DELETE_MODAL = 'HIDE_DELETE_MODAL' as const;
 
 export interface DeleteInfo {
-  type?: '댓글' | '게시글';
-  id: number;
+  type?: '댓글' | '게시글' | 'Gallery 게시글';
+  id: number | number[];
+  menu?: 'all' | 'like' | 'comment';
   hasChild?: boolean;
   replyId?: number | null;
 }
@@ -213,6 +218,9 @@ export type PostState = {
   loadMyInteractionsPostsLoading: boolean;
   loadMyInteractionsPostsDone: boolean;
   loadMyInteractionsPostsError: null | string;
+  deleteMyInteractionsPostsLoading: boolean;
+  deleteMyInteractionsPostsDone: boolean;
+  deleteMyInteractionsPostsError: null | string;
   addPostLoading: boolean;
   addPostDone: boolean;
   addPostError: null | string;
@@ -305,6 +313,22 @@ export interface loadMyInteractionsPostsSuccessAction {
 
 export interface loadMyInteractionsPostsFailureAction {
   type: typeof LOAD_MY_INTERACTIONS_POSTS_FAILURE;
+  error: string;
+}
+
+export interface deleteMyInteractionsPostsRequestAction {
+  type: typeof DELETE_MY_INTERACTIONS_POSTS_REQUEST;
+  menu: 'all' | 'like' | 'comment';
+  id: number[];
+}
+
+export interface deleteMyInteractionsPostsSuccessAction {
+  type: typeof DELETE_MY_INTERACTIONS_POSTS_SUCCESS;
+  data: number[];
+}
+
+export interface deleteMyInteractionsPostsFailureAction {
+  type: typeof DELETE_MY_INTERACTIONS_POSTS_FAILURE;
   error: string;
 }
 
@@ -693,6 +717,9 @@ export type PostAction =
   | loadMyInteractionsPostsRequestAction
   | loadMyInteractionsPostsSuccessAction
   | loadMyInteractionsPostsFailureAction
+  | deleteMyInteractionsPostsRequestAction
+  | deleteMyInteractionsPostsSuccessAction
+  | deleteMyInteractionsPostsFailureAction
   | addPostRequestAction
   | addPostSuccessAction
   | addPostFailureAction

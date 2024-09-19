@@ -630,9 +630,7 @@ router.post('/comment/delete', isLoggedIn, async (req, res, next) => {
         where: {
           type: 'replyComment',
           PostId: postId,
-          ReplyCommentId: replyComment.id,
-          AlerterId: req.user!.id,
-          AlertedId: replyComment.UserId
+          ReplyCommentId: replyComment.id
         }
       });
 
@@ -665,9 +663,7 @@ router.post('/comment/delete', isLoggedIn, async (req, res, next) => {
         where: {
           type: 'comment',
           PostId: postId,
-          CommentId: comment.id,
-          AlerterId: req.user!.id,
-          AlertedId: comment.UserId
+          CommentId: comment.id
         }
       });
 
@@ -695,7 +691,7 @@ router.patch('/like/:postId', isLoggedIn, async (req, res, next) => {
     });
 
     if (!post) {
-      return res.status(403).send('게시글이 존재하지 않습니다.');
+      return res.status(403).send({ message: '게시글이 존재하지 않습니다.' });
     }
 
     await post.addLiker(req.user!.id);
@@ -723,7 +719,7 @@ router.delete('/like/:postId', isLoggedIn, async (req, res, next) => {
     });
 
     if (!post) {
-      return res.status(403).send('게시글이 존재하지 않습니다.');
+      return res.status(403).send({ message: '게시글이 존재하지 않습니다.' });
     }
 
     await post.removeLiker(req.user!.id);
@@ -731,9 +727,7 @@ router.delete('/like/:postId', isLoggedIn, async (req, res, next) => {
     await UserHistory.destroy({
       where: {
         type: 'like',
-        PostId: post.id,
-        AlerterId: req.user!.id,
-        AlertedId: post.UserId
+        PostId: post.id
       }
     });
     res.status(200).json({ PostId: post.id, UserId: req.user!.id });

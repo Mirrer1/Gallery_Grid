@@ -5,7 +5,7 @@ import { ArrowsAltOutlined, CommentOutlined, HeartOutlined } from '@ant-design/i
 import { RootState } from 'store/reducers';
 import { showPostModal } from 'store/actions/postAction';
 import { Image, PostComment, PostLike, UserHistoryPost } from 'store/types/postType';
-import { slideInFromBottom } from 'styles/Common/animation';
+import { slideInFromBottom, slideInTooltip } from 'styles/Common/animation';
 import {
   BigPostPreviewContent,
   BigPostPreviewImage,
@@ -17,18 +17,20 @@ import {
 type BigPostPreviewProps = {
   userHistory: UserHistoryPost;
   selectMode: boolean;
+  selectedPostIds: number[];
+  setSelectedPostIds: React.Dispatch<React.SetStateAction<number[]>>;
 };
 
-const BigPostPreview = ({ userHistory, selectMode }: BigPostPreviewProps) => {
+const BigPostPreview = ({ userHistory, selectMode, selectedPostIds, setSelectedPostIds }: BigPostPreviewProps) => {
   const dispatch = useDispatch();
   const { me } = useSelector((state: RootState) => state.user);
+
   const liked = useMemo(
     () => userHistory.Post.Likers.some((liker: PostLike) => liker.id === me?.id),
     [userHistory.Post.Likers]
   );
-  const hasCommented = useMemo(() => {
-    console.log(userHistory.Post.Comments);
 
+  const hasCommented = useMemo(() => {
     return userHistory.Post.Comments.some((comment: PostComment) => {
       const isUserCommented = comment.User && comment.User.id === me?.id;
       const isUserReplied = comment.Replies?.some(reply => reply.User?.id === me?.id);
@@ -36,15 +38,29 @@ const BigPostPreview = ({ userHistory, selectMode }: BigPostPreviewProps) => {
     });
   }, [userHistory.Post.Comments, me?.id]);
 
+  const onToggleSelect = useCallback(() => {
+    setSelectedPostIds(prev => {
+      if (prev.includes(userHistory.id)) {
+        return prev.filter(id => id !== userHistory.id);
+      } else {
+        return [...prev, userHistory.id];
+      }
+    });
+  }, [userHistory.id, setSelectedPostIds]);
+
   const onClickPost = useCallback(() => {
-    dispatch(showPostModal(userHistory.Post));
-  }, []);
+    if (selectMode) {
+      onToggleSelect();
+    } else {
+      dispatch(showPostModal(userHistory.Post));
+    }
+  }, [selectMode, userHistory.Post, onToggleSelect]);
 
   return (
     <BigPostPreviewWrapper {...slideInFromBottom()} onClick={onClickPost}>
       {selectMode && (
-        <BigPostPreviewCheckbox>
-          <input type="checkbox" />
+        <BigPostPreviewCheckbox {...slideInTooltip}>
+          <input type="checkbox" checked={selectedPostIds.includes(userHistory.id)} onChange={onToggleSelect} />
         </BigPostPreviewCheckbox>
       )}
 

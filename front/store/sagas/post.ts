@@ -84,7 +84,11 @@ import {
   loadMyInteractionsPostsRequestAction,
   LOAD_MY_INTERACTIONS_POSTS_SUCCESS,
   LOAD_MY_INTERACTIONS_POSTS_FAILURE,
-  UserHistoryPost
+  UserHistoryPost,
+  DELETE_MY_INTERACTIONS_POSTS_REQUEST,
+  deleteMyInteractionsPostsRequestAction,
+  DELETE_MY_INTERACTIONS_POSTS_FAILURE,
+  DELETE_MY_INTERACTIONS_POSTS_SUCCESS
 } from 'store/types/postType';
 
 function loadNewPostsAPI(lastId?: number) {
@@ -124,6 +128,26 @@ function* loadMyInteractionsPosts(action: loadMyInteractionsPostsRequestAction) 
   } catch (error: any) {
     yield put({
       type: LOAD_MY_INTERACTIONS_POSTS_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
+function deleteMyInteractionsPostsAPI(menu: 'all' | 'like' | 'comment', id: number[]) {
+  return axios.patch('/posts/interactions', { menu, id });
+}
+
+function* deleteMyInteractionsPosts(action: deleteMyInteractionsPostsRequestAction) {
+  try {
+    const result: AxiosResponse<number[]> = yield call(() => deleteMyInteractionsPostsAPI(action.menu, action.id));
+
+    yield put({
+      type: DELETE_MY_INTERACTIONS_POSTS_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: DELETE_MY_INTERACTIONS_POSTS_FAILURE,
       error: error.response.data.message
     });
   }
@@ -485,6 +509,10 @@ function* watchLoadMyInteractionsPosts() {
   yield takeLatest(LOAD_MY_INTERACTIONS_POSTS_REQUEST, loadMyInteractionsPosts);
 }
 
+function* watchDeleteMyInteractionsPosts() {
+  yield takeLatest(DELETE_MY_INTERACTIONS_POSTS_REQUEST, deleteMyInteractionsPosts);
+}
+
 function* watchAddPost() {
   yield takeLatest(ADD_POST_REQUEST, addPost);
 }
@@ -565,6 +593,7 @@ export default function* postSaga() {
   yield all([
     fork(watchLoadNewPosts),
     fork(watchLoadMyInteractionsPosts),
+    fork(watchDeleteMyInteractionsPosts),
     fork(watchAddPost),
     fork(watchEditPost),
     fork(watchDeletePost),

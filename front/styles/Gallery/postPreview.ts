@@ -7,7 +7,7 @@ import { HoverStyle } from 'styles/Common/hover';
 export const PostPreviewWrapper = styled(motion.section)`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
+  gap: 8px;
 
   & > article {
     width: 100%;
@@ -42,7 +42,7 @@ export const PostPreviewWrapper = styled(motion.section)`
   }
 `;
 
-export const PostPreviewCheckbox = styled.div`
+export const PostPreviewCheckbox = styled(motion.div)`
   position: absolute;
   top: 5px;
   left: 5px;
@@ -57,7 +57,7 @@ export const PostPreviewImage = styled.div`
   position: relative;
   cursor: pointer;
   width: 100%;
-  height: 250px;
+  height: 290px;
 
   & > img {
     width: 100%;
@@ -98,8 +98,12 @@ export const PostPreviewImage = styled.div`
     transition: opacity 200ms ease-in-out;
   }
 
+  ${media.tablet} {
+    height: 220px;
+  }
+
   ${media.mobile} {
-    height: 200px;
+    height: 185px;
   }
 `;
 
@@ -108,17 +112,17 @@ export const PostPreviewContent = styled.div`
   bottom: 12%;
   left: 6%;
   opacity: 0%;
-  width: fit-content;
+  width: 90%;
   cursor: pointer;
   transition: opacity 200ms ease-in-out;
 
   & > h1 {
-    width: 95%;
+    width: 100%;
     font-size: 0.9rem;
     font-weight: 700;
     line-height: 1.2;
     display: -webkit-box;
-    -webkit-line-clamp: 3;
+    -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -127,7 +131,7 @@ export const PostPreviewContent = styled.div`
   }
 
   & > p {
-    font-size: 0.6rem;
+    font-size: 0.8rem;
     text-decoration: underline;
     opacity: 70%;
     margin-bottom: 1.5em;
@@ -143,6 +147,7 @@ export const PostPreviewContent = styled.div`
     }
 
     & > p {
+      font-size: 0.7rem;
       margin-bottom: 0.8em;
     }
   }

@@ -9,6 +9,7 @@ import {
   SwapOutlined
 } from '@ant-design/icons';
 import { motion } from 'framer-motion';
+import { toast } from 'react-toastify';
 import { END } from 'redux-saga';
 import Head from 'next/head';
 import axios from 'axios';
@@ -19,12 +20,14 @@ import PostPreview from 'components/Gallery/PostPreview';
 import PostModal from 'components/Modal/PostModal';
 
 import wrapper from 'store/configureStore';
+import DeleteModal from 'components/Modal/DeleteModal';
+import useToastStatus from 'utils/useToast';
 import { loadMyInfoRequest } from 'store/actions/userAction';
-import { loadMyInteractionsPostsRequest, showPostModal } from 'store/actions/postAction';
+import { loadMyInteractionsPostsRequest, showDeleteModal } from 'store/actions/postAction';
 import { RootState } from 'store/reducers';
-import { Post, UserHistoryPost } from 'store/types/postType';
+import { UserHistoryPost } from 'store/types/postType';
 import { PostPreviewWrapper } from 'styles/Gallery/postPreview';
-import { slideInFromBottom, slideInList } from 'styles/Common/animation';
+import { slideInFromBottom, slideInList, slideInTooltip } from 'styles/Common/animation';
 import {
   GalleryActionBtn,
   GalleryCategoryBtn,
@@ -37,15 +40,25 @@ import {
 const Gallery = () => {
   const dispatch = useDispatch();
   const galleryContainerRef = useRef<HTMLDivElement>(null);
-  const { isPostModalVisible, galleryPosts, loadMyInteractionsPostsLoading } = useSelector(
-    (state: RootState) => state.post
-  );
+  const {
+    isPostModalVisible,
+    galleryPosts,
+    loadMyInteractionsPostsLoading,
+    isDeleteModalVisible,
+    loadMyInteractionsPostsDone
+  } = useSelector((state: RootState) => state.post);
+
+  const [isFirstRender, setIsFirstRender] = useState(true);
   const [selectMenu, setSelectMenu] = useState<'all' | 'like' | 'comment'>('all');
   const [selectSort, setSelectSort] = useState<'best' | 'new'>('best');
   const [selectMode, setSelectMode] = useState(false);
+  const [selectedPostIds, setSelectedPostIds] = useState<number[]>([]);
+  useToastStatus();
 
   const onClickMenu = useCallback((menu: 'all' | 'like' | 'comment') => {
     setSelectMenu(menu);
+    setSelectMode(false);
+    setSelectedPostIds([]);
   }, []);
 
   const onClickSort = useCallback((sort: 'best' | 'new') => {
@@ -58,15 +71,36 @@ const Gallery = () => {
 
   const onCancelSelectMode = useCallback(() => {
     setSelectMode(false);
+    setSelectedPostIds([]);
   }, []);
 
-  const onClickPost = useCallback((post: Post) => {
-    dispatch(showPostModal(post));
-  }, []);
+  const onSelectDelete = useCallback(() => {
+    if (selectedPostIds.length === 0) {
+      toast.warning('삭제할 게시글을 선택해주세요.');
+      return;
+    }
+
+    dispatch(showDeleteModal({ type: 'Gallery 게시글', menu: selectMenu, id: selectedPostIds }));
+  }, [selectedPostIds]);
+
+  const onSelectAll = useCallback(() => {
+    const allPostIds = galleryPosts.map((userHistory: UserHistoryPost) => userHistory.id);
+    setSelectedPostIds(allPostIds);
+
+    dispatch(showDeleteModal({ type: 'Gallery 게시글', menu: selectMenu, id: allPostIds }));
+  }, [galleryPosts, selectedPostIds]);
 
   useEffect(() => {
-    dispatch(loadMyInteractionsPostsRequest(selectMenu, selectSort));
+    if (!isFirstRender) {
+      dispatch(loadMyInteractionsPostsRequest(selectMenu, selectSort));
+    }
   }, [selectMenu, selectSort]);
+
+  useEffect(() => {
+    console.log(galleryPosts);
+
+    setIsFirstRender(false);
+  }, []);
 
   return (
     <>
@@ -103,12 +137,12 @@ const Gallery = () => {
 
           <GalleryActionBtn $selectMode={selectMode}>
             {selectMode ? (
-              <>
-                <button>
+              <motion.div key={selectMode ? 'selectMode-true' : 'selectMode-false'} {...slideInTooltip}>
+                <button type="button" onClick={onSelectDelete}>
                   <DeleteOutlined />
                   선택삭제
                 </button>
-                <button>
+                <button type="button" onClick={onSelectAll}>
                   <DeleteOutlined />
                   전체삭제
                 </button>
@@ -116,24 +150,26 @@ const Gallery = () => {
                   <CloseSquareOutlined />
                   취소
                 </button>
-              </>
+              </motion.div>
             ) : (
-              <button onClick={onExecuteSelectMode}>
-                <CheckSquareOutlined />
-                선택
-              </button>
-            )}
+              <motion.div key={selectMode ? 'selectMode-true' : 'selectMode-false'} {...slideInTooltip}>
+                <button onClick={onExecuteSelectMode}>
+                  <CheckSquareOutlined />
+                  선택
+                </button>
 
-            {selectSort === 'best' ? (
-              <button type="button" onClick={() => onClickSort('new')}>
-                <SwapOutlined />
-                인기순
-              </button>
-            ) : (
-              <button type="button" onClick={() => onClickSort('best')}>
-                <SwapOutlined />
-                최신순
-              </button>
+                {selectSort === 'best' ? (
+                  <button type="button" onClick={() => onClickSort('new')}>
+                    <SwapOutlined />
+                    인기순
+                  </button>
+                ) : (
+                  <button type="button" onClick={() => onClickSort('best')}>
+                    <SwapOutlined />
+                    최신순
+                  </button>
+                )}
+              </motion.div>
             )}
           </GalleryActionBtn>
 
@@ -144,33 +180,42 @@ const Gallery = () => {
               </GalleryLoadingContainer>
             ) : galleryPosts.length > 0 ? (
               <>
-                <BigPostPreview userHistory={galleryPosts[0]} selectMode={selectMode} />
+                <BigPostPreview
+                  userHistory={galleryPosts[0]}
+                  selectMode={selectMode}
+                  selectedPostIds={selectedPostIds}
+                  setSelectedPostIds={setSelectedPostIds}
+                />
 
                 {galleryPosts.length > 1 && (
                   <PostPreviewWrapper {...slideInFromBottom(0.3)}>
                     {galleryPosts.slice(1).map((userHistory: UserHistoryPost) => (
-                      <motion.article
-                        key={userHistory.id}
-                        onClick={() => onClickPost(userHistory.Post)}
-                        {...slideInList}
-                      >
-                        <PostPreview userHistory={userHistory} selectMode={selectMode} />
+                      <motion.article key={userHistory.id} {...slideInList}>
+                        <PostPreview
+                          userHistory={userHistory}
+                          selectMode={selectMode}
+                          selectedPostIds={selectedPostIds}
+                          setSelectedPostIds={setSelectedPostIds}
+                        />
                       </motion.article>
                     ))}
                   </PostPreviewWrapper>
                 )}
               </>
             ) : (
-              <GalleryNoPostsContainer>
-                <CloseSquareTwoTone twoToneColor="#6BA2E6" />
-                <h1>No posts yet.</h1>
-                <p>게시글이 존재하지 않습니다.</p>
-              </GalleryNoPostsContainer>
+              loadMyInteractionsPostsDone && (
+                <GalleryNoPostsContainer>
+                  <CloseSquareTwoTone twoToneColor="#6BA2E6" />
+                  <h1>No posts yet.</h1>
+                  <p>게시글이 존재하지 않습니다.</p>
+                </GalleryNoPostsContainer>
+              )
             )}
           </div>
         </GalleryWrapper>
 
         {isPostModalVisible && <PostModal />}
+        {isDeleteModalVisible && <DeleteModal />}
       </AppLayout>
     </>
   );

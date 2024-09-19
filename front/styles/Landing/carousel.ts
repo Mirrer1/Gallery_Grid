@@ -40,7 +40,6 @@ export const CarouselImage = styled.div`
     position: absolute;
     right: 3%;
     bottom: 3%;
-    color: #fffafa;
     font-weight: 500;
   }
 
@@ -93,10 +92,14 @@ export const CarouselBtn = styled.div`
   ${({ theme }) => theme.flexSet('space-between')};
   padding-left: 6em;
 
-  & > button > span {
-    font-size: 1rem;
-    font-weight: 500;
-    margin-right: 0.5em;
+  & > button {
+    font-weight: 700;
+
+    & > span {
+      font-size: 1rem;
+      font-weight: 500;
+      margin-right: 0.5em;
+    }
   }
 
   ${media.tablet} {

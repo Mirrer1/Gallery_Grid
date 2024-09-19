@@ -41,7 +41,8 @@ import {
   LIKE_POST_REQUEST,
   UNLIKE_POST_REQUEST,
   LOAD_NEW_POSTS_REQUEST,
-  LOAD_MY_INTERACTIONS_POSTS_REQUEST
+  LOAD_MY_INTERACTIONS_POSTS_REQUEST,
+  DELETE_MY_INTERACTIONS_POSTS_REQUEST
 } from 'store/types/postType';
 
 export const loadNewPostsRequest = (lastId?: number) => ({
@@ -53,6 +54,12 @@ export const loadMyInteractionsPostsRequest = (menu: 'all' | 'like' | 'comment',
   type: LOAD_MY_INTERACTIONS_POSTS_REQUEST,
   menu,
   sortBy
+});
+
+export const deleteMyInteractionsPostsRequest = (menu: 'all' | 'like' | 'comment', id: number[]) => ({
+  type: DELETE_MY_INTERACTIONS_POSTS_REQUEST,
+  menu,
+  id
 });
 
 export const addPostRequest = (data: FormData) => ({

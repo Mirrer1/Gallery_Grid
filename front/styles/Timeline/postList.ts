@@ -24,6 +24,7 @@ export const PostCategory = styled.div`
 
   ${media.mobile} {
     justify-content: center;
+    margin: 0 0.5em;
   }
 `;
 
@@ -49,12 +50,15 @@ export const CategoryItem = styled.button<{ $selected: boolean }>`
   }
 
   ${media.mobile} {
+    flex: 1;
+
     & > p {
-      font-size: 0.7rem;
+      font-size: 0.8rem;
+      margin: 12px 0;
     }
 
     & > div {
-      width: 70px;
+      width: 100%;
     }
   }
 `;

@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 
 import media from 'styles/media';
-import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
+import { ReverseHoverStyle } from 'styles/Common/hover';
+import { motion } from 'framer-motion';
 
 export const GalleryWrapper = styled.section`
   background-color: white;
@@ -103,11 +104,13 @@ export const GalleryCategoryBtn = styled.button<{ $selected: boolean }>`
   }
 `;
 
+export const GalleryActionBtnWrapper = styled(motion.div)``;
+
 export const GalleryActionBtn = styled.div<{ $selectMode: boolean }>`
   ${({ theme }) => theme.flexSet('end')};
   margin-bottom: 0.5em;
 
-  & > button {
+  & > div > button {
     font-size: 0.7rem;
     font-weight: 500;
     padding: 0.5em 1em;
@@ -115,21 +118,23 @@ export const GalleryActionBtn = styled.div<{ $selectMode: boolean }>`
     border: ${props => (props.$selectMode ? '1px solid #EE6B6E' : '1px solid #6BA2E6')};
     border-radius: 5px;
     margin-right: 0.5em;
-    ${HoverStyle('&')}
+    transition: opacity 200ms ease-in-out !important;
+
+    &:hover {
+      opacity: 40% !important;
+    }
+
+    &:active {
+      opacity: 100% !important;
+    }
 
     & > span {
       margin-right: 0.5em;
     }
   }
 
-  & > button:last-child {
-    margin-right: 0;
-    color: ${({ theme }) => theme.colors.primary};
-    border: 1px solid ${({ theme }) => theme.colors.primary};
-  }
-
   ${media.tablet} {
-    & > button {
+    & > div > button {
       font-size: 0.6rem;
 
       & > span {
@@ -139,7 +144,7 @@ export const GalleryActionBtn = styled.div<{ $selectMode: boolean }>`
   }
 
   ${media.mobile} {
-    & > button {
+    & > div > button {
       font-size: 0.55rem;
     }
   }

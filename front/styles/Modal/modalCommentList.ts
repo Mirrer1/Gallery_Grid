@@ -148,7 +148,8 @@ export const ModalCommentContainer = styled.div<{ $reply: boolean }>`
             color: ${({ theme }) => theme.colors.primary};
             background-color: #d6e4f8;
             border-radius: 10px;
-            padding: 0.3em 0.6em;
+            padding: 0 0.6em;
+            line-height: 2;
           }
         }
 

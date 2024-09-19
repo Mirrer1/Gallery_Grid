@@ -86,7 +86,10 @@ import {
   EDIT_MODAL_COMMENT_UPLOAD_IMAGE_REQUEST,
   EDIT_MODAL_COMMENT_UPLOAD_IMAGE_SUCCESS,
   EDIT_MODAL_COMMENT_UPLOAD_IMAGE_FAILURE,
-  EDIT_MODAL_COMMENT_REMOVE_UPLOADED_IMAGE
+  EDIT_MODAL_COMMENT_REMOVE_UPLOADED_IMAGE,
+  DELETE_MY_INTERACTIONS_POSTS_REQUEST,
+  DELETE_MY_INTERACTIONS_POSTS_SUCCESS,
+  DELETE_MY_INTERACTIONS_POSTS_FAILURE
 } from 'store/types/postType';
 
 export const initialState: PostState = {
@@ -113,6 +116,9 @@ export const initialState: PostState = {
   loadMyInteractionsPostsLoading: false,
   loadMyInteractionsPostsDone: false,
   loadMyInteractionsPostsError: null,
+  deleteMyInteractionsPostsLoading: false,
+  deleteMyInteractionsPostsDone: false,
+  deleteMyInteractionsPostsError: null,
   addPostLoading: false,
   addPostDone: false,
   addPostError: null,
@@ -208,6 +214,21 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
       case LOAD_MY_INTERACTIONS_POSTS_FAILURE:
         draft.loadMyInteractionsPostsLoading = false;
         draft.loadMyInteractionsPostsError = action.error;
+        break;
+      case DELETE_MY_INTERACTIONS_POSTS_REQUEST:
+        draft.deleteMyInteractionsPostsLoading = true;
+        draft.deleteMyInteractionsPostsDone = false;
+        draft.deleteMyInteractionsPostsError = null;
+        break;
+      case DELETE_MY_INTERACTIONS_POSTS_SUCCESS:
+        draft.deleteMyInteractionsPostsLoading = false;
+        draft.deleteMyInteractionsPostsDone = true;
+        draft.isDeleteModalVisible = false;
+        draft.galleryPosts = draft.galleryPosts.filter(post => !action.data.includes(post.id));
+        break;
+      case DELETE_MY_INTERACTIONS_POSTS_FAILURE:
+        draft.deleteMyInteractionsPostsLoading = false;
+        draft.deleteMyInteractionsPostsError = action.error;
         break;
       case ADD_POST_REQUEST:
         draft.addPostLoading = true;
