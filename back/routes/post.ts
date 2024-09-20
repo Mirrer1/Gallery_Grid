@@ -7,9 +7,9 @@ import Post from '../models/post';
 import User from '../models/user';
 import Image from '../models/image';
 import Comment from '../models/comment';
-import { isLoggedIn } from './middleware';
 import ReplyComment from '../models/replyComment';
 import UserHistory from '../models/userHistory';
+import { isLoggedIn } from './middleware';
 
 const router = express.Router();
 

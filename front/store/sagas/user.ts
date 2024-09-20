@@ -28,7 +28,15 @@ import {
   EDIT_MY_INFO_REQUEST,
   editMyInfoRequestAction,
   EDIT_MY_INFO_SUCCESS,
-  EDIT_MY_INFO_FAILURE
+  EDIT_MY_INFO_FAILURE,
+  FOLLOW_USER_REQUEST,
+  UNFOLLOW_USER_REQUEST,
+  followUserRequestAction,
+  FOLLOW_USER_SUCCESS,
+  FOLLOW_USER_FAILURE,
+  unFollowUserRequestAction,
+  UNFOLLOW_USER_SUCCESS,
+  UNFOLLOW_USER_FAILURE
 } from 'store/types/userType';
 
 function signUpAPI(data: AuthResponse) {
@@ -168,6 +176,46 @@ function* uploadUserImage(action: userUploadImageRequestAction) {
   }
 }
 
+function followUserAPI(data: number) {
+  return axios.post(`/user/follow/${data}`);
+}
+
+function* followUser(action: followUserRequestAction) {
+  try {
+    const result: AxiosResponse<number> = yield call(followUserAPI, action.data);
+
+    yield put({
+      type: FOLLOW_USER_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: FOLLOW_USER_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
+function unFollowUserAPI(data: number) {
+  return axios.delete(`/user/follow/${data}`);
+}
+
+function* unFollowUser(action: unFollowUserRequestAction) {
+  try {
+    const result: AxiosResponse<number> = yield call(unFollowUserAPI, action.data);
+
+    yield put({
+      type: UNFOLLOW_USER_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: UNFOLLOW_USER_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
 function* watchSignUp() {
   yield takeLatest(SIGNUP_REQUEST, signUp);
 }
@@ -196,6 +244,14 @@ function* watchUserUploadImage() {
   yield takeLatest(USER_UPLOAD_IMAGE_REQUEST, uploadUserImage);
 }
 
+function* watchFollowUser() {
+  yield takeLatest(FOLLOW_USER_REQUEST, followUser);
+}
+
+function* watchUnFollowUser() {
+  yield takeLatest(UNFOLLOW_USER_REQUEST, unFollowUser);
+}
+
 export default function* userSaga() {
   yield all([
     fork(watchLogin),
@@ -204,6 +260,8 @@ export default function* userSaga() {
     fork(watchLogout),
     fork(watchSignUp),
     fork(watchEditMyInfo),
-    fork(watchUserUploadImage)
+    fork(watchUserUploadImage),
+    fork(watchFollowUser),
+    fork(watchUnFollowUser)
   ]);
 }

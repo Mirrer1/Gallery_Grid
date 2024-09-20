@@ -118,18 +118,21 @@ export const PostHeader = styled.div`
   }
 `;
 
-export const PostFollowBtn = styled.button`
+export const PostFollowBtn = styled.button<{ $isFollowing: boolean }>`
   ${HoverStyle('&')}
   font-size: 0.7rem;
-  background-color: ${({ theme }) => theme.colors.primary};
-  color: white;
+  background-color: ${props => (props.$isFollowing ? 'white' : '#6BA2E6')};
+  color: ${props => (props.$isFollowing ? '#6BA2E6' : 'white')};
+  border: ${props => props.$isFollowing && '1px solid #6BA2E6'};
   font-weight: 500;
-  padding: 0.7em 1.5em;
   border-radius: 5px;
   margin-right: 0.5em;
+  line-height: 2.4;
+  width: 67px;
 
   ${media.mobile} {
     font-size: 0.6rem;
+    width: 58px;
   }
 `;
 

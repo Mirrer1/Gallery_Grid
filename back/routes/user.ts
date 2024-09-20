@@ -125,12 +125,14 @@ router.get('/', async (req, res, next) => {
           {
             model: User,
             as: 'Followings',
-            attributes: ['id']
+            attributes: ['id'],
+            through: { attributes: [] }
           },
           {
             model: User,
             as: 'Followers',
-            attributes: ['id']
+            attributes: ['id'],
+            through: { attributes: [] }
           },
           {
             model: Image,
@@ -257,6 +259,39 @@ router.patch('/edit', isLoggedIn, upload.none(), async (req, res, next) => {
   } catch (error) {
     console.error(error);
     next(error);
+  }
+});
+
+router.post('/follow/:id', isLoggedIn, async (req, res, next) => {
+  try {
+    const targetId = parseInt(req.params.id, 10);
+    const userId = req.user!.id;
+
+    const me = await User.findOne({
+      where: { id: userId }
+    });
+    await me!.addFollowing(targetId);
+
+    res.status(200).json(targetId);
+  } catch (e) {
+    console.error(e);
+    next(e);
+  }
+});
+
+router.delete('/follow/:id', isLoggedIn, async (req, res, next) => {
+  try {
+    const targetId = parseInt(req.params.id, 10);
+    const userId = req.user!.id;
+
+    const me = await User.findOne({
+      where: { id: userId }
+    });
+    await me!.removeFollowing(targetId);
+    res.status(200).json(targetId);
+  } catch (e) {
+    console.error(e);
+    next(e);
   }
 });
 

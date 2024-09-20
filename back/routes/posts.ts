@@ -1,17 +1,18 @@
 import express from 'express';
-import { Op, Sequelize } from 'sequelize';
+import { Op } from 'sequelize';
 
 import Post from '../models/post';
 import User from '../models/user';
 import Image from '../models/image';
 import Comment from '../models/comment';
 import ReplyComment from '../models/replyComment';
-import { sequelize } from '../models';
 import UserHistory from '../models/userHistory';
+import { sequelize } from '../models';
+import { isLoggedIn } from './middleware';
 
 const router = express.Router();
 
-router.get('/new', async (req, res, next) => {
+router.get('/new', isLoggedIn, async (req, res, next) => {
   try {
     const where: { id?: { [Op.lt]: number } } = {};
     const lastId = req.query.lastId ? parseInt(req.query.lastId as string, 10) : 0;
@@ -158,7 +159,7 @@ router.get('/interactions', async (req, res, next) => {
   }
 });
 
-router.patch('/interactions', async (req, res, next) => {
+router.patch('/interactions', isLoggedIn, async (req, res, next) => {
   try {
     const { menu, id } = req.body;
     const userId = req.user!.id;

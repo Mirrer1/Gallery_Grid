@@ -7,6 +7,7 @@ import {
   DeleteOutlined,
   EditOutlined,
   HeartOutlined,
+  LoadingOutlined,
   MoreOutlined,
   ShareAltOutlined
 } from '@ant-design/icons';
@@ -43,12 +44,13 @@ import {
   PostContainer,
   PostFollowBtn
 } from 'styles/Timeline/postList';
+import { followUserRequest, unFollowUserRequest } from 'store/actions/userAction';
 
 const PostList = () => {
   const dispatch = useDispatch();
   const firstPostRef = useRef<HTMLDivElement>(null);
   const postContainerRef = useRef<HTMLDivElement>(null);
-  const { me } = useSelector((state: RootState) => state.user);
+  const { me, followUserLoading, unFollowUserLoading } = useSelector((state: RootState) => state.user);
   const {
     timelinePosts,
     postImagePaths,
@@ -115,6 +117,16 @@ const PostList = () => {
     [timelinePosts]
   );
 
+  const onToggleFollow = useCallback(
+    (userId: number) => {
+      const isFollowing = me.Followings.some((following: { id: number }) => following.id === userId);
+
+      if (isFollowing) dispatch(unFollowUserRequest(userId));
+      else dispatch(followUserRequest(userId));
+    },
+    [me.Followings]
+  );
+
   useEffect(() => {
     if (firstPostRef.current) {
       firstPostRef.current.scrollIntoView({
@@ -169,7 +181,21 @@ const PostList = () => {
             </div>
 
             <div>
-              <PostFollowBtn type="button">Follow</PostFollowBtn>
+              {me.id !== post.UserId && (
+                <PostFollowBtn
+                  type="button"
+                  onClick={() => onToggleFollow(post.UserId)}
+                  $isFollowing={me.Followings.some((following: { id: number }) => following.id === post.UserId)}
+                >
+                  {followUserLoading || unFollowUserLoading ? (
+                    <LoadingOutlined />
+                  ) : me.Followings.some((following: { id: number }) => following.id === post.UserId) ? (
+                    'Unfollow'
+                  ) : (
+                    'Follow'
+                  )}
+                </PostFollowBtn>
+              )}
               <MoreOutlined onClick={() => handleTooltip(post.id)} />
 
               {isTooltipVisible && (
