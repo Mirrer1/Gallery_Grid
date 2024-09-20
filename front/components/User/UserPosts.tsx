@@ -133,30 +133,32 @@ const UserPosts = () => {
           <UserPostImage>
             <img src={post.img[0]} alt={`${post.user}의 게시글 이미지`} />
 
+            <ArrowsAltOutlined />
+          </UserPostImage>
+
+          <UserPostContent>
+            <div>
+              <h1>{post.desc}</h1>
+              <p>{post.user}</p>
+
+              <UserPostOption>
+                <div>
+                  <HeartOutlined />
+                  <span>24</span>
+                </div>
+
+                <div>
+                  <CommentOutlined />
+                  <span>13</span>
+                </div>
+              </UserPostOption>
+            </div>
+
             <div>
               {post.img.map((_: any, i: any) => (
                 <div key={i} />
               ))}
             </div>
-
-            <ArrowsAltOutlined />
-          </UserPostImage>
-
-          <UserPostContent>
-            <h1>{post.desc}</h1>
-            <p>{post.user}</p>
-
-            <UserPostOption>
-              <div>
-                <HeartOutlined />
-                <span>24</span>
-              </div>
-
-              <div>
-                <CommentOutlined />
-                <span>13</span>
-              </div>
-            </UserPostOption>
           </UserPostContent>
         </article>
       ))}

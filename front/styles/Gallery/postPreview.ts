@@ -24,7 +24,12 @@ export const PostPreviewWrapper = styled(motion.section)`
           ${HoverStyle('&')};
         }
 
-        & > div:last-child {
+        & > div:nth-child(2) {
+          opacity: 100%;
+        }
+
+        & > div:nth-child(2) > div:first-child,
+        & > div:nth-child(2) > div:first-child > div {
           opacity: 100%;
         }
       }
@@ -63,31 +68,7 @@ export const PostPreviewImage = styled.div`
     width: 100%;
     height: 100%;
     border-radius: 5px;
-    transition: filter 150ms ease-in-out;
-  }
-
-  & > div {
-    width: 100%;
-    ${({ theme }) => theme.flexSet('end')};
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-  }
-
-  & > div > div {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    margin-right: 4px;
-    background-color: #b5b5b5;
-
-    &:first-child {
-      background-color: ${({ theme }) => theme.colors.primary};
-    }
-
-    &:last-child {
-      margin-right: 0;
-    }
+    transition: filter 200ms ease-in-out;
   }
 
   & > span {
@@ -96,6 +77,7 @@ export const PostPreviewImage = styled.div`
     top: 8px;
     right: 8px;
     transition: opacity 200ms ease-in-out;
+    cursor: pointer;
   }
 
   ${media.tablet} {
@@ -109,64 +91,100 @@ export const PostPreviewImage = styled.div`
 
 export const PostPreviewContent = styled.div`
   position: absolute;
-  bottom: 12%;
-  left: 6%;
-  opacity: 0%;
-  width: 90%;
+  bottom: 0;
+  width: 100%;
+  padding: 0.7em 1em;
   cursor: pointer;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0));
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  background-clip: padding-box;
+  opacity: 0%;
   transition: opacity 200ms ease-in-out;
 
-  & > h1 {
-    width: 100%;
-    font-size: 0.9rem;
-    font-weight: 700;
-    line-height: 1.2;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: normal;
-    margin-bottom: 0.5em;
-  }
-
-  & > p {
-    font-size: 0.8rem;
-    text-decoration: underline;
-    opacity: 70%;
-    margin-bottom: 1.5em;
-  }
-
-  ${media.tablet} {
-    opacity: 100%;
-
+  & > div:first-child {
     & > h1 {
-      font-size: 0.8rem;
-      -webkit-line-clamp: 1;
-      margin-bottom: 0.25em;
+      width: 100%;
+      font-size: 0.9rem;
+      font-weight: 700;
+      line-height: 1.2;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: normal;
+      margin-bottom: 0.5em;
     }
 
     & > p {
-      font-size: 0.7rem;
-      margin-bottom: 0.8em;
+      font-size: 0.8rem;
+      text-decoration: underline;
+      opacity: 70%;
+      margin-bottom: 1.5em;
+    }
+  }
+
+  & > div:last-child {
+    ${({ theme }) => theme.flexSet('end')};
+    width: 100%;
+
+    & > div {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      margin-right: 4px;
+      background-color: #b5b5b5;
+
+      &:first-child {
+        background-color: ${({ theme }) => theme.colors.primary};
+      }
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+
+  ${media.tablet} {
+    padding: 0.5em 0.8em;
+    opacity: 100%;
+
+    & > div:first-child {
+      & > h1 {
+        font-size: 0.8rem;
+        -webkit-line-clamp: 1;
+        margin-bottom: 0.25em;
+      }
+
+      & > p {
+        font-size: 0.7rem;
+        margin-bottom: 0.8em;
+      }
     }
   }
 
   ${media.mobile} {
-    width: 60%;
-
-    & > h1 {
-      font-size: 0.75rem;
+    & > div:first-child {
+      & > h1 {
+        font-size: 0.75rem;
+      }
     }
   }
 `;
 
 export const PostPreviewOption = styled.div<{ $liked: boolean; $hasCommented: boolean }>`
   ${({ theme }) => theme.flexSet('start')}
+  margin-bottom: 1em;
+  opacity: 0%;
+  transition: opacity 200ms ease-in-out;
 
   & > div {
-    opacity: 60%;
     font-size: 0.8rem;
+
+    & > span > svg {
+      margin-right: 0.2em;
+    }
   }
 
   & > div:first-child {
@@ -178,17 +196,18 @@ export const PostPreviewOption = styled.div<{ $liked: boolean; $hasCommented: bo
     color: ${props => (props.$hasCommented ? '#6BA2E6' : 'black')};
   }
 
-  & > div > span > svg {
-    margin-right: 0.2em;
-  }
-
   ${media.tablet} {
+    opacity: 100%;
+    margin-bottom: 0.5em;
+
     & > div {
       font-size: 0.7rem;
     }
   }
 
   ${media.mobile} {
+    margin-bottom: 0.3em;
+
     & > div {
       font-size: 0.65rem;
     }

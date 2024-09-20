@@ -46,7 +46,7 @@ export const CommunitySection = styled(motion.article)`
   }
 
   ${media.mobile} {
-    height: 160px;
+    height: 200px;
   }
 `;
 

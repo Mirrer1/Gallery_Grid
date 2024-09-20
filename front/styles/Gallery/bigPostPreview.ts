@@ -18,6 +18,14 @@ export const BigPostPreviewWrapper = styled(motion.section)`
         opacity: 100%;
         ${HoverStyle('&')}
       }
+
+      & > div:first-child > div {
+        opacity: 100%;
+      }
+
+      & > div:nth-child(2) {
+        opacity: 100%;
+      }
     }
   }
 
@@ -52,10 +60,12 @@ export const BigPostPreviewImage = styled.div`
   }
 
   & > div {
+    opacity: 0%;
     ${({ theme }) => theme.flexSet()};
     position: absolute;
     bottom: 10px;
     left: 10px;
+    transition: opacity 200ms ease-in-out;
   }
 
   & > div > div {
@@ -77,8 +87,8 @@ export const BigPostPreviewImage = styled.div`
   & > span {
     opacity: 0;
     position: absolute;
-    top: 5px;
-    right: 5px;
+    top: 8px;
+    right: 8px;
     font-size: 1.4rem;
     transition: opacity 200ms ease-in-out;
   }
@@ -104,6 +114,8 @@ export const BigPostPreviewContent = styled.div`
   bottom: 5%;
   left: 54%;
   width: 44%;
+  opacity: 0%;
+  transition: opacity 200ms ease-in-out;
 
   & > h1 {
     width: 95%;
@@ -130,6 +142,7 @@ export const BigPostPreviewContent = styled.div`
     left: 48%;
     bottom: 3%;
     width: 50%;
+    opacity: 100%;
 
     & > h1 {
       font-size: 1rem;
@@ -157,7 +170,6 @@ export const BigPostPreviewOption = styled.div<{ $liked: boolean; $hasCommented:
   ${({ theme }) => theme.flexSet('end')}
 
   & > div {
-    opacity: 60%;
     font-size: 0.9rem;
   }
 

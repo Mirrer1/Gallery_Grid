@@ -66,40 +66,42 @@ const PostPreview = ({ userHistory, selectMode, selectedPostIds, setSelectedPost
       <PostPreviewImage onClick={onClickPost}>
         <img src={`http://localhost:3065/${userHistory.Post.Images[0].src}`} alt="게시글의 첫번째 이미지" />
 
+        <ArrowsAltOutlined />
+      </PostPreviewImage>
+
+      <PostPreviewContent>
+        <div>
+          <h1>{userHistory.Post.content}</h1>
+          <p>{userHistory.Post.User.nickname}</p>
+
+          <PostPreviewOption $liked={liked} $hasCommented={hasCommented}>
+            <div>
+              <HeartOutlined />
+              <span>{userHistory.Post.Likers.length}</span>
+            </div>
+
+            <div>
+              <CommentOutlined />
+              <span>
+                {userHistory.Post.Comments.reduce((total, comment) => {
+                  const repliesCount = comment.Replies ? comment.Replies.length : 0;
+
+                  if (comment.isDeleted) {
+                    return total + repliesCount;
+                  }
+
+                  return total + 1 + repliesCount;
+                }, 0)}
+              </span>
+            </div>
+          </PostPreviewOption>
+        </div>
+
         <div>
           {userHistory.Post.Images.map((image: Image) => (
             <div key={image.id} />
           ))}
         </div>
-
-        <ArrowsAltOutlined />
-      </PostPreviewImage>
-
-      <PostPreviewContent>
-        <h1>{userHistory.Post.content}</h1>
-        <p>{userHistory.Post.User.nickname}</p>
-
-        <PostPreviewOption $liked={liked} $hasCommented={hasCommented}>
-          <div>
-            <HeartOutlined />
-            <span>{userHistory.Post.Likers.length}</span>
-          </div>
-
-          <div>
-            <CommentOutlined />
-            <span>
-              {userHistory.Post.Comments.reduce((total, comment) => {
-                const repliesCount = comment.Replies ? comment.Replies.length : 0;
-
-                if (comment.isDeleted) {
-                  return total + repliesCount;
-                }
-
-                return total + 1 + repliesCount;
-              }, 0)}
-            </span>
-          </div>
-        </PostPreviewOption>
       </PostPreviewContent>
     </>
   );
