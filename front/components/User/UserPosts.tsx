@@ -134,6 +134,12 @@ const UserPosts = () => {
             <img src={post.img[0]} alt={`${post.user}의 게시글 이미지`} />
 
             <ArrowsAltOutlined />
+
+            <div>
+              {post.img.map((_: any, i: any) => (
+                <div key={i} />
+              ))}
+            </div>
           </UserPostImage>
 
           <UserPostContent>
@@ -152,12 +158,6 @@ const UserPosts = () => {
                   <span>13</span>
                 </div>
               </UserPostOption>
-            </div>
-
-            <div>
-              {post.img.map((_: any, i: any) => (
-                <div key={i} />
-              ))}
             </div>
           </UserPostContent>
         </article>

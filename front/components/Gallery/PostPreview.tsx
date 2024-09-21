@@ -67,9 +67,15 @@ const PostPreview = ({ userHistory, selectMode, selectedPostIds, setSelectedPost
         <img src={`http://localhost:3065/${userHistory.Post.Images[0].src}`} alt="게시글의 첫번째 이미지" />
 
         <ArrowsAltOutlined />
+
+        <div>
+          {userHistory.Post.Images.map((image: Image) => (
+            <div key={image.id} />
+          ))}
+        </div>
       </PostPreviewImage>
 
-      <PostPreviewContent>
+      <PostPreviewContent $selectMode={selectMode}>
         <div>
           <h1>{userHistory.Post.content}</h1>
           <p>{userHistory.Post.User.nickname}</p>
@@ -95,12 +101,6 @@ const PostPreview = ({ userHistory, selectMode, selectedPostIds, setSelectedPost
               </span>
             </div>
           </PostPreviewOption>
-        </div>
-
-        <div>
-          {userHistory.Post.Images.map((image: Image) => (
-            <div key={image.id} />
-          ))}
         </div>
       </PostPreviewContent>
     </>

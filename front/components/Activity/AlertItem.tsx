@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
-import { CommentOutlined, HeartOutlined, HeartTwoTone } from '@ant-design/icons';
+import { CheckSquareOutlined, CommentOutlined, DeleteOutlined, HeartOutlined, HeartTwoTone } from '@ant-design/icons';
 
 import { showCommentList, showPostModal } from 'store/actions/postAction';
 import {
@@ -8,7 +8,8 @@ import {
   AlertHeader,
   AlertContent,
   AlertItemWrapper,
-  AlertContentBtn
+  AlertContentBtn,
+  AlertBtn
 } from 'styles/Activity/alert';
 
 const AlertItem = ({ type }: { type: string }) => {
@@ -22,22 +23,41 @@ const AlertItem = ({ type }: { type: string }) => {
   return (
     <AlertItemWrapper>
       <AlertHeader $type={type}>
-        <img src="https://i.pinimg.com/564x/aa/06/d7/aa06d77cd048b867f5d0b40362e62a76.jpg" alt="프로필 이미지1" />
+        <div>
+          <img src="https://i.pinimg.com/564x/aa/06/d7/aa06d77cd048b867f5d0b40362e62a76.jpg" alt="프로필 이미지1" />
 
-        <p>14:47</p>
-        {type === 'like' ? (
-          <h1>
-            <span>User1</span>님이 회원님의 게시글을 좋아합니다.
-          </h1>
-        ) : type === 'comment' ? (
-          <h1>
-            <span>User2</span>님이 게시글에 <span>Lorem ipsum dolor sit ame...</span>댓글을 남겼습니다.
-          </h1>
-        ) : type === 'follow' ? (
-          <h1>
-            <span>User3</span>님이 회원님을 팔로우하기 시작했습니다.
-          </h1>
-        ) : null}
+          <p>14:47</p>
+          {type === 'like' ? (
+            <h1>
+              <span>User1</span>님이 회원님의 게시글을 좋아합니다.
+            </h1>
+          ) : type === 'comment' ? (
+            <h1>
+              <p>
+                <span>User2</span>님이 게시글에
+              </p>
+              <p>
+                강장공장 공장장은 강 공장장기이고, 된장공장 공장장은 공공장장이다 강장공장 공장장은 강 공장장기이고,
+                된장공장 공장장은 공공장장이다.강장공장 공장장은 강 공장장기이고, 된장공장 공장장은 공공장장이다강장공장
+                공장장은 강 공장장기이고, 된장공장 공장장은 공공장장이다강장공장 공장장은 강 공장장기이고, 된장공장
+                공장장은 공공장장이다
+              </p>
+              댓글을 남겼습니다.
+            </h1>
+          ) : type === 'follow' ? (
+            <h1>
+              <span>User3</span>님이 회원님을 팔로우하기 시작했습니다.
+            </h1>
+          ) : null}
+        </div>
+
+        <AlertBtn $selectAll={false}>
+          <button>
+            <CheckSquareOutlined />
+            <DeleteOutlined />
+            <p>읽음</p>
+          </button>
+        </AlertBtn>
       </AlertHeader>
 
       <AlertContentWrapper>

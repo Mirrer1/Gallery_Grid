@@ -76,7 +76,7 @@ const BigPostPreview = ({ userHistory, selectMode, selectedPostIds, setSelectedP
         <ArrowsAltOutlined />
       </BigPostPreviewImage>
 
-      <BigPostPreviewContent>
+      <BigPostPreviewContent $selectMode={selectMode}>
         <h1>{userHistory.Post.content}</h1>
         <p>{userHistory.Post.User.nickname}</p>
 

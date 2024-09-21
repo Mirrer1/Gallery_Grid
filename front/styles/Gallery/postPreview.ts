@@ -80,6 +80,30 @@ export const PostPreviewImage = styled.div`
     cursor: pointer;
   }
 
+  & > div {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    ${({ theme }) => theme.flexSet('end')};
+    width: 100%;
+
+    & > div {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      margin-right: 4px;
+      background-color: #b5b5b5;
+
+      &:first-child {
+        background-color: ${({ theme }) => theme.colors.primary};
+      }
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+
   ${media.tablet} {
     height: 220px;
   }
@@ -89,7 +113,7 @@ export const PostPreviewImage = styled.div`
   }
 `;
 
-export const PostPreviewContent = styled.div`
+export const PostPreviewContent = styled.div<{ $selectMode: boolean }>`
   position: absolute;
   bottom: 0;
   width: 100%;
@@ -99,7 +123,7 @@ export const PostPreviewContent = styled.div`
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
   background-clip: padding-box;
-  opacity: 0%;
+  opacity: ${props => (props.$selectMode ? '100%' : '0%')};
   transition: opacity 200ms ease-in-out;
 
   & > div:first-child {
@@ -122,27 +146,6 @@ export const PostPreviewContent = styled.div`
       text-decoration: underline;
       opacity: 70%;
       margin-bottom: 1.5em;
-    }
-  }
-
-  & > div:last-child {
-    ${({ theme }) => theme.flexSet('end')};
-    width: 100%;
-
-    & > div {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      margin-right: 4px;
-      background-color: #b5b5b5;
-
-      &:first-child {
-        background-color: ${({ theme }) => theme.colors.primary};
-      }
-
-      &:last-child {
-        margin-right: 0;
-      }
     }
   }
 

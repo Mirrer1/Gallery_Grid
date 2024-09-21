@@ -19,10 +19,6 @@ export const BigPostPreviewWrapper = styled(motion.section)`
         ${HoverStyle('&')}
       }
 
-      & > div:first-child > div {
-        opacity: 100%;
-      }
-
       & > div:nth-child(2) {
         opacity: 100%;
       }
@@ -60,12 +56,10 @@ export const BigPostPreviewImage = styled.div`
   }
 
   & > div {
-    opacity: 0%;
     ${({ theme }) => theme.flexSet()};
     position: absolute;
     bottom: 10px;
     left: 10px;
-    transition: opacity 200ms ease-in-out;
   }
 
   & > div > div {
@@ -109,12 +103,12 @@ export const BigPostPreviewImage = styled.div`
   }
 `;
 
-export const BigPostPreviewContent = styled.div`
+export const BigPostPreviewContent = styled.div<{ $selectMode: boolean }>`
   position: absolute;
   bottom: 5%;
   left: 54%;
   width: 44%;
-  opacity: 0%;
+  opacity: ${props => (props.$selectMode ? '100%' : '0%')};
   transition: opacity 200ms ease-in-out;
 
   & > h1 {

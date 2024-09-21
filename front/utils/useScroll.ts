@@ -17,7 +17,6 @@ type ScrollParams = {
   loading: boolean;
   action: (lastId: number) => AnyAction;
   thresholds: number[];
-  useRefForAllScreens: boolean;
 };
 
 const breakpoints = {
@@ -38,8 +37,7 @@ const useScroll = ({ type, ref }: UseScrollParams) => {
           hasMore: hasMoreTimelinePosts,
           loading: loadNewPostsLoading,
           action: loadNewPostsRequest,
-          thresholds: [350, 900, 1700],
-          useRefForAllScreens: false
+          thresholds: [350, 900, 1700]
         };
       default:
         return {
@@ -47,55 +45,27 @@ const useScroll = ({ type, ref }: UseScrollParams) => {
           hasMore: false,
           loading: false,
           action: () => ({ type: 'UNKNOWN_ACTION' }),
-          thresholds: [0, 0, 0],
-          useRefForAllScreens: false
+          thresholds: [0, 0, 0]
         };
     }
   };
 
-  const { items, hasMore, loading, action, thresholds, useRefForAllScreens } = getScrollParams(type);
+  const { items, hasMore, loading, action, thresholds } = getScrollParams(type);
 
   useEffect(() => {
     const handleScroll = () => {
       const lastId = items[items.length - 1]?.id;
 
-      if (useRefForAllScreens || window.innerWidth >= breakpoints.web) {
-        if (ref.current) {
-          const { scrollTop, clientHeight, scrollHeight } = ref.current;
-          if (scrollTop + clientHeight > scrollHeight - thresholds[0]) {
-            if (hasMore && !loading) {
-              dispatch(action(lastId));
-            }
-          }
-        }
-      } else if (window.innerWidth >= breakpoints.tablet) {
-        if (useRefForAllScreens && ref.current) {
-          const { scrollTop, clientHeight, scrollHeight } = ref.current;
-          if (scrollTop + clientHeight > scrollHeight - thresholds[1]) {
-            if (hasMore && !loading) {
-              dispatch(action(lastId));
-            }
-          }
-        } else if (
-          window.scrollY + document.documentElement.clientHeight >
-          document.documentElement.scrollHeight - thresholds[1]
-        ) {
+      if (window.innerWidth >= breakpoints.web && ref.current) {
+        const { scrollTop, clientHeight, scrollHeight } = ref.current;
+        if (scrollTop + clientHeight > scrollHeight - thresholds[0]) {
           if (hasMore && !loading) {
             dispatch(action(lastId));
           }
         }
-      } else if (window.innerWidth < breakpoints.tablet) {
-        if (useRefForAllScreens && ref.current) {
-          const { scrollTop, clientHeight, scrollHeight } = ref.current;
-          if (scrollTop + clientHeight > scrollHeight - thresholds[2]) {
-            if (hasMore && !loading) {
-              dispatch(action(lastId));
-            }
-          }
-        } else if (
-          window.scrollY + document.documentElement.clientHeight >
-          document.documentElement.scrollHeight - thresholds[2]
-        ) {
+      } else if (window.innerWidth < breakpoints.web) {
+        const threshold = window.innerWidth >= breakpoints.tablet ? thresholds[1] : thresholds[2];
+        if (window.scrollY + window.innerHeight > document.documentElement.scrollHeight - threshold) {
           if (hasMore && !loading) {
             dispatch(action(lastId));
           }
@@ -104,18 +74,20 @@ const useScroll = ({ type, ref }: UseScrollParams) => {
     };
 
     const currentRef = ref.current;
-    if (currentRef) {
+
+    if (window.innerWidth >= breakpoints.web && currentRef) {
       currentRef.addEventListener('scroll', handleScroll);
+    } else {
+      window.addEventListener('scroll', handleScroll);
     }
-    window.addEventListener('scroll', handleScroll);
 
     return () => {
-      if (currentRef) {
+      if (window.innerWidth >= breakpoints.web && currentRef) {
         currentRef.removeEventListener('scroll', handleScroll);
       }
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [hasMore, loading, items, dispatch, action, ref, thresholds, useRefForAllScreens]);
+  }, [hasMore, loading, items, dispatch, action, ref, thresholds]);
 };
 
 export default useScroll;
