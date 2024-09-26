@@ -24,6 +24,7 @@ export const CarouselImage = styled.div`
     width: 80%;
     height: 600px;
     filter: blur(5px);
+    border-radius: 5px;
   }
 
   & > img:nth-child(2) {
@@ -32,15 +33,24 @@ export const CarouselImage = styled.div`
     position: absolute;
     top: 50%;
     left: 40%;
+    border-radius: 5px;
     transform: translate(-50%, -50%);
     ${ImageShadowStyle}
   }
 
   & > p {
     position: absolute;
-    right: 3%;
-    bottom: 3%;
+    right: 0;
+    bottom: 0;
+    width: 80%;
+    color: white;
     font-weight: 500;
+    text-align: end;
+    padding: 1em 0.5em 0.7em 0.5em;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.1) 50%, rgba(0, 0, 0, 0) 100%);
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    background-clip: padding-box;
   }
 
   ${media.tablet} {
@@ -63,8 +73,9 @@ export const CarouselImage = styled.div`
     }
 
     & > p {
-      right: 2%;
-      bottom: 4%;
+      width: 100%;
+      right: 0;
+      bottom: 0;
       font-size: 1rem;
     }
   }
@@ -81,8 +92,6 @@ export const CarouselImage = styled.div`
 
     & > p {
       font-size: 0.8rem;
-      bottom: 3.5%;
-      right: 5%;
     }
   }
 `;

@@ -10,6 +10,7 @@ import passport from 'passport';
 import Image from '../models/image';
 import Post from '../models/post';
 import { isLoggedIn, isNotLoggedIn } from './middleware';
+import UserHistory from '../models/userHistory';
 
 const router = express.Router();
 
@@ -267,9 +268,16 @@ router.post('/follow/:id', isLoggedIn, async (req, res, next) => {
     const targetId = parseInt(req.params.id, 10);
     const userId = req.user!.id;
 
+    UserHistory.create({
+      type: 'follow',
+      AlerterId: userId,
+      AlertedId: targetId
+    });
+
     const me = await User.findOne({
       where: { id: userId }
     });
+
     await me!.addFollowing(targetId);
 
     res.status(200).json(targetId);
@@ -284,10 +292,20 @@ router.delete('/follow/:id', isLoggedIn, async (req, res, next) => {
     const targetId = parseInt(req.params.id, 10);
     const userId = req.user!.id;
 
+    await UserHistory.destroy({
+      where: {
+        type: 'follow',
+        AlerterId: userId,
+        AlertedId: targetId
+      }
+    });
+
     const me = await User.findOne({
       where: { id: userId }
     });
+
     await me!.removeFollowing(targetId);
+
     res.status(200).json(targetId);
   } catch (e) {
     console.error(e);

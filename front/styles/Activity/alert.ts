@@ -56,6 +56,11 @@ export const AlertBtn = styled(motion.div)<{ $selectAll: boolean }>`
       }
     }
   }
+
+  ${media.tablet} {
+    position: relative;
+    bottom: 2px;
+  }
 `;
 
 export const AlertWrapper = styled(motion.section)`
@@ -93,10 +98,6 @@ export const AlertDivider = styled.div`
 
   ${media.tablet} {
     border-radius: 5px 5px 0 0;
-  }
-
-  ${media.mobile} {
-    font-size: 0.65rem;
   }
 `;
 
@@ -188,19 +189,20 @@ export const AlertHeader = styled.div<{ $type: string }>`
   ${media.mobile} {
     margin-right: 0;
 
-    & > img {
-      width: 40px;
-      height: 40px;
-      margin-right: 0.7em;
-    }
+    & > div:first-child {
+      & > img {
+        width: 44px;
+        height: 44px;
+      }
 
-    & > p {
-      display: none;
-    }
+      & > p {
+        display: none;
+      }
 
-    & > h1 {
-      width: 80%;
-      font-size: 0.7rem;
+      & > h1 {
+        width: 80%;
+        font-size: 0.7rem;
+      }
     }
   }
 `;

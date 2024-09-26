@@ -138,7 +138,7 @@ export const PopularUserContents = styled.div`
     position: absolute;
     bottom: 0;
     width: 100%;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 50%, rgba(0, 0, 0, 0) 100%);
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
     background-clip: padding-box;
