@@ -36,11 +36,7 @@ import {
   FOLLOW_USER_FAILURE,
   unFollowUserRequestAction,
   UNFOLLOW_USER_SUCCESS,
-  UNFOLLOW_USER_FAILURE,
-  LOAD_MY_ACTIVITY_COUNTS_REQUEST,
-  ActivityCounts,
-  LOAD_MY_ACTIVITY_COUNTS_SUCCESS,
-  LOAD_MY_ACTIVITY_COUNTS_FAILURE
+  UNFOLLOW_USER_FAILURE
 } from 'store/types/userType';
 
 function signUpAPI(data: AuthResponse) {
@@ -115,26 +111,6 @@ function* loadMyInfo() {
   } catch (error: any) {
     yield put({
       type: LOAD_MY_INFO_FAILURE,
-      error: error.response.data.message
-    });
-  }
-}
-
-function loadMyActivityCountsAPI() {
-  return axios.get('/user/activities');
-}
-
-function* loadMyActivityCounts() {
-  try {
-    const result: AxiosResponse<ActivityCounts> = yield call(loadMyActivityCountsAPI);
-
-    yield put({
-      type: LOAD_MY_ACTIVITY_COUNTS_SUCCESS,
-      data: result.data
-    });
-  } catch (error: any) {
-    yield put({
-      type: LOAD_MY_ACTIVITY_COUNTS_FAILURE,
       error: error.response.data.message
     });
   }
@@ -256,10 +232,6 @@ function* watchLoadMyInfo() {
   yield takeLatest(LOAD_MY_INFO_REQUEST, loadMyInfo);
 }
 
-function* watchLoadMyActivityCounts() {
-  yield takeLatest(LOAD_MY_ACTIVITY_COUNTS_REQUEST, loadMyActivityCounts);
-}
-
 function* watchLogout() {
   yield takeLatest(LOGOUT_REQUEST, logout);
 }
@@ -285,7 +257,6 @@ export default function* userSaga() {
     fork(watchLogin),
     fork(watchLoginGoogle),
     fork(watchLoadMyInfo),
-    fork(watchLoadMyActivityCounts),
     fork(watchLogout),
     fork(watchSignUp),
     fork(watchEditMyInfo),

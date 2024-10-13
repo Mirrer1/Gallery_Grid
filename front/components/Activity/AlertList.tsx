@@ -1,16 +1,19 @@
-import React, { useRef } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useCallback, useRef } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { CheckSquareOutlined, CloseSquareTwoTone } from '@ant-design/icons';
+import { toast } from 'react-toastify';
 import dayjs from 'dayjs';
 
 import AlertItem from './AlertItem';
 import useScroll from 'utils/useScroll';
 import { RootState } from 'store/reducers';
 import { UserHistoryPost } from 'store/types/postType';
+import { readActivityRequest } from 'store/actions/postAction';
 import { slideInFromBottom, slideInList } from 'styles/Common/animation';
 import { AlertBtn, AlertDivider, AlertWrapper, NoAlertsContainer } from 'styles/Activity/alert';
 
 const AlertList = () => {
+  const dispatch = useDispatch();
   const activityPostsRef = useRef<HTMLDivElement>(null);
   const { myActivityPosts } = useSelector((state: RootState) => state.post);
   useScroll({ type: 'activity', ref: activityPostsRef });
@@ -31,10 +34,15 @@ const AlertList = () => {
 
   const groupedActivities = groupByDate(myActivityPosts);
 
+  const onReadAllActivities = useCallback(() => {
+    if (myActivityPosts.length > 0) dispatch(readActivityRequest('all'));
+    else toast.warning('활동 내역이 존재하지 않습니다.');
+  }, []);
+
   return (
     <>
       <AlertBtn {...slideInFromBottom(0.3)} $selectAll={true}>
-        <button>
+        <button type="button" onClick={onReadAllActivities}>
           <CheckSquareOutlined />
           <p>모두 읽음</p>
         </button>

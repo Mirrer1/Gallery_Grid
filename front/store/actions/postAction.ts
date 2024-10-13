@@ -44,7 +44,9 @@ import {
   LOAD_MY_INTERACTIONS_POSTS_REQUEST,
   DELETE_MY_INTERACTIONS_POSTS_REQUEST,
   LOAD_MY_ACTIVITY_POSTS_REQUEST,
-  SET_ACTIVITY_FOCUSED_COMMENT_ID
+  SET_ACTIVITY_FOCUSED_COMMENT_ID,
+  LOAD_MY_ACTIVITY_COUNTS_REQUEST,
+  READ_ACTIVITY_REQUEST
 } from 'store/types/postType';
 
 export const loadNewPostsRequest = (lastId?: number) => ({
@@ -52,9 +54,18 @@ export const loadNewPostsRequest = (lastId?: number) => ({
   lastId
 });
 
+export const loadMyActivityCountsRequest = () => ({
+  type: LOAD_MY_ACTIVITY_COUNTS_REQUEST
+});
+
 export const loadMyActivityPostsRequest = (lastId?: number) => ({
   type: LOAD_MY_ACTIVITY_POSTS_REQUEST,
   lastId
+});
+
+export const readActivityRequest = (targetId: 'all' | number) => ({
+  type: READ_ACTIVITY_REQUEST,
+  targetId
 });
 
 export const loadMyInteractionsPostsRequest = (menu: 'all' | 'like' | 'comment', sortBy: 'best' | 'new') => ({

@@ -9,14 +9,15 @@ import AlertList from 'components/Activity/AlertList';
 import PostModal from 'components/Modal/PostModal';
 
 import wrapper from 'store/configureStore';
+import useToastStatus from 'utils/useToast';
 import { RootState } from 'store/reducers';
-import { loadMyActivityCountsRequest, loadMyInfoRequest } from 'store/actions/userAction';
-import { loadMyActivityPostsRequest } from 'store/actions/postAction';
+import { loadMyInfoRequest } from 'store/actions/userAction';
+import { loadMyActivityCountsRequest, loadMyActivityPostsRequest } from 'store/actions/postAction';
 import { ActivityHeader, ActivityWrapper, HeaderItem } from 'styles/Activity';
 
 const Activity = () => {
-  const { myActivityCounts } = useSelector((state: RootState) => state.user);
-  const { isPostModalVisible } = useSelector((state: RootState) => state.post);
+  const { myActivityCounts, isPostModalVisible } = useSelector((state: RootState) => state.post);
+  useToastStatus();
 
   return (
     <>

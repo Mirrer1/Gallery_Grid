@@ -315,23 +315,4 @@ router.delete('/follow/:id', isLoggedIn, async (req, res, next) => {
   }
 });
 
-router.get('/activities', isLoggedIn, async (req, res, next) => {
-  try {
-    const userId = req.user!.id;
-    const where = { isRead: false, AlertedId: userId, AlerterId: { [Op.ne]: userId } };
-
-    const [likeCount, commentCount, replyCount, followCount] = await Promise.all([
-      UserHistory.count({ where: { ...where, type: 'like' } }),
-      UserHistory.count({ where: { ...where, type: 'comment' } }),
-      UserHistory.count({ where: { ...where, type: 'replyComment' } }),
-      UserHistory.count({ where: { ...where, type: 'follow' } })
-    ]);
-
-    res.status(200).json({ like: likeCount, comment: commentCount + replyCount, follow: followCount });
-  } catch (e) {
-    console.error(e);
-    next(e);
-  }
-});
-
 export default router;

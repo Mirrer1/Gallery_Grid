@@ -93,11 +93,18 @@ import {
   DELETE_MY_INTERACTIONS_POSTS_REQUEST,
   DELETE_MY_INTERACTIONS_POSTS_SUCCESS,
   DELETE_MY_INTERACTIONS_POSTS_FAILURE,
-  SET_ACTIVITY_FOCUSED_COMMENT_ID
+  SET_ACTIVITY_FOCUSED_COMMENT_ID,
+  LOAD_MY_ACTIVITY_COUNTS_REQUEST,
+  LOAD_MY_ACTIVITY_COUNTS_SUCCESS,
+  LOAD_MY_ACTIVITY_COUNTS_FAILURE,
+  READ_ACTIVITY_REQUEST,
+  READ_ACTIVITY_SUCCESS,
+  READ_ACTIVITY_FAILURE
 } from 'store/types/postType';
 
 export const initialState: PostState = {
   timelinePosts: [],
+  myActivityCounts: { like: 0, comment: 0, follow: 0 },
   myActivityPosts: [],
   galleryPosts: [],
   singlePost: null,
@@ -120,9 +127,15 @@ export const initialState: PostState = {
   loadNewPostsLoading: false,
   loadNewPostsDone: false,
   loadNewPostsError: null,
+  loadMyActivityCountsLoading: false,
+  loadMyActivityCountsDone: false,
+  loadMyActivityCountsError: null,
   loadMyActivityPostsLoading: false,
   loadMyActivityPostsDone: false,
   loadMyActivityPostsError: null,
+  readActivityLoading: false,
+  readActivityDone: false,
+  readActivityError: null,
   loadMyInteractionsPostsLoading: false,
   loadMyInteractionsPostsDone: false,
   loadMyInteractionsPostsError: null,
@@ -211,6 +224,20 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
         draft.loadNewPostsLoading = false;
         draft.loadNewPostsError = action.error;
         break;
+      case LOAD_MY_ACTIVITY_COUNTS_REQUEST:
+        draft.loadMyActivityCountsLoading = true;
+        draft.loadMyActivityCountsDone = false;
+        draft.loadMyActivityCountsError = null;
+        break;
+      case LOAD_MY_ACTIVITY_COUNTS_SUCCESS:
+        draft.loadMyActivityCountsLoading = false;
+        draft.loadMyActivityCountsDone = true;
+        draft.myActivityCounts = action.data;
+        break;
+      case LOAD_MY_ACTIVITY_COUNTS_FAILURE:
+        draft.loadMyActivityCountsLoading = false;
+        draft.loadMyActivityCountsError = action.error;
+        break;
       case LOAD_MY_ACTIVITY_POSTS_REQUEST:
         draft.loadMyActivityPostsLoading = true;
         draft.loadMyActivityPostsDone = false;
@@ -225,6 +252,38 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
       case LOAD_MY_ACTIVITY_POSTS_FAILURE:
         draft.loadMyActivityPostsLoading = false;
         draft.loadMyActivityPostsError = action.error;
+        break;
+      case READ_ACTIVITY_REQUEST:
+        draft.readActivityLoading = true;
+        draft.readActivityDone = false;
+        draft.readActivityError = null;
+        break;
+      case READ_ACTIVITY_SUCCESS:
+        draft.readActivityLoading = false;
+        draft.readActivityDone = true;
+        if (action.data === 'all') {
+          draft.myActivityPosts = [];
+          draft.myActivityCounts = { like: 0, comment: 0, follow: 0 };
+        } else {
+          const index = draft.myActivityPosts.findIndex(post => post.id === action.data);
+
+          if (index !== -1) {
+            const postType = draft.myActivityPosts[index].type;
+            draft.myActivityPosts.splice(index, 1);
+
+            if (postType === 'like') {
+              draft.myActivityCounts.like = Math.max(0, draft.myActivityCounts.like - 1);
+            } else if (postType === 'comment' || postType === 'replyComment') {
+              draft.myActivityCounts.comment = Math.max(0, draft.myActivityCounts.comment - 1);
+            } else if (postType === 'follow') {
+              draft.myActivityCounts.follow = Math.max(0, draft.myActivityCounts.follow - 1);
+            }
+          }
+        }
+        break;
+      case READ_ACTIVITY_FAILURE:
+        draft.readActivityLoading = false;
+        draft.readActivityError = action.error;
         break;
       case LOAD_MY_INTERACTIONS_POSTS_REQUEST:
         draft.loadMyInteractionsPostsLoading = true;

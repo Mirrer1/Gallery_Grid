@@ -35,7 +35,9 @@ const useToastStatus = () => {
     unLikePostDone,
     unLikePostError,
     deleteMyInteractionsPostsDone,
-    deleteMyInteractionsPostsError
+    deleteMyInteractionsPostsError,
+    readActivityDone,
+    readActivityError
   } = useSelector((state: RootState) => state.post);
   const { editMyInfoDone, editMyInfoError, followUserDone, followUserError, unFollowUserDone, unFollowUserError } =
     useSelector((state: RootState) => state.user);
@@ -124,6 +126,12 @@ const useToastStatus = () => {
       error: deleteMyInteractionsPostsError,
       successMessage: '게시글이 삭제되었습니다.',
       errorMessage: deleteMyInteractionsPostsError
+    },
+    {
+      done: readActivityDone,
+      error: readActivityError,
+      successMessage: '활동 내역이 읽음 처리되었습니다.',
+      errorMessage: readActivityError
     }
   ];
   const userStatusList = [

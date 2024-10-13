@@ -6,7 +6,7 @@ import dayjs from 'dayjs';
 import ImagePreview from 'components/Modal/ImagePreviewModal';
 import useImagePreview from 'utils/useImagePreview';
 import { UserHistoryPost } from 'store/types/postType';
-import { setActivityFocusedCommentId, showPostModal } from 'store/actions/postAction';
+import { readActivityRequest, setActivityFocusedCommentId, showPostModal } from 'store/actions/postAction';
 import { slideInList } from 'styles/Common/animation';
 import {
   AlertContentWrapper,
@@ -34,6 +34,10 @@ const AlertItem = ({ history }: AlertItemProps) => {
     }
 
     dispatch(showPostModal(history.Post));
+  }, []);
+
+  const onReadActivity = useCallback(() => {
+    dispatch(readActivityRequest(history.id));
   }, []);
 
   return (
@@ -78,7 +82,7 @@ const AlertItem = ({ history }: AlertItemProps) => {
         </div>
 
         <AlertBtn $selectAll={false}>
-          <button>
+          <button type="button" onClick={onReadActivity}>
             <CheckSquareOutlined />
             <DeleteOutlined />
             <p>읽음</p>

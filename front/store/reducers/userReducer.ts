@@ -4,9 +4,6 @@ import {
   LOAD_MY_INFO_FAILURE,
   LOAD_MY_INFO_REQUEST,
   LOAD_MY_INFO_SUCCESS,
-  LOAD_MY_ACTIVITY_COUNTS_FAILURE,
-  LOAD_MY_ACTIVITY_COUNTS_REQUEST,
-  LOAD_MY_ACTIVITY_COUNTS_SUCCESS,
   LOGIN_FAILURE,
   LOGIN_GOOGLE_FAILURE,
   LOGIN_GOOGLE_REQUEST,
@@ -41,7 +38,6 @@ import {
 
 export const initialState: UserState = {
   me: null,
-  myActivityCounts: null,
   userImagePath: [],
   loginLoading: false,
   loginDone: false,
@@ -52,9 +48,6 @@ export const initialState: UserState = {
   loadMyInfoLoading: false,
   loadMyInfoDone: false,
   loadMyInfoError: null,
-  loadMyActivityCountsLoading: false,
-  loadMyActivityCountsDone: false,
-  loadMyActivityCountsError: null,
   logoutLoading: false,
   logoutDone: false,
   logoutError: null,
@@ -120,20 +113,7 @@ const reducer = (state: UserState = initialState, action: UserAction): UserState
         draft.loadMyInfoLoading = false;
         draft.loadMyInfoError = action.error;
         break;
-      case LOAD_MY_ACTIVITY_COUNTS_REQUEST:
-        draft.loadMyActivityCountsLoading = true;
-        draft.loadMyActivityCountsDone = false;
-        draft.loadMyActivityCountsError = null;
-        break;
-      case LOAD_MY_ACTIVITY_COUNTS_SUCCESS:
-        draft.loadMyActivityCountsLoading = false;
-        draft.loadMyActivityCountsDone = true;
-        draft.myActivityCounts = action.data;
-        break;
-      case LOAD_MY_ACTIVITY_COUNTS_FAILURE:
-        draft.loadMyActivityCountsLoading = false;
-        draft.loadMyActivityCountsError = action.error;
-        break;
+
       case RESET_LOGIN_MESSAGE:
         draft.loginError = null;
         break;

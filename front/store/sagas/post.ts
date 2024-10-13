@@ -92,7 +92,15 @@ import {
   LOAD_MY_ACTIVITY_POSTS_REQUEST,
   loadMyActivityPostsRequestAction,
   LOAD_MY_ACTIVITY_POSTS_SUCCESS,
-  LOAD_MY_ACTIVITY_POSTS_FAILURE
+  LOAD_MY_ACTIVITY_POSTS_FAILURE,
+  LOAD_MY_ACTIVITY_COUNTS_REQUEST,
+  ActivityCounts,
+  LOAD_MY_ACTIVITY_COUNTS_SUCCESS,
+  LOAD_MY_ACTIVITY_COUNTS_FAILURE,
+  READ_ACTIVITY_REQUEST,
+  readActivityRequestAction,
+  READ_ACTIVITY_SUCCESS,
+  READ_ACTIVITY_FAILURE
 } from 'store/types/postType';
 
 function loadNewPostsAPI(lastId?: number) {
@@ -115,6 +123,26 @@ function* loadNewPosts(action: loadNewPostsRequestAction) {
   }
 }
 
+function loadMyActivityCountsAPI() {
+  return axios.get('/post/activities');
+}
+
+function* loadMyActivityCounts() {
+  try {
+    const result: AxiosResponse<ActivityCounts> = yield call(loadMyActivityCountsAPI);
+
+    yield put({
+      type: LOAD_MY_ACTIVITY_COUNTS_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: LOAD_MY_ACTIVITY_COUNTS_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
 function loadMyActivityPostsAPI(lastId?: number) {
   return axios.get(`/posts/activities?lastId=${lastId || 0}`);
 }
@@ -130,6 +158,26 @@ function* loadMyActivityPosts(action: loadMyActivityPostsRequestAction) {
   } catch (error: any) {
     yield put({
       type: LOAD_MY_ACTIVITY_POSTS_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
+function readActivityAPI(targetId: 'all' | number) {
+  return axios.post('/post/activities', { targetId });
+}
+
+function* readActivity(action: readActivityRequestAction) {
+  try {
+    const result: AxiosResponse<'all' | number> = yield call(() => readActivityAPI(action.targetId));
+
+    yield put({
+      type: READ_ACTIVITY_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: READ_ACTIVITY_FAILURE,
       error: error.response.data.message
     });
   }
@@ -529,8 +577,16 @@ function* watchLoadNewPosts() {
   yield takeLatest(LOAD_NEW_POSTS_REQUEST, loadNewPosts);
 }
 
+function* watchLoadMyActivityCounts() {
+  yield takeLatest(LOAD_MY_ACTIVITY_COUNTS_REQUEST, loadMyActivityCounts);
+}
+
 function* watchLoadMyActivityPosts() {
   yield takeLatest(LOAD_MY_ACTIVITY_POSTS_REQUEST, loadMyActivityPosts);
+}
+
+function* watchReadActivity() {
+  yield takeLatest(READ_ACTIVITY_REQUEST, readActivity);
 }
 
 function* watchLoadMyInteractionsPosts() {
@@ -620,7 +676,9 @@ function* watchUnLikePost() {
 export default function* postSaga() {
   yield all([
     fork(watchLoadNewPosts),
+    fork(watchLoadMyActivityCounts),
     fork(watchLoadMyActivityPosts),
+    fork(watchReadActivity),
     fork(watchLoadMyInteractionsPosts),
     fork(watchDeleteMyInteractionsPosts),
     fork(watchAddPost),
