@@ -26,7 +26,7 @@ const ModalCommentListItem = ({
 }: ModalCommentListItemProps) => {
   const dispatch = useDispatch();
   const { me } = useSelector((state: RootState) => state.user);
-  const { isDeleteModalVisible } = useSelector((state: RootState) => state.post);
+  const { isDeleteModalVisible, activityFocusedCommentId } = useSelector((state: RootState) => state.post);
 
   const openDeleteModal = useCallback(
     (commentId: number) => {
@@ -46,7 +46,7 @@ const ModalCommentListItem = ({
   }, []);
 
   return (
-    <ModalCommentContainer $reply={false} {...slideInList}>
+    <ModalCommentContainer $reply={false} $isFocused={activityFocusedCommentId === comment.id} {...slideInList}>
       <div>
         <div>
           <img

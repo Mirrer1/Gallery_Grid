@@ -1,13 +1,13 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { CheckSquareOutlined } from '@ant-design/icons';
+import { CheckSquareOutlined, CloseSquareTwoTone } from '@ant-design/icons';
 import dayjs from 'dayjs';
 
 import AlertItem from './AlertItem';
 import { RootState } from 'store/reducers';
 import { UserHistoryPost } from 'store/types/postType';
 import { slideInFromBottom, slideInList } from 'styles/Common/animation';
-import { AlertBtn, AlertDivider, AlertWrapper } from 'styles/Activity/alert';
+import { AlertBtn, AlertDivider, AlertWrapper, NoAlertsContainer } from 'styles/Activity/alert';
 
 const AlertList = () => {
   const { myActivityPosts } = useSelector((state: RootState) => state.post);
@@ -38,17 +38,22 @@ const AlertList = () => {
       </AlertBtn>
 
       <AlertWrapper {...slideInFromBottom(0.3)}>
-        {Object.keys(groupedActivities).map(date => {
-          return (
+        {myActivityPosts.length === 0 ? (
+          <NoAlertsContainer>
+            <CloseSquareTwoTone twoToneColor="#6BA2E6" />
+            <h1>No Activities yet.</h1>
+            <p>활동 내역이 없습니다.</p>
+          </NoAlertsContainer>
+        ) : (
+          Object.keys(groupedActivities).map(date => (
             <div key={date}>
               <AlertDivider {...slideInList}>{date === dayjs().format('YYYY-MM-DD') ? 'Today' : date}</AlertDivider>
-
               {groupedActivities[date].map((history: UserHistoryPost) => (
                 <AlertItem key={history.id} history={history} />
               ))}
             </div>
-          );
-        })}
+          ))
+        )}
       </AlertWrapper>
     </>
   );

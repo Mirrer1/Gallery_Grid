@@ -77,6 +77,32 @@ export const AlertWrapper = styled(motion.section)`
   }
 `;
 
+export const NoAlertsContainer = styled.div`
+  ${({ theme }) => theme.flexColumnSet()};
+  height: 100%;
+
+  & > span {
+    font-size: 3rem;
+    margin-bottom: 0.25em;
+  }
+
+  & > h1 {
+    color: ${({ theme }) => theme.colors.font};
+    font-size: 1.4rem;
+    font-weight: 500;
+    margin-bottom: 0.2em;
+  }
+
+  & > p {
+    font-size: 0.8rem;
+    opacity: 60%;
+  }
+
+  ${media.tablet} {
+    height: 100vh;
+  }
+`;
+
 export const AlertDivider = styled(motion.div)`
   position: sticky;
   top: 0.01px;

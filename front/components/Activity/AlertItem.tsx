@@ -4,7 +4,7 @@ import { CheckSquareOutlined, CommentOutlined, DeleteOutlined, HeartOutlined } f
 import dayjs from 'dayjs';
 
 import { UserHistoryPost } from 'store/types/postType';
-import { showPostModal } from 'store/actions/postAction';
+import { setActivityFocusedCommentId, showPostModal } from 'store/actions/postAction';
 import {
   AlertContentWrapper,
   AlertHeader,
@@ -27,6 +27,12 @@ const AlertItem = ({ history }: AlertItemProps) => {
   const activityType = history.type === 'replyComment' ? 'comment' : history.type;
 
   const onClickPost = useCallback(() => {
+    if (history.type === 'comment' && history.Comment?.id) {
+      dispatch(setActivityFocusedCommentId(history.Comment.id));
+    } else if (history.type === 'replyComment' && history.ReplyComment?.id) {
+      dispatch(setActivityFocusedCommentId(history.ReplyComment.id));
+    }
+
     dispatch(showPostModal(history.Post));
   }, []);
 

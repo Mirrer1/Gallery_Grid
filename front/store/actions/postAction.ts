@@ -43,7 +43,8 @@ import {
   LOAD_NEW_POSTS_REQUEST,
   LOAD_MY_INTERACTIONS_POSTS_REQUEST,
   DELETE_MY_INTERACTIONS_POSTS_REQUEST,
-  LOAD_MY_ACTIVITY_POSTS_REQUEST
+  LOAD_MY_ACTIVITY_POSTS_REQUEST,
+  SET_ACTIVITY_FOCUSED_COMMENT_ID
 } from 'store/types/postType';
 
 export const loadNewPostsRequest = (lastId?: number) => ({
@@ -247,5 +248,10 @@ export const executeCommentEdit = (data: string) => ({
 
 export const executeModalCommentEdit = (data: string) => ({
   type: EXECUTE_MODAL_COMMENT_EDIT,
+  data
+});
+
+export const setActivityFocusedCommentId = (data: number) => ({
+  type: SET_ACTIVITY_FOCUSED_COMMENT_ID,
   data
 });

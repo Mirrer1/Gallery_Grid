@@ -36,7 +36,9 @@ const ModalCommentList = () => {
     loadModalCommentsLoading,
     addModalCommentDone,
     lastChangedModalCommentId,
-    editModalCommentDone
+    editModalCommentDone,
+    activityFocusedCommentId,
+    loadModalCommentsDone
   } = useSelector((state: RootState) => state.post);
 
   const [replyId, setReplyId] = useState<number | null>(null);
@@ -107,6 +109,12 @@ const ModalCommentList = () => {
       commentRefs.current[lastChangedModalCommentId]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   }, [addModalCommentDone, lastChangedModalCommentId]);
+
+  useEffect(() => {
+    if (loadModalCommentsDone && activityFocusedCommentId && commentRefs.current[activityFocusedCommentId]) {
+      commentRefs.current[activityFocusedCommentId]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, [loadModalCommentsDone, activityFocusedCommentId]);
 
   useEffect(() => {
     dispatch(loadModalCommentsRequest(singlePost.id));

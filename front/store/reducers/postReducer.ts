@@ -92,7 +92,8 @@ import {
   EDIT_MODAL_COMMENT_REMOVE_UPLOADED_IMAGE,
   DELETE_MY_INTERACTIONS_POSTS_REQUEST,
   DELETE_MY_INTERACTIONS_POSTS_SUCCESS,
-  DELETE_MY_INTERACTIONS_POSTS_FAILURE
+  DELETE_MY_INTERACTIONS_POSTS_FAILURE,
+  SET_ACTIVITY_FOCUSED_COMMENT_ID
 } from 'store/types/postType';
 
 export const initialState: PostState = {
@@ -112,6 +113,7 @@ export const initialState: PostState = {
   modalComments: [],
   lastChangedCommentId: null,
   lastChangedModalCommentId: null,
+  activityFocusedCommentId: null,
   commentVisiblePostId: null,
   hasMoreTimelinePosts: true,
   hasMoreMyActivityPosts: true,
@@ -1012,6 +1014,12 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
       case HIDE_MODAL_COMMENT_LIST:
         draft.isModalCommentListVisible = false;
         draft.modalCommentImagePath = [];
+        draft.activityFocusedCommentId = null;
+        break;
+      case SET_ACTIVITY_FOCUSED_COMMENT_ID:
+        draft.activityFocusedCommentId = action.data;
+        draft.isModalCommentListVisible = true;
+        draft.modalCommentImagePath = [];
         break;
       case SHOW_POST_CAROUSEL:
         draft.isCarouselVisible = true;
@@ -1030,6 +1038,7 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
         draft.isPostModalVisible = false;
         draft.isModalCommentListVisible = false;
         draft.lastChangedModalCommentId = null;
+        draft.activityFocusedCommentId = null;
         break;
       case EXECUTE_POST_EDIT:
         draft.postEditMode = true;

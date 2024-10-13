@@ -111,6 +111,7 @@ export const HIDE_POST_MODAL = 'HIDE_POST_MODAL' as const;
 
 export const SHOW_MODAL_COMMENT_LIST = 'SHOW_MODAL_COMMENT_LIST' as const;
 export const HIDE_MODAL_COMMENT_LIST = 'HIDE_MODAL_COMMENT_LIST' as const;
+export const SET_ACTIVITY_FOCUSED_COMMENT_ID = 'SET_ACTIVITY_FOCUSED_COMMENT_ID' as const;
 
 export const EXECUTE_POST_EDIT = 'EXECUTE_POST_EDIT' as const;
 export const CANCEL_POST_EDIT = 'CANCEL_POST_EDIT' as const;
@@ -219,6 +220,7 @@ export type PostState = {
   modalComments: Comment[] | null;
   lastChangedCommentId: number | null;
   lastChangedModalCommentId: number | null;
+  activityFocusedCommentId: number | null;
   commentVisiblePostId: number | null;
   hasMoreTimelinePosts: boolean;
   hasMoreMyActivityPosts: boolean;
@@ -732,6 +734,11 @@ export interface executeModalCommentEditAction {
   data: string;
 }
 
+export interface setActivityFocusedCommentIdAction {
+  type: typeof SET_ACTIVITY_FOCUSED_COMMENT_ID;
+  data: number;
+}
+
 export type PostAction =
   | ShowCommentListAction
   | HideCommentListAction
@@ -821,4 +828,5 @@ export type PostAction =
   | executeModalCommentEditAction
   | editModalCommentRequestAction
   | editModalCommentSuccessAction
-  | editModalCommentFailureAction;
+  | editModalCommentFailureAction
+  | setActivityFocusedCommentIdAction;
