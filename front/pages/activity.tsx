@@ -11,6 +11,7 @@ import PostModal from 'components/Modal/PostModal';
 import wrapper from 'store/configureStore';
 import { RootState } from 'store/reducers';
 import { loadMyInfoRequest } from 'store/actions/userAction';
+import { loadMyActivityPostsRequest } from 'store/actions/postAction';
 import { ActivityHeader, ActivityWrapper, HeaderItem } from 'styles/Activity';
 
 const Activity = () => {
@@ -80,7 +81,7 @@ export const getServerSideProps = wrapper.getServerSideProps(async context => {
   if (context.req && cookie) axios.defaults.headers.Cookie = cookie;
 
   context.store.dispatch(loadMyInfoRequest());
-  // context.store.dispatch(loadPostsRequest());
+  context.store.dispatch(loadMyActivityPostsRequest());
 
   context.store.dispatch(END);
   await context.store.sagaTask?.toPromise();

@@ -1,8 +1,10 @@
 import React, { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
-import { CheckSquareOutlined, CommentOutlined, DeleteOutlined, HeartOutlined, HeartTwoTone } from '@ant-design/icons';
+import { CheckSquareOutlined, CommentOutlined, DeleteOutlined, HeartOutlined } from '@ant-design/icons';
+import dayjs from 'dayjs';
 
-import { showCommentList, showPostModal } from 'store/actions/postAction';
+import { UserHistoryPost } from 'store/types/postType';
+import { showPostModal } from 'store/actions/postAction';
 import {
   AlertContentWrapper,
   AlertHeader,
@@ -11,44 +13,62 @@ import {
   AlertContentBtn,
   AlertBtn
 } from 'styles/Activity/alert';
+import { slideInList } from 'styles/Common/animation';
+import ImagePreview from 'components/Modal/ImagePreviewModal';
+import useImagePreview from 'utils/useImagePreview';
 
-const AlertItem = ({ type }: { type: string }) => {
+type AlertItemProps = {
+  history: UserHistoryPost;
+};
+
+const AlertItem = ({ history }: AlertItemProps) => {
   const dispatch = useDispatch();
+  const { imagePreview, showImagePreview, hideImagePreview } = useImagePreview();
+  const activityType = history.type === 'replyComment' ? 'comment' : history.type;
 
   const onClickPost = useCallback(() => {
-    if (type === 'comment') dispatch(showCommentList());
-    dispatch(showPostModal());
+    dispatch(showPostModal(history.Post));
   }, []);
 
   return (
-    <AlertItemWrapper>
-      <AlertHeader $type={type}>
+    <AlertItemWrapper {...slideInList}>
+      <AlertHeader $type={activityType}>
         <div>
-          <img src="https://i.pinimg.com/564x/aa/06/d7/aa06d77cd048b867f5d0b40362e62a76.jpg" alt="프로필 이미지1" />
+          <img
+            src={
+              history.Alerter?.ProfileImage ? `http://localhost:3065/${history.Alerter?.ProfileImage.src}` : '/user.jpg'
+            }
+            alt="유저 프로필 이미지"
+            onClick={() =>
+              showImagePreview(
+                history.Alerter?.ProfileImage
+                  ? `http://localhost:3065/${history.Alerter?.ProfileImage.src}`
+                  : '/user.jpg'
+              )
+            }
+          />
 
-          <p>14:47</p>
-          {type === 'like' ? (
-            <h1>
-              <span>User1</span>님이 회원님의 게시글을 좋아합니다.
-            </h1>
-          ) : type === 'comment' ? (
-            <h1>
-              <p>
-                <span>User2</span>님이 게시글에
-              </p>
-              <p>
-                강장공장 공장장은 강 공장장기이고, 된장공장 공장장은 공공장장이다 강장공장 공장장은 강 공장장기이고,
-                된장공장 공장장은 공공장장이다.강장공장 공장장은 강 공장장기이고, 된장공장 공장장은 공공장장이다강장공장
-                공장장은 강 공장장기이고, 된장공장 공장장은 공공장장이다강장공장 공장장은 강 공장장기이고, 된장공장
-                공장장은 공공장장이다
-              </p>
-              댓글을 남겼습니다.
-            </h1>
-          ) : type === 'follow' ? (
-            <h1>
-              <span>User3</span>님이 회원님을 팔로우하기 시작했습니다.
-            </h1>
-          ) : null}
+          <div>
+            {activityType === 'like' ? (
+              <h1>
+                <span>{history.Alerter?.nickname}</span>님이 회원님의 게시글을 좋아합니다.
+              </h1>
+            ) : activityType === 'comment' ? (
+              <h1>
+                <p>
+                  <span>{history.Alerter?.nickname}</span>님이 게시글에
+                </p>
+                <p>{history.Comment ? history.Comment.content : history.ReplyComment?.content}</p>
+                댓글을 남겼습니다.
+              </h1>
+            ) : activityType === 'follow' ? (
+              <h1>
+                <span>{history.Alerter?.nickname}</span>님이 회원님을 팔로우하기 시작했습니다.
+              </h1>
+            ) : null}
+
+            <p>{dayjs(history.createdAt).format('HH:mm')}</p>
+          </div>
         </div>
 
         <AlertBtn $selectAll={false}>
@@ -60,32 +80,34 @@ const AlertItem = ({ type }: { type: string }) => {
         </AlertBtn>
       </AlertHeader>
 
-      <AlertContentWrapper>
-        {type === 'like' || type === 'comment' ? (
-          <AlertContent onClick={onClickPost}>
-            <img src="https://i.pinimg.com/564x/fb/13/18/fb1318cf654aae07299360fd4b66bf70.jpg" alt="게시글 이미지1" />
+      <AlertContentWrapper onClick={onClickPost}>
+        {activityType === 'like' || activityType === 'comment' ? (
+          <AlertContent onClick={onClickPost} $type={activityType}>
+            <img src={`http://localhost:3065/${history.Post.Images[0].src}`} alt="게시글의 첫번째 이미지" />
 
             <div>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem expedita tenetur velit maxime, ullam
-                laborum recusandae. Ab fuga, dolore repudiandae quae eum in, eligendi totam non vel voluptates dolorum
-                atque? Lorem recusandae. Ab fuga, dolore repudiandae quae eum in, eligendi totam non vel voluptates
-                dolorum atque? Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem expedita tenetur velit
-                maxime, ullam laborum Lorem recusandae. Ab fuga, dolore repudiandae quae eum in, eligendi totam non vel
-                voluptates dolorum atque? Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem expedita
-                tenetur velit maxime, ullam laborum Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem
-                expedita tenetur velit maxime, ullam laborum Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Quidem expedita tenetur velit maxime, ullam laborum
-              </p>
+              <p>{history.Post.content}</p>
 
               <div>
-                {type === 'like' ? <HeartTwoTone /> : <HeartOutlined />}
-                <span>21</span>
-              </div>
+                <div>
+                  <HeartOutlined />
+                  <span>{history.Post.Likers.length}</span>
+                </div>
 
-              <div>
-                {type === 'comment' ? <CommentOutlined style={{ color: '#0066ff' }} /> : <CommentOutlined />}
-                <span>12</span>
+                <div>
+                  <CommentOutlined />
+                  <span>
+                    {history.Post.Comments.reduce((total, comment) => {
+                      const repliesCount = comment.Replies ? comment.Replies.length : 0;
+
+                      if (comment.isDeleted) {
+                        return total + repliesCount;
+                      }
+
+                      return total + 1 + repliesCount;
+                    }, 0)}
+                  </span>
+                </div>
               </div>
             </div>
           </AlertContent>
@@ -96,6 +118,8 @@ const AlertItem = ({ type }: { type: string }) => {
           </AlertContentBtn>
         )}
       </AlertContentWrapper>
+
+      <ImagePreview imagePreview={imagePreview} hideImagePreview={hideImagePreview} />
     </AlertItemWrapper>
   );
 };

@@ -6,6 +6,7 @@ import formatDate from 'utils/useListTimes';
 import { RootState } from 'store/reducers';
 import { showDeleteModal } from 'store/actions/postAction';
 import { IReplyComment } from 'store/types/postType';
+import { slideInList } from 'styles/Common/animation';
 import { ModalCommentContainer, ModalCommentListItemImage } from 'styles/Modal/modalCommentList';
 
 type ModalReplyCommentProps = {
@@ -47,7 +48,7 @@ const ModalReplyComment = ({
   }, []);
 
   return (
-    <ModalCommentContainer $reply={true}>
+    <ModalCommentContainer $reply={true} {...slideInList}>
       <div>
         <div>
           <img

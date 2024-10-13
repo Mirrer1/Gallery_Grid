@@ -111,7 +111,7 @@ export const ModalCommentListItemWrapper = styled.div`
   }
 `;
 
-export const ModalCommentContainer = styled.div<{ $reply: boolean }>`
+export const ModalCommentContainer = styled(motion.div)<{ $reply: boolean }>`
   padding-left: ${props => (props.$reply ? '2em' : '0')};
   margin-bottom: 1em;
 

@@ -10,7 +10,7 @@ export const LayoutWrapper = styled.div`
   width: 100%;
   height: 100%;
   flex-grow: 1;
-  padding: 2.5% 13%;
+  padding: 2.5% 12%;
 
   & > aside {
     ${({ theme }) => theme.flexColumnSet('space-between', 'start')};

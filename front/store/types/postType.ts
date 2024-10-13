@@ -4,6 +4,10 @@ export const LOAD_NEW_POSTS_REQUEST = 'LOAD_NEW_POSTS_REQUEST' as const;
 export const LOAD_NEW_POSTS_SUCCESS = 'LOAD_NEW_POSTS_SUCCESS' as const;
 export const LOAD_NEW_POSTS_FAILURE = 'LOAD_NEW_POSTS_FAILURE' as const;
 
+export const LOAD_MY_ACTIVITY_POSTS_REQUEST = 'LOAD_MY_ACTIVITY_POSTS_REQUEST' as const;
+export const LOAD_MY_ACTIVITY_POSTS_SUCCESS = 'LOAD_MY_ACTIVITY_POSTS_SUCCESS' as const;
+export const LOAD_MY_ACTIVITY_POSTS_FAILURE = 'LOAD_MY_ACTIVITY_POSTS_FAILURE' as const;
+
 export const LOAD_MY_INTERACTIONS_POSTS_REQUEST = 'LOAD_MY_INTERACTIONS_POSTS_REQUEST' as const;
 export const LOAD_MY_INTERACTIONS_POSTS_SUCCESS = 'LOAD_MY_INTERACTIONS_POSTS_SUCCESS' as const;
 export const LOAD_MY_INTERACTIONS_POSTS_FAILURE = 'LOAD_MY_INTERACTIONS_POSTS_FAILURE' as const;
@@ -192,10 +196,15 @@ export interface UserHistoryPost {
   id: number;
   type: string;
   Post: Post;
+  createdAt: string;
+  Alerter?: { id: number; nickname: string; ProfileImage: { id: number; src: string } | null };
+  Comment: { id: number; content: string } | null;
+  ReplyComment: { id: number; content: string } | null;
 }
 
 export type PostState = {
   timelinePosts: Post[];
+  myActivityPosts: UserHistoryPost[];
   galleryPosts: UserHistoryPost[];
   singlePost: Post | null;
   postImagePaths: string[];
@@ -212,9 +221,13 @@ export type PostState = {
   lastChangedModalCommentId: number | null;
   commentVisiblePostId: number | null;
   hasMoreTimelinePosts: boolean;
+  hasMoreMyActivityPosts: boolean;
   loadNewPostsLoading: boolean;
   loadNewPostsDone: boolean;
   loadNewPostsError: null | string;
+  loadMyActivityPostsLoading: boolean;
+  loadMyActivityPostsDone: boolean;
+  loadMyActivityPostsError: null | string;
   loadMyInteractionsPostsLoading: boolean;
   loadMyInteractionsPostsDone: boolean;
   loadMyInteractionsPostsError: null | string;
@@ -297,6 +310,21 @@ export interface loadNewPostsSuccessAction {
 
 export interface loadNewPostsFailureAction {
   type: typeof LOAD_NEW_POSTS_FAILURE;
+  error: string;
+}
+
+export interface loadMyActivityPostsRequestAction {
+  type: typeof LOAD_MY_ACTIVITY_POSTS_REQUEST;
+  lastId?: number;
+}
+
+export interface loadMyActivityPostsSuccessAction {
+  type: typeof LOAD_MY_ACTIVITY_POSTS_SUCCESS;
+  data: UserHistoryPost[];
+}
+
+export interface loadMyActivityPostsFailureAction {
+  type: typeof LOAD_MY_ACTIVITY_POSTS_FAILURE;
   error: string;
 }
 
@@ -714,6 +742,9 @@ export type PostAction =
   | loadNewPostsRequestAction
   | loadNewPostsSuccessAction
   | loadNewPostsFailureAction
+  | loadMyActivityPostsRequestAction
+  | loadMyActivityPostsSuccessAction
+  | loadMyActivityPostsFailureAction
   | loadMyInteractionsPostsRequestAction
   | loadMyInteractionsPostsSuccessAction
   | loadMyInteractionsPostsFailureAction

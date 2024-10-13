@@ -1,11 +1,33 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { CheckSquareOutlined } from '@ant-design/icons';
+import dayjs from 'dayjs';
 
 import AlertItem from './AlertItem';
-import { slideInFromBottom } from 'styles/Common/animation';
+import { RootState } from 'store/reducers';
+import { UserHistoryPost } from 'store/types/postType';
+import { slideInFromBottom, slideInList } from 'styles/Common/animation';
 import { AlertBtn, AlertDivider, AlertWrapper } from 'styles/Activity/alert';
 
 const AlertList = () => {
+  const { myActivityPosts } = useSelector((state: RootState) => state.post);
+
+  const groupByDate = (activities: UserHistoryPost[]) => {
+    const groupedActivities: { [date: string]: UserHistoryPost[] } = {};
+
+    activities.forEach(activity => {
+      const date = dayjs(activity.createdAt).format('YYYY-MM-DD');
+      if (!groupedActivities[date]) {
+        groupedActivities[date] = [];
+      }
+      groupedActivities[date].push(activity);
+    });
+
+    return groupedActivities;
+  };
+
+  const groupedActivities = groupByDate(myActivityPosts);
+
   return (
     <>
       <AlertBtn {...slideInFromBottom(0.3)} $selectAll={true}>
@@ -16,35 +38,17 @@ const AlertList = () => {
       </AlertBtn>
 
       <AlertWrapper {...slideInFromBottom(0.3)}>
-        <AlertDivider>Today</AlertDivider>
-        <AlertItem type="like" />
-        <AlertItem type="comment" />
-        <AlertItem type="follow" />
+        {Object.keys(groupedActivities).map(date => {
+          return (
+            <div key={date}>
+              <AlertDivider {...slideInList}>{date === dayjs().format('YYYY-MM-DD') ? 'Today' : date}</AlertDivider>
 
-        <AlertDivider>Yesterday</AlertDivider>
-        <AlertItem type="like" />
-        <AlertItem type="comment" />
-        <AlertItem type="follow" />
-
-        <AlertDivider>2024-1-21</AlertDivider>
-        <AlertItem type="like" />
-        <AlertItem type="comment" />
-        <AlertItem type="follow" />
-
-        <AlertDivider>2024-1-15</AlertDivider>
-        <AlertItem type="like" />
-        <AlertItem type="comment" />
-        <AlertItem type="follow" />
-
-        <AlertDivider>2024-1-13</AlertDivider>
-        <AlertItem type="like" />
-        <AlertItem type="comment" />
-        <AlertItem type="follow" />
-
-        <AlertDivider>2024-1-4</AlertDivider>
-        <AlertItem type="like" />
-        <AlertItem type="comment" />
-        <AlertItem type="follow" />
+              {groupedActivities[date].map((history: UserHistoryPost) => (
+                <AlertItem key={history.id} history={history} />
+              ))}
+            </div>
+          );
+        })}
       </AlertWrapper>
     </>
   );

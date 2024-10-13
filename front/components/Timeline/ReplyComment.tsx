@@ -5,8 +5,9 @@ import formatDate from 'utils/useListTimes';
 import DeleteModal from 'components/Modal/DeleteModal';
 import { RootState } from 'store/reducers';
 import { IReplyComment } from 'store/types/postType';
-import { CommentContainer, CommentListItemImage } from 'styles/Timeline/commentList';
 import { showDeleteModal } from 'store/actions/postAction';
+import { slideInList } from 'styles/Common/animation';
+import { CommentContainer, CommentListItemImage } from 'styles/Timeline/commentList';
 
 type ReplyCommentProps = {
   comment: IReplyComment;
@@ -47,7 +48,7 @@ const ReplyComment = ({
   }, []);
 
   return (
-    <CommentContainer $reply={true}>
+    <CommentContainer $reply={true} {...slideInList}>
       <div>
         <div>
           <img

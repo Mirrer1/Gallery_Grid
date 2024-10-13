@@ -77,7 +77,7 @@ export const AlertWrapper = styled(motion.section)`
   }
 `;
 
-export const AlertDivider = styled.div`
+export const AlertDivider = styled(motion.div)`
   position: sticky;
   top: 0.01px;
   z-index: 20;
@@ -101,7 +101,7 @@ export const AlertDivider = styled.div`
   }
 `;
 
-export const AlertItemWrapper = styled.section`
+export const AlertItemWrapper = styled(motion.section)`
   padding: 1em;
 
   ${media.tablet} {
@@ -127,43 +127,47 @@ export const AlertHeader = styled.div<{ $type: string }>`
       width: 50px;
       height: 50px;
       border-radius: 50%;
-      margin-right: 1em;
+      margin-right: 0.8em;
       cursor: pointer;
     }
 
-    & > p {
-      font-weight: 500;
-      font-size: 0.8rem;
-      opacity: 40%;
-      margin-right: 0.5em;
-    }
-
-    & > h1 {
+    & > div {
       width: 1px;
       flex-grow: 1;
-      ${({ theme }) => theme.flexSet('start')}
-      font-size: 0.9rem;
 
-      & > span:first-child,
-      & > p:first-child > span {
-        font-weight: 600;
-        cursor: pointer;
+      & > h1 {
+        ${({ theme }) => theme.flexSet('start')}
+        font-size: 0.9rem;
+        margin-bottom: 0.2em;
+
+        & > span:first-child,
+        & > p:first-child > span {
+          font-weight: 600;
+          cursor: pointer;
+        }
+
+        & > p:first-child {
+          margin-right: 0.2em;
+        }
+
+        & > p:last-child {
+          max-width: 35%;
+          font-weight: 600;
+          display: -webkit-box;
+          -webkit-line-clamp: 1;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: normal;
+          margin-right: 0.2em;
+        }
       }
 
-      & > p:first-child {
+      & > p {
+        font-weight: 500;
+        font-size: 0.8rem;
+        opacity: 40%;
         margin-right: 0.5em;
-      }
-
-      & > p:last-child {
-        width: 1px;
-        flex-grow: 1;
-        font-weight: 600;
-        display: -webkit-box;
-        -webkit-line-clamp: 1;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: normal;
       }
     }
   }
@@ -176,12 +180,18 @@ export const AlertHeader = styled.div<{ $type: string }>`
         margin-right: 0.5em;
       }
 
-      & > h1 {
-        font-size: 0.75rem;
-      }
+      & > div {
+        & > h1 {
+          font-size: 0.75rem;
 
-      & > p {
-        margin-right: 0.25em;
+          & > p:last-child {
+            max-width: 23%;
+          }
+        }
+
+        & > p {
+          font-size: 0.75rem;
+        }
       }
     }
   }
@@ -195,13 +205,14 @@ export const AlertHeader = styled.div<{ $type: string }>`
         height: 44px;
       }
 
-      & > p {
-        display: none;
-      }
+      & > div {
+        & > h1 {
+          font-size: 0.7rem;
 
-      & > h1 {
-        width: 80%;
-        font-size: 0.7rem;
+          & > p:last-child {
+            max-width: 26%;
+          }
+        }
       }
     }
   }
@@ -216,7 +227,7 @@ export const AlertContentWrapper = styled.div`
   }
 `;
 
-export const AlertContent = styled.div`
+export const AlertContent = styled.div<{ $type: 'follow' | 'like' | 'comment' }>`
   ${HoverStyle('&')}
   ${({ theme }) => theme.flexSet('start')}
   border: 1px solid rgba(0, 0, 0, 0.06);
@@ -225,14 +236,18 @@ export const AlertContent = styled.div`
   ${ShadowStyle};
 
   & > img {
-    width: 20%;
+    width: 200px;
     height: 150px;
     border-radius: 5px;
+    margin-right: 0.8em;
   }
 
   & > div {
-    width: 80%;
-    padding-left: 1em;
+    ${({ theme }) => theme.flexColumnSet('space-between', 'start')};
+    width: 1px;
+    flex-grow: 1;
+    height: 150px;
+    padding: 0.2em 0;
 
     & > p {
       display: -webkit-box;
@@ -248,13 +263,23 @@ export const AlertContent = styled.div`
     }
 
     & > div {
-      display: inline-block;
-      opacity: 60%;
-      font-size: 0.8rem;
-      margin-right: 0.5em;
+      & > div {
+        display: inline-block;
+        opacity: 60%;
+        font-size: 0.8rem;
+        margin-right: 0.3em;
 
-      & > span {
-        margin-right: 0.2em;
+        & > span {
+          margin-right: 0.2em;
+        }
+      }
+
+      & > div:first-child {
+        color: ${props => props.$type === 'like' && '#EE6B6E'};
+      }
+
+      & > div:last-child {
+        color: ${props => props.$type === 'comment' && '#6BA2E6'};
       }
     }
   }
@@ -263,12 +288,10 @@ export const AlertContent = styled.div`
     padding: 0.7em;
 
     & > img {
-      width: 30%;
+      width: 150px;
     }
 
     & > div {
-      width: 70%;
-
       & > p {
         -webkit-line-clamp: 4;
       }
@@ -282,6 +305,7 @@ export const AlertContent = styled.div`
       width: 100%;
       height: 230px;
       margin-bottom: 0.3em;
+      margin-right: 0;
     }
 
     & > div {
@@ -294,36 +318,29 @@ export const AlertContent = styled.div`
 export const AlertContentBtn = styled.div`
   padding-left: 0.5em;
 
-  & > button:first-child {
-    ${HoverStyle('&')}
+  & > button {
+    width: 89px;
+    height: 28px;
     font-size: 0.8rem;
-    color: #6ba2e6;
     font-weight: 500;
-    padding: 0.7em 2em;
-    border: 1px solid #6ba2e6;
     border-radius: 5px;
+    ${HoverStyle('&')}
+  }
+
+  & > button:first-child {
+    color: #6ba2e6;
+    border: 1px solid #6ba2e6;
     margin-right: 0.3em;
   }
 
   & > button:last-child {
-    ${HoverStyle('&')}
     background-color: #6ba2e6;
-    font-size: 0.8rem;
     color: white;
-    font-weight: 500;
-    padding: 0.77em 1.7em;
-    border-radius: 5px;
   }
 
   ${media.tablet} {
-    & > button:first-child {
+    & > button {
       font-size: 0.75rem;
-      padding: 0.5em 1.5em;
-    }
-
-    & > button:last-child {
-      font-size: 0.75rem;
-      padding: 0.6em 1.1em;
     }
   }
 

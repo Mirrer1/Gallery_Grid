@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { CloseCircleOutlined, DownOutlined, FileSearchOutlined, SearchOutlined, UpOutlined } from '@ant-design/icons';
 
 import useInput from 'utils/useInput';
-import { IFollowList, IFollowUser } from 'types/Follow';
 import {
   FollowSearch,
   FollowTable,
@@ -12,7 +11,7 @@ import {
   FollowTableWrapper
 } from 'styles/Activity/follow';
 
-const FollowList = ({ type, list }: IFollowList) => {
+const FollowList = ({ type, list }: any) => {
   const tableRef = useRef<HTMLDivElement | null>(null);
   const [search, onChangeSearch, setSearch] = useInput('');
   const [isSearchVisible, setSearchVisible] = useState(false);
@@ -86,7 +85,7 @@ const FollowList = ({ type, list }: IFollowList) => {
         </FollowTableHeader>
 
         <FollowTableBody $visible={isTableVisible}>
-          {list.map((user: IFollowUser) => (
+          {list.map((user: any) => (
             <tr key={user.id}>
               <td>
                 <img src={user.img} alt={`${user.name}의 프로필 이미지`} />

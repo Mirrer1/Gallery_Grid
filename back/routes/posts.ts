@@ -94,7 +94,7 @@ router.get('/interactions', async (req, res, next) => {
       ];
     }
 
-    let where: any = { AlerterId: userId };
+    let where: any = { AlerterId: userId, type: { [Op.ne]: 'follow' } };
     if (menu === 'like') {
       where = { ...where, type: 'like' };
     } else if (menu === 'comment') {
@@ -238,6 +238,102 @@ router.patch('/interactions', isLoggedIn, async (req, res, next) => {
     }
 
     res.status(200).json(id);
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+});
+
+router.get('/activities', isLoggedIn, async (req, res, next) => {
+  try {
+    const userId = req.user!.id;
+    const lastId = req.query.lastId ? parseInt(req.query.lastId as string, 10) : 0;
+
+    const where: any = {
+      isRead: false,
+      AlertedId: userId,
+      AlerterId: { [Op.ne]: userId }
+    };
+
+    if (lastId) {
+      where.id = { [Op.lt]: lastId };
+    }
+
+    const posts = await UserHistory.findAll({
+      where,
+      attributes: ['id', 'type', 'createdAt'],
+      // limit: 10,
+      order: [['createdAt', 'DESC']],
+      include: [
+        {
+          model: Post,
+          required: false,
+          include: [
+            {
+              model: User,
+              attributes: ['id', 'nickname'],
+              include: [
+                {
+                  model: Image,
+                  as: 'ProfileImage',
+                  where: { type: 'user' },
+                  attributes: ['id', 'src'],
+                  required: false
+                }
+              ]
+            },
+            {
+              model: Image,
+              where: { type: 'post' },
+              attributes: ['id', 'src']
+            },
+            {
+              model: User,
+              as: 'Likers',
+              attributes: ['id'],
+              through: { attributes: [] }
+            },
+            {
+              model: Comment,
+              attributes: ['id', 'isDeleted'],
+              include: [
+                { model: User, attributes: ['id'] },
+                {
+                  model: ReplyComment,
+                  as: 'Replies',
+                  attributes: ['id'],
+                  include: [{ model: User, attributes: ['id'] }]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          model: User,
+          attributes: ['id', 'nickname'],
+          as: 'Alerter',
+          include: [
+            {
+              model: Image,
+              as: 'ProfileImage',
+              where: { type: 'user' },
+              attributes: ['id', 'src'],
+              required: false
+            }
+          ]
+        },
+        {
+          model: Comment,
+          attributes: ['id', 'content']
+        },
+        {
+          model: ReplyComment,
+          attributes: ['id', 'content']
+        }
+      ]
+    });
+
+    res.status(200).json(posts);
   } catch (err) {
     console.error(err);
     next(err);

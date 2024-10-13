@@ -270,8 +270,10 @@ router.post('/follow/:id', isLoggedIn, async (req, res, next) => {
 
     UserHistory.create({
       type: 'follow',
+      PostId: 1,
       AlerterId: userId,
-      AlertedId: targetId
+      AlertedId: targetId,
+      isRead: false
     });
 
     const me = await User.findOne({

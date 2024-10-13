@@ -379,7 +379,8 @@ router.post('/comment', isLoggedIn, upload.none(), async (req, res, next) => {
         PostId,
         ReplyCommentId: fullReplyComment?.id,
         AlerterId: req.user!.id,
-        AlertedId: post.UserId
+        AlertedId: post.UserId,
+        isRead: false
       });
 
       return res.status(201).json({ comment: fullReplyComment, parentId });
@@ -460,7 +461,8 @@ router.post('/comment', isLoggedIn, upload.none(), async (req, res, next) => {
         PostId,
         CommentId: fullComment?.id,
         AlerterId: req.user!.id,
-        AlertedId: post.UserId
+        AlertedId: post.UserId,
+        isRead: false
       });
 
       return res.status(201).json({ comment: fullComment, parentId });
@@ -706,7 +708,8 @@ router.patch('/like/:postId', isLoggedIn, async (req, res, next) => {
       type: 'like',
       PostId: post.id,
       AlerterId: req.user!.id,
-      AlertedId: post.UserId
+      AlertedId: post.UserId,
+      isRead: false
     });
 
     res.status(200).json({ PostId: post.id, UserId: req.user!.id });

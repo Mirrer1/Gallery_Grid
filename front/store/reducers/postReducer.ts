@@ -12,6 +12,9 @@ import {
   LOAD_NEW_POSTS_REQUEST,
   LOAD_NEW_POSTS_SUCCESS,
   LOAD_NEW_POSTS_FAILURE,
+  LOAD_MY_ACTIVITY_POSTS_REQUEST,
+  LOAD_MY_ACTIVITY_POSTS_SUCCESS,
+  LOAD_MY_ACTIVITY_POSTS_FAILURE,
   LOAD_MY_INTERACTIONS_POSTS_REQUEST,
   LOAD_MY_INTERACTIONS_POSTS_SUCCESS,
   LOAD_MY_INTERACTIONS_POSTS_FAILURE,
@@ -94,6 +97,7 @@ import {
 
 export const initialState: PostState = {
   timelinePosts: [],
+  myActivityPosts: [],
   galleryPosts: [],
   singlePost: null,
   postImagePaths: [],
@@ -110,9 +114,13 @@ export const initialState: PostState = {
   lastChangedModalCommentId: null,
   commentVisiblePostId: null,
   hasMoreTimelinePosts: true,
+  hasMoreMyActivityPosts: true,
   loadNewPostsLoading: false,
   loadNewPostsDone: false,
   loadNewPostsError: null,
+  loadMyActivityPostsLoading: false,
+  loadMyActivityPostsDone: false,
+  loadMyActivityPostsError: null,
   loadMyInteractionsPostsLoading: false,
   loadMyInteractionsPostsDone: false,
   loadMyInteractionsPostsError: null,
@@ -200,6 +208,21 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
       case LOAD_NEW_POSTS_FAILURE:
         draft.loadNewPostsLoading = false;
         draft.loadNewPostsError = action.error;
+        break;
+      case LOAD_MY_ACTIVITY_POSTS_REQUEST:
+        draft.loadMyActivityPostsLoading = true;
+        draft.loadMyActivityPostsDone = false;
+        draft.loadMyActivityPostsError = null;
+        break;
+      case LOAD_MY_ACTIVITY_POSTS_SUCCESS:
+        draft.loadMyActivityPostsLoading = false;
+        draft.loadMyActivityPostsDone = true;
+        draft.myActivityPosts = draft.myActivityPosts.concat(action.data);
+        draft.hasMoreMyActivityPosts = action.data.length === 10;
+        break;
+      case LOAD_MY_ACTIVITY_POSTS_FAILURE:
+        draft.loadMyActivityPostsLoading = false;
+        draft.loadMyActivityPostsError = action.error;
         break;
       case LOAD_MY_INTERACTIONS_POSTS_REQUEST:
         draft.loadMyInteractionsPostsLoading = true;
