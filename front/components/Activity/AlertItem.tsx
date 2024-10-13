@@ -3,8 +3,11 @@ import { useDispatch } from 'react-redux';
 import { CheckSquareOutlined, CommentOutlined, DeleteOutlined, HeartOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 
+import ImagePreview from 'components/Modal/ImagePreviewModal';
+import useImagePreview from 'utils/useImagePreview';
 import { UserHistoryPost } from 'store/types/postType';
 import { setActivityFocusedCommentId, showPostModal } from 'store/actions/postAction';
+import { slideInList } from 'styles/Common/animation';
 import {
   AlertContentWrapper,
   AlertHeader,
@@ -13,9 +16,6 @@ import {
   AlertContentBtn,
   AlertBtn
 } from 'styles/Activity/alert';
-import { slideInList } from 'styles/Common/animation';
-import ImagePreview from 'components/Modal/ImagePreviewModal';
-import useImagePreview from 'utils/useImagePreview';
 
 type AlertItemProps = {
   history: UserHistoryPost;

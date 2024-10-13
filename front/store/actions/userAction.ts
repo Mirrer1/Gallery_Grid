@@ -12,7 +12,8 @@ import {
   EDIT_MY_INFO_REQUEST,
   EXECUTE_USER_EDIT,
   FOLLOW_USER_REQUEST,
-  UNFOLLOW_USER_REQUEST
+  UNFOLLOW_USER_REQUEST,
+  LOAD_MY_ACTIVITY_COUNTS_REQUEST
 } from 'store/types/userType';
 
 export const loginRequest = (data: AuthResponse) => ({
@@ -26,6 +27,10 @@ export const loginGoogleRequest = () => ({
 
 export const loadMyInfoRequest = () => ({
   type: LOAD_MY_INFO_REQUEST
+});
+
+export const loadMyActivityCountsRequest = () => ({
+  type: LOAD_MY_ACTIVITY_COUNTS_REQUEST
 });
 
 export const resetLoginMessage = () => ({

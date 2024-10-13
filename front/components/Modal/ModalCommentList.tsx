@@ -6,6 +6,7 @@ import ModalReplyComment from './ModalReplyComment';
 import ModalCommentListItem from './ModalCommentListItem';
 import ImagePreview from './ImagePreviewModal';
 import ModalCommentForm from './ModalCommentForm';
+import EditModalCommentForm from './EditModalCommentForm';
 
 import useImagePreview from 'utils/useImagePreview';
 import { RootState } from 'store/reducers';
@@ -24,7 +25,6 @@ import {
   ModalNoCommentsContainer,
   DeleteModalCommentText
 } from 'styles/Modal/modalCommentList';
-import EditModalCommentForm from './EditModalCommentForm';
 
 const ModalCommentList = () => {
   const dispatch = useDispatch();

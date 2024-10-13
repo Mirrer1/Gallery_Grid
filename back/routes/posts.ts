@@ -248,12 +248,7 @@ router.get('/activities', isLoggedIn, async (req, res, next) => {
   try {
     const userId = req.user!.id;
     const lastId = req.query.lastId ? parseInt(req.query.lastId as string, 10) : 0;
-
-    const where: any = {
-      isRead: false,
-      AlertedId: userId,
-      AlerterId: { [Op.ne]: userId }
-    };
+    const where: any = { isRead: false, AlertedId: userId, AlerterId: { [Op.ne]: userId } };
 
     if (lastId) {
       where.id = { [Op.lt]: lastId };

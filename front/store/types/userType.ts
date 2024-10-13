@@ -11,6 +11,10 @@ export const LOAD_MY_INFO_REQUEST = 'LOAD_MY_INFO_REQUEST' as const;
 export const LOAD_MY_INFO_SUCCESS = 'LOAD_MY_INFO_SUCCESS' as const;
 export const LOAD_MY_INFO_FAILURE = 'LOAD_MY_INFO_FAILURE' as const;
 
+export const LOAD_MY_ACTIVITY_COUNTS_REQUEST = 'LOAD_MY_ACTIVITY_COUNTS_REQUEST' as const;
+export const LOAD_MY_ACTIVITY_COUNTS_SUCCESS = 'LOAD_MY_ACTIVITY_COUNTS_SUCCESS' as const;
+export const LOAD_MY_ACTIVITY_COUNTS_FAILURE = 'LOAD_MY_ACTIVITY_COUNTS_FAILURE' as const;
+
 export const LOGOUT_REQUEST = 'LOGOUT_REQUEST' as const;
 export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS' as const;
 export const LOGOUT_FAILURE = 'LOGOUT_FAILURE' as const;
@@ -40,6 +44,7 @@ export const UNFOLLOW_USER_FAILURE = 'UNFOLLOW_USER_FAILURE' as const;
 
 export type UserState = {
   me: User | null;
+  myActivityCounts: ActivityCounts | null;
   userImagePath: string[];
   loginLoading: boolean;
   loginDone: boolean;
@@ -50,6 +55,9 @@ export type UserState = {
   loadMyInfoLoading: boolean;
   loadMyInfoDone: boolean;
   loadMyInfoError: null | string;
+  loadMyActivityCountsLoading: boolean;
+  loadMyActivityCountsDone: boolean;
+  loadMyActivityCountsError: null | string;
   logoutLoading: boolean;
   logoutDone: boolean;
   logoutError: null | string;
@@ -82,6 +90,12 @@ export interface AuthResponse {
   email: string;
   password: string;
   nickname?: string;
+}
+
+export interface ActivityCounts {
+  like: number;
+  comment: number;
+  follow: number;
 }
 
 export interface User {
@@ -137,6 +151,20 @@ export interface loadMyInfoSuccessAction {
 
 export interface loadMyInfoFailureAction {
   type: typeof LOAD_MY_INFO_FAILURE;
+  error: string;
+}
+
+export interface loadMyActivityCountsRequestAction {
+  type: typeof LOAD_MY_ACTIVITY_COUNTS_REQUEST;
+}
+
+export interface loadMyActivityCountsSuccessAction {
+  type: typeof LOAD_MY_ACTIVITY_COUNTS_SUCCESS;
+  data: ActivityCounts;
+}
+
+export interface loadMyActivityCountsFailureAction {
+  type: typeof LOAD_MY_ACTIVITY_COUNTS_FAILURE;
   error: string;
 }
 
@@ -276,4 +304,7 @@ export type UserAction =
   | followUserFailureAction
   | unFollowUserRequestAction
   | unFollowUserSuccessAction
-  | unFollowUserFailureAction;
+  | unFollowUserFailureAction
+  | loadMyActivityCountsRequestAction
+  | loadMyActivityCountsSuccessAction
+  | loadMyActivityCountsFailureAction;

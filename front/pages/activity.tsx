@@ -10,11 +10,12 @@ import PostModal from 'components/Modal/PostModal';
 
 import wrapper from 'store/configureStore';
 import { RootState } from 'store/reducers';
-import { loadMyInfoRequest } from 'store/actions/userAction';
+import { loadMyActivityCountsRequest, loadMyInfoRequest } from 'store/actions/userAction';
 import { loadMyActivityPostsRequest } from 'store/actions/postAction';
 import { ActivityHeader, ActivityWrapper, HeaderItem } from 'styles/Activity';
 
 const Activity = () => {
+  const { myActivityCounts } = useSelector((state: RootState) => state.user);
   const { isPostModalVisible } = useSelector((state: RootState) => state.post);
 
   return (
@@ -33,7 +34,7 @@ const Activity = () => {
 
               <HeaderItem>
                 <h1>Like</h1>
-                <p>100</p>
+                <p>{myActivityCounts.like}</p>
               </HeaderItem>
 
               <HeaderItem>
@@ -42,7 +43,7 @@ const Activity = () => {
 
               <HeaderItem>
                 <h1>Comment</h1>
-                <p>3</p>
+                <p>{myActivityCounts.comment}</p>
               </HeaderItem>
 
               <HeaderItem>
@@ -51,7 +52,7 @@ const Activity = () => {
 
               <HeaderItem>
                 <h1>Follow</h1>
-                <p>55</p>
+                <p>{myActivityCounts.follow}</p>
               </HeaderItem>
 
               <HeaderItem>
@@ -81,6 +82,7 @@ export const getServerSideProps = wrapper.getServerSideProps(async context => {
   if (context.req && cookie) axios.defaults.headers.Cookie = cookie;
 
   context.store.dispatch(loadMyInfoRequest());
+  context.store.dispatch(loadMyActivityCountsRequest());
   context.store.dispatch(loadMyActivityPostsRequest());
 
   context.store.dispatch(END);
