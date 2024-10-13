@@ -257,7 +257,7 @@ router.get('/activities', isLoggedIn, async (req, res, next) => {
     const posts = await UserHistory.findAll({
       where,
       attributes: ['id', 'type', 'createdAt'],
-      // limit: 10,
+      limit: 10,
       order: [['createdAt', 'DESC']],
       include: [
         {

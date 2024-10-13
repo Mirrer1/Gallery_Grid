@@ -2,17 +2,17 @@ import { useEffect, RefObject } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AnyAction } from 'redux';
 
-import { Post } from 'store/types/postType';
+import { Post, UserHistoryPost } from 'store/types/postType';
 import { RootState } from 'store/reducers';
-import { loadNewPostsRequest } from 'store/actions/postAction';
+import { loadMyActivityPostsRequest, loadNewPostsRequest } from 'store/actions/postAction';
 
 type UseScrollParams = {
-  type: 'timeline-new';
+  type: 'timeline-new' | 'activity';
   ref: RefObject<HTMLDivElement>;
 };
 
 type ScrollParams = {
-  items: Post[];
+  items: Post[] | UserHistoryPost[];
   hasMore: boolean;
   loading: boolean;
   action: (lastId: number) => AnyAction;
@@ -27,7 +27,14 @@ const breakpoints = {
 
 const useScroll = ({ type, ref }: UseScrollParams) => {
   const dispatch = useDispatch();
-  const { timelinePosts, hasMoreTimelinePosts, loadNewPostsLoading } = useSelector((state: RootState) => state.post);
+  const {
+    timelinePosts,
+    hasMoreTimelinePosts,
+    loadNewPostsLoading,
+    myActivityPosts,
+    hasMoreMyActivityPosts,
+    loadMyActivityPostsLoading
+  } = useSelector((state: RootState) => state.post);
 
   const getScrollParams = (type: string): ScrollParams => {
     switch (type) {
@@ -38,6 +45,14 @@ const useScroll = ({ type, ref }: UseScrollParams) => {
           loading: loadNewPostsLoading,
           action: loadNewPostsRequest,
           thresholds: [350, 900, 1700]
+        };
+      case 'activity':
+        return {
+          items: myActivityPosts,
+          hasMore: hasMoreMyActivityPosts,
+          loading: loadMyActivityPostsLoading,
+          action: loadMyActivityPostsRequest,
+          thresholds: [720, 1860, 1480]
         };
       default:
         return {

@@ -34,7 +34,7 @@ const Activity = () => {
 
               <HeaderItem>
                 <h1>Like</h1>
-                <p>{myActivityCounts.like}</p>
+                <p>{myActivityCounts?.like}</p>
               </HeaderItem>
 
               <HeaderItem>
@@ -43,7 +43,7 @@ const Activity = () => {
 
               <HeaderItem>
                 <h1>Comment</h1>
-                <p>{myActivityCounts.comment}</p>
+                <p>{myActivityCounts?.comment}</p>
               </HeaderItem>
 
               <HeaderItem>
@@ -52,7 +52,7 @@ const Activity = () => {
 
               <HeaderItem>
                 <h1>Follow</h1>
-                <p>{myActivityCounts.follow}</p>
+                <p>{myActivityCounts?.follow}</p>
               </HeaderItem>
 
               <HeaderItem>

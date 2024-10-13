@@ -1,16 +1,19 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { CheckSquareOutlined, CloseSquareTwoTone } from '@ant-design/icons';
 import dayjs from 'dayjs';
 
 import AlertItem from './AlertItem';
+import useScroll from 'utils/useScroll';
 import { RootState } from 'store/reducers';
 import { UserHistoryPost } from 'store/types/postType';
 import { slideInFromBottom, slideInList } from 'styles/Common/animation';
 import { AlertBtn, AlertDivider, AlertWrapper, NoAlertsContainer } from 'styles/Activity/alert';
 
 const AlertList = () => {
+  const activityPostsRef = useRef<HTMLDivElement>(null);
   const { myActivityPosts } = useSelector((state: RootState) => state.post);
+  useScroll({ type: 'activity', ref: activityPostsRef });
 
   const groupByDate = (activities: UserHistoryPost[]) => {
     const groupedActivities: { [date: string]: UserHistoryPost[] } = {};
@@ -37,7 +40,7 @@ const AlertList = () => {
         </button>
       </AlertBtn>
 
-      <AlertWrapper {...slideInFromBottom(0.3)}>
+      <AlertWrapper ref={activityPostsRef} {...slideInFromBottom(0.3)}>
         {myActivityPosts.length === 0 ? (
           <NoAlertsContainer>
             <CloseSquareTwoTone twoToneColor="#6BA2E6" />
