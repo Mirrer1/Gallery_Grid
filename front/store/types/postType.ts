@@ -206,7 +206,7 @@ export interface UserHistoryPost {
   type: string;
   Post: Post;
   createdAt: string;
-  Alerter?: { id: number; nickname: string; ProfileImage: { id: number; src: string } | null };
+  Alerter: { id: number; nickname: string; ProfileImage: { id: number; src: string } | null };
   Comment: { id: number; content: string } | null;
   ReplyComment: { id: number; content: string } | null;
 }

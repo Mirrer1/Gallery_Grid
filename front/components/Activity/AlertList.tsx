@@ -37,7 +37,7 @@ const AlertList = () => {
   const onReadAllActivities = useCallback(() => {
     if (myActivityPosts.length > 0) dispatch(readActivityRequest('all'));
     else toast.warning('활동 내역이 존재하지 않습니다.');
-  }, []);
+  }, [myActivityPosts]);
 
   return (
     <>

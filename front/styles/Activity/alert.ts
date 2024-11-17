@@ -341,7 +341,7 @@ export const AlertContent = styled.div<{ $type: 'follow' | 'like' | 'comment' }>
   }
 `;
 
-export const AlertContentBtn = styled.div`
+export const AlertContentBtn = styled.div<{ $isFollowing: boolean }>`
   padding-left: 0.5em;
 
   & > button {
@@ -360,8 +360,9 @@ export const AlertContentBtn = styled.div`
   }
 
   & > button:last-child {
-    background-color: #6ba2e6;
-    color: white;
+    background-color: ${props => (props.$isFollowing ? 'white' : '#6BA2E6')};
+    color: ${props => (props.$isFollowing ? '#6BA2E6' : 'white')};
+    border: ${props => props.$isFollowing && '1px solid #6BA2E6'};
   }
 
   ${media.tablet} {

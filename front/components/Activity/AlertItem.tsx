@@ -1,11 +1,19 @@
 import React, { useCallback } from 'react';
-import { useDispatch } from 'react-redux';
-import { CheckSquareOutlined, CommentOutlined, DeleteOutlined, HeartOutlined } from '@ant-design/icons';
+import { useSelector, useDispatch } from 'react-redux';
+import {
+  CheckSquareOutlined,
+  CommentOutlined,
+  DeleteOutlined,
+  HeartOutlined,
+  LoadingOutlined
+} from '@ant-design/icons';
 import dayjs from 'dayjs';
 
 import ImagePreview from 'components/Modal/ImagePreviewModal';
 import useImagePreview from 'utils/useImagePreview';
+import { RootState } from 'store/reducers';
 import { UserHistoryPost } from 'store/types/postType';
+import { followUserRequest, unFollowUserRequest } from 'store/actions/userAction';
 import { readActivityRequest, setActivityFocusedCommentId, showPostModal } from 'store/actions/postAction';
 import { slideInList } from 'styles/Common/animation';
 import {
@@ -24,9 +32,12 @@ type AlertItemProps = {
 const AlertItem = ({ history }: AlertItemProps) => {
   const dispatch = useDispatch();
   const { imagePreview, showImagePreview, hideImagePreview } = useImagePreview();
+  const { me, followUserLoading, unFollowUserLoading } = useSelector((state: RootState) => state.user);
   const activityType = history.type === 'replyComment' ? 'comment' : history.type;
 
   const onClickPost = useCallback(() => {
+    if (history.type === 'follow') return;
+
     if (history.type === 'comment' && history.Comment?.id) {
       dispatch(setActivityFocusedCommentId(history.Comment.id));
     } else if (history.type === 'replyComment' && history.ReplyComment?.id) {
@@ -34,11 +45,23 @@ const AlertItem = ({ history }: AlertItemProps) => {
     }
 
     dispatch(showPostModal(history.Post));
-  }, []);
+  }, [history]);
+
+  const onToggleFollow = useCallback(
+    (userId: number) => {
+      const isFollowing = me.Followings.some((following: { id: number }) => following.id === userId);
+
+      if (isFollowing) dispatch(unFollowUserRequest(userId));
+      else dispatch(followUserRequest(userId));
+    },
+    [me.Followings, history]
+  );
 
   const onReadActivity = useCallback(() => {
     dispatch(readActivityRequest(history.id));
   }, []);
+
+  console.log(history);
 
   return (
     <AlertItemWrapper {...slideInList}>
@@ -122,9 +145,22 @@ const AlertItem = ({ history }: AlertItemProps) => {
             </div>
           </AlertContent>
         ) : (
-          <AlertContentBtn>
+          <AlertContentBtn
+            $isFollowing={me.Followings.some((following: { id: number }) => following.id === history.Alerter.id)}
+          >
             <button type="button">Visit</button>
-            <button type="button">Follow</button>
+
+            {me.id !== history.Alerter?.id && (
+              <button type="button" onClick={() => onToggleFollow(history.Alerter.id)}>
+                {followUserLoading || unFollowUserLoading ? (
+                  <LoadingOutlined />
+                ) : me.Followings.some((following: { id: number }) => following.id === history.Alerter.id) ? (
+                  'Unfollow'
+                ) : (
+                  'Follow'
+                )}
+              </button>
+            )}
           </AlertContentBtn>
         )}
       </AlertContentWrapper>

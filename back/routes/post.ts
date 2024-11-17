@@ -737,7 +737,9 @@ router.delete('/like/:postId', isLoggedIn, async (req, res, next) => {
     await UserHistory.destroy({
       where: {
         type: 'like',
-        PostId: post.id
+        PostId: post.id,
+        AlerterId: req.user!.id,
+        AlertedId: post.UserId
       }
     });
     res.status(200).json({ PostId: post.id, UserId: req.user!.id });

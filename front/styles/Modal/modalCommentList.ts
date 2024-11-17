@@ -196,8 +196,9 @@ export const ModalCommentContainer = styled(motion.div)<{ $reply: boolean; $isFo
 export const DeleteModalCommentText = styled.p`
   font-size: 0.9rem;
   font-weight: 500;
-  margin-bottom: 1em;
   opacity: 40%;
+  padding: 0.5em;
+  margin-bottom: 0.5em;
 `;
 
 export const ModalCommentListItemImage = styled.div`

@@ -363,10 +363,29 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
           draft.commentVisiblePostId = null;
           draft.commentImagePath = [];
         }
+
         const index = draft.timelinePosts.findIndex(post => post.id === action.data);
         if (index !== -1) draft.timelinePosts.splice(index, 1);
+
         const galleryIndex = draft.galleryPosts.findIndex(post => post.Post.id === action.data);
         if (galleryIndex !== -1) draft.galleryPosts.splice(galleryIndex, 1);
+
+        draft.myActivityPosts = draft.myActivityPosts.filter(post => {
+          if (post.Post.id === action.data) {
+            if (post.type === 'like') {
+              draft.myActivityCounts.like = Math.max(0, draft.myActivityCounts.like - 1);
+            }
+            if (post.type === 'comment' || post.type === 'replyComment') {
+              draft.myActivityCounts.comment = Math.max(0, draft.myActivityCounts.comment - 1);
+            }
+            if (post.type === 'follow') {
+              draft.myActivityCounts.follow = Math.max(0, draft.myActivityCounts.follow - 1);
+            }
+            return false;
+          }
+          return true;
+        });
+
         break;
       case DELETE_POST_FAILURE:
         draft.deletePostLoading = false;
@@ -723,6 +742,30 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
           draft.galleryPosts[galleryPostIndex].Post.Comments = galleryComments;
         }
 
+        draft.myActivityPosts.forEach(activity => {
+          if (activity.Post.id === action.data.comment.PostId) {
+            const activityComments = activity.Post.Comments || [];
+            const activityParentId = action.data.parentId ? parseInt(action.data.parentId, 10) : null;
+
+            if (activityParentId) {
+              const activityParentComment = activityComments.find(comment => comment.id === activityParentId);
+              if (activityParentComment) {
+                activityParentComment.Replies = activityParentComment.Replies || [];
+                activityParentComment.Replies.push(action.data.comment);
+              }
+            } else {
+              activityComments.push({
+                id: action.data.comment.id,
+                isDeleted: false,
+                User: { id: action.data.comment.UserId },
+                Replies: []
+              });
+            }
+
+            activity.Post.Comments = activityComments;
+          }
+        });
+
         break;
       }
       case ADD_MODAL_COMMENT_FAILURE:
@@ -999,6 +1042,30 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
           }
         }
 
+        draft.myActivityPosts.forEach(activity => {
+          if (activity.Post.id === postId) {
+            const activityComments = activity.Post.Comments;
+
+            if (replyId) {
+              const parentComment = activityComments.find(comment => comment.id === replyId);
+              if (parentComment) {
+                parentComment.Replies = parentComment.Replies.filter(reply => reply.id !== id);
+
+                if (parentComment.Replies.length === 0 && parentComment.isDeleted) {
+                  activity.Post.Comments = activityComments.filter(comment => comment.id !== replyId);
+                }
+              }
+            } else {
+              if (hasChild) {
+                const commentToUpdate = activityComments.find(comment => comment.id === id);
+                if (commentToUpdate) commentToUpdate.isDeleted = true;
+              } else {
+                activity.Post.Comments = activityComments.filter(comment => comment.id !== id);
+              }
+            }
+          }
+        });
+
         draft.isDeleteModalVisible = false;
         draft.deleteInfo = null;
         break;
@@ -1025,6 +1092,12 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
         if (galleryPost) {
           galleryPost.Post.Likers.push({ id: action.data.UserId });
         }
+
+        draft.myActivityPosts.forEach(activity => {
+          if (activity.Post.id === action.data.PostId) {
+            activity.Post.Likers.push({ id: action.data.UserId });
+          }
+        });
         break;
       }
       case LIKE_POST_FAILURE:
@@ -1049,6 +1122,12 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
         if (galleryPost) {
           galleryPost.Post.Likers = galleryPost.Post.Likers.filter(liker => liker.id !== action.data.UserId);
         }
+
+        draft.myActivityPosts.forEach(activity => {
+          if (activity.Post.id === action.data.PostId) {
+            activity.Post.Likers = activity.Post.Likers.filter(liker => liker.id !== action.data.UserId);
+          }
+        });
         break;
       }
       case UNLIKE_POST_FAILURE:
