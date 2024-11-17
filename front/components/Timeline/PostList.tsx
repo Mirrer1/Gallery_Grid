@@ -30,8 +30,13 @@ import {
   showPostModal,
   executePostEdit,
   likePostRequest,
-  unLikePostRequest
+  unLikePostRequest,
+  initializePostList,
+  loadNewPostsRequest,
+  loadBestPostsRequest
 } from 'store/actions/postAction';
+import { followUserRequest, unFollowUserRequest } from 'store/actions/userAction';
+
 import { slideInList, slideInTooltip } from 'styles/Common/animation';
 import { Tooltip, TooltipBtn, TooltipOutsideArea } from 'styles/Common/tooltip';
 import {
@@ -44,7 +49,6 @@ import {
   PostContainer,
   PostFollowBtn
 } from 'styles/Timeline/postList';
-import { followUserRequest, unFollowUserRequest } from 'store/actions/userAction';
 
 const PostList = () => {
   const dispatch = useDispatch();
@@ -58,17 +62,19 @@ const PostList = () => {
     isDeleteModalVisible,
     addPostDone,
     isPostModalVisible,
-    commentVisiblePostId
+    commentVisiblePostId,
+    isCategoryChanged
   } = useSelector((state: RootState) => state.post);
-  const { imagePreview, showImagePreview, hideImagePreview } = useImagePreview();
-  useScroll({ type: 'timeline-new', ref: postContainerRef });
 
-  const [category, setCategory] = useState('best');
+  const [category, setCategory] = useState<'best' | 'new' | 'follow'>('best');
   const [modalImages, setModalImages] = useState<Image[]>([]);
   const [isTooltipVisible, setIsTooltipVisible] = useState<number | null>(null);
+  const { imagePreview, showImagePreview, hideImagePreview } = useImagePreview();
+  useScroll({ type: `timeline-${category}`, ref: postContainerRef });
 
-  const onClickCategory = useCallback((category: string) => {
+  const onClickCategory = useCallback((category: 'best' | 'new' | 'follow') => {
     setCategory(category);
+    dispatch(initializePostList());
   }, []);
 
   const showCarousel = useCallback((images: Image[]) => {
@@ -135,6 +141,16 @@ const PostList = () => {
       });
     }
   }, [category, addPostDone]);
+
+  useEffect(() => {
+    if (isCategoryChanged && category === 'best') {
+      dispatch(loadBestPostsRequest());
+    } else if (isCategoryChanged && category === 'new') {
+      dispatch(loadNewPostsRequest());
+    } else if (isCategoryChanged && category === 'follow') {
+      dispatch(loadNewPostsRequest());
+    }
+  }, [isCategoryChanged, category]);
 
   return (
     <PostContainer ref={postContainerRef} $uploading={postImagePaths.length > 0}>

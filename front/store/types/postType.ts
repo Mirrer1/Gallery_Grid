@@ -1,8 +1,13 @@
 import { User } from './userType';
 
+export const INITIALIZE_POST_LIST = 'INITIALIZE_POST_LIST' as const;
 export const LOAD_NEW_POSTS_REQUEST = 'LOAD_NEW_POSTS_REQUEST' as const;
 export const LOAD_NEW_POSTS_SUCCESS = 'LOAD_NEW_POSTS_SUCCESS' as const;
 export const LOAD_NEW_POSTS_FAILURE = 'LOAD_NEW_POSTS_FAILURE' as const;
+
+export const LOAD_BEST_POSTS_REQUEST = 'LOAD_BEST_POSTS_REQUEST' as const;
+export const LOAD_BEST_POSTS_SUCCESS = 'LOAD_BEST_POSTS_SUCCESS' as const;
+export const LOAD_BEST_POSTS_FAILURE = 'LOAD_BEST_POSTS_FAILURE' as const;
 
 export const LOAD_MY_ACTIVITY_COUNTS_REQUEST = 'LOAD_MY_ACTIVITY_COUNTS_REQUEST' as const;
 export const LOAD_MY_ACTIVITY_COUNTS_SUCCESS = 'LOAD_MY_ACTIVITY_COUNTS_SUCCESS' as const;
@@ -239,9 +244,13 @@ export type PostState = {
   commentVisiblePostId: number | null;
   hasMoreTimelinePosts: boolean;
   hasMoreMyActivityPosts: boolean;
+  isCategoryChanged: boolean;
   loadNewPostsLoading: boolean;
   loadNewPostsDone: boolean;
   loadNewPostsError: null | string;
+  loadBestPostsLoading: boolean;
+  loadBestPostsDone: boolean;
+  loadBestPostsError: null | string;
   loadMyActivityCountsLoading: boolean;
   loadMyActivityCountsDone: boolean;
   loadMyActivityCountsError: null | string;
@@ -321,6 +330,10 @@ export type PostState = {
   isDeleteModalVisible: boolean;
 };
 
+export interface initializePostListAction {
+  type: typeof INITIALIZE_POST_LIST;
+}
+
 export interface loadNewPostsRequestAction {
   type: typeof LOAD_NEW_POSTS_REQUEST;
   lastId?: number;
@@ -333,6 +346,23 @@ export interface loadNewPostsSuccessAction {
 
 export interface loadNewPostsFailureAction {
   type: typeof LOAD_NEW_POSTS_FAILURE;
+  error: string;
+}
+
+export interface loadBestPostsRequestAction {
+  type: typeof LOAD_BEST_POSTS_REQUEST;
+  lastId?: number;
+  lastLikeCount?: number;
+  lastCommentCount?: number;
+}
+
+export interface loadBestPostsSuccessAction {
+  type: typeof LOAD_BEST_POSTS_SUCCESS;
+  data: Post[];
+}
+
+export interface loadBestPostsFailureAction {
+  type: typeof LOAD_BEST_POSTS_FAILURE;
   error: string;
 }
 
@@ -790,6 +820,7 @@ export interface setActivityFocusedCommentIdAction {
 }
 
 export type PostAction =
+  | initializePostListAction
   | ShowCommentListAction
   | HideCommentListAction
   | ShowPostModalAction
@@ -799,6 +830,9 @@ export type PostAction =
   | loadNewPostsRequestAction
   | loadNewPostsSuccessAction
   | loadNewPostsFailureAction
+  | loadBestPostsRequestAction
+  | loadBestPostsSuccessAction
+  | loadBestPostsFailureAction
   | loadMyActivityCountsRequestAction
   | loadMyActivityCountsSuccessAction
   | loadMyActivityCountsFailureAction

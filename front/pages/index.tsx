@@ -8,6 +8,7 @@ import MenuContents from 'components/Landing/MenuContents';
 import wrapper from 'store/configureStore';
 import { RootState } from 'store/reducers';
 import { loadMyInfoRequest } from 'store/actions/userAction';
+import { loadBestPostsRequest } from 'store/actions/postAction';
 import { ContactIcon, HeaderWrapper, MenuButton } from 'styles/Landing/header';
 
 const Landing = () => {
@@ -62,6 +63,7 @@ export const getServerSideProps = wrapper.getServerSideProps(async context => {
   }
 
   context.store.dispatch(loadMyInfoRequest());
+  context.store.dispatch(loadBestPostsRequest());
 
   context.store.dispatch(END);
   await context.store.sagaTask?.toPromise();

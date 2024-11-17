@@ -46,12 +46,25 @@ import {
   LOAD_MY_ACTIVITY_POSTS_REQUEST,
   SET_ACTIVITY_FOCUSED_COMMENT_ID,
   LOAD_MY_ACTIVITY_COUNTS_REQUEST,
-  READ_ACTIVITY_REQUEST
+  READ_ACTIVITY_REQUEST,
+  INITIALIZE_POST_LIST,
+  LOAD_BEST_POSTS_REQUEST
 } from 'store/types/postType';
+
+export const initializePostList = () => ({
+  type: INITIALIZE_POST_LIST
+});
 
 export const loadNewPostsRequest = (lastId?: number) => ({
   type: LOAD_NEW_POSTS_REQUEST,
   lastId
+});
+
+export const loadBestPostsRequest = (lastId?: number, lastLikeCount?: number, lastCommentCount?: number) => ({
+  type: LOAD_BEST_POSTS_REQUEST,
+  lastId,
+  lastLikeCount,
+  lastCommentCount
 });
 
 export const loadMyActivityCountsRequest = () => ({

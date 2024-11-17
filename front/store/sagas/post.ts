@@ -100,7 +100,11 @@ import {
   READ_ACTIVITY_REQUEST,
   readActivityRequestAction,
   READ_ACTIVITY_SUCCESS,
-  READ_ACTIVITY_FAILURE
+  READ_ACTIVITY_FAILURE,
+  LOAD_BEST_POSTS_REQUEST,
+  loadBestPostsRequestAction,
+  LOAD_BEST_POSTS_SUCCESS,
+  LOAD_BEST_POSTS_FAILURE
 } from 'store/types/postType';
 
 function loadNewPostsAPI(lastId?: number) {
@@ -118,6 +122,30 @@ function* loadNewPosts(action: loadNewPostsRequestAction) {
   } catch (error: any) {
     yield put({
       type: LOAD_NEW_POSTS_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
+function loadBestPostsAPI(lastId?: number, lastLikeCount?: number, lastCommentCount?: number) {
+  return axios.get(
+    `/posts/best?lastId=${lastId || 0}&lastLikeCount=${lastLikeCount || 0}&lastCommentCount=${lastCommentCount || 0}`
+  );
+}
+
+function* loadBestPosts(action: loadBestPostsRequestAction) {
+  try {
+    const result: AxiosResponse<Post[]> = yield call(() =>
+      loadBestPostsAPI(action.lastId, action.lastLikeCount, action.lastCommentCount)
+    );
+
+    yield put({
+      type: LOAD_BEST_POSTS_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: LOAD_BEST_POSTS_FAILURE,
       error: error.response.data.message
     });
   }
@@ -577,6 +605,10 @@ function* watchLoadNewPosts() {
   yield takeLatest(LOAD_NEW_POSTS_REQUEST, loadNewPosts);
 }
 
+function* watchLoadBestPosts() {
+  yield takeLatest(LOAD_BEST_POSTS_REQUEST, loadBestPosts);
+}
+
 function* watchLoadMyActivityCounts() {
   yield takeLatest(LOAD_MY_ACTIVITY_COUNTS_REQUEST, loadMyActivityCounts);
 }
@@ -676,6 +708,7 @@ function* watchUnLikePost() {
 export default function* postSaga() {
   yield all([
     fork(watchLoadNewPosts),
+    fork(watchLoadBestPosts),
     fork(watchLoadMyActivityCounts),
     fork(watchLoadMyActivityPosts),
     fork(watchReadActivity),

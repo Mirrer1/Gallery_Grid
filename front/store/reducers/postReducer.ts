@@ -12,6 +12,9 @@ import {
   LOAD_NEW_POSTS_REQUEST,
   LOAD_NEW_POSTS_SUCCESS,
   LOAD_NEW_POSTS_FAILURE,
+  LOAD_BEST_POSTS_REQUEST,
+  LOAD_BEST_POSTS_SUCCESS,
+  LOAD_BEST_POSTS_FAILURE,
   LOAD_MY_ACTIVITY_POSTS_REQUEST,
   LOAD_MY_ACTIVITY_POSTS_SUCCESS,
   LOAD_MY_ACTIVITY_POSTS_FAILURE,
@@ -99,7 +102,8 @@ import {
   LOAD_MY_ACTIVITY_COUNTS_FAILURE,
   READ_ACTIVITY_REQUEST,
   READ_ACTIVITY_SUCCESS,
-  READ_ACTIVITY_FAILURE
+  READ_ACTIVITY_FAILURE,
+  INITIALIZE_POST_LIST
 } from 'store/types/postType';
 
 export const initialState: PostState = {
@@ -124,9 +128,13 @@ export const initialState: PostState = {
   commentVisiblePostId: null,
   hasMoreTimelinePosts: true,
   hasMoreMyActivityPosts: true,
+  isCategoryChanged: false,
   loadNewPostsLoading: false,
   loadNewPostsDone: false,
   loadNewPostsError: null,
+  loadBestPostsLoading: false,
+  loadBestPostsDone: false,
+  loadBestPostsError: null,
   loadMyActivityCountsLoading: false,
   loadMyActivityCountsDone: false,
   loadMyActivityCountsError: null,
@@ -209,6 +217,11 @@ export const initialState: PostState = {
 const reducer = (state: PostState = initialState, action: PostAction): PostState => {
   return produce(state, draft => {
     switch (action.type) {
+      case INITIALIZE_POST_LIST:
+        draft.timelinePosts = [];
+        draft.hasMoreTimelinePosts = true;
+        draft.isCategoryChanged = true;
+        break;
       case LOAD_NEW_POSTS_REQUEST:
         draft.loadNewPostsLoading = true;
         draft.loadNewPostsDone = false;
@@ -223,6 +236,21 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
       case LOAD_NEW_POSTS_FAILURE:
         draft.loadNewPostsLoading = false;
         draft.loadNewPostsError = action.error;
+        break;
+      case LOAD_BEST_POSTS_REQUEST:
+        draft.loadBestPostsLoading = true;
+        draft.loadBestPostsDone = false;
+        draft.loadBestPostsError = null;
+        break;
+      case LOAD_BEST_POSTS_SUCCESS:
+        draft.loadBestPostsLoading = false;
+        draft.loadBestPostsDone = true;
+        draft.timelinePosts = draft.timelinePosts.concat(action.data);
+        draft.hasMoreTimelinePosts = action.data.length === 10;
+        break;
+      case LOAD_BEST_POSTS_FAILURE:
+        draft.loadBestPostsLoading = false;
+        draft.loadBestPostsError = action.error;
         break;
       case LOAD_MY_ACTIVITY_COUNTS_REQUEST:
         draft.loadMyActivityCountsLoading = true;
