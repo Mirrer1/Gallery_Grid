@@ -104,7 +104,11 @@ import {
   LOAD_BEST_POSTS_REQUEST,
   loadBestPostsRequestAction,
   LOAD_BEST_POSTS_SUCCESS,
-  LOAD_BEST_POSTS_FAILURE
+  LOAD_BEST_POSTS_FAILURE,
+  LOAD_FOLLOWING_POSTS_REQUEST,
+  loadFollowingPostsRequestAction,
+  LOAD_FOLLOWING_POSTS_SUCCESS,
+  LOAD_FOLLOWING_POSTS_FAILURE
 } from 'store/types/postType';
 
 function loadNewPostsAPI(lastId?: number) {
@@ -146,6 +150,26 @@ function* loadBestPosts(action: loadBestPostsRequestAction) {
   } catch (error: any) {
     yield put({
       type: LOAD_BEST_POSTS_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
+function loadFollowingPostsAPI(lastCreatedAt?: string, limit: number = 10) {
+  return axios.get(`/posts/following?lastCreatedAt=${encodeURIComponent(lastCreatedAt || '')}&limit=${limit}`);
+}
+
+function* loadFollowingPosts(action: loadFollowingPostsRequestAction) {
+  try {
+    const result: AxiosResponse<Post[]> = yield call(() => loadFollowingPostsAPI(action.lastCreatedAt, action.limit));
+
+    yield put({
+      type: LOAD_FOLLOWING_POSTS_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: LOAD_FOLLOWING_POSTS_FAILURE,
       error: error.response.data.message
     });
   }
@@ -609,6 +633,10 @@ function* watchLoadBestPosts() {
   yield takeLatest(LOAD_BEST_POSTS_REQUEST, loadBestPosts);
 }
 
+function* watchLoadFollowingPosts() {
+  yield takeLatest(LOAD_FOLLOWING_POSTS_REQUEST, loadFollowingPosts);
+}
+
 function* watchLoadMyActivityCounts() {
   yield takeLatest(LOAD_MY_ACTIVITY_COUNTS_REQUEST, loadMyActivityCounts);
 }
@@ -709,6 +737,7 @@ export default function* postSaga() {
   yield all([
     fork(watchLoadNewPosts),
     fork(watchLoadBestPosts),
+    fork(watchLoadFollowingPosts),
     fork(watchLoadMyActivityCounts),
     fork(watchLoadMyActivityPosts),
     fork(watchReadActivity),

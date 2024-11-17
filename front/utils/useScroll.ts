@@ -4,7 +4,12 @@ import { AnyAction } from 'redux';
 
 import { Post, PostComment, UserHistoryPost } from 'store/types/postType';
 import { RootState } from 'store/reducers';
-import { loadBestPostsRequest, loadMyActivityPostsRequest, loadNewPostsRequest } from 'store/actions/postAction';
+import {
+  loadBestPostsRequest,
+  loadFollowingPostsRequest,
+  loadMyActivityPostsRequest,
+  loadNewPostsRequest
+} from 'store/actions/postAction';
 
 type UseScrollParams = {
   type: `timeline-${'best' | 'new' | 'follow'}` | 'activity';
@@ -63,6 +68,17 @@ const useScroll = ({ type, ref }: UseScrollParams) => {
           hasMore: hasMoreTimelinePosts,
           loading: loadNewPostsLoading,
           dispatcher: () => loadNewPostsRequest(timelinePosts[timelinePosts.length - 1]?.id || 0),
+          thresholds: [350, 900, 1700]
+        };
+      case 'timeline-follow':
+        return {
+          items: timelinePosts,
+          hasMore: hasMoreTimelinePosts,
+          loading: loadNewPostsLoading,
+          dispatcher: () => {
+            const lastPost = timelinePosts[timelinePosts.length - 1];
+            return loadFollowingPostsRequest(lastPost?.createdAt || null, 10);
+          },
           thresholds: [350, 900, 1700]
         };
       case 'activity':

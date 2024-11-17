@@ -15,6 +15,9 @@ import {
   LOAD_BEST_POSTS_REQUEST,
   LOAD_BEST_POSTS_SUCCESS,
   LOAD_BEST_POSTS_FAILURE,
+  LOAD_FOLLOWING_POSTS_REQUEST,
+  LOAD_FOLLOWING_POSTS_SUCCESS,
+  LOAD_FOLLOWING_POSTS_FAILURE,
   LOAD_MY_ACTIVITY_POSTS_REQUEST,
   LOAD_MY_ACTIVITY_POSTS_SUCCESS,
   LOAD_MY_ACTIVITY_POSTS_FAILURE,
@@ -103,7 +106,8 @@ import {
   READ_ACTIVITY_REQUEST,
   READ_ACTIVITY_SUCCESS,
   READ_ACTIVITY_FAILURE,
-  INITIALIZE_POST_LIST
+  INITIALIZE_POST_LIST,
+  DELETE_FOLLOWING_USER_POSTS
 } from 'store/types/postType';
 
 export const initialState: PostState = {
@@ -135,6 +139,9 @@ export const initialState: PostState = {
   loadBestPostsLoading: false,
   loadBestPostsDone: false,
   loadBestPostsError: null,
+  loadFollowingPostsLoading: false,
+  loadFollowingPostsDone: false,
+  loadFollowingPostsError: null,
   loadMyActivityCountsLoading: false,
   loadMyActivityCountsDone: false,
   loadMyActivityCountsError: null,
@@ -251,6 +258,24 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
       case LOAD_BEST_POSTS_FAILURE:
         draft.loadBestPostsLoading = false;
         draft.loadBestPostsError = action.error;
+        break;
+      case LOAD_FOLLOWING_POSTS_REQUEST:
+        draft.loadFollowingPostsLoading = true;
+        draft.loadFollowingPostsDone = false;
+        draft.loadFollowingPostsError = null;
+        break;
+      case LOAD_FOLLOWING_POSTS_SUCCESS:
+        draft.loadFollowingPostsLoading = false;
+        draft.loadFollowingPostsDone = true;
+        draft.timelinePosts = draft.timelinePosts.concat(action.data);
+        draft.hasMoreTimelinePosts = action.data.length === 10;
+        break;
+      case LOAD_FOLLOWING_POSTS_FAILURE:
+        draft.loadFollowingPostsLoading = false;
+        draft.loadFollowingPostsError = action.error;
+        break;
+      case DELETE_FOLLOWING_USER_POSTS:
+        draft.timelinePosts = draft.timelinePosts.filter(post => post.User.id !== action.data);
         break;
       case LOAD_MY_ACTIVITY_COUNTS_REQUEST:
         draft.loadMyActivityCountsLoading = true;

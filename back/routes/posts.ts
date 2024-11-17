@@ -158,6 +158,81 @@ router.get('/best', async (req, res, next) => {
   }
 });
 
+router.get('/following', isLoggedIn, async (req, res, next) => {
+  try {
+    const { lastCreatedAt, limit } = req.query;
+    const postsLimit = parseInt(limit as string, 10) || 10;
+
+    const user = await User.findOne({
+      where: { id: req.user!.id }
+    });
+
+    if (!user) {
+      return res.status(404).send('유저 정보가 존재하지 않습니다.');
+    }
+
+    const followings = await user.getFollowings({
+      attributes: ['id']
+    });
+
+    const followingIds = followings.map(following => following.id);
+
+    if (followingIds.length === 0) {
+      return res.status(200).json([]);
+    }
+
+    const posts = await Post.findAll({
+      where: {
+        UserId: { [Op.in]: followingIds },
+        ...(lastCreatedAt && { createdAt: { [Op.lt]: new Date(lastCreatedAt as string) } })
+      },
+      limit: postsLimit,
+      order: [['createdAt', 'DESC']],
+      include: [
+        {
+          model: User,
+          attributes: ['id', 'nickname'],
+          include: [
+            {
+              model: Image,
+              as: 'ProfileImage',
+              attributes: ['id', 'src'],
+              required: false
+            }
+          ]
+        },
+        {
+          model: Image,
+          where: { type: 'post' },
+          attributes: ['id', 'src']
+        },
+        {
+          model: User,
+          as: 'Likers',
+          attributes: ['id'],
+          through: { attributes: [] }
+        },
+        {
+          model: Comment,
+          attributes: ['id', 'isDeleted'],
+          include: [
+            {
+              model: ReplyComment,
+              as: 'Replies',
+              attributes: ['id']
+            }
+          ]
+        }
+      ]
+    });
+
+    return res.status(200).json(posts);
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+});
+
 router.get('/interactions', async (req, res, next) => {
   try {
     const menu = req.query.menu as 'all' | 'like' | 'comment';

@@ -9,6 +9,11 @@ export const LOAD_BEST_POSTS_REQUEST = 'LOAD_BEST_POSTS_REQUEST' as const;
 export const LOAD_BEST_POSTS_SUCCESS = 'LOAD_BEST_POSTS_SUCCESS' as const;
 export const LOAD_BEST_POSTS_FAILURE = 'LOAD_BEST_POSTS_FAILURE' as const;
 
+export const DELETE_FOLLOWING_USER_POSTS = 'DELETE_FOLLOWING_USER_POSTS' as const;
+export const LOAD_FOLLOWING_POSTS_REQUEST = 'LOAD_FOLLOWING_POSTS_REQUEST' as const;
+export const LOAD_FOLLOWING_POSTS_SUCCESS = 'LOAD_FOLLOWING_POSTS_SUCCESS' as const;
+export const LOAD_FOLLOWING_POSTS_FAILURE = 'LOAD_FOLLOWING_POSTS_FAILURE' as const;
+
 export const LOAD_MY_ACTIVITY_COUNTS_REQUEST = 'LOAD_MY_ACTIVITY_COUNTS_REQUEST' as const;
 export const LOAD_MY_ACTIVITY_COUNTS_SUCCESS = 'LOAD_MY_ACTIVITY_COUNTS_SUCCESS' as const;
 export const LOAD_MY_ACTIVITY_COUNTS_FAILURE = 'LOAD_MY_ACTIVITY_COUNTS_FAILURE' as const;
@@ -251,6 +256,9 @@ export type PostState = {
   loadBestPostsLoading: boolean;
   loadBestPostsDone: boolean;
   loadBestPostsError: null | string;
+  loadFollowingPostsLoading: boolean;
+  loadFollowingPostsDone: boolean;
+  loadFollowingPostsError: null | string;
   loadMyActivityCountsLoading: boolean;
   loadMyActivityCountsDone: boolean;
   loadMyActivityCountsError: null | string;
@@ -364,6 +372,27 @@ export interface loadBestPostsSuccessAction {
 export interface loadBestPostsFailureAction {
   type: typeof LOAD_BEST_POSTS_FAILURE;
   error: string;
+}
+
+export interface loadFollowingPostsRequestAction {
+  type: typeof LOAD_FOLLOWING_POSTS_REQUEST;
+  lastCreatedAt?: string;
+  limit?: number;
+}
+
+export interface loadFollowingPostsSuccessAction {
+  type: typeof LOAD_FOLLOWING_POSTS_SUCCESS;
+  data: Post[];
+}
+
+export interface loadFollowingPostsFailureAction {
+  type: typeof LOAD_FOLLOWING_POSTS_FAILURE;
+  error: string;
+}
+
+export interface deleteFollowingUserPostsAction {
+  type: typeof DELETE_FOLLOWING_USER_POSTS;
+  data: number;
 }
 
 export interface loadMyActivityCountsRequestAction {
@@ -833,6 +862,10 @@ export type PostAction =
   | loadBestPostsRequestAction
   | loadBestPostsSuccessAction
   | loadBestPostsFailureAction
+  | loadFollowingPostsRequestAction
+  | loadFollowingPostsSuccessAction
+  | loadFollowingPostsFailureAction
+  | deleteFollowingUserPostsAction
   | loadMyActivityCountsRequestAction
   | loadMyActivityCountsSuccessAction
   | loadMyActivityCountsFailureAction

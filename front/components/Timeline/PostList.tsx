@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   AlertOutlined,
   ArrowsAltOutlined,
+  CloseSquareTwoTone,
   CommentOutlined,
   DeleteOutlined,
   EditOutlined,
@@ -33,7 +34,9 @@ import {
   unLikePostRequest,
   initializePostList,
   loadNewPostsRequest,
-  loadBestPostsRequest
+  loadBestPostsRequest,
+  loadFollowingPostsRequest,
+  deleteFollowingUserPostsRequest
 } from 'store/actions/postAction';
 import { followUserRequest, unFollowUserRequest } from 'store/actions/userAction';
 
@@ -47,7 +50,8 @@ import {
   PostCategory,
   CategoryItem,
   PostContainer,
-  PostFollowBtn
+  PostFollowBtn,
+  NoFollowingPostsContainer
 } from 'styles/Timeline/postList';
 
 const PostList = () => {
@@ -63,7 +67,8 @@ const PostList = () => {
     addPostDone,
     isPostModalVisible,
     commentVisiblePostId,
-    isCategoryChanged
+    isCategoryChanged,
+    isCommentListVisible
   } = useSelector((state: RootState) => state.post);
 
   const [category, setCategory] = useState<'best' | 'new' | 'follow'>('best');
@@ -127,10 +132,14 @@ const PostList = () => {
     (userId: number) => {
       const isFollowing = me.Followings.some((following: { id: number }) => following.id === userId);
 
-      if (isFollowing) dispatch(unFollowUserRequest(userId));
-      else dispatch(followUserRequest(userId));
+      if (isFollowing) {
+        dispatch(unFollowUserRequest(userId));
+        category === 'follow' && dispatch(deleteFollowingUserPostsRequest(userId));
+      } else {
+        dispatch(followUserRequest(userId));
+      }
     },
-    [me.Followings]
+    [me.Followings, category]
   );
 
   useEffect(() => {
@@ -143,12 +152,14 @@ const PostList = () => {
   }, [category, addPostDone]);
 
   useEffect(() => {
+    if (isCommentListVisible) dispatch(hideCommentList());
+
     if (isCategoryChanged && category === 'best') {
       dispatch(loadBestPostsRequest());
     } else if (isCategoryChanged && category === 'new') {
       dispatch(loadNewPostsRequest());
     } else if (isCategoryChanged && category === 'follow') {
-      dispatch(loadNewPostsRequest());
+      dispatch(loadFollowingPostsRequest());
     }
   }, [isCategoryChanged, category]);
 
@@ -173,125 +184,124 @@ const PostList = () => {
         </CategoryItem>
       </PostCategory>
 
-      {timelinePosts.map((post: Post) => (
-        <PostWrapper key={post.id} {...slideInList}>
-          <PostHeader>
-            <div>
-              <img
-                src={post.User.ProfileImage ? `http://localhost:3065/${post.User.ProfileImage.src}` : '/user.jpg'}
-                alt="유저 프로필 이미지"
-                onClick={() =>
-                  showImagePreview(
-                    post.User.ProfileImage ? `http://localhost:3065/${post.User.ProfileImage.src}` : '/user.jpg'
-                  )
-                }
-              />
-
+      {timelinePosts.length === 0 && category === 'follow' ? (
+        <NoFollowingPostsContainer>
+          <CloseSquareTwoTone twoToneColor="#6BA2E6" />
+          <h1>No posts yet.</h1>
+          <p>게시글이 존재하지 않습니다!</p>
+        </NoFollowingPostsContainer>
+      ) : (
+        timelinePosts.map((post: Post) => (
+          <PostWrapper key={post.id} {...slideInList}>
+            <PostHeader>
               <div>
-                <h1>{post.User.nickname}</h1>
-                <p>
-                  {formatDate(post.createdAt)}
-                  {post.location && ` - ${post.location}`}
-                </p>
+                <img
+                  src={post.User.ProfileImage ? `http://localhost:3065/${post.User.ProfileImage.src}` : '/user.jpg'}
+                  alt="유저 프로필 이미지"
+                  onClick={() =>
+                    showImagePreview(
+                      post.User.ProfileImage ? `http://localhost:3065/${post.User.ProfileImage.src}` : '/user.jpg'
+                    )
+                  }
+                />
+                <div>
+                  <h1>{post.User.nickname}</h1>
+                  <p>
+                    {formatDate(post.createdAt)}
+                    {post.location && ` - ${post.location}`}
+                  </p>
+                </div>
               </div>
-            </div>
+              <div>
+                {me.id !== post.UserId && (
+                  <PostFollowBtn
+                    type="button"
+                    onClick={() => onToggleFollow(post.UserId)}
+                    $isFollowing={me.Followings.some((following: { id: number }) => following.id === post.UserId)}
+                  >
+                    {followUserLoading || unFollowUserLoading ? (
+                      <LoadingOutlined />
+                    ) : me.Followings.some((following: { id: number }) => following.id === post.UserId) ? (
+                      'Unfollow'
+                    ) : (
+                      'Follow'
+                    )}
+                  </PostFollowBtn>
+                )}
+                <MoreOutlined onClick={() => handleTooltip(post.id)} />
 
-            <div>
-              {me.id !== post.UserId && (
-                <PostFollowBtn
-                  type="button"
-                  onClick={() => onToggleFollow(post.UserId)}
-                  $isFollowing={me.Followings.some((following: { id: number }) => following.id === post.UserId)}
+                {isTooltipVisible && (
+                  <Tooltip key={isTooltipVisible} {...slideInTooltip} $visible={isTooltipVisible === post.id}>
+                    <TooltipOutsideArea onClick={hideTooltip} />
+                    {me?.id === post.UserId ? (
+                      <TooltipBtn>
+                        <button type="button" onClick={() => openEditModal(post)}>
+                          <EditOutlined />
+                          수정
+                        </button>
+                        <button type="button" onClick={() => openDeleteModal(post.id)}>
+                          <DeleteOutlined />
+                          삭제
+                        </button>
+                      </TooltipBtn>
+                    ) : (
+                      <TooltipBtn>
+                        <button type="button">
+                          <ShareAltOutlined />
+                          공유
+                        </button>
+                        <button type="button">
+                          <AlertOutlined />
+                          신고
+                        </button>
+                      </TooltipBtn>
+                    )}
+                  </Tooltip>
+                )}
+              </div>
+            </PostHeader>
+            <PostContents>
+              <div>
+                <img
+                  src={`http://localhost:3065/${post.Images[0].src}`}
+                  alt="게시글의 첫번째 이미지"
+                  onClick={() => showCarousel(post.Images)}
+                />
+                <div>
+                  {post.Images.map((image: Image) => (
+                    <div key={image.id} />
+                  ))}
+                </div>
+                <ArrowsAltOutlined onClick={() => showCarousel(post.Images)} />
+              </div>
+              <div>
+                <p>{post.content}</p>
+                <PostOptions
+                  $liked={post.Likers.some(liker => liker.id === me?.id)}
+                  $commentVisiblePostId={commentVisiblePostId === post.id}
                 >
-                  {followUserLoading || unFollowUserLoading ? (
-                    <LoadingOutlined />
-                  ) : me.Followings.some((following: { id: number }) => following.id === post.UserId) ? (
-                    'Unfollow'
-                  ) : (
-                    'Follow'
-                  )}
-                </PostFollowBtn>
-              )}
-              <MoreOutlined onClick={() => handleTooltip(post.id)} />
+                  <div onClick={() => onToggleLike(post.id)}>
+                    <HeartOutlined />
+                    <span>{post.Likers.length}</span>
+                  </div>
+                  <div onClick={() => onToggleComment(post.id)}>
+                    <CommentOutlined />
+                    {post.Comments.reduce((total, comment) => {
+                      const repliesCount = comment.Replies ? comment.Replies.length : 0;
 
-              {isTooltipVisible && (
-                <Tooltip key={isTooltipVisible} {...slideInTooltip} $visible={isTooltipVisible === post.id}>
-                  <TooltipOutsideArea onClick={hideTooltip} />
+                      if (comment.isDeleted) {
+                        return total + repliesCount;
+                      }
 
-                  {me?.id === post.UserId ? (
-                    <TooltipBtn>
-                      <button type="button" onClick={() => openEditModal(post)}>
-                        <EditOutlined />
-                        수정
-                      </button>
-                      <button type="button" onClick={() => openDeleteModal(post.id)}>
-                        <DeleteOutlined />
-                        삭제
-                      </button>
-                    </TooltipBtn>
-                  ) : (
-                    <TooltipBtn>
-                      <button type="button">
-                        <ShareAltOutlined />
-                        공유
-                      </button>
-                      <button type="button">
-                        <AlertOutlined />
-                        신고
-                      </button>
-                    </TooltipBtn>
-                  )}
-                </Tooltip>
-              )}
-            </div>
-          </PostHeader>
-
-          <PostContents>
-            <div>
-              <img
-                src={`http://localhost:3065/${post.Images[0].src}`}
-                alt="게시글의 첫번째 이미지"
-                onClick={() => showCarousel(post.Images)}
-              />
-
-              <div>
-                {post.Images.map((image: Image) => (
-                  <div key={image.id} />
-                ))}
+                      return total + 1 + repliesCount;
+                    }, 0)}
+                  </div>
+                </PostOptions>
               </div>
-
-              <ArrowsAltOutlined onClick={() => showCarousel(post.Images)} />
-            </div>
-
-            <div>
-              <p>{post.content}</p>
-
-              <PostOptions
-                $liked={post.Likers.some(liker => liker.id === me?.id)}
-                $commentVisiblePostId={commentVisiblePostId === post.id}
-              >
-                <div onClick={() => onToggleLike(post.id)}>
-                  <HeartOutlined />
-                  <span>{post.Likers.length}</span>
-                </div>
-
-                <div onClick={() => onToggleComment(post.id)}>
-                  <CommentOutlined />
-                  {post.Comments.reduce((total, comment) => {
-                    const repliesCount = comment.Replies ? comment.Replies.length : 0;
-
-                    if (comment.isDeleted) {
-                      return total + repliesCount;
-                    }
-
-                    return total + 1 + repliesCount;
-                  }, 0)}
-                </div>
-              </PostOptions>
-            </div>
-          </PostContents>
-        </PostWrapper>
-      ))}
+            </PostContents>
+          </PostWrapper>
+        ))
+      )}
 
       {isCarouselVisible && <PostImageCarousel images={modalImages} />}
       {isPostModalVisible && <PostModal />}

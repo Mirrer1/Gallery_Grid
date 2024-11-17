@@ -48,7 +48,9 @@ import {
   LOAD_MY_ACTIVITY_COUNTS_REQUEST,
   READ_ACTIVITY_REQUEST,
   INITIALIZE_POST_LIST,
-  LOAD_BEST_POSTS_REQUEST
+  LOAD_BEST_POSTS_REQUEST,
+  LOAD_FOLLOWING_POSTS_REQUEST,
+  DELETE_FOLLOWING_USER_POSTS
 } from 'store/types/postType';
 
 export const initializePostList = () => ({
@@ -65,6 +67,17 @@ export const loadBestPostsRequest = (lastId?: number, lastLikeCount?: number, la
   lastId,
   lastLikeCount,
   lastCommentCount
+});
+
+export const loadFollowingPostsRequest = (lastCreatedAt?: string, limit: number = 10) => ({
+  type: LOAD_FOLLOWING_POSTS_REQUEST,
+  lastCreatedAt,
+  limit
+});
+
+export const deleteFollowingUserPostsRequest = (data: number) => ({
+  type: DELETE_FOLLOWING_USER_POSTS,
+  data
 });
 
 export const loadMyActivityCountsRequest = () => ({
