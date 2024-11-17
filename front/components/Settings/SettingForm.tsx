@@ -39,9 +39,9 @@ const SettingForm = () => {
       }
 
       const nicknameRegex = /^[A-Za-z0-9가-힣]{2,16}$/;
-      if (!nickname || !useValidate(nickname, nicknameRegex, '닉네임 형식이 올바르지 않습니다.')) {
-        return;
-      }
+      const isValid = useValidate([{ value: nickname, regex: nicknameRegex, fieldName: '닉네임' }]);
+
+      if (!isValid) return;
 
       const formData = new FormData();
       if (userImagePath.length > 0) {

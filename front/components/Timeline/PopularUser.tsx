@@ -31,7 +31,6 @@ const PopularUser = () => {
   ];
 
   const [curr, setCurr] = useState(0);
-  const [touchStartX, setTouchStartX] = useState<number | null>(null);
   const { isCommentListVisible } = useSelector((state: RootState) => state.post);
 
   const next = useCallback(() => {
@@ -44,27 +43,8 @@ const PopularUser = () => {
     setCurr(newCurr);
   }, [curr]);
 
-  const handleTouchStart = (e: React.TouchEvent) => {
-    setTouchStartX(e.touches[0].clientX);
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    if (touchStartX !== null) {
-      const touchEndX = e.changedTouches[0].clientX;
-      const deltaX = touchEndX - touchStartX;
-
-      if (deltaX > 50) prev();
-      else if (deltaX < -50) next();
-    }
-    setTouchStartX(null);
-  };
-
   return (
-    <PopularUserWrapper
-      onTouchStart={handleTouchStart}
-      onTouchEnd={handleTouchEnd}
-      $commentvisible={isCommentListVisible}
-    >
+    <PopularUserWrapper $commentvisible={isCommentListVisible}>
       <div style={{ transform: `translateX(-${curr * 100}%)` }}>
         {popularUsers.map((user, i) => (
           <div key={i}>
@@ -90,13 +70,17 @@ const PopularUser = () => {
               </PopularOptions>
             </PopularUserContents>
 
-            <PopularBtn $alignleft="true" onClick={prev}>
-              <CaretLeftOutlined />
-            </PopularBtn>
+            {curr !== 0 && (
+              <PopularBtn $alignleft="true" onClick={prev}>
+                <CaretLeftOutlined />
+              </PopularBtn>
+            )}
 
-            <PopularBtn $alignleft="false" onClick={next}>
-              <CaretRightOutlined />
-            </PopularBtn>
+            {curr !== popularUsers.length - 1 && (
+              <PopularBtn $alignleft="false" onClick={next}>
+                <CaretRightOutlined />
+              </PopularBtn>
+            )}
           </div>
         ))}
       </div>

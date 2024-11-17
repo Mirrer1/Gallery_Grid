@@ -27,7 +27,13 @@ import {
   USER_UPLOAD_IMAGE_SUCCESS,
   UserAction,
   UserState,
-  EXECUTE_USER_EDIT
+  EXECUTE_USER_EDIT,
+  FOLLOW_USER_FAILURE,
+  FOLLOW_USER_REQUEST,
+  FOLLOW_USER_SUCCESS,
+  UNFOLLOW_USER_FAILURE,
+  UNFOLLOW_USER_REQUEST,
+  UNFOLLOW_USER_SUCCESS
 } from 'store/types/userType';
 
 export const initialState: UserState = {
@@ -54,7 +60,13 @@ export const initialState: UserState = {
   editMyInfoError: null,
   userUploadImageLoading: false,
   userUploadImageDone: false,
-  userUploadImageError: null
+  userUploadImageError: null,
+  followUserLoading: false,
+  followUserDone: false,
+  followUserError: null,
+  unFollowUserLoading: false,
+  unFollowUserDone: false,
+  unFollowUserError: null
 };
 
 const reducer = (state: UserState = initialState, action: UserAction): UserState => {
@@ -101,6 +113,7 @@ const reducer = (state: UserState = initialState, action: UserAction): UserState
         draft.loadMyInfoLoading = false;
         draft.loadMyInfoError = action.error;
         break;
+
       case RESET_LOGIN_MESSAGE:
         draft.loginError = null;
         break;
@@ -171,6 +184,34 @@ const reducer = (state: UserState = initialState, action: UserAction): UserState
         break;
       case USER_REMOVE_UPLOADED_IMAGE:
         draft.userImagePath = [];
+        break;
+      case FOLLOW_USER_REQUEST:
+        draft.followUserLoading = true;
+        draft.followUserDone = false;
+        draft.followUserError = null;
+        break;
+      case FOLLOW_USER_SUCCESS:
+        draft.followUserLoading = false;
+        draft.followUserDone = true;
+        if (draft.me) draft.me.Followings.push({ id: action.data });
+        break;
+      case FOLLOW_USER_FAILURE:
+        draft.followUserLoading = false;
+        draft.followUserError = action.error;
+        break;
+      case UNFOLLOW_USER_REQUEST:
+        draft.unFollowUserLoading = true;
+        draft.unFollowUserDone = false;
+        draft.unFollowUserError = null;
+        break;
+      case UNFOLLOW_USER_SUCCESS:
+        draft.unFollowUserLoading = false;
+        draft.unFollowUserDone = true;
+        if (draft.me) draft.me.Followings = draft.me.Followings.filter(following => following.id !== action.data);
+        break;
+      case UNFOLLOW_USER_FAILURE:
+        draft.unFollowUserLoading = false;
+        draft.unFollowUserError = action.error;
         break;
       default:
         return state;

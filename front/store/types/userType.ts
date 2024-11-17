@@ -30,6 +30,14 @@ export const USER_UPLOAD_IMAGE_SUCCESS = 'USER_UPLOAD_IMAGE_SUCCESS' as const;
 export const USER_UPLOAD_IMAGE_FAILURE = 'USER_UPLOAD_IMAGE_FAILURE' as const;
 export const USER_REMOVE_UPLOADED_IMAGE = 'USER_REMOVE_UPLOADED_IMAGE' as const;
 
+export const FOLLOW_USER_REQUEST = 'FOLLOW_USER_REQUEST' as const;
+export const FOLLOW_USER_SUCCESS = 'FOLLOW_USER_SUCCESS' as const;
+export const FOLLOW_USER_FAILURE = 'FOLLOW_USER_FAILURE' as const;
+
+export const UNFOLLOW_USER_REQUEST = 'UNFOLLOW_USER_REQUEST' as const;
+export const UNFOLLOW_USER_SUCCESS = 'UNFOLLOW_USER_SUCCESS' as const;
+export const UNFOLLOW_USER_FAILURE = 'UNFOLLOW_USER_FAILURE' as const;
+
 export type UserState = {
   me: User | null;
   userImagePath: string[];
@@ -58,6 +66,12 @@ export type UserState = {
   userUploadImageLoading: boolean;
   userUploadImageDone: boolean;
   userUploadImageError: null | string;
+  followUserLoading: boolean;
+  followUserDone: boolean;
+  followUserError: null | string;
+  unFollowUserLoading: boolean;
+  unFollowUserDone: boolean;
+  unFollowUserError: null | string;
 };
 
 export interface ResponseMessage {
@@ -78,8 +92,8 @@ export interface User {
   createdAt: string;
   updatedAt: string;
   Posts: number[];
-  Followings: number[];
-  Followers: number[];
+  Followings: { id: number }[];
+  Followers: { id: number }[];
   ProfileImage: { id: number; src: string } | null;
 }
 
@@ -200,6 +214,36 @@ export interface userRemoveUploadedImageAction {
   type: typeof USER_REMOVE_UPLOADED_IMAGE;
 }
 
+export interface followUserRequestAction {
+  type: typeof FOLLOW_USER_REQUEST;
+  data: number;
+}
+
+export interface followUserSuccessAction {
+  type: typeof FOLLOW_USER_SUCCESS;
+  data: number;
+}
+
+export interface followUserFailureAction {
+  type: typeof FOLLOW_USER_FAILURE;
+  error: string;
+}
+
+export interface unFollowUserRequestAction {
+  type: typeof UNFOLLOW_USER_REQUEST;
+  data: number;
+}
+
+export interface unFollowUserSuccessAction {
+  type: typeof UNFOLLOW_USER_SUCCESS;
+  data: number;
+}
+
+export interface unFollowUserFailureAction {
+  type: typeof UNFOLLOW_USER_FAILURE;
+  error: string;
+}
+
 export type UserAction =
   | loginRequestAction
   | loginSuccessAction
@@ -226,4 +270,10 @@ export type UserAction =
   | userUploadImageRequestAction
   | userUploadImageSuccessAction
   | userUploadImageFailureAction
-  | userRemoveUploadedImageAction;
+  | userRemoveUploadedImageAction
+  | followUserRequestAction
+  | followUserSuccessAction
+  | followUserFailureAction
+  | unFollowUserRequestAction
+  | unFollowUserSuccessAction
+  | unFollowUserFailureAction;

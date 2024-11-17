@@ -10,7 +10,9 @@ import {
   USER_UPLOAD_IMAGE_REQUEST,
   USER_REMOVE_UPLOADED_IMAGE,
   EDIT_MY_INFO_REQUEST,
-  EXECUTE_USER_EDIT
+  EXECUTE_USER_EDIT,
+  FOLLOW_USER_REQUEST,
+  UNFOLLOW_USER_REQUEST
 } from 'store/types/userType';
 
 export const loginRequest = (data: AuthResponse) => ({
@@ -59,4 +61,14 @@ export const userUploadImageRequest = (data: FormData) => ({
 
 export const userRemoveUploadedImage = () => ({
   type: USER_REMOVE_UPLOADED_IMAGE
+});
+
+export const followUserRequest = (data: number) => ({
+  type: FOLLOW_USER_REQUEST,
+  data
+});
+
+export const unFollowUserRequest = (data: number) => ({
+  type: UNFOLLOW_USER_REQUEST,
+  data
 });

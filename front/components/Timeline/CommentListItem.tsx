@@ -6,6 +6,7 @@ import { Comment } from 'store/types/postType';
 import DeleteModal from 'components/Modal/DeleteModal';
 import formatDate from 'utils/useListTimes';
 import { showDeleteModal } from 'store/actions/postAction';
+import { slideInList } from 'styles/Common/animation';
 import { CommentContainer, CommentListItemImage } from 'styles/Timeline/commentList';
 
 type CommentListItemProps = {
@@ -45,7 +46,7 @@ const CommentListItem = ({
   }, []);
 
   return (
-    <CommentContainer $reply={false}>
+    <CommentContainer $reply={false} {...slideInList}>
       <div>
         <div>
           <img

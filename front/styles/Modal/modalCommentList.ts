@@ -102,18 +102,24 @@ export const ModalNoCommentsContainer = styled.div`
 export const ModalCommentListItemWrapper = styled.div`
   flex-grow: 1;
   height: 1px;
-  padding: 0 1em;
+  padding: 0 0.5em;
   overflow-y: auto;
 
   & > div {
     border-bottom: 1px solid #eeeff3;
-    padding-top: 1em;
+    padding-top: 0.5em;
   }
 `;
 
-export const ModalCommentContainer = styled.div<{ $reply: boolean }>`
-  padding-left: ${props => (props.$reply ? '2em' : '0')};
-  margin-bottom: 1em;
+export const ModalCommentContainer = styled(motion.div)<{ $reply: boolean; $isFocused: boolean }>`
+  padding: 0.5em;
+  margin-bottom: 0.5em;
+  margin-left: ${props => (props.$reply ? '2em' : '0')};
+  background-color: ${props => props.$isFocused && '#E6F7FF'};
+  border-left: ${props => props.$isFocused && '3px solid #6BA2E6'};
+  transition:
+    background-color 0.3s ease,
+    border-left 0.3s ease;
 
   & > div {
     ${({ theme }) => theme.flexSet('space-between')};
@@ -190,8 +196,9 @@ export const ModalCommentContainer = styled.div<{ $reply: boolean }>`
 export const DeleteModalCommentText = styled.p`
   font-size: 0.9rem;
   font-weight: 500;
-  margin-bottom: 1em;
   opacity: 40%;
+  padding: 0.5em;
+  margin-bottom: 0.5em;
 `;
 
 export const ModalCommentListItemImage = styled.div`

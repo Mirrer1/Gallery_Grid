@@ -20,48 +20,42 @@ export const ActivityWrapper = styled.div`
 `;
 
 export const ActivityHeader = styled.header`
-  padding: 1.5em 1em;
+  padding: 1.3em 0;
+  background-color: white;
+  margin-bottom: 0.8em;
+  border-radius: 5px;
 
   & > div {
-    ${({ theme }) => theme.flexSet('start')};
-  }
-
-  & > div > div {
+    ${({ theme }) => theme.flexSet('space-between')};
+    width: 70%;
+    height: 100%;
     text-align: center;
-    margin-right: 4em;
-    border-right: 3px solid #e4e5ec;
-    padding-right: 5em;
 
-    &:last-child {
-      margin-right: 0;
-      border-right: none;
-      padding-right: 0;
+    & > div:first-child,
+    & > div:last-child {
+      visibility: hidden;
     }
   }
 
   ${media.tablet} {
-    padding: 0.5em;
-    margin-bottom: 1em;
+    padding: 1.1em 0;
+
+    & > div {
+      width: 100%;
+    }
   }
 
   ${media.mobile} {
-    padding: 0.5em 1.5em;
-    margin-bottom: 0.7em;
-
-    & > div {
-      justify-content: space-between;
-    }
-
-    & > div > div {
-      margin-right: 0;
-      padding-right: 3.5em;
-    }
+    padding: 0.7em 0;
   }
 `;
 
 export const HeaderItem = styled.div`
+  height: 100%;
+
   & > h1 {
-    font-size: 0.8rem;
+    font-size: 0.9rem;
+    font-weight: 500;
     opacity: 60%;
     margin-bottom: 0.5em;
   }
@@ -72,13 +66,25 @@ export const HeaderItem = styled.div`
     font-weight: 700;
   }
 
+  & > div {
+    width: 3px;
+    height: 100%;
+    background-color: #e4e5ec;
+  }
+
+  ${media.tablet} {
+    & > div {
+      height: 42.39px;
+    }
+  }
+
   ${media.mobile} {
     & > h1 {
-      font-size: 0.6rem;
+      font-size: 0.75rem;
     }
 
     & > p {
-      font-size: 1rem;
+      font-size: 1.1rem;
     }
   }
 `;

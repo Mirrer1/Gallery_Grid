@@ -6,6 +6,7 @@ import {
   DeleteOutlined,
   EditOutlined,
   HeartOutlined,
+  LoadingOutlined,
   MoreOutlined,
   ShareAltOutlined
 } from '@ant-design/icons';
@@ -33,11 +34,12 @@ import {
   ModalContentText,
   ModalContentWrapper
 } from 'styles/Modal/modalContent';
+import { followUserRequest, unFollowUserRequest } from 'store/actions/userAction';
 
 const ModalContent = () => {
   const dispatch = useDispatch();
   const { imagePreview, showImagePreview, hideImagePreview } = useImagePreview();
-  const { me } = useSelector((state: RootState) => state.user);
+  const { me, followUserLoading, unFollowUserLoading } = useSelector((state: RootState) => state.user);
   const { singlePost, modalCommentImagePath, isModalCommentListVisible } = useSelector(
     (state: RootState) => state.post
   );
@@ -69,6 +71,16 @@ const ModalContent = () => {
     [singlePost.Likers]
   );
 
+  const onToggleFollow = useCallback(
+    (userId: number) => {
+      const isFollowing = me.Followings.some((following: { id: number }) => following.id === userId);
+
+      if (isFollowing) dispatch(unFollowUserRequest(userId));
+      else dispatch(followUserRequest(userId));
+    },
+    [me.Followings]
+  );
+
   const openEditModal = useCallback(() => {
     setIsTooltipVisible(false);
     dispatch(executePostEdit());
@@ -76,7 +88,9 @@ const ModalContent = () => {
 
   return (
     <ModalContentWrapper>
-      <ModalContentHeader>
+      <ModalContentHeader
+        $isFollowing={me.Followings.some((following: { id: number }) => following.id === singlePost.UserId)}
+      >
         <div>
           <img
             src={
@@ -100,7 +114,18 @@ const ModalContent = () => {
         </div>
 
         <div>
-          <button type="button">Follow</button>
+          {me.id !== singlePost.UserId && (
+            <button type="button" onClick={() => onToggleFollow(singlePost.UserId)}>
+              {followUserLoading || unFollowUserLoading ? (
+                <LoadingOutlined />
+              ) : me.Followings.some((following: { id: number }) => following.id === singlePost.UserId) ? (
+                'Unfollow'
+              ) : (
+                'Follow'
+              )}
+            </button>
+          )}
+
           <MoreOutlined onClick={handleTooltip} />
 
           {isTooltipVisible && (

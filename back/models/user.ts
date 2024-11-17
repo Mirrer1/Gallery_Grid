@@ -1,4 +1,12 @@
-import Sequelize, { CreationOptional, InferAttributes, InferCreationAttributes, Model } from 'sequelize';
+import Sequelize, {
+  BelongsToManyAddAssociationMixin,
+  BelongsToManyGetAssociationsMixin,
+  BelongsToManyRemoveAssociationMixin,
+  CreationOptional,
+  InferAttributes,
+  InferCreationAttributes,
+  Model
+} from 'sequelize';
 import Post from './post';
 import Alert from './userHistory';
 import Chat from './chat';
@@ -17,6 +25,12 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare isRecommended: boolean;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
+  declare Posts?: Post[];
+
+  public addFollowing!: BelongsToManyAddAssociationMixin<User, number>;
+  public removeFollowing!: BelongsToManyRemoveAssociationMixin<User, number>;
+  public getFollowings!: BelongsToManyGetAssociationsMixin<User>;
+  public getFollowers!: BelongsToManyGetAssociationsMixin<User>;
 
   static initiate(sequelize: Sequelize.Sequelize) {
     User.init(

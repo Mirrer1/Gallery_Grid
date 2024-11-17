@@ -39,12 +39,12 @@ const LoginForm = ({ selectMenu, onClickMenu }: MenuProps) => {
       const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
       const passwordRegex = /^[A-Za-z\d]{8,16}$/;
 
-      if (
-        !useValidate(email, emailRegex, '이메일 형식이 올바르지 않습니다.') ||
-        !useValidate(password, passwordRegex, '비밀번호 형식이 올바르지 않습니다.')
-      ) {
-        return;
-      }
+      const isValid = useValidate([
+        { value: email, regex: emailRegex, fieldName: '이메일' },
+        { value: password, regex: passwordRegex, fieldName: '비밀번호' }
+      ]);
+
+      if (!isValid) return;
 
       dispatch(loginRequest({ email, password }));
     },
@@ -91,13 +91,13 @@ const LoginForm = ({ selectMenu, onClickMenu }: MenuProps) => {
 
       <AccountForm onSubmit={onSubmitForm}>
         <AccountInput $largemargin="true">
-          <input type="text" value={email} onChange={onChangeEmail} required />
+          <input type="text" value={email} onChange={onChangeEmail} />
           <label>Email address</label>
           <span />
         </AccountInput>
 
         <AccountInput $largemargin="false">
-          <input type="password" value={password} onChange={onChangePassword} required />
+          <input type="password" value={password} onChange={onChangePassword} />
           <label>Password</label>
           <span />
         </AccountInput>

@@ -6,6 +6,7 @@ import formatDate from 'utils/useListTimes';
 import { RootState } from 'store/reducers';
 import { Comment } from 'store/types/postType';
 import { showDeleteModal } from 'store/actions/postAction';
+import { slideInList } from 'styles/Common/animation';
 import { ModalCommentContainer, ModalCommentListItemImage } from 'styles/Modal/modalCommentList';
 
 type ModalCommentListItemProps = {
@@ -25,7 +26,7 @@ const ModalCommentListItem = ({
 }: ModalCommentListItemProps) => {
   const dispatch = useDispatch();
   const { me } = useSelector((state: RootState) => state.user);
-  const { isDeleteModalVisible } = useSelector((state: RootState) => state.post);
+  const { isDeleteModalVisible, activityFocusedCommentId } = useSelector((state: RootState) => state.post);
 
   const openDeleteModal = useCallback(
     (commentId: number) => {
@@ -45,7 +46,7 @@ const ModalCommentListItem = ({
   }, []);
 
   return (
-    <ModalCommentContainer $reply={false}>
+    <ModalCommentContainer $reply={false} $isFocused={activityFocusedCommentId === comment.id} {...slideInList}>
       <div>
         <div>
           <img

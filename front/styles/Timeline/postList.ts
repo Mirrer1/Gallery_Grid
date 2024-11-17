@@ -11,6 +11,7 @@ export const PostContainer = styled.div<{ $uploading: boolean }>`
 
   ${media.tablet} {
     overflow-y: visible;
+    border-radius: 0 0 5px 5px;
   }
 `;
 
@@ -69,6 +70,7 @@ export const PostWrapper = styled(motion.article)`
 
   ${media.tablet} {
     padding: 1em 2em;
+    border-radius: 0 0 5px 5px;
   }
 
   ${media.mobile} {
@@ -118,18 +120,21 @@ export const PostHeader = styled.div`
   }
 `;
 
-export const PostFollowBtn = styled.button`
+export const PostFollowBtn = styled.button<{ $isFollowing: boolean }>`
   ${HoverStyle('&')}
   font-size: 0.7rem;
-  background-color: ${({ theme }) => theme.colors.primary};
-  color: white;
+  background-color: ${props => (props.$isFollowing ? 'white' : '#6BA2E6')};
+  color: ${props => (props.$isFollowing ? '#6BA2E6' : 'white')};
+  border: ${props => props.$isFollowing && '1px solid #6BA2E6'};
   font-weight: 500;
-  padding: 0.7em 1.5em;
   border-radius: 5px;
   margin-right: 0.5em;
+  line-height: 2.4;
+  width: 67px;
 
   ${media.mobile} {
     font-size: 0.6rem;
+    width: 58px;
   }
 `;
 
@@ -238,5 +243,31 @@ export const PostOptions = styled.div<{ $liked: boolean; $commentVisiblePostId: 
 
   & > div > span > svg {
     margin-right: 0.3em;
+  }
+`;
+
+export const NoFollowingPostsContainer = styled.div`
+  ${({ theme }) => theme.flexColumnSet()}
+  height: 85%;
+
+  & > span {
+    font-size: 3rem;
+    margin-bottom: 0.25em;
+  }
+
+  & > h1 {
+    color: ${({ theme }) => theme.colors.font};
+    font-size: 1.4rem;
+    font-weight: 500;
+    margin-bottom: 0.2em;
+  }
+
+  & > p {
+    font-size: 0.8rem;
+    opacity: 60%;
+  }
+
+  ${media.tablet} {
+    height: 500px;
   }
 `;

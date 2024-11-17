@@ -18,6 +18,10 @@ export const BigPostPreviewWrapper = styled(motion.section)`
         opacity: 100%;
         ${HoverStyle('&')}
       }
+
+      & > div:nth-child(2) {
+        opacity: 100%;
+      }
     }
   }
 
@@ -77,8 +81,8 @@ export const BigPostPreviewImage = styled.div`
   & > span {
     opacity: 0;
     position: absolute;
-    top: 5px;
-    right: 5px;
+    top: 8px;
+    right: 8px;
     font-size: 1.4rem;
     transition: opacity 200ms ease-in-out;
   }
@@ -99,11 +103,13 @@ export const BigPostPreviewImage = styled.div`
   }
 `;
 
-export const BigPostPreviewContent = styled.div`
+export const BigPostPreviewContent = styled.div<{ $selectMode: boolean }>`
   position: absolute;
   bottom: 5%;
   left: 54%;
   width: 44%;
+  opacity: ${props => (props.$selectMode ? '100%' : '0%')};
+  transition: opacity 200ms ease-in-out;
 
   & > h1 {
     width: 95%;
@@ -130,6 +136,7 @@ export const BigPostPreviewContent = styled.div`
     left: 48%;
     bottom: 3%;
     width: 50%;
+    opacity: 100%;
 
     & > h1 {
       font-size: 1rem;
@@ -157,7 +164,6 @@ export const BigPostPreviewOption = styled.div<{ $liked: boolean; $hasCommented:
   ${({ theme }) => theme.flexSet('end')}
 
   & > div {
-    opacity: 60%;
     font-size: 0.9rem;
   }
 

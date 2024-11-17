@@ -12,6 +12,15 @@ import {
   LOAD_NEW_POSTS_REQUEST,
   LOAD_NEW_POSTS_SUCCESS,
   LOAD_NEW_POSTS_FAILURE,
+  LOAD_BEST_POSTS_REQUEST,
+  LOAD_BEST_POSTS_SUCCESS,
+  LOAD_BEST_POSTS_FAILURE,
+  LOAD_FOLLOWING_POSTS_REQUEST,
+  LOAD_FOLLOWING_POSTS_SUCCESS,
+  LOAD_FOLLOWING_POSTS_FAILURE,
+  LOAD_MY_ACTIVITY_POSTS_REQUEST,
+  LOAD_MY_ACTIVITY_POSTS_SUCCESS,
+  LOAD_MY_ACTIVITY_POSTS_FAILURE,
   LOAD_MY_INTERACTIONS_POSTS_REQUEST,
   LOAD_MY_INTERACTIONS_POSTS_SUCCESS,
   LOAD_MY_INTERACTIONS_POSTS_FAILURE,
@@ -89,11 +98,22 @@ import {
   EDIT_MODAL_COMMENT_REMOVE_UPLOADED_IMAGE,
   DELETE_MY_INTERACTIONS_POSTS_REQUEST,
   DELETE_MY_INTERACTIONS_POSTS_SUCCESS,
-  DELETE_MY_INTERACTIONS_POSTS_FAILURE
+  DELETE_MY_INTERACTIONS_POSTS_FAILURE,
+  SET_ACTIVITY_FOCUSED_COMMENT_ID,
+  LOAD_MY_ACTIVITY_COUNTS_REQUEST,
+  LOAD_MY_ACTIVITY_COUNTS_SUCCESS,
+  LOAD_MY_ACTIVITY_COUNTS_FAILURE,
+  READ_ACTIVITY_REQUEST,
+  READ_ACTIVITY_SUCCESS,
+  READ_ACTIVITY_FAILURE,
+  INITIALIZE_POST_LIST,
+  DELETE_FOLLOWING_USER_POSTS
 } from 'store/types/postType';
 
 export const initialState: PostState = {
   timelinePosts: [],
+  myActivityCounts: { like: 0, comment: 0, follow: 0 },
+  myActivityPosts: [],
   galleryPosts: [],
   singlePost: null,
   postImagePaths: [],
@@ -108,11 +128,29 @@ export const initialState: PostState = {
   modalComments: [],
   lastChangedCommentId: null,
   lastChangedModalCommentId: null,
+  activityFocusedCommentId: null,
   commentVisiblePostId: null,
   hasMoreTimelinePosts: true,
+  hasMoreMyActivityPosts: true,
+  isCategoryChanged: false,
   loadNewPostsLoading: false,
   loadNewPostsDone: false,
   loadNewPostsError: null,
+  loadBestPostsLoading: false,
+  loadBestPostsDone: false,
+  loadBestPostsError: null,
+  loadFollowingPostsLoading: false,
+  loadFollowingPostsDone: false,
+  loadFollowingPostsError: null,
+  loadMyActivityCountsLoading: false,
+  loadMyActivityCountsDone: false,
+  loadMyActivityCountsError: null,
+  loadMyActivityPostsLoading: false,
+  loadMyActivityPostsDone: false,
+  loadMyActivityPostsError: null,
+  readActivityLoading: false,
+  readActivityDone: false,
+  readActivityError: null,
   loadMyInteractionsPostsLoading: false,
   loadMyInteractionsPostsDone: false,
   loadMyInteractionsPostsError: null,
@@ -186,6 +224,11 @@ export const initialState: PostState = {
 const reducer = (state: PostState = initialState, action: PostAction): PostState => {
   return produce(state, draft => {
     switch (action.type) {
+      case INITIALIZE_POST_LIST:
+        draft.timelinePosts = [];
+        draft.hasMoreTimelinePosts = true;
+        draft.isCategoryChanged = true;
+        break;
       case LOAD_NEW_POSTS_REQUEST:
         draft.loadNewPostsLoading = true;
         draft.loadNewPostsDone = false;
@@ -200,6 +243,100 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
       case LOAD_NEW_POSTS_FAILURE:
         draft.loadNewPostsLoading = false;
         draft.loadNewPostsError = action.error;
+        break;
+      case LOAD_BEST_POSTS_REQUEST:
+        draft.loadBestPostsLoading = true;
+        draft.loadBestPostsDone = false;
+        draft.loadBestPostsError = null;
+        break;
+      case LOAD_BEST_POSTS_SUCCESS:
+        draft.loadBestPostsLoading = false;
+        draft.loadBestPostsDone = true;
+        draft.timelinePosts = draft.timelinePosts.concat(action.data);
+        draft.hasMoreTimelinePosts = action.data.length === 10;
+        break;
+      case LOAD_BEST_POSTS_FAILURE:
+        draft.loadBestPostsLoading = false;
+        draft.loadBestPostsError = action.error;
+        break;
+      case LOAD_FOLLOWING_POSTS_REQUEST:
+        draft.loadFollowingPostsLoading = true;
+        draft.loadFollowingPostsDone = false;
+        draft.loadFollowingPostsError = null;
+        break;
+      case LOAD_FOLLOWING_POSTS_SUCCESS:
+        draft.loadFollowingPostsLoading = false;
+        draft.loadFollowingPostsDone = true;
+        draft.timelinePosts = draft.timelinePosts.concat(action.data);
+        draft.hasMoreTimelinePosts = action.data.length === 10;
+        break;
+      case LOAD_FOLLOWING_POSTS_FAILURE:
+        draft.loadFollowingPostsLoading = false;
+        draft.loadFollowingPostsError = action.error;
+        break;
+      case DELETE_FOLLOWING_USER_POSTS:
+        draft.timelinePosts = draft.timelinePosts.filter(post => post.User.id !== action.data);
+        break;
+      case LOAD_MY_ACTIVITY_COUNTS_REQUEST:
+        draft.loadMyActivityCountsLoading = true;
+        draft.loadMyActivityCountsDone = false;
+        draft.loadMyActivityCountsError = null;
+        break;
+      case LOAD_MY_ACTIVITY_COUNTS_SUCCESS:
+        draft.loadMyActivityCountsLoading = false;
+        draft.loadMyActivityCountsDone = true;
+        draft.myActivityCounts = action.data;
+        break;
+      case LOAD_MY_ACTIVITY_COUNTS_FAILURE:
+        draft.loadMyActivityCountsLoading = false;
+        draft.loadMyActivityCountsError = action.error;
+        break;
+      case LOAD_MY_ACTIVITY_POSTS_REQUEST:
+        draft.loadMyActivityPostsLoading = true;
+        draft.loadMyActivityPostsDone = false;
+        draft.loadMyActivityPostsError = null;
+        break;
+      case LOAD_MY_ACTIVITY_POSTS_SUCCESS:
+        draft.loadMyActivityPostsLoading = false;
+        draft.loadMyActivityPostsDone = true;
+        draft.myActivityPosts = draft.myActivityPosts.concat(action.data);
+        draft.hasMoreMyActivityPosts = action.data.length === 10;
+        break;
+      case LOAD_MY_ACTIVITY_POSTS_FAILURE:
+        draft.loadMyActivityPostsLoading = false;
+        draft.loadMyActivityPostsError = action.error;
+        break;
+      case READ_ACTIVITY_REQUEST:
+        draft.readActivityLoading = true;
+        draft.readActivityDone = false;
+        draft.readActivityError = null;
+        break;
+      case READ_ACTIVITY_SUCCESS:
+        draft.readActivityLoading = false;
+        draft.readActivityDone = true;
+        if (action.data === 'all') {
+          draft.myActivityPosts = [];
+          draft.myActivityCounts = { like: 0, comment: 0, follow: 0 };
+        } else {
+          const index = draft.myActivityPosts.findIndex(post => post.id === action.data);
+
+          if (index !== -1) {
+            const postType = draft.myActivityPosts[index].type;
+            draft.myActivityPosts.splice(index, 1);
+
+            if (postType === 'like') {
+              draft.myActivityCounts.like = Math.max(0, draft.myActivityCounts.like - 1);
+            } else if (postType === 'comment' || postType === 'replyComment') {
+              draft.myActivityCounts.comment = Math.max(0, draft.myActivityCounts.comment - 1);
+            } else if (postType === 'follow') {
+              draft.myActivityCounts.follow = Math.max(0, draft.myActivityCounts.follow - 1);
+            }
+          }
+        }
+        break;
+      case READ_ACTIVITY_FAILURE:
+        draft.readActivityLoading = false;
+        draft.readActivityError = action.error;
         break;
       case LOAD_MY_INTERACTIONS_POSTS_REQUEST:
         draft.loadMyInteractionsPostsLoading = true;
@@ -279,10 +416,29 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
           draft.commentVisiblePostId = null;
           draft.commentImagePath = [];
         }
+
         const index = draft.timelinePosts.findIndex(post => post.id === action.data);
         if (index !== -1) draft.timelinePosts.splice(index, 1);
+
         const galleryIndex = draft.galleryPosts.findIndex(post => post.Post.id === action.data);
         if (galleryIndex !== -1) draft.galleryPosts.splice(galleryIndex, 1);
+
+        draft.myActivityPosts = draft.myActivityPosts.filter(post => {
+          if (post.Post.id === action.data) {
+            if (post.type === 'like') {
+              draft.myActivityCounts.like = Math.max(0, draft.myActivityCounts.like - 1);
+            }
+            if (post.type === 'comment' || post.type === 'replyComment') {
+              draft.myActivityCounts.comment = Math.max(0, draft.myActivityCounts.comment - 1);
+            }
+            if (post.type === 'follow') {
+              draft.myActivityCounts.follow = Math.max(0, draft.myActivityCounts.follow - 1);
+            }
+            return false;
+          }
+          return true;
+        });
+
         break;
       case DELETE_POST_FAILURE:
         draft.deletePostLoading = false;
@@ -639,6 +795,30 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
           draft.galleryPosts[galleryPostIndex].Post.Comments = galleryComments;
         }
 
+        draft.myActivityPosts.forEach(activity => {
+          if (activity.Post.id === action.data.comment.PostId) {
+            const activityComments = activity.Post.Comments || [];
+            const activityParentId = action.data.parentId ? parseInt(action.data.parentId, 10) : null;
+
+            if (activityParentId) {
+              const activityParentComment = activityComments.find(comment => comment.id === activityParentId);
+              if (activityParentComment) {
+                activityParentComment.Replies = activityParentComment.Replies || [];
+                activityParentComment.Replies.push(action.data.comment);
+              }
+            } else {
+              activityComments.push({
+                id: action.data.comment.id,
+                isDeleted: false,
+                User: { id: action.data.comment.UserId },
+                Replies: []
+              });
+            }
+
+            activity.Post.Comments = activityComments;
+          }
+        });
+
         break;
       }
       case ADD_MODAL_COMMENT_FAILURE:
@@ -915,6 +1095,30 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
           }
         }
 
+        draft.myActivityPosts.forEach(activity => {
+          if (activity.Post.id === postId) {
+            const activityComments = activity.Post.Comments;
+
+            if (replyId) {
+              const parentComment = activityComments.find(comment => comment.id === replyId);
+              if (parentComment) {
+                parentComment.Replies = parentComment.Replies.filter(reply => reply.id !== id);
+
+                if (parentComment.Replies.length === 0 && parentComment.isDeleted) {
+                  activity.Post.Comments = activityComments.filter(comment => comment.id !== replyId);
+                }
+              }
+            } else {
+              if (hasChild) {
+                const commentToUpdate = activityComments.find(comment => comment.id === id);
+                if (commentToUpdate) commentToUpdate.isDeleted = true;
+              } else {
+                activity.Post.Comments = activityComments.filter(comment => comment.id !== id);
+              }
+            }
+          }
+        });
+
         draft.isDeleteModalVisible = false;
         draft.deleteInfo = null;
         break;
@@ -941,6 +1145,12 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
         if (galleryPost) {
           galleryPost.Post.Likers.push({ id: action.data.UserId });
         }
+
+        draft.myActivityPosts.forEach(activity => {
+          if (activity.Post.id === action.data.PostId) {
+            activity.Post.Likers.push({ id: action.data.UserId });
+          }
+        });
         break;
       }
       case LIKE_POST_FAILURE:
@@ -965,6 +1175,12 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
         if (galleryPost) {
           galleryPost.Post.Likers = galleryPost.Post.Likers.filter(liker => liker.id !== action.data.UserId);
         }
+
+        draft.myActivityPosts.forEach(activity => {
+          if (activity.Post.id === action.data.PostId) {
+            activity.Post.Likers = activity.Post.Likers.filter(liker => liker.id !== action.data.UserId);
+          }
+        });
         break;
       }
       case UNLIKE_POST_FAILURE:
@@ -989,6 +1205,12 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
       case HIDE_MODAL_COMMENT_LIST:
         draft.isModalCommentListVisible = false;
         draft.modalCommentImagePath = [];
+        draft.activityFocusedCommentId = null;
+        break;
+      case SET_ACTIVITY_FOCUSED_COMMENT_ID:
+        draft.activityFocusedCommentId = action.data;
+        draft.isModalCommentListVisible = true;
+        draft.modalCommentImagePath = [];
         break;
       case SHOW_POST_CAROUSEL:
         draft.isCarouselVisible = true;
@@ -1007,6 +1229,7 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
         draft.isPostModalVisible = false;
         draft.isModalCommentListVisible = false;
         draft.lastChangedModalCommentId = null;
+        draft.activityFocusedCommentId = null;
         break;
       case EXECUTE_POST_EDIT:
         draft.postEditMode = true;

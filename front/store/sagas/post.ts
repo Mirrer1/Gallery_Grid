@@ -88,7 +88,27 @@ import {
   DELETE_MY_INTERACTIONS_POSTS_REQUEST,
   deleteMyInteractionsPostsRequestAction,
   DELETE_MY_INTERACTIONS_POSTS_FAILURE,
-  DELETE_MY_INTERACTIONS_POSTS_SUCCESS
+  DELETE_MY_INTERACTIONS_POSTS_SUCCESS,
+  LOAD_MY_ACTIVITY_POSTS_REQUEST,
+  loadMyActivityPostsRequestAction,
+  LOAD_MY_ACTIVITY_POSTS_SUCCESS,
+  LOAD_MY_ACTIVITY_POSTS_FAILURE,
+  LOAD_MY_ACTIVITY_COUNTS_REQUEST,
+  ActivityCounts,
+  LOAD_MY_ACTIVITY_COUNTS_SUCCESS,
+  LOAD_MY_ACTIVITY_COUNTS_FAILURE,
+  READ_ACTIVITY_REQUEST,
+  readActivityRequestAction,
+  READ_ACTIVITY_SUCCESS,
+  READ_ACTIVITY_FAILURE,
+  LOAD_BEST_POSTS_REQUEST,
+  loadBestPostsRequestAction,
+  LOAD_BEST_POSTS_SUCCESS,
+  LOAD_BEST_POSTS_FAILURE,
+  LOAD_FOLLOWING_POSTS_REQUEST,
+  loadFollowingPostsRequestAction,
+  LOAD_FOLLOWING_POSTS_SUCCESS,
+  LOAD_FOLLOWING_POSTS_FAILURE
 } from 'store/types/postType';
 
 function loadNewPostsAPI(lastId?: number) {
@@ -106,6 +126,110 @@ function* loadNewPosts(action: loadNewPostsRequestAction) {
   } catch (error: any) {
     yield put({
       type: LOAD_NEW_POSTS_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
+function loadBestPostsAPI(lastId?: number, lastLikeCount?: number, lastCommentCount?: number) {
+  return axios.get(
+    `/posts/best?lastId=${lastId || 0}&lastLikeCount=${lastLikeCount || 0}&lastCommentCount=${lastCommentCount || 0}`
+  );
+}
+
+function* loadBestPosts(action: loadBestPostsRequestAction) {
+  try {
+    const result: AxiosResponse<Post[]> = yield call(() =>
+      loadBestPostsAPI(action.lastId, action.lastLikeCount, action.lastCommentCount)
+    );
+
+    yield put({
+      type: LOAD_BEST_POSTS_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: LOAD_BEST_POSTS_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
+function loadFollowingPostsAPI(lastCreatedAt?: string, limit: number = 10) {
+  return axios.get(`/posts/following?lastCreatedAt=${encodeURIComponent(lastCreatedAt || '')}&limit=${limit}`);
+}
+
+function* loadFollowingPosts(action: loadFollowingPostsRequestAction) {
+  try {
+    const result: AxiosResponse<Post[]> = yield call(() => loadFollowingPostsAPI(action.lastCreatedAt, action.limit));
+
+    yield put({
+      type: LOAD_FOLLOWING_POSTS_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: LOAD_FOLLOWING_POSTS_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
+function loadMyActivityCountsAPI() {
+  return axios.get('/post/activities');
+}
+
+function* loadMyActivityCounts() {
+  try {
+    const result: AxiosResponse<ActivityCounts> = yield call(loadMyActivityCountsAPI);
+
+    yield put({
+      type: LOAD_MY_ACTIVITY_COUNTS_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: LOAD_MY_ACTIVITY_COUNTS_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
+function loadMyActivityPostsAPI(lastId?: number) {
+  return axios.get(`/posts/activities?lastId=${lastId || 0}`);
+}
+
+function* loadMyActivityPosts(action: loadMyActivityPostsRequestAction) {
+  try {
+    const result: AxiosResponse<UserHistoryPost[]> = yield call(() => loadMyActivityPostsAPI(action.lastId));
+
+    yield put({
+      type: LOAD_MY_ACTIVITY_POSTS_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: LOAD_MY_ACTIVITY_POSTS_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
+function readActivityAPI(targetId: 'all' | number) {
+  return axios.post('/post/activities', { targetId });
+}
+
+function* readActivity(action: readActivityRequestAction) {
+  try {
+    const result: AxiosResponse<'all' | number> = yield call(() => readActivityAPI(action.targetId));
+
+    yield put({
+      type: READ_ACTIVITY_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: READ_ACTIVITY_FAILURE,
       error: error.response.data.message
     });
   }
@@ -505,6 +629,26 @@ function* watchLoadNewPosts() {
   yield takeLatest(LOAD_NEW_POSTS_REQUEST, loadNewPosts);
 }
 
+function* watchLoadBestPosts() {
+  yield takeLatest(LOAD_BEST_POSTS_REQUEST, loadBestPosts);
+}
+
+function* watchLoadFollowingPosts() {
+  yield takeLatest(LOAD_FOLLOWING_POSTS_REQUEST, loadFollowingPosts);
+}
+
+function* watchLoadMyActivityCounts() {
+  yield takeLatest(LOAD_MY_ACTIVITY_COUNTS_REQUEST, loadMyActivityCounts);
+}
+
+function* watchLoadMyActivityPosts() {
+  yield takeLatest(LOAD_MY_ACTIVITY_POSTS_REQUEST, loadMyActivityPosts);
+}
+
+function* watchReadActivity() {
+  yield takeLatest(READ_ACTIVITY_REQUEST, readActivity);
+}
+
 function* watchLoadMyInteractionsPosts() {
   yield takeLatest(LOAD_MY_INTERACTIONS_POSTS_REQUEST, loadMyInteractionsPosts);
 }
@@ -592,6 +736,11 @@ function* watchUnLikePost() {
 export default function* postSaga() {
   yield all([
     fork(watchLoadNewPosts),
+    fork(watchLoadBestPosts),
+    fork(watchLoadFollowingPosts),
+    fork(watchLoadMyActivityCounts),
+    fork(watchLoadMyActivityPosts),
+    fork(watchReadActivity),
     fork(watchLoadMyInteractionsPosts),
     fork(watchDeleteMyInteractionsPosts),
     fork(watchAddPost),

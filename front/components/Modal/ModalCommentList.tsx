@@ -6,6 +6,7 @@ import ModalReplyComment from './ModalReplyComment';
 import ModalCommentListItem from './ModalCommentListItem';
 import ImagePreview from './ImagePreviewModal';
 import ModalCommentForm from './ModalCommentForm';
+import EditModalCommentForm from './EditModalCommentForm';
 
 import useImagePreview from 'utils/useImagePreview';
 import { RootState } from 'store/reducers';
@@ -24,7 +25,6 @@ import {
   ModalNoCommentsContainer,
   DeleteModalCommentText
 } from 'styles/Modal/modalCommentList';
-import EditModalCommentForm from './EditModalCommentForm';
 
 const ModalCommentList = () => {
   const dispatch = useDispatch();
@@ -36,7 +36,9 @@ const ModalCommentList = () => {
     loadModalCommentsLoading,
     addModalCommentDone,
     lastChangedModalCommentId,
-    editModalCommentDone
+    editModalCommentDone,
+    activityFocusedCommentId,
+    loadModalCommentsDone
   } = useSelector((state: RootState) => state.post);
 
   const [replyId, setReplyId] = useState<number | null>(null);
@@ -107,6 +109,12 @@ const ModalCommentList = () => {
       commentRefs.current[lastChangedModalCommentId]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   }, [addModalCommentDone, lastChangedModalCommentId]);
+
+  useEffect(() => {
+    if (loadModalCommentsDone && activityFocusedCommentId && commentRefs.current[activityFocusedCommentId]) {
+      commentRefs.current[activityFocusedCommentId]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, [loadModalCommentsDone, activityFocusedCommentId]);
 
   useEffect(() => {
     dispatch(loadModalCommentsRequest(singlePost.id));

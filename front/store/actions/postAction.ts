@@ -42,12 +42,56 @@ import {
   UNLIKE_POST_REQUEST,
   LOAD_NEW_POSTS_REQUEST,
   LOAD_MY_INTERACTIONS_POSTS_REQUEST,
-  DELETE_MY_INTERACTIONS_POSTS_REQUEST
+  DELETE_MY_INTERACTIONS_POSTS_REQUEST,
+  LOAD_MY_ACTIVITY_POSTS_REQUEST,
+  SET_ACTIVITY_FOCUSED_COMMENT_ID,
+  LOAD_MY_ACTIVITY_COUNTS_REQUEST,
+  READ_ACTIVITY_REQUEST,
+  INITIALIZE_POST_LIST,
+  LOAD_BEST_POSTS_REQUEST,
+  LOAD_FOLLOWING_POSTS_REQUEST,
+  DELETE_FOLLOWING_USER_POSTS
 } from 'store/types/postType';
+
+export const initializePostList = () => ({
+  type: INITIALIZE_POST_LIST
+});
 
 export const loadNewPostsRequest = (lastId?: number) => ({
   type: LOAD_NEW_POSTS_REQUEST,
   lastId
+});
+
+export const loadBestPostsRequest = (lastId?: number, lastLikeCount?: number, lastCommentCount?: number) => ({
+  type: LOAD_BEST_POSTS_REQUEST,
+  lastId,
+  lastLikeCount,
+  lastCommentCount
+});
+
+export const loadFollowingPostsRequest = (lastCreatedAt?: string, limit: number = 10) => ({
+  type: LOAD_FOLLOWING_POSTS_REQUEST,
+  lastCreatedAt,
+  limit
+});
+
+export const deleteFollowingUserPostsRequest = (data: number) => ({
+  type: DELETE_FOLLOWING_USER_POSTS,
+  data
+});
+
+export const loadMyActivityCountsRequest = () => ({
+  type: LOAD_MY_ACTIVITY_COUNTS_REQUEST
+});
+
+export const loadMyActivityPostsRequest = (lastId?: number) => ({
+  type: LOAD_MY_ACTIVITY_POSTS_REQUEST,
+  lastId
+});
+
+export const readActivityRequest = (targetId: 'all' | number) => ({
+  type: READ_ACTIVITY_REQUEST,
+  targetId
 });
 
 export const loadMyInteractionsPostsRequest = (menu: 'all' | 'like' | 'comment', sortBy: 'best' | 'new') => ({
@@ -241,5 +285,10 @@ export const executeCommentEdit = (data: string) => ({
 
 export const executeModalCommentEdit = (data: string) => ({
   type: EXECUTE_MODAL_COMMENT_EDIT,
+  data
+});
+
+export const setActivityFocusedCommentId = (data: number) => ({
+  type: SET_ACTIVITY_FOCUSED_COMMENT_ID,
   data
 });

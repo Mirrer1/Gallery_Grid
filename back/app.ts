@@ -60,7 +60,7 @@ app.get('/', (req, res, next) => {
   res.send('Gallery Grid server is functioning correctly!');
 });
 
-app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+app.use((err: any, req: Request, res: Response, next: NextFunction): void => {
   console.error(err);
   res.status(500).send('Server error occurred! Please check the server console.');
 });

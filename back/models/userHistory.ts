@@ -14,6 +14,7 @@ class UserHistory extends Model<InferAttributes<UserHistory>, InferCreationAttri
   declare FollowId: number | null;
   declare AlerterId: number | null;
   declare AlertedId: number | null;
+  declare isRead: boolean;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 
@@ -56,6 +57,11 @@ class UserHistory extends Model<InferAttributes<UserHistory>, InferCreationAttri
         AlertedId: {
           type: Sequelize.INTEGER,
           allowNull: true
+        },
+        isRead: {
+          type: Sequelize.BOOLEAN,
+          defaultValue: false,
+          allowNull: false
         },
         createdAt: Sequelize.DATE,
         updatedAt: Sequelize.DATE

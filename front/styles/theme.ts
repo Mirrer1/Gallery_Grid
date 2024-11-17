@@ -3,7 +3,7 @@ import { Theme } from './theme.d';
 const theme: Theme = {
   colors: {
     primary: '#6BA2E6',
-    red: '#ee6b6e',
+    red: '#EE6B6E',
     bg: '#EEEFF3',
     darkBg: '#E4E5EC',
     lightBg: '#F7F7F9',

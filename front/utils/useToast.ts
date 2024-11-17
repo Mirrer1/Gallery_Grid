@@ -35,9 +35,12 @@ const useToastStatus = () => {
     unLikePostDone,
     unLikePostError,
     deleteMyInteractionsPostsDone,
-    deleteMyInteractionsPostsError
+    deleteMyInteractionsPostsError,
+    readActivityDone,
+    readActivityError
   } = useSelector((state: RootState) => state.post);
-  const { editMyInfoDone, editMyInfoError } = useSelector((state: RootState) => state.user);
+  const { editMyInfoDone, editMyInfoError, followUserDone, followUserError, unFollowUserDone, unFollowUserError } =
+    useSelector((state: RootState) => state.user);
 
   const postStatusList = [
     {
@@ -123,6 +126,12 @@ const useToastStatus = () => {
       error: deleteMyInteractionsPostsError,
       successMessage: '게시글이 삭제되었습니다.',
       errorMessage: deleteMyInteractionsPostsError
+    },
+    {
+      done: readActivityDone,
+      error: readActivityError,
+      successMessage: '활동 내역이 읽음 처리되었습니다.',
+      errorMessage: readActivityError
     }
   ];
   const userStatusList = [
@@ -131,6 +140,18 @@ const useToastStatus = () => {
       error: editMyInfoError,
       successMessage: '유저 정보가 변경되었습니다.',
       errorMessage: editMyInfoError
+    },
+    {
+      done: followUserDone,
+      error: followUserError,
+      successMessage: '회원을 팔로우했습니다.',
+      errorMessage: followUserError
+    },
+    {
+      done: unFollowUserDone,
+      error: unFollowUserError,
+      successMessage: '회원의 팔로우를 취소했습니다.',
+      errorMessage: unFollowUserError
     }
   ];
 

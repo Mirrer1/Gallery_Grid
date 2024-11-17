@@ -2,22 +2,26 @@ import { useEffect, RefObject } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AnyAction } from 'redux';
 
-import { Post } from 'store/types/postType';
+import { Post, PostComment, UserHistoryPost } from 'store/types/postType';
 import { RootState } from 'store/reducers';
-import { loadNewPostsRequest } from 'store/actions/postAction';
+import {
+  loadBestPostsRequest,
+  loadFollowingPostsRequest,
+  loadMyActivityPostsRequest,
+  loadNewPostsRequest
+} from 'store/actions/postAction';
 
 type UseScrollParams = {
-  type: 'timeline-new';
+  type: `timeline-${'best' | 'new' | 'follow'}` | 'activity';
   ref: RefObject<HTMLDivElement>;
 };
 
 type ScrollParams = {
-  items: Post[];
+  items: Post[] | UserHistoryPost[];
   hasMore: boolean;
   loading: boolean;
-  action: (lastId: number) => AnyAction;
+  dispatcher: () => AnyAction;
   thresholds: number[];
-  useRefForAllScreens: boolean;
 };
 
 const breakpoints = {
@@ -28,94 +32,110 @@ const breakpoints = {
 
 const useScroll = ({ type, ref }: UseScrollParams) => {
   const dispatch = useDispatch();
-  const { timelinePosts, hasMoreTimelinePosts, loadNewPostsLoading } = useSelector((state: RootState) => state.post);
+  const {
+    timelinePosts,
+    hasMoreTimelinePosts,
+    loadNewPostsLoading,
+    myActivityPosts,
+    hasMoreMyActivityPosts,
+    loadMyActivityPostsLoading,
+    loadBestPostsLoading
+  } = useSelector((state: RootState) => state.post);
 
   const getScrollParams = (type: string): ScrollParams => {
     switch (type) {
+      case 'timeline-best':
+        return {
+          items: timelinePosts,
+          hasMore: hasMoreTimelinePosts,
+          loading: loadBestPostsLoading,
+          dispatcher: () => {
+            const lastPost = timelinePosts[timelinePosts.length - 1];
+            return loadBestPostsRequest(
+              lastPost?.id,
+              lastPost?.Likers.length,
+              lastPost?.Comments.reduce(
+                (acc: number, comment: PostComment) => acc + 1 + (comment.Replies?.length || 0),
+                0
+              )
+            );
+          },
+          thresholds: [350, 900, 1700]
+        };
       case 'timeline-new':
         return {
           items: timelinePosts,
           hasMore: hasMoreTimelinePosts,
           loading: loadNewPostsLoading,
-          action: loadNewPostsRequest,
-          thresholds: [350, 900, 1700],
-          useRefForAllScreens: false
+          dispatcher: () => loadNewPostsRequest(timelinePosts[timelinePosts.length - 1]?.id || 0),
+          thresholds: [350, 900, 1700]
+        };
+      case 'timeline-follow':
+        return {
+          items: timelinePosts,
+          hasMore: hasMoreTimelinePosts,
+          loading: loadNewPostsLoading,
+          dispatcher: () => {
+            const lastPost = timelinePosts[timelinePosts.length - 1];
+            return loadFollowingPostsRequest(lastPost?.createdAt || null, 10);
+          },
+          thresholds: [350, 900, 1700]
+        };
+      case 'activity':
+        return {
+          items: myActivityPosts,
+          hasMore: hasMoreMyActivityPosts,
+          loading: loadMyActivityPostsLoading,
+          dispatcher: () => loadMyActivityPostsRequest(myActivityPosts[myActivityPosts.length - 1]?.id || 0),
+          thresholds: [720, 1860, 1480]
         };
       default:
         return {
           items: [],
           hasMore: false,
           loading: false,
-          action: () => ({ type: 'UNKNOWN_ACTION' }),
-          thresholds: [0, 0, 0],
-          useRefForAllScreens: false
+          dispatcher: () => ({ type: 'UNKNOWN_ACTION' }),
+          thresholds: [0, 0, 0]
         };
     }
   };
 
-  const { items, hasMore, loading, action, thresholds, useRefForAllScreens } = getScrollParams(type);
+  const { items, hasMore, loading, dispatcher, thresholds } = getScrollParams(type);
 
   useEffect(() => {
     const handleScroll = () => {
-      const lastId = items[items.length - 1]?.id;
-
-      if (useRefForAllScreens || window.innerWidth >= breakpoints.web) {
-        if (ref.current) {
-          const { scrollTop, clientHeight, scrollHeight } = ref.current;
-          if (scrollTop + clientHeight > scrollHeight - thresholds[0]) {
-            if (hasMore && !loading) {
-              dispatch(action(lastId));
-            }
+      if (window.innerWidth >= breakpoints.web && ref.current) {
+        const { scrollTop, clientHeight, scrollHeight } = ref.current;
+        if (scrollTop + clientHeight > scrollHeight - thresholds[0]) {
+          if (hasMore && !loading) {
+            dispatch(dispatcher());
           }
         }
-      } else if (window.innerWidth >= breakpoints.tablet) {
-        if (useRefForAllScreens && ref.current) {
-          const { scrollTop, clientHeight, scrollHeight } = ref.current;
-          if (scrollTop + clientHeight > scrollHeight - thresholds[1]) {
-            if (hasMore && !loading) {
-              dispatch(action(lastId));
-            }
-          }
-        } else if (
-          window.scrollY + document.documentElement.clientHeight >
-          document.documentElement.scrollHeight - thresholds[1]
-        ) {
+      } else if (window.innerWidth < breakpoints.web) {
+        const threshold = window.innerWidth >= breakpoints.tablet ? thresholds[1] : thresholds[2];
+        if (window.scrollY + window.innerHeight > document.documentElement.scrollHeight - threshold) {
           if (hasMore && !loading) {
-            dispatch(action(lastId));
-          }
-        }
-      } else if (window.innerWidth < breakpoints.tablet) {
-        if (useRefForAllScreens && ref.current) {
-          const { scrollTop, clientHeight, scrollHeight } = ref.current;
-          if (scrollTop + clientHeight > scrollHeight - thresholds[2]) {
-            if (hasMore && !loading) {
-              dispatch(action(lastId));
-            }
-          }
-        } else if (
-          window.scrollY + document.documentElement.clientHeight >
-          document.documentElement.scrollHeight - thresholds[2]
-        ) {
-          if (hasMore && !loading) {
-            dispatch(action(lastId));
+            dispatch(dispatcher());
           }
         }
       }
     };
 
     const currentRef = ref.current;
-    if (currentRef) {
+
+    if (window.innerWidth >= breakpoints.web && currentRef) {
       currentRef.addEventListener('scroll', handleScroll);
+    } else {
+      window.addEventListener('scroll', handleScroll);
     }
-    window.addEventListener('scroll', handleScroll);
 
     return () => {
-      if (currentRef) {
+      if (window.innerWidth >= breakpoints.web && currentRef) {
         currentRef.removeEventListener('scroll', handleScroll);
       }
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [hasMore, loading, items, dispatch, action, ref, thresholds, useRefForAllScreens]);
+  }, [hasMore, loading, items, dispatch, dispatcher, ref, thresholds]);
 };
 
 export default useScroll;

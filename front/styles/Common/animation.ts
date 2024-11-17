@@ -68,10 +68,12 @@ export const slideInSeletedImage = {
 export const slideInList = {
   variants: {
     hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } }
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } },
+    exit: { opacity: 0, y: 20, transition: { duration: 0.3, ease: 'easeIn' } }
   },
   initial: 'hidden',
   whileInView: 'visible',
+  exit: 'exit',
   viewport: { once: false, amount: 0.2 }
 };
 

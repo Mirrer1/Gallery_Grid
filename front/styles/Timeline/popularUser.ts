@@ -19,17 +19,7 @@ export const PopularBtn = styled.div<{ $alignleft: string }>`
   transition: opacity 250ms ease-in-out;
 
   ${media.tablet} {
-    opacity: 100%;
-    ${props => (props.$alignleft === 'true' ? 'transform: translate(10%, -10%);' : 'transform: translate(-20%, -10%);')}
-  }
-
-  ${media.mobile} {
-    ${props => (props.$alignleft === 'true' ? 'transform: translate(10%, 25%);' : 'transform: translate(-20%, 25%);')}
-
-    & > span {
-      position: relative;
-      right: ${props => (props.$alignleft === 'true' ? '1px' : '-1px')};
-    }
+    display: none;
   }
 `;
 
@@ -81,21 +71,32 @@ export const PopularUserWrapper = styled.div<{ $commentvisible: boolean }>`
     height: 100%;
     margin-bottom: 0;
     border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0);
+    box-shadow: none;
+    overflow-x: scroll;
 
-    & > div > div {
-      display: flex;
-      height: 100%;
-
-      & > img {
-        width: 35%;
+    & > div {
+      & > div {
+        position: relative;
+        display: flex;
+        width: 40%;
         height: 100%;
+        margin-right: 0.5em;
+
+        & > img {
+          width: 100%;
+          height: 100%;
+          border-radius: 5px;
+        }
       }
     }
   }
 
   ${media.mobile} {
-    & > div > div > img {
-      width: 45%;
+    & > div {
+      & > div {
+        width: 45%;
+      }
     }
   }
 `;
@@ -134,33 +135,37 @@ export const PopularUserContents = styled.div`
   }
 
   ${media.tablet} {
-    width: 65%;
-    height: 100%;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 50%, rgba(0, 0, 0, 0) 100%);
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    background-clip: padding-box;
+
+    & > div > h1 {
+      color: white;
+      margin-bottom: 1%;
+    }
 
     & > div > p {
-      -webkit-line-clamp: 5;
+      color: white;
+      -webkit-line-clamp: 1;
     }
   }
 
   ${media.mobile} {
-    width: 55%;
-
     & > div:first-child > div {
       font-size: 0.6rem;
-      font-weight: 500;
       margin-bottom: 0.7em;
     }
 
     & > div > h1 {
       font-size: 0.8rem;
-      font-weight: 500;
-      margin-bottom: 1em;
     }
 
     & > div > p {
-      -webkit-line-clamp: 3;
       font-size: 0.7rem;
-      margin-bottom: 1em;
     }
   }
 `;
@@ -170,25 +175,33 @@ export const PopularOptions = styled.div`
   ${({ theme }) => theme.flexSet('end')}
 
   & > div {
-    opacity: 60%;
     font-size: 0.8rem;
   }
 
   & > div:first-child {
     margin-right: 0.7em;
+    color: ${({ theme }) => theme.colors.primary};
+  }
+
+  & > div:last-child {
+    color: ${({ theme }) => theme.colors.red};
   }
 
   & > div > span > svg {
     margin-right: 0.2em;
   }
 
+  ${media.tablet} {
+    opacity: 60%;
+  }
+
   ${media.mobile} {
     & > div {
-      font-size: 0.6rem;
+      font-size: 0.7rem;
     }
 
     & > div:first-child {
-      margin-right: 0.7em;
+      margin-right: 0.5em;
     }
 
     & > div > span > svg {

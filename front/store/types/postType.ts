@@ -1,8 +1,30 @@
 import { User } from './userType';
 
+export const INITIALIZE_POST_LIST = 'INITIALIZE_POST_LIST' as const;
 export const LOAD_NEW_POSTS_REQUEST = 'LOAD_NEW_POSTS_REQUEST' as const;
 export const LOAD_NEW_POSTS_SUCCESS = 'LOAD_NEW_POSTS_SUCCESS' as const;
 export const LOAD_NEW_POSTS_FAILURE = 'LOAD_NEW_POSTS_FAILURE' as const;
+
+export const LOAD_BEST_POSTS_REQUEST = 'LOAD_BEST_POSTS_REQUEST' as const;
+export const LOAD_BEST_POSTS_SUCCESS = 'LOAD_BEST_POSTS_SUCCESS' as const;
+export const LOAD_BEST_POSTS_FAILURE = 'LOAD_BEST_POSTS_FAILURE' as const;
+
+export const DELETE_FOLLOWING_USER_POSTS = 'DELETE_FOLLOWING_USER_POSTS' as const;
+export const LOAD_FOLLOWING_POSTS_REQUEST = 'LOAD_FOLLOWING_POSTS_REQUEST' as const;
+export const LOAD_FOLLOWING_POSTS_SUCCESS = 'LOAD_FOLLOWING_POSTS_SUCCESS' as const;
+export const LOAD_FOLLOWING_POSTS_FAILURE = 'LOAD_FOLLOWING_POSTS_FAILURE' as const;
+
+export const LOAD_MY_ACTIVITY_COUNTS_REQUEST = 'LOAD_MY_ACTIVITY_COUNTS_REQUEST' as const;
+export const LOAD_MY_ACTIVITY_COUNTS_SUCCESS = 'LOAD_MY_ACTIVITY_COUNTS_SUCCESS' as const;
+export const LOAD_MY_ACTIVITY_COUNTS_FAILURE = 'LOAD_MY_ACTIVITY_COUNTS_FAILURE' as const;
+
+export const LOAD_MY_ACTIVITY_POSTS_REQUEST = 'LOAD_MY_ACTIVITY_POSTS_REQUEST' as const;
+export const LOAD_MY_ACTIVITY_POSTS_SUCCESS = 'LOAD_MY_ACTIVITY_POSTS_SUCCESS' as const;
+export const LOAD_MY_ACTIVITY_POSTS_FAILURE = 'LOAD_MY_ACTIVITY_POSTS_FAILURE' as const;
+
+export const READ_ACTIVITY_REQUEST = 'READ_ACTIVITY_REQUEST' as const;
+export const READ_ACTIVITY_SUCCESS = 'READ_ACTIVITY_SUCCESS' as const;
+export const READ_ACTIVITY_FAILURE = 'READ_ACTIVITY_FAILURE' as const;
 
 export const LOAD_MY_INTERACTIONS_POSTS_REQUEST = 'LOAD_MY_INTERACTIONS_POSTS_REQUEST' as const;
 export const LOAD_MY_INTERACTIONS_POSTS_SUCCESS = 'LOAD_MY_INTERACTIONS_POSTS_SUCCESS' as const;
@@ -107,6 +129,7 @@ export const HIDE_POST_MODAL = 'HIDE_POST_MODAL' as const;
 
 export const SHOW_MODAL_COMMENT_LIST = 'SHOW_MODAL_COMMENT_LIST' as const;
 export const HIDE_MODAL_COMMENT_LIST = 'HIDE_MODAL_COMMENT_LIST' as const;
+export const SET_ACTIVITY_FOCUSED_COMMENT_ID = 'SET_ACTIVITY_FOCUSED_COMMENT_ID' as const;
 
 export const EXECUTE_POST_EDIT = 'EXECUTE_POST_EDIT' as const;
 export const CANCEL_POST_EDIT = 'CANCEL_POST_EDIT' as const;
@@ -192,10 +215,22 @@ export interface UserHistoryPost {
   id: number;
   type: string;
   Post: Post;
+  createdAt: string;
+  Alerter: { id: number; nickname: string; ProfileImage: { id: number; src: string } | null };
+  Comment: { id: number; content: string } | null;
+  ReplyComment: { id: number; content: string } | null;
+}
+
+export interface ActivityCounts {
+  like: number;
+  comment: number;
+  follow: number;
 }
 
 export type PostState = {
   timelinePosts: Post[];
+  myActivityCounts: ActivityCounts;
+  myActivityPosts: UserHistoryPost[];
   galleryPosts: UserHistoryPost[];
   singlePost: Post | null;
   postImagePaths: string[];
@@ -210,11 +245,29 @@ export type PostState = {
   modalComments: Comment[] | null;
   lastChangedCommentId: number | null;
   lastChangedModalCommentId: number | null;
+  activityFocusedCommentId: number | null;
   commentVisiblePostId: number | null;
   hasMoreTimelinePosts: boolean;
+  hasMoreMyActivityPosts: boolean;
+  isCategoryChanged: boolean;
   loadNewPostsLoading: boolean;
   loadNewPostsDone: boolean;
   loadNewPostsError: null | string;
+  loadBestPostsLoading: boolean;
+  loadBestPostsDone: boolean;
+  loadBestPostsError: null | string;
+  loadFollowingPostsLoading: boolean;
+  loadFollowingPostsDone: boolean;
+  loadFollowingPostsError: null | string;
+  loadMyActivityCountsLoading: boolean;
+  loadMyActivityCountsDone: boolean;
+  loadMyActivityCountsError: null | string;
+  loadMyActivityPostsLoading: boolean;
+  loadMyActivityPostsDone: boolean;
+  loadMyActivityPostsError: null | string;
+  readActivityLoading: boolean;
+  readActivityDone: boolean;
+  readActivityError: null | string;
   loadMyInteractionsPostsLoading: boolean;
   loadMyInteractionsPostsDone: boolean;
   loadMyInteractionsPostsError: null | string;
@@ -285,6 +338,10 @@ export type PostState = {
   isDeleteModalVisible: boolean;
 };
 
+export interface initializePostListAction {
+  type: typeof INITIALIZE_POST_LIST;
+}
+
 export interface loadNewPostsRequestAction {
   type: typeof LOAD_NEW_POSTS_REQUEST;
   lastId?: number;
@@ -297,6 +354,88 @@ export interface loadNewPostsSuccessAction {
 
 export interface loadNewPostsFailureAction {
   type: typeof LOAD_NEW_POSTS_FAILURE;
+  error: string;
+}
+
+export interface loadBestPostsRequestAction {
+  type: typeof LOAD_BEST_POSTS_REQUEST;
+  lastId?: number;
+  lastLikeCount?: number;
+  lastCommentCount?: number;
+}
+
+export interface loadBestPostsSuccessAction {
+  type: typeof LOAD_BEST_POSTS_SUCCESS;
+  data: Post[];
+}
+
+export interface loadBestPostsFailureAction {
+  type: typeof LOAD_BEST_POSTS_FAILURE;
+  error: string;
+}
+
+export interface loadFollowingPostsRequestAction {
+  type: typeof LOAD_FOLLOWING_POSTS_REQUEST;
+  lastCreatedAt?: string;
+  limit?: number;
+}
+
+export interface loadFollowingPostsSuccessAction {
+  type: typeof LOAD_FOLLOWING_POSTS_SUCCESS;
+  data: Post[];
+}
+
+export interface loadFollowingPostsFailureAction {
+  type: typeof LOAD_FOLLOWING_POSTS_FAILURE;
+  error: string;
+}
+
+export interface deleteFollowingUserPostsAction {
+  type: typeof DELETE_FOLLOWING_USER_POSTS;
+  data: number;
+}
+
+export interface loadMyActivityCountsRequestAction {
+  type: typeof LOAD_MY_ACTIVITY_COUNTS_REQUEST;
+}
+
+export interface loadMyActivityCountsSuccessAction {
+  type: typeof LOAD_MY_ACTIVITY_COUNTS_SUCCESS;
+  data: ActivityCounts;
+}
+
+export interface loadMyActivityCountsFailureAction {
+  type: typeof LOAD_MY_ACTIVITY_COUNTS_FAILURE;
+  error: string;
+}
+
+export interface loadMyActivityPostsRequestAction {
+  type: typeof LOAD_MY_ACTIVITY_POSTS_REQUEST;
+  lastId?: number;
+}
+
+export interface loadMyActivityPostsSuccessAction {
+  type: typeof LOAD_MY_ACTIVITY_POSTS_SUCCESS;
+  data: any;
+}
+
+export interface loadMyActivityPostsFailureAction {
+  type: typeof LOAD_MY_ACTIVITY_POSTS_FAILURE;
+  error: string;
+}
+
+export interface readActivityRequestAction {
+  type: typeof READ_ACTIVITY_REQUEST;
+  targetId: 'all' | number;
+}
+
+export interface readActivitySuccessAction {
+  type: typeof READ_ACTIVITY_SUCCESS;
+  data: 'all' | number;
+}
+
+export interface readActivityFailureAction {
+  type: typeof READ_ACTIVITY_FAILURE;
   error: string;
 }
 
@@ -704,7 +843,13 @@ export interface executeModalCommentEditAction {
   data: string;
 }
 
+export interface setActivityFocusedCommentIdAction {
+  type: typeof SET_ACTIVITY_FOCUSED_COMMENT_ID;
+  data: number;
+}
+
 export type PostAction =
+  | initializePostListAction
   | ShowCommentListAction
   | HideCommentListAction
   | ShowPostModalAction
@@ -714,6 +859,22 @@ export type PostAction =
   | loadNewPostsRequestAction
   | loadNewPostsSuccessAction
   | loadNewPostsFailureAction
+  | loadBestPostsRequestAction
+  | loadBestPostsSuccessAction
+  | loadBestPostsFailureAction
+  | loadFollowingPostsRequestAction
+  | loadFollowingPostsSuccessAction
+  | loadFollowingPostsFailureAction
+  | deleteFollowingUserPostsAction
+  | loadMyActivityCountsRequestAction
+  | loadMyActivityCountsSuccessAction
+  | loadMyActivityCountsFailureAction
+  | loadMyActivityPostsRequestAction
+  | loadMyActivityPostsSuccessAction
+  | loadMyActivityPostsFailureAction
+  | readActivityRequestAction
+  | readActivitySuccessAction
+  | readActivityFailureAction
   | loadMyInteractionsPostsRequestAction
   | loadMyInteractionsPostsSuccessAction
   | loadMyInteractionsPostsFailureAction
@@ -790,4 +951,5 @@ export type PostAction =
   | executeModalCommentEditAction
   | editModalCommentRequestAction
   | editModalCommentSuccessAction
-  | editModalCommentFailureAction;
+  | editModalCommentFailureAction
+  | setActivityFocusedCommentIdAction;

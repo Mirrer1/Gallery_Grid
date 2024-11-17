@@ -68,9 +68,14 @@ export const SettingProfile = styled(motion.div)<{ $loading: boolean }>`
 
   & > div:nth-child(3) {
     position: absolute;
-    left: 1%;
-    bottom: 1%;
+    left: 0;
+    bottom: 0;
     top: auto;
+    padding: 1em 0.5em 0.5em 0.5em;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.1) 50%, rgba(0, 0, 0, 0) 100%);
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    background-clip: padding-box;
 
     & > span,
     & > label > span {

@@ -3,6 +3,65 @@ import { motion } from 'framer-motion';
 
 import media from 'styles/media';
 import { HoverStyle } from 'styles/Common/hover';
+import { ShadowStyle } from 'styles/Common/shadow';
+
+export const AlertBtn = styled(motion.div)<{ $selectAll: boolean }>`
+  width: ${props => !props.$selectAll && '15%'};
+  ${({ theme }) => theme.flexSet('end')};
+  margin-bottom: ${props => props.$selectAll && '0.5em'};
+
+  & > button {
+    ${({ theme }) => theme.flexSet()};
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 0.5em 1em;
+    color: ${props => (props.$selectAll ? 'white' : '#6BA2E6')};
+    background-color: ${props => (props.$selectAll ? '#6BA2E6' : 'white')};
+    border: ${props => !props.$selectAll && '1px solid #6BA2E6'};
+    border-radius: 5px;
+    ${HoverStyle('&')};
+
+    & > span {
+      margin-right: 0.5em;
+    }
+
+    & > span:nth-child(2) {
+      display: ${props => !props.$selectAll && 'none'};
+    }
+  }
+
+  ${media.tablet} {
+    width: ${props => !props.$selectAll && '8%'};
+
+    & > button {
+      font-size: 0.7rem;
+      padding: ${props => !props.$selectAll && '0'};
+      border: ${props => !props.$selectAll && 'none'};
+
+      & > span {
+        font-size: ${props => !props.$selectAll && '1rem'};
+        margin-right: ${props => (props.$selectAll ? '0.3em' : '0')};
+      }
+
+      & > span:first-child {
+        display: ${props => !props.$selectAll && 'none'};
+      }
+
+      & > span:nth-child(2) {
+        display: ${props => !props.$selectAll && 'block'};
+      }
+
+      & > p {
+        display: ${props => !props.$selectAll && 'none'};
+      }
+    }
+  }
+
+  ${media.tablet} {
+    position: relative;
+    bottom: 2px;
+  }
+`;
 
 export const AlertWrapper = styled(motion.section)`
   height: 1px;
@@ -18,7 +77,33 @@ export const AlertWrapper = styled(motion.section)`
   }
 `;
 
-export const AlertDivider = styled.div`
+export const NoAlertsContainer = styled.div`
+  ${({ theme }) => theme.flexColumnSet()};
+  height: 100%;
+
+  & > span {
+    font-size: 3rem;
+    margin-bottom: 0.25em;
+  }
+
+  & > h1 {
+    color: ${({ theme }) => theme.colors.font};
+    font-size: 1.4rem;
+    font-weight: 500;
+    margin-bottom: 0.2em;
+  }
+
+  & > p {
+    font-size: 0.8rem;
+    opacity: 60%;
+  }
+
+  ${media.tablet} {
+    height: 100vh;
+  }
+`;
+
+export const AlertDivider = styled(motion.div)`
   position: sticky;
   top: 0.01px;
   z-index: 20;
@@ -40,14 +125,14 @@ export const AlertDivider = styled.div`
   ${media.tablet} {
     border-radius: 5px 5px 0 0;
   }
-
-  ${media.mobile} {
-    font-size: 0.65rem;
-  }
 `;
 
-export const AlertItemWrapper = styled.section`
-  padding: 1em 1.5em;
+export const AlertItemWrapper = styled(motion.section)`
+  padding: 1em;
+
+  ${media.tablet} {
+    padding: 0.7em 1em;
+  }
 
   ${media.mobile} {
     padding: 0.5em 0.5em 0.8em 0.5em;
@@ -55,84 +140,140 @@ export const AlertItemWrapper = styled.section`
 `;
 
 export const AlertHeader = styled.div<{ $type: string }>`
-  ${({ theme }) => theme.flexSet('start')}
+  ${({ theme }) => theme.flexSet('space-between')}
   margin-bottom: ${props => (props.$type === 'follow' ? '0' : '0.5em')};
+  margin-right: 1em;
 
-  & > img {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    margin-right: 1em;
-    cursor: pointer;
-  }
+  & > div:first-child {
+    width: 1px;
+    flex-grow: 1;
+    ${({ theme }) => theme.flexSet('start')}
 
-  & > p {
-    font-weight: 500;
-    font-size: 0.8rem;
-    opacity: 40%;
-    margin-right: 0.5em;
-  }
-
-  & > h1 {
-    width: 80%;
-    font-size: 0.9rem;
-    line-height: 1.3;
-    padding-bottom: 0.2em;
-    word-wrap: break-word;
-
-    & > span:first-child {
-      color: ${({ theme }) => theme.colors.primary};
-      font-weight: 600;
+    & > img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      margin-right: 0.8em;
       cursor: pointer;
     }
 
-    & > span:last-child {
-      font-weight: 600;
+    & > div {
+      width: 1px;
+      flex-grow: 1;
+
+      & > h1 {
+        ${({ theme }) => theme.flexSet('start')}
+        font-size: 0.9rem;
+        margin-bottom: 0.2em;
+
+        & > span:first-child,
+        & > p:first-child > span {
+          font-weight: 600;
+          cursor: pointer;
+        }
+
+        & > p:first-child {
+          margin-right: 0.2em;
+        }
+
+        & > p:last-child {
+          max-width: 35%;
+          font-weight: 600;
+          display: -webkit-box;
+          -webkit-line-clamp: 1;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: normal;
+          margin-right: 0.2em;
+        }
+      }
+
+      & > p {
+        font-weight: 500;
+        font-size: 0.8rem;
+        opacity: 40%;
+        margin-right: 0.5em;
+      }
+    }
+  }
+
+  ${media.tablet} {
+    & > div:first-child {
+      & > img {
+        width: 46px;
+        height: 46px;
+        margin-right: 0.5em;
+      }
+
+      & > div {
+        & > h1 {
+          font-size: 0.75rem;
+
+          & > p:last-child {
+            max-width: 23%;
+          }
+        }
+
+        & > p {
+          font-size: 0.75rem;
+        }
+      }
     }
   }
 
   ${media.mobile} {
-    & > img {
-      width: 40px;
-      height: 40px;
-      margin-right: 0.7em;
-    }
+    margin-right: 0;
 
-    & > p {
-      display: none;
-    }
+    & > div:first-child {
+      & > img {
+        width: 44px;
+        height: 44px;
+      }
 
-    & > h1 {
-      width: 80%;
-      font-size: 0.7rem;
+      & > div {
+        & > h1 {
+          font-size: 0.7rem;
+
+          & > p:last-child {
+            max-width: 26%;
+          }
+        }
+      }
     }
   }
 `;
 
 export const AlertContentWrapper = styled.div`
   margin: 0 1em 0 3.5em;
+  cursor: pointer;
 
   ${media.mobile} {
     margin: 0;
   }
 `;
 
-export const AlertContent = styled.div`
+export const AlertContent = styled.div<{ $type: 'follow' | 'like' | 'comment' }>`
   ${HoverStyle('&')}
   ${({ theme }) => theme.flexSet('start')}
-  border: 2px solid rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.06);
   border-radius: 5px;
   padding: 1em;
+  ${ShadowStyle};
 
   & > img {
-    width: 20%;
+    width: 200px;
     height: 150px;
     border-radius: 5px;
+    margin-right: 0.8em;
   }
 
   & > div {
-    width: 80%;
-    padding-left: 1em;
+    ${({ theme }) => theme.flexColumnSet('space-between', 'start')};
+    width: 1px;
+    flex-grow: 1;
+    height: 150px;
+    padding: 0.2em 0;
 
     & > p {
       display: -webkit-box;
@@ -148,14 +289,23 @@ export const AlertContent = styled.div`
     }
 
     & > div {
-      display: inline-block;
-      cursor: pointer;
-      opacity: 60%;
-      font-size: 0.8rem;
-      margin-right: 0.5em;
+      & > div {
+        display: inline-block;
+        opacity: 60%;
+        font-size: 0.8rem;
+        margin-right: 0.3em;
 
-      & > span {
-        margin-right: 0.2em;
+        & > span {
+          margin-right: 0.2em;
+        }
+      }
+
+      & > div:first-child {
+        color: ${props => props.$type === 'like' && '#EE6B6E'};
+      }
+
+      & > div:last-child {
+        color: ${props => props.$type === 'comment' && '#6BA2E6'};
       }
     }
   }
@@ -164,12 +314,10 @@ export const AlertContent = styled.div`
     padding: 0.7em;
 
     & > img {
-      width: 30%;
+      width: 150px;
     }
 
     & > div {
-      width: 70%;
-
       & > p {
         -webkit-line-clamp: 4;
       }
@@ -183,6 +331,7 @@ export const AlertContent = styled.div`
       width: 100%;
       height: 230px;
       margin-bottom: 0.3em;
+      margin-right: 0;
     }
 
     & > div {
@@ -192,51 +341,37 @@ export const AlertContent = styled.div`
   }
 `;
 
-export const AlertContentBtn = styled.div`
+export const AlertContentBtn = styled.div<{ $isFollowing: boolean }>`
   padding-left: 0.5em;
 
-  & > button:first-child {
-    ${HoverStyle('&')}
+  & > button {
+    width: 89px;
+    height: 28px;
     font-size: 0.8rem;
-    color: #6ba2e6;
     font-weight: 500;
-    padding: 0.7em 2em;
-    border: 1px solid #6ba2e6;
     border-radius: 5px;
+    ${HoverStyle('&')}
+  }
+
+  & > button:first-child {
+    color: #6ba2e6;
+    border: 1px solid #6ba2e6;
     margin-right: 0.3em;
   }
 
   & > button:last-child {
-    ${HoverStyle('&')}
-    background-color: #6ba2e6;
-    font-size: 0.8rem;
-    color: white;
-    font-weight: 500;
-    padding: 0.77em 1.7em;
-    border-radius: 5px;
+    background-color: ${props => (props.$isFollowing ? 'white' : '#6BA2E6')};
+    color: ${props => (props.$isFollowing ? '#6BA2E6' : 'white')};
+    border: ${props => props.$isFollowing && '1px solid #6BA2E6'};
   }
 
   ${media.tablet} {
-    & > button:first-child {
+    & > button {
       font-size: 0.75rem;
-      padding: 0.5em 1.5em;
-    }
-
-    & > button:last-child {
-      font-size: 0.75rem;
-      padding: 0.6em 1.1em;
     }
   }
 
   ${media.mobile} {
     padding-left: 3em;
-
-    & > button:first-child {
-      font-size: 0.65rem;
-    }
-
-    & > button:last-child {
-      font-size: 0.65rem;
-    }
   }
 `;

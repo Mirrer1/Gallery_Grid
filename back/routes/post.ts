@@ -2,14 +2,15 @@ import express from 'express';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
+import { Op } from 'sequelize';
 
 import Post from '../models/post';
 import User from '../models/user';
 import Image from '../models/image';
 import Comment from '../models/comment';
-import { isLoggedIn } from './middleware';
 import ReplyComment from '../models/replyComment';
 import UserHistory from '../models/userHistory';
+import { isLoggedIn } from './middleware';
 
 const router = express.Router();
 
@@ -379,7 +380,8 @@ router.post('/comment', isLoggedIn, upload.none(), async (req, res, next) => {
         PostId,
         ReplyCommentId: fullReplyComment?.id,
         AlerterId: req.user!.id,
-        AlertedId: post.UserId
+        AlertedId: post.UserId,
+        isRead: false
       });
 
       return res.status(201).json({ comment: fullReplyComment, parentId });
@@ -460,7 +462,8 @@ router.post('/comment', isLoggedIn, upload.none(), async (req, res, next) => {
         PostId,
         CommentId: fullComment?.id,
         AlerterId: req.user!.id,
-        AlertedId: post.UserId
+        AlertedId: post.UserId,
+        isRead: false
       });
 
       return res.status(201).json({ comment: fullComment, parentId });
@@ -706,7 +709,8 @@ router.patch('/like/:postId', isLoggedIn, async (req, res, next) => {
       type: 'like',
       PostId: post.id,
       AlerterId: req.user!.id,
-      AlertedId: post.UserId
+      AlertedId: post.UserId,
+      isRead: false
     });
 
     res.status(200).json({ PostId: post.id, UserId: req.user!.id });
@@ -733,13 +737,60 @@ router.delete('/like/:postId', isLoggedIn, async (req, res, next) => {
     await UserHistory.destroy({
       where: {
         type: 'like',
-        PostId: post.id
+        PostId: post.id,
+        AlerterId: req.user!.id,
+        AlertedId: post.UserId
       }
     });
     res.status(200).json({ PostId: post.id, UserId: req.user!.id });
   } catch (error) {
     console.error(error);
     next(error);
+  }
+});
+
+router.get('/activities', isLoggedIn, async (req, res, next) => {
+  try {
+    const userId = req.user!.id;
+    const where = { isRead: false, AlertedId: userId, AlerterId: { [Op.ne]: userId } };
+
+    const [likeCount, commentCount, replyCount, followCount] = await Promise.all([
+      UserHistory.count({ where: { ...where, type: 'like' } }),
+      UserHistory.count({ where: { ...where, type: 'comment' } }),
+      UserHistory.count({ where: { ...where, type: 'replyComment' } }),
+      UserHistory.count({ where: { ...where, type: 'follow' } })
+    ]);
+
+    res.status(200).json({ like: likeCount, comment: commentCount + replyCount, follow: followCount });
+  } catch (e) {
+    console.error(e);
+    next(e);
+  }
+});
+
+router.post('/activities', isLoggedIn, async (req, res, next) => {
+  try {
+    const userId = req.user!.id;
+    const { targetId } = req.body;
+
+    if (targetId === 'all') {
+      await UserHistory.update(
+        { isRead: true },
+        {
+          where: {
+            AlertedId: userId,
+            AlerterId: { [Op.ne]: userId }
+          }
+        }
+      );
+    } else {
+      await UserHistory.update({ isRead: true }, { where: { id: targetId } });
+    }
+
+    return res.status(200).json(targetId);
+  } catch (e) {
+    console.error(e);
+    next(e);
   }
 });
 

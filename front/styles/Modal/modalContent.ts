@@ -22,11 +22,11 @@ export const ModalContentWrapper = styled.div`
   ${media.mobile} {
     width: 100%;
     height: 50%;
-    border-radius: 0 0 5px 5px;
+    border-radius: 0;
   }
 `;
 
-export const ModalContentHeader = styled.div`
+export const ModalContentHeader = styled.div<{ $isFollowing: boolean }>`
   ${({ theme }) => theme.flexSet('space-between')};
   padding: 0.8em;
   border-bottom: 1.5px solid ${({ theme }) => theme.colors.darkBg};
@@ -59,9 +59,11 @@ export const ModalContentHeader = styled.div`
     ${({ theme }) => theme.flexSet()};
 
     & > button {
+      width: 80px;
       font-size: 0.7rem;
-      background-color: ${({ theme }) => theme.colors.primary};
-      color: white;
+      background-color: ${props => (props.$isFollowing ? 'white' : '#6BA2E6')};
+      color: ${props => (props.$isFollowing ? '#6BA2E6' : 'white')};
+      border: ${props => props.$isFollowing && '1px solid #6BA2E6'};
       font-weight: 500;
       padding: 0.7em 1.5em;
       border-radius: 5px;
@@ -91,7 +93,7 @@ export const ModalContentHeader = styled.div`
     & > div:last-child {
       & > button {
         font-size: 0.6rem;
-        padding: 0.73em 1.5em 0.7em 1.5em;
+        width: 70px;
       }
     }
   }

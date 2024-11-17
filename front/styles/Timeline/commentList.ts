@@ -106,6 +106,7 @@ export const CommentListItemWrapper = styled.div`
   height: 1px;
   padding: 0 1em;
   overflow-y: auto;
+  overflow-x: hidden;
 
   & > div {
     border-bottom: 1px solid #eeeff3;
@@ -120,7 +121,7 @@ export const DeleteCommentText = styled.p`
   opacity: 40%;
 `;
 
-export const CommentContainer = styled.div<{ $reply: boolean }>`
+export const CommentContainer = styled(motion.div)<{ $reply: boolean }>`
   padding-left: ${props => (props.$reply ? '2em' : '0')};
   margin-bottom: 1em;
 
@@ -159,6 +160,7 @@ export const CommentContainer = styled.div<{ $reply: boolean }>`
             border-radius: 10px;
             padding: 0 0.6em;
             line-height: 2;
+            text-align: center;
           }
         }
 
