@@ -37,6 +37,9 @@ import {
   LOAD_BEST_USERS_REQUEST,
   LOAD_BEST_USERS_SUCCESS,
   LOAD_BEST_USERS_FAILURE,
+  LOAD_SUGGEST_USERS_REQUEST,
+  LOAD_SUGGEST_USERS_SUCCESS,
+  LOAD_SUGGEST_USERS_FAILURE,
   INCREMENT_BEST_USERS_LIKE,
   DECREMENT_BEST_USERS_LIKE,
   INCREMENT_BEST_USERS_COMMENT,
@@ -46,10 +49,14 @@ import {
 export const initialState: UserState = {
   me: null,
   bestUsers: null,
+  suggestUsers: null,
   userImagePath: [],
   loadBestUsersLoading: false,
   loadBestUsersDone: false,
   loadBestUsersError: null,
+  loadSuggestUsersLoading: false,
+  loadSuggestUsersDone: false,
+  loadSuggestUsersError: null,
   loginLoading: false,
   loginDone: false,
   loginError: null,
@@ -96,6 +103,20 @@ const reducer = (state: UserState = initialState, action: UserAction): UserState
       case LOAD_BEST_USERS_FAILURE:
         draft.loadBestUsersLoading = false;
         draft.loadBestUsersError = action.error;
+        break;
+      case LOAD_SUGGEST_USERS_REQUEST:
+        draft.loadSuggestUsersLoading = true;
+        draft.loadSuggestUsersDone = false;
+        draft.loadSuggestUsersError = null;
+        break;
+      case LOAD_SUGGEST_USERS_SUCCESS:
+        draft.loadSuggestUsersLoading = false;
+        draft.loadSuggestUsersDone = true;
+        draft.suggestUsers = action.data;
+        break;
+      case LOAD_SUGGEST_USERS_FAILURE:
+        draft.loadSuggestUsersLoading = false;
+        draft.loadSuggestUsersError = action.error;
         break;
       case LOGIN_REQUEST:
         draft.loginLoading = true;

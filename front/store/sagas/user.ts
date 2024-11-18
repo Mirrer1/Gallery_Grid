@@ -40,7 +40,11 @@ import {
   LOAD_BEST_USERS_REQUEST,
   LOAD_BEST_USERS_SUCCESS,
   LOAD_BEST_USERS_FAILURE,
-  BestUser
+  FeaturedUser,
+  LOAD_SUGGEST_USERS_REQUEST,
+  LOAD_SUGGEST_USERS_SUCCESS,
+  LOAD_SUGGEST_USERS_FAILURE,
+  loadSuggestUsersRequestAction
 } from 'store/types/userType';
 
 function loadBestUsersAPI() {
@@ -49,7 +53,7 @@ function loadBestUsersAPI() {
 
 function* loadBestUsers() {
   try {
-    const result: AxiosResponse<BestUser[]> = yield call(loadBestUsersAPI);
+    const result: AxiosResponse<FeaturedUser[]> = yield call(loadBestUsersAPI);
 
     yield put({
       type: LOAD_BEST_USERS_SUCCESS,
@@ -58,6 +62,28 @@ function* loadBestUsers() {
   } catch (error: any) {
     yield put({
       type: LOAD_BEST_USERS_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
+function loadSuggestUsersAPI(excludeIds: number[] = []) {
+  return axios.get('/user/suggest', {
+    params: { excludeIds: excludeIds.length ? excludeIds.join(',') : undefined }
+  });
+}
+
+function* loadSuggestUsers(action: loadSuggestUsersRequestAction) {
+  try {
+    const result: AxiosResponse<FeaturedUser[]> = yield call(loadSuggestUsersAPI, action.excludeIds);
+
+    yield put({
+      type: LOAD_SUGGEST_USERS_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: LOAD_SUGGEST_USERS_FAILURE,
       error: error.response.data.message
     });
   }
@@ -244,6 +270,10 @@ function* watchLoadBestUsers() {
   yield takeLatest(LOAD_BEST_USERS_REQUEST, loadBestUsers);
 }
 
+function* watchLoadSuggestUsers() {
+  yield takeLatest(LOAD_SUGGEST_USERS_REQUEST, loadSuggestUsers);
+}
+
 function* watchSignUp() {
   yield takeLatest(SIGNUP_REQUEST, signUp);
 }
@@ -283,6 +313,7 @@ function* watchUnFollowUser() {
 export default function* userSaga() {
   yield all([
     fork(watchLoadBestUsers),
+    fork(watchLoadSuggestUsers),
     fork(watchLogin),
     fork(watchLoginGoogle),
     fork(watchLoadMyInfo),

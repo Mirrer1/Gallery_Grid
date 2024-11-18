@@ -1,8 +1,19 @@
-import React, { useCallback } from 'react';
-import { CaretDownOutlined, SyncOutlined, UserAddOutlined } from '@ant-design/icons';
-import { useSelector } from 'react-redux';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import {
+  CaretDownOutlined,
+  LoadingOutlined,
+  SyncOutlined,
+  UserAddOutlined,
+  UserDeleteOutlined
+} from '@ant-design/icons';
 
+import ImagePreview from 'components/Modal/ImagePreviewModal';
+import useImagePreview from 'utils/useImagePreview';
 import { RootState } from 'store/reducers';
+import { FeaturedUser } from 'store/types/userType';
+import { followUserRequest, loadSuggestUsersRequest, unFollowUserRequest } from 'store/actions/userAction';
+import { suggestedItemAnimation, suggestedListAnimation } from 'styles/Common/animation';
 import {
   SuggestedHeader,
   SuggestedInfo,
@@ -17,28 +28,38 @@ type SuggestedProps = {
 };
 
 const SuggestedList = ({ suggestedListVisible, setSuggestedListVisible }: SuggestedProps) => {
-  const SuggestedUsers = [
-    {
-      nickname: 'user1',
-      profile: 'https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg',
-      desc: '가나다라마바사가나다라마바사가나다라마바사가나다라마바사가나다라마바사가나다라마바사가나다라마바사가나다라마바사가나다라마바사가나다라마바사가나다라마바사가나다라마바사가나다라마바사가나다라마바사가나다라마바사가나다라마바사가나다라마바사'
-    },
-    {
-      nickname: 'user2',
-      profile: 'https://i.pinimg.com/564x/b1/bc/32/b1bc32636df7757cc51cf52a71a2a78f.jpg',
-      desc: '가나다라마바사 amet consectetur adipisicing elit. Minus esse quis ex corporis eligendi ad et adipisciomnis dolores nemo repudiandae beatae expedita nesciunt autem est enim sunt quam praesentium libero, modimaiores consequatur? Repudiandae perspiciatis explicabo laboriosam cum ad.'
-    },
-    {
-      nickname: 'user3',
-      profile: 'https://i.pinimg.com/564x/e7/5b/41/e75b41ec9be4ff5303804a35466544e3.jpg',
-      desc: 'Minus esse quis ex corporis eligendi ad et adipisciomnis dolores nemo repudiandae beatae expedita nesciunt autem est enim sunt quam praesentium libero, modimaiores consequatur? Repudiandae perspiciatis explicabo laboriosam cum ad.'
-    }
-  ];
+  const dispatch = useDispatch();
+  const { me, suggestUsers, loadSuggestUsersLoading, followUserDone, unFollowUserDone } = useSelector(
+    (state: RootState) => state.user
+  );
   const { isCommentListVisible } = useSelector((state: RootState) => state.post);
+  const { imagePreview, showImagePreview, hideImagePreview } = useImagePreview();
+  const [followActionLoadingUserId, setFollowActionLoadingUserId] = useState<number | null>(null);
 
   const hideSuggestedList = useCallback(() => {
     setSuggestedListVisible(false);
   }, [suggestedListVisible]);
+
+  const onToggleFollow = useCallback(
+    (userId: number) => {
+      setFollowActionLoadingUserId(userId);
+
+      const isFollowing = me.Followings.some((following: { id: number }) => following.id === userId);
+
+      if (isFollowing) dispatch(unFollowUserRequest(userId));
+      else dispatch(followUserRequest(userId));
+    },
+    [me.Followings, suggestUsers]
+  );
+
+  const reloadSuggestUsers = useCallback(() => {
+    const excludeIds = suggestUsers.map((user: FeaturedUser) => user.id);
+    dispatch(loadSuggestUsersRequest(excludeIds));
+  }, [suggestUsers]);
+
+  useEffect(() => {
+    if (followUserDone || unFollowUserDone) setFollowActionLoadingUserId(null);
+  }, [followUserDone, unFollowUserDone]);
 
   return (
     <>
@@ -49,31 +70,47 @@ const SuggestedList = ({ suggestedListVisible, setSuggestedListVisible }: Sugges
           <h1>Suggested people</h1>
 
           <div>
-            {/* <SyncOutlined spin /> */}
-            <SyncOutlined />
+            <SyncOutlined onClick={reloadSuggestUsers} spin={loadSuggestUsersLoading} />
             <CaretDownOutlined onClick={hideSuggestedList} />
           </div>
         </SuggestedHeader>
 
-        <SuggestedInfoWrapper>
-          {SuggestedUsers.map((user, i) => (
-            <SuggestedInfo key={i}>
+        <SuggestedInfoWrapper {...suggestedListAnimation} key={JSON.stringify(suggestUsers)}>
+          {suggestUsers?.map((user: FeaturedUser) => (
+            <SuggestedInfo key={user.id} {...suggestedItemAnimation}>
               <div>
-                <img src={user.profile} alt={`${user.nickname}의 프로필 이미지`} />
+                <img
+                  src={user?.ProfileImage ? `http://localhost:3065/${user.ProfileImage.src}` : '/user.jpg'}
+                  alt={`${user.nickname}의 프로필 이미지`}
+                  onClick={() =>
+                    showImagePreview(
+                      user?.ProfileImage ? `http://localhost:3065/${user.ProfileImage.src}` : '/user.jpg'
+                    )
+                  }
+                />
               </div>
 
               <div>
                 <div>
                   <h2>{user.nickname}</h2>
-                  <UserAddOutlined />
+
+                  {followActionLoadingUserId === user.id ? (
+                    <LoadingOutlined />
+                  ) : me.Followings.some((following: { id: number }) => following.id === user.id) ? (
+                    <UserDeleteOutlined onClick={() => onToggleFollow(user.id)} />
+                  ) : (
+                    <UserAddOutlined onClick={() => onToggleFollow(user.id)} />
+                  )}
                 </div>
 
-                <p>{user.desc}</p>
+                <p>{user.desc?.trim() ? user.desc : '소개글이 없습니다.'}</p>
               </div>
             </SuggestedInfo>
           ))}
         </SuggestedInfoWrapper>
       </SuggestedWrapper>
+
+      <ImagePreview imagePreview={imagePreview} hideImagePreview={hideImagePreview} />
     </>
   );
 };

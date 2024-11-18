@@ -83,3 +83,44 @@ export const slideInUploadImage = {
   exit: { opacity: 0, x: -100 },
   transition: { type: 'spring', stiffness: 50, damping: 20 }
 };
+
+export const suggestedListAnimation = {
+  variants: {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        staggerChildren: 0.15,
+        duration: 0.5,
+        ease: 'easeOut'
+      }
+    },
+    exit: {
+      opacity: 0,
+      y: 20,
+      transition: {
+        duration: 0.3,
+        ease: 'easeIn'
+      }
+    }
+  },
+  initial: 'hidden',
+  animate: 'visible',
+  exit: 'exit',
+  viewport: { once: false, amount: 0.2 }
+};
+
+export const suggestedItemAnimation = {
+  variants: {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.7,
+        ease: 'easeInOut'
+      }
+    }
+  }
+};

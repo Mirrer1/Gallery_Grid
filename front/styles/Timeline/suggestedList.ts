@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { motion } from 'framer-motion';
 
 import media from 'styles/media';
 import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
@@ -85,7 +86,7 @@ export const SuggestedHeader = styled.div`
   }
 `;
 
-export const SuggestedInfoWrapper = styled.div`
+export const SuggestedInfoWrapper = styled(motion.div)`
   flex-grow: 1;
   width: 100%;
   ${({ theme }) => theme.flexColumnSet('space-between')};
@@ -111,7 +112,7 @@ export const SuggestedInfoWrapper = styled.div`
   }
 `;
 
-export const SuggestedInfo = styled.div`
+export const SuggestedInfo = styled(motion.div)`
   flex: 1;
   width: 100%;
   ${({ theme }) => theme.flexSet('start')}
@@ -148,12 +149,14 @@ export const SuggestedInfo = styled.div`
 
       & > span {
         ${ReverseHoverStyle('&')}
+        font-size: 1.1rem;
         opacity: 40%;
       }
     }
   }
 
   & > div > p {
+    width: 90%;
     display: -webkit-box;
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
@@ -163,41 +166,5 @@ export const SuggestedInfo = styled.div`
     font-size: 0.8rem;
     opacity: 60%;
     line-height: 1.5;
-  }
-
-  ${media.tablet} {
-    & > img {
-      height: 60px;
-    }
-
-    & > div > div > h2 {
-      font-size: 1rem;
-    }
-
-    & > div > div > span {
-      font-size: 0.9rem;
-    }
-
-    & > div > p {
-      font-size: 0.9rem;
-    }
-  }
-
-  ${media.mobile} {
-    & > img {
-      height: 50px;
-    }
-
-    & > div > div > h2 {
-      font-size: 0.9rem;
-    }
-
-    & > div > div > span {
-      font-size: 0.8rem;
-    }
-
-    & > div > p {
-      font-size: 0.8rem;
-    }
   }
 `;

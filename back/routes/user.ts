@@ -4,7 +4,7 @@ import path from 'path';
 import fs from 'fs';
 import bcrypt from 'bcrypt';
 import passport from 'passport';
-import { Op, Sequelize } from 'sequelize';
+import { Op, Sequelize, fn } from 'sequelize';
 
 import User from '../models/user';
 import Image from '../models/image';
@@ -393,6 +393,72 @@ router.get('/best', isLoggedIn, async (req, res, next) => {
     });
 
     res.status(200).json(bestUsers);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+router.get('/suggest', isLoggedIn, async (req, res, next) => {
+  try {
+    const userId = req.user!.id;
+    const excludeIds = Array.isArray(req.query.excludeIds)
+      ? req.query.excludeIds.map(Number)
+      : typeof req.query.excludeIds === 'string'
+      ? req.query.excludeIds.split(',').map(Number)
+      : [];
+
+    const popularUsers = await User.findAll({
+      where: {
+        id: {
+          [Op.not]: [userId, ...excludeIds]
+        },
+        isRecommended: true
+      },
+      attributes: [
+        'id',
+        'nickname',
+        'desc',
+        [Sequelize.literal('(SELECT COUNT(*) FROM Follow WHERE Follow.FollowingId = User.id)'), 'followerCount'],
+        [
+          Sequelize.literal(
+            '(SELECT COUNT(*) FROM `Like` INNER JOIN posts ON posts.id = `Like`.PostId WHERE posts.UserId = User.id)'
+          ),
+          'likeCount'
+        ],
+        [
+          Sequelize.literal(
+            '(SELECT COUNT(*) FROM comments WHERE comments.PostId IN (SELECT id FROM posts WHERE posts.UserId = User.id))'
+          ),
+          'commentCount'
+        ],
+        [
+          Sequelize.literal(
+            '(SELECT COUNT(*) FROM reply_comments INNER JOIN comments ON reply_comments.CommentId = comments.id WHERE comments.PostId IN (SELECT id FROM posts WHERE posts.UserId = User.id))'
+          ),
+          'replyCommentCount'
+        ]
+      ],
+      include: [
+        {
+          model: Image,
+          as: 'ProfileImage',
+          where: { type: 'user' },
+          attributes: ['id', 'src'],
+          required: false
+        }
+      ],
+      order: [
+        [
+          Sequelize.literal('(followerCount * 2 + likeCount * 0.5 + commentCount * 0.5 + replyCommentCount * 0.5)'),
+          'DESC'
+        ]
+      ],
+      limit: 100
+    });
+
+    const shuffledUsers = popularUsers.sort(() => 0.5 - Math.random()).slice(0, 3);
+    res.status(200).json(shuffledUsers);
   } catch (error) {
     console.error(error);
     next(error);

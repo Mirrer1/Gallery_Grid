@@ -16,7 +16,7 @@ import wrapper from 'store/configureStore';
 import useToastStatus from 'utils/useToast';
 import { RootState } from 'store/reducers';
 import { loadBestPostsRequest } from 'store/actions/postAction';
-import { loadBestUsersRequest, loadMyInfoRequest } from 'store/actions/userAction';
+import { loadBestUsersRequest, loadMyInfoRequest, loadSuggestUsersRequest } from 'store/actions/userAction';
 import { slideInFromBottom } from 'styles/Common/animation';
 import { CommunitySection, MobileSuggestedBtn, PostsSection, TimelineWrapper } from 'styles/Timeline';
 
@@ -72,6 +72,7 @@ export const getServerSideProps = wrapper.getServerSideProps(async context => {
 
   context.store.dispatch(loadMyInfoRequest());
   context.store.dispatch(loadBestUsersRequest());
+  context.store.dispatch(loadSuggestUsersRequest());
   context.store.dispatch(loadBestPostsRequest());
 
   context.store.dispatch(END);

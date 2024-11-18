@@ -4,6 +4,10 @@ export const LOAD_BEST_USERS_REQUEST = 'LOAD_BEST_USERS_REQUEST' as const;
 export const LOAD_BEST_USERS_SUCCESS = 'LOAD_BEST_USERS_SUCCESS' as const;
 export const LOAD_BEST_USERS_FAILURE = 'LOAD_BEST_USERS_FAILURE' as const;
 
+export const LOAD_SUGGEST_USERS_REQUEST = 'LOAD_SUGGEST_USERS_REQUEST' as const;
+export const LOAD_SUGGEST_USERS_SUCCESS = 'LOAD_SUGGEST_USERS_SUCCESS' as const;
+export const LOAD_SUGGEST_USERS_FAILURE = 'LOAD_SUGGEST_USERS_FAILURE' as const;
+
 export const LOGIN_REQUEST = 'LOGIN_REQUEST' as const;
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS' as const;
 export const LOGIN_FAILURE = 'LOGIN_FAILURE' as const;
@@ -51,10 +55,14 @@ export const DECREMENT_BEST_USERS_COMMENT = 'DECREMENT_BEST_USERS_COMMENT' as co
 
 export type UserState = {
   me: User | null;
-  bestUsers: BestUser[] | null;
+  bestUsers: FeaturedUser[] | null;
+  suggestUsers: FeaturedUser[] | null;
   loadBestUsersLoading: boolean;
   loadBestUsersDone: boolean;
   loadBestUsersError: null | string;
+  loadSuggestUsersLoading: boolean;
+  loadSuggestUsersDone: boolean;
+  loadSuggestUsersError: null | string;
   userImagePath: string[];
   loginLoading: boolean;
   loginDone: boolean;
@@ -99,7 +107,7 @@ export interface AuthResponse {
   nickname?: string;
 }
 
-export interface BestUser {
+export interface FeaturedUser {
   id: number;
   nickname: string;
   desc: string;
@@ -129,11 +137,26 @@ export interface loadBestUsersRequestAction {
 
 export interface loadBestUsersSuccessAction {
   type: typeof LOAD_BEST_USERS_SUCCESS;
-  data: BestUser[];
+  data: FeaturedUser[];
 }
 
 export interface loadBestUsersFailureAction {
   type: typeof LOAD_BEST_USERS_FAILURE;
+  error: string;
+}
+
+export interface loadSuggestUsersRequestAction {
+  type: typeof LOAD_SUGGEST_USERS_REQUEST;
+  excludeIds?: number[];
+}
+
+export interface loadSuggestUsersSuccessAction {
+  type: typeof LOAD_SUGGEST_USERS_SUCCESS;
+  data: FeaturedUser[];
+}
+
+export interface loadSuggestUsersFailureAction {
+  type: typeof LOAD_SUGGEST_USERS_FAILURE;
   error: string;
 }
 
@@ -340,6 +363,9 @@ export type UserAction =
   | loadBestUsersRequestAction
   | loadBestUsersSuccessAction
   | loadBestUsersFailureAction
+  | loadSuggestUsersRequestAction
+  | loadSuggestUsersSuccessAction
+  | loadSuggestUsersFailureAction
   | incrementBestUsersLikeAction
   | decrementBestUsersLikeAction
   | incrementBestUsersCommentAction

@@ -3,7 +3,7 @@ import { CaretLeftOutlined, CaretRightOutlined, CommentOutlined, HeartOutlined, 
 import { useSelector } from 'react-redux';
 
 import { RootState } from 'store/reducers';
-import { BestUser } from 'store/types/userType';
+import { FeaturedUser } from 'store/types/userType';
 import { formatFollowerCount } from 'utils/formatFollowerCount';
 import { PopularBtn, PopularOptions, PopularUserContents, PopularUserWrapper } from 'styles/Timeline/popularUser';
 
@@ -25,8 +25,8 @@ const PopularUser = () => {
   return (
     <PopularUserWrapper $commentvisible={isCommentListVisible}>
       <div style={{ transform: `translateX(-${curr * 100}%)` }}>
-        {bestUsers?.map((user: BestUser, i: number) => (
-          <div key={i}>
+        {bestUsers?.map((user: FeaturedUser) => (
+          <div key={user.id}>
             <img
               src={user?.ProfileImage ? `http://localhost:3065/${user.ProfileImage.src}` : '/user.jpg'}
               alt={`${user.nickname}의 프로필 이미지`}
@@ -36,7 +36,7 @@ const PopularUser = () => {
               <div>
                 <div>Popular</div>
                 <h1>{user.nickname}</h1>
-                <p>{user.desc}</p>
+                <p>{user.desc?.trim() ? user.desc : '소개글이 없습니다.'}</p>
               </div>
 
               <PopularOptions>
