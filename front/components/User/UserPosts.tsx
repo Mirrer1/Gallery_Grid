@@ -150,12 +150,12 @@ const UserPosts = () => {
               <UserPostOption>
                 <div>
                   <HeartOutlined />
-                  <span>24</span>
+                  <span>{(2231).toLocaleString()}</span>
                 </div>
 
                 <div>
                   <CommentOutlined />
-                  <span>13</span>
+                  <span>{(112).toLocaleString()}</span>
                 </div>
               </UserPostOption>
             </div>

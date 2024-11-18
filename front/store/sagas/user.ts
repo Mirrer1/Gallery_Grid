@@ -36,8 +36,32 @@ import {
   FOLLOW_USER_FAILURE,
   unFollowUserRequestAction,
   UNFOLLOW_USER_SUCCESS,
-  UNFOLLOW_USER_FAILURE
+  UNFOLLOW_USER_FAILURE,
+  LOAD_BEST_USERS_REQUEST,
+  LOAD_BEST_USERS_SUCCESS,
+  LOAD_BEST_USERS_FAILURE,
+  BestUser
 } from 'store/types/userType';
+
+function loadBestUsersAPI() {
+  return axios.get('/user/best');
+}
+
+function* loadBestUsers() {
+  try {
+    const result: AxiosResponse<BestUser[]> = yield call(loadBestUsersAPI);
+
+    yield put({
+      type: LOAD_BEST_USERS_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: LOAD_BEST_USERS_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
 
 function signUpAPI(data: AuthResponse) {
   return axios.post('/user', data);
@@ -216,6 +240,10 @@ function* unFollowUser(action: unFollowUserRequestAction) {
   }
 }
 
+function* watchLoadBestUsers() {
+  yield takeLatest(LOAD_BEST_USERS_REQUEST, loadBestUsers);
+}
+
 function* watchSignUp() {
   yield takeLatest(SIGNUP_REQUEST, signUp);
 }
@@ -254,6 +282,7 @@ function* watchUnFollowUser() {
 
 export default function* userSaga() {
   yield all([
+    fork(watchLoadBestUsers),
     fork(watchLogin),
     fork(watchLoginGoogle),
     fork(watchLoadMyInfo),

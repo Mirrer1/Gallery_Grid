@@ -3,14 +3,16 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 import bcrypt from 'bcrypt';
-import { Op } from 'sequelize';
+import passport from 'passport';
+import { Op, Sequelize } from 'sequelize';
 
 import User from '../models/user';
-import passport from 'passport';
 import Image from '../models/image';
 import Post from '../models/post';
-import { isLoggedIn, isNotLoggedIn } from './middleware';
+import Comment from '../models/comment';
 import UserHistory from '../models/userHistory';
+import ReplyComment from '../models/replyComment';
+import { isLoggedIn, isNotLoggedIn } from './middleware';
 
 const router = express.Router();
 
@@ -312,6 +314,88 @@ router.delete('/follow/:id', isLoggedIn, async (req, res, next) => {
   } catch (e) {
     console.error(e);
     next(e);
+  }
+});
+
+router.get('/best', isLoggedIn, async (req, res, next) => {
+  try {
+    const bestUsers = await User.findAll({
+      where: { isRecommended: true },
+      attributes: [
+        'id',
+        'nickname',
+        'desc',
+        [Sequelize.literal('(SELECT COUNT(*) FROM Follow WHERE Follow.FollowingId = User.id)'), 'followerCount'],
+        [
+          Sequelize.literal(
+            '(SELECT COUNT(*) FROM `Like` INNER JOIN posts ON posts.id = `Like`.PostId WHERE posts.UserId = User.id)'
+          ),
+          'likeCount'
+        ],
+        [
+          Sequelize.literal(
+            '(SELECT COUNT(*) FROM comments WHERE comments.PostId IN (SELECT id FROM posts WHERE posts.UserId = User.id))'
+          ),
+          'commentCount'
+        ],
+        [
+          Sequelize.literal(
+            '(SELECT COUNT(*) FROM reply_comments INNER JOIN comments ON reply_comments.CommentId = comments.id WHERE comments.PostId IN (SELECT id FROM posts WHERE posts.UserId = User.id))'
+          ),
+          'replyCommentCount'
+        ]
+      ],
+      include: [
+        {
+          model: Image,
+          as: 'ProfileImage',
+          where: { type: 'user' },
+          attributes: ['id', 'src'],
+          required: false
+        },
+        {
+          model: Post,
+          attributes: [],
+          include: [
+            {
+              model: User,
+              as: 'Likers',
+              attributes: [],
+              through: { attributes: [] }
+            },
+            {
+              model: Comment,
+              attributes: [],
+              include: [
+                {
+                  model: ReplyComment,
+                  as: 'Replies',
+                  attributes: []
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      group: ['User.id'],
+      order: [
+        [
+          Sequelize.literal(
+            '((SELECT COUNT(*) FROM Follow WHERE Follow.FollowingId = User.id) * 2 + ' +
+              '(SELECT COUNT(*) FROM `Like` INNER JOIN posts ON posts.id = `Like`.PostId WHERE posts.UserId = User.id) * 0.5 + ' +
+              '(SELECT COUNT(*) FROM comments WHERE comments.PostId IN (SELECT id FROM posts WHERE posts.UserId = User.id)) * 0.5 + ' +
+              '(SELECT COUNT(*) FROM reply_comments INNER JOIN comments ON reply_comments.CommentId = comments.id WHERE comments.PostId IN (SELECT id FROM posts WHERE posts.UserId = User.id)) * 0.5)'
+          ),
+          'DESC'
+        ]
+      ],
+      limit: 5
+    });
+
+    res.status(200).json(bestUsers);
+  } catch (error) {
+    console.error(error);
+    next(error);
   }
 });
 

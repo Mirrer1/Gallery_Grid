@@ -83,7 +83,7 @@ const BigPostPreview = ({ userHistory, selectMode, selectedPostIds, setSelectedP
         <BigPostPreviewOption $liked={liked} $hasCommented={hasCommented}>
           <div>
             <HeartOutlined />
-            <span>{userHistory.Post.Likers.length}</span>
+            <span>{userHistory.Post.Likers.length.toLocaleString()}</span>
           </div>
 
           <div>
@@ -97,7 +97,7 @@ const BigPostPreview = ({ userHistory, selectMode, selectedPostIds, setSelectedP
                 }
 
                 return total + 1 + repliesCount;
-              }, 0)}
+              }, 0).toLocaleString()}
             </span>
           </div>
         </BigPostPreviewOption>

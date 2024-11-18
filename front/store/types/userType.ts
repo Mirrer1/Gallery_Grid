@@ -1,3 +1,9 @@
+import { ResponseComment, ResponseDeleteComment, ResponseLike } from './postType';
+
+export const LOAD_BEST_USERS_REQUEST = 'LOAD_BEST_USERS_REQUEST' as const;
+export const LOAD_BEST_USERS_SUCCESS = 'LOAD_BEST_USERS_SUCCESS' as const;
+export const LOAD_BEST_USERS_FAILURE = 'LOAD_BEST_USERS_FAILURE' as const;
+
 export const LOGIN_REQUEST = 'LOGIN_REQUEST' as const;
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS' as const;
 export const LOGIN_FAILURE = 'LOGIN_FAILURE' as const;
@@ -38,8 +44,17 @@ export const UNFOLLOW_USER_REQUEST = 'UNFOLLOW_USER_REQUEST' as const;
 export const UNFOLLOW_USER_SUCCESS = 'UNFOLLOW_USER_SUCCESS' as const;
 export const UNFOLLOW_USER_FAILURE = 'UNFOLLOW_USER_FAILURE' as const;
 
+export const INCREMENT_BEST_USERS_LIKE = 'INCREMENT_BEST_USERS_LIKE' as const;
+export const DECREMENT_BEST_USERS_LIKE = 'DECREMENT_BEST_USERS_LIKE' as const;
+export const INCREMENT_BEST_USERS_COMMENT = 'INCREMENT_BEST_USERS_COMMENT' as const;
+export const DECREMENT_BEST_USERS_COMMENT = 'DECREMENT_BEST_USERS_COMMENT' as const;
+
 export type UserState = {
   me: User | null;
+  bestUsers: BestUser[] | null;
+  loadBestUsersLoading: boolean;
+  loadBestUsersDone: boolean;
+  loadBestUsersError: null | string;
   userImagePath: string[];
   loginLoading: boolean;
   loginDone: boolean;
@@ -84,6 +99,17 @@ export interface AuthResponse {
   nickname?: string;
 }
 
+export interface BestUser {
+  id: number;
+  nickname: string;
+  desc: string;
+  followerCount: number;
+  likeCount: number;
+  commentCount: number;
+  replyCommentCount: number;
+  ProfileImage: { id: number; src: string } | null;
+}
+
 export interface User {
   id: number;
   email: string;
@@ -95,6 +121,20 @@ export interface User {
   Followings: { id: number }[];
   Followers: { id: number }[];
   ProfileImage: { id: number; src: string } | null;
+}
+
+export interface loadBestUsersRequestAction {
+  type: typeof LOAD_BEST_USERS_REQUEST;
+}
+
+export interface loadBestUsersSuccessAction {
+  type: typeof LOAD_BEST_USERS_SUCCESS;
+  data: BestUser[];
+}
+
+export interface loadBestUsersFailureAction {
+  type: typeof LOAD_BEST_USERS_FAILURE;
+  error: string;
 }
 
 export interface loginRequestAction {
@@ -244,6 +284,26 @@ export interface unFollowUserFailureAction {
   error: string;
 }
 
+export interface incrementBestUsersLikeAction {
+  type: typeof INCREMENT_BEST_USERS_LIKE;
+  data: ResponseLike;
+}
+
+export interface decrementBestUsersLikeAction {
+  type: typeof DECREMENT_BEST_USERS_LIKE;
+  data: ResponseLike;
+}
+
+export interface incrementBestUsersCommentAction {
+  type: typeof INCREMENT_BEST_USERS_COMMENT;
+  data: ResponseComment;
+}
+
+export interface decrementBestUsersCommentAction {
+  type: typeof DECREMENT_BEST_USERS_COMMENT;
+  data: ResponseDeleteComment;
+}
+
 export type UserAction =
   | loginRequestAction
   | loginSuccessAction
@@ -276,4 +336,11 @@ export type UserAction =
   | followUserFailureAction
   | unFollowUserRequestAction
   | unFollowUserSuccessAction
-  | unFollowUserFailureAction;
+  | unFollowUserFailureAction
+  | loadBestUsersRequestAction
+  | loadBestUsersSuccessAction
+  | loadBestUsersFailureAction
+  | incrementBestUsersLikeAction
+  | decrementBestUsersLikeAction
+  | incrementBestUsersCommentAction
+  | decrementBestUsersCommentAction;

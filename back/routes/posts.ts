@@ -8,7 +8,7 @@ import Comment from '../models/comment';
 import ReplyComment from '../models/replyComment';
 import UserHistory from '../models/userHistory';
 import { sequelize } from '../models';
-import { isLoggedIn, isNotLoggedIn } from './middleware';
+import { isLoggedIn } from './middleware';
 
 const router = express.Router();
 

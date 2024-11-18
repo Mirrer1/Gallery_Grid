@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
 
+import { formatFollowerCount } from 'utils/formatFollowerCount';
 import { slideInFromBottom } from 'styles/Common/animation';
 import {
   UserActivityItem,
@@ -48,17 +49,17 @@ const UserInfo = ({ selectedActivity, setSelectedActivity }: InfoProps) => {
       <UserActivityWrapper>
         <UserActivityItem onClick={() => handleActivity('posts')} $selected={selectedActivity === 'posts'}>
           <h2>Total Post</h2>
-          <p>286</p>
+          <p>{(28612).toLocaleString()}</p>
         </UserActivityItem>
 
         <UserActivityItem onClick={() => handleActivity('follower')} $selected={selectedActivity === 'follower'}>
           <h2>Follower</h2>
-          <p>286</p>
+          <p>{formatFollowerCount(12357658)}</p>
         </UserActivityItem>
 
         <UserActivityItem onClick={() => handleActivity('following')} $selected={selectedActivity === 'following'}>
           <h2>Following</h2>
-          <p>286</p>
+          <p>{formatFollowerCount(89045656)}</p>
         </UserActivityItem>
       </UserActivityWrapper>
     </UserInfoWrapper>

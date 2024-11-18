@@ -33,12 +33,23 @@ import {
   FOLLOW_USER_SUCCESS,
   UNFOLLOW_USER_FAILURE,
   UNFOLLOW_USER_REQUEST,
-  UNFOLLOW_USER_SUCCESS
+  UNFOLLOW_USER_SUCCESS,
+  LOAD_BEST_USERS_REQUEST,
+  LOAD_BEST_USERS_SUCCESS,
+  LOAD_BEST_USERS_FAILURE,
+  INCREMENT_BEST_USERS_LIKE,
+  DECREMENT_BEST_USERS_LIKE,
+  INCREMENT_BEST_USERS_COMMENT,
+  DECREMENT_BEST_USERS_COMMENT
 } from 'store/types/userType';
 
 export const initialState: UserState = {
   me: null,
+  bestUsers: null,
   userImagePath: [],
+  loadBestUsersLoading: false,
+  loadBestUsersDone: false,
+  loadBestUsersError: null,
   loginLoading: false,
   loginDone: false,
   loginError: null,
@@ -72,6 +83,20 @@ export const initialState: UserState = {
 const reducer = (state: UserState = initialState, action: UserAction): UserState => {
   return produce(state, draft => {
     switch (action.type) {
+      case LOAD_BEST_USERS_REQUEST:
+        draft.loadBestUsersLoading = true;
+        draft.loadBestUsersDone = false;
+        draft.loadBestUsersError = null;
+        break;
+      case LOAD_BEST_USERS_SUCCESS:
+        draft.loadBestUsersLoading = false;
+        draft.loadBestUsersDone = true;
+        draft.bestUsers = action.data;
+        break;
+      case LOAD_BEST_USERS_FAILURE:
+        draft.loadBestUsersLoading = false;
+        draft.loadBestUsersError = action.error;
+        break;
       case LOGIN_REQUEST:
         draft.loginLoading = true;
         draft.loginDone = false;
@@ -113,7 +138,6 @@ const reducer = (state: UserState = initialState, action: UserAction): UserState
         draft.loadMyInfoLoading = false;
         draft.loadMyInfoError = action.error;
         break;
-
       case RESET_LOGIN_MESSAGE:
         draft.loginError = null;
         break;
@@ -194,6 +218,9 @@ const reducer = (state: UserState = initialState, action: UserAction): UserState
         draft.followUserLoading = false;
         draft.followUserDone = true;
         if (draft.me) draft.me.Followings.push({ id: action.data });
+
+        const followedUser = draft.bestUsers?.find(user => user.id === action.data);
+        if (followedUser) followedUser.followerCount += 1;
         break;
       case FOLLOW_USER_FAILURE:
         draft.followUserLoading = false;
@@ -208,10 +235,33 @@ const reducer = (state: UserState = initialState, action: UserAction): UserState
         draft.unFollowUserLoading = false;
         draft.unFollowUserDone = true;
         if (draft.me) draft.me.Followings = draft.me.Followings.filter(following => following.id !== action.data);
+
+        const unfollowedUser = draft.bestUsers?.find(user => user.id === action.data);
+        if (unfollowedUser) unfollowedUser.followerCount -= 1;
         break;
       case UNFOLLOW_USER_FAILURE:
         draft.unFollowUserLoading = false;
         draft.unFollowUserError = action.error;
+        break;
+      case INCREMENT_BEST_USERS_LIKE:
+        const likedUser = draft.bestUsers?.find(user => user.id === action.data.AuthorId);
+        if (likedUser) likedUser.likeCount += 1;
+        break;
+      case DECREMENT_BEST_USERS_LIKE:
+        const unlikedUser = draft.bestUsers?.find(user => user.id === action.data.AuthorId);
+        if (unlikedUser && unlikedUser.likeCount > 0) unlikedUser.likeCount -= 1;
+        break;
+      case INCREMENT_BEST_USERS_COMMENT:
+        const commentUser = draft.bestUsers?.find(user => user.id === action.data.comment.Post.UserId);
+        if (commentUser) {
+          action.data.parentId ? (commentUser.replyCommentCount += 1) : (commentUser.commentCount += 1);
+        }
+        break;
+      case DECREMENT_BEST_USERS_COMMENT:
+        const deleteCommentUser = draft.bestUsers?.find(user => user.id === action.data.AuthorId);
+        if (deleteCommentUser) {
+          action.data.replyId ? (deleteCommentUser.replyCommentCount -= 1) : (deleteCommentUser.commentCount -= 1);
+        }
         break;
       default:
         return state;

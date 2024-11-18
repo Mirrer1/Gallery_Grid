@@ -110,6 +110,12 @@ import {
   LOAD_FOLLOWING_POSTS_SUCCESS,
   LOAD_FOLLOWING_POSTS_FAILURE
 } from 'store/types/postType';
+import {
+  DECREMENT_BEST_USERS_COMMENT,
+  DECREMENT_BEST_USERS_LIKE,
+  INCREMENT_BEST_USERS_COMMENT,
+  INCREMENT_BEST_USERS_LIKE
+} from 'store/types/userType';
 
 function loadNewPostsAPI(lastId?: number) {
   return axios.get(`/posts/new?lastId=${lastId || 0}`);
@@ -405,6 +411,11 @@ function* addComment(action: addCommentRequestAction) {
       type: ADD_COMMENT_SUCCESS,
       data: result.data
     });
+
+    yield put({
+      type: INCREMENT_BEST_USERS_COMMENT,
+      data: result.data
+    });
   } catch (error: any) {
     yield put({
       type: ADD_COMMENT_FAILURE,
@@ -443,6 +454,10 @@ function* deleteComment(action: deleteCommentRequestAction) {
 
     yield put({
       type: DELETE_COMMENT_SUCCESS,
+      data: result.data
+    });
+    yield put({
+      type: DECREMENT_BEST_USERS_COMMENT,
       data: result.data
     });
   } catch (error: any) {
@@ -597,6 +612,10 @@ function* likePost(action: likePostRequestAction) {
       type: LIKE_POST_SUCCESS,
       data: result.data
     });
+    yield put({
+      type: INCREMENT_BEST_USERS_LIKE,
+      data: result.data
+    });
   } catch (error: any) {
     yield put({
       type: LIKE_POST_FAILURE,
@@ -615,6 +634,10 @@ function* unLikePost(action: unLikePostRequestAction) {
 
     yield put({
       type: UNLIKE_POST_SUCCESS,
+      data: result.data
+    });
+    yield put({
+      type: DECREMENT_BEST_USERS_LIKE,
       data: result.data
     });
   } catch (error: any) {

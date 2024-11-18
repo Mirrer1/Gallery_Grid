@@ -83,7 +83,7 @@ const PostPreview = ({ userHistory, selectMode, selectedPostIds, setSelectedPost
           <PostPreviewOption $liked={liked} $hasCommented={hasCommented}>
             <div>
               <HeartOutlined />
-              <span>{userHistory.Post.Likers.length}</span>
+              <span>{userHistory.Post.Likers.length.toLocaleString()}</span>
             </div>
 
             <div>
@@ -97,7 +97,7 @@ const PostPreview = ({ userHistory, selectMode, selectedPostIds, setSelectedPost
                   }
 
                   return total + 1 + repliesCount;
-                }, 0)}
+                }, 0).toLocaleString()}
               </span>
             </div>
           </PostPreviewOption>

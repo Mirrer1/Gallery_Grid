@@ -124,7 +124,7 @@ const AlertItem = ({ history }: AlertItemProps) => {
               <div>
                 <div>
                   <HeartOutlined />
-                  <span>{history.Post.Likers.length}</span>
+                  <span>{history.Post.Likers.length.toLocaleString()}</span>
                 </div>
 
                 <div>
@@ -138,7 +138,7 @@ const AlertItem = ({ history }: AlertItemProps) => {
                       }
 
                       return total + 1 + repliesCount;
-                    }, 0)}
+                    }, 0).toLocaleString()}
                   </span>
                 </div>
               </div>

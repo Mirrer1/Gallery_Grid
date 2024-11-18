@@ -282,7 +282,7 @@ const PostList = () => {
                 >
                   <div onClick={() => onToggleLike(post.id)}>
                     <HeartOutlined />
-                    <span>{post.Likers.length}</span>
+                    <span>{post.Likers.length.toLocaleString()}</span>
                   </div>
                   <div onClick={() => onToggleComment(post.id)}>
                     <CommentOutlined />
@@ -294,7 +294,7 @@ const PostList = () => {
                       }
 
                       return total + 1 + repliesCount;
-                    }, 0)}
+                    }, 0).toLocaleString()}
                   </div>
                 </PostOptions>
               </div>

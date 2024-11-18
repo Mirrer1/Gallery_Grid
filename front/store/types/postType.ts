@@ -153,6 +153,7 @@ export interface Image {
 export interface ResponseLike {
   PostId: number;
   UserId: number;
+  AuthorId: number;
 }
 
 export interface ResponseComment {
@@ -165,6 +166,7 @@ export interface ResponseDeleteComment {
   postId: number;
   replyId?: number;
   hasChild?: boolean;
+  AuthorId: number;
 }
 
 export interface Comment {

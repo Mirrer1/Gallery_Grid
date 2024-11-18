@@ -112,19 +112,19 @@ export const PopularUserContents = styled.div`
     color: ${({ theme }) => theme.colors.primary};
     font-size: 0.7rem;
     font-weight: 500;
-    margin-bottom: 2%;
+    margin-bottom: 4px;
   }
 
   & > div > h1 {
     font-size: 0.9rem;
     font-weight: 500;
-    margin-bottom: 4%;
+    margin-bottom: 10px;
     cursor: pointer;
   }
 
   & > div > p {
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -176,36 +176,36 @@ export const PopularOptions = styled.div`
 
   & > div {
     font-size: 0.8rem;
-  }
 
-  & > div:first-child {
-    margin-right: 0.7em;
-    color: ${({ theme }) => theme.colors.primary};
-  }
+    &:first-child {
+      margin-right: 0.7em;
+      opacity: 60%;
+    }
 
-  & > div:last-child {
-    color: ${({ theme }) => theme.colors.red};
-  }
+    &:nth-child(2) {
+      margin-right: 0.7em;
+      color: ${({ theme }) => theme.colors.red};
+    }
 
-  & > div > span > svg {
-    margin-right: 0.2em;
+    &:last-child {
+      color: ${({ theme }) => theme.colors.primary};
+    }
+
+    & > span > svg {
+      margin-right: 0.2em;
+    }
   }
 
   ${media.tablet} {
     opacity: 60%;
-  }
 
-  ${media.mobile} {
     & > div {
       font-size: 0.7rem;
-    }
 
-    & > div:first-child {
-      margin-right: 0.5em;
-    }
-
-    & > div > span > svg {
-      margin-right: 0.3em;
+      &:first-child {
+        opacity: 100%;
+        color: white;
+      }
     }
   }
 `;
