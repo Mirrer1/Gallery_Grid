@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 
 import media from 'styles/media';
 import { HoverStyle } from 'styles/Common/hover';
+import { ShadowStyle } from 'styles/Common/shadow';
 
 export const PostPreviewWrapper = styled(motion.section)`
   display: grid;
@@ -69,6 +70,7 @@ export const PostPreviewImage = styled.div`
     height: 100%;
     border-radius: 5px;
     transition: filter 200ms ease-in-out;
+    ${ShadowStyle};
   }
 
   & > span {

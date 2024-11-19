@@ -2,8 +2,8 @@ import styled from 'styled-components';
 import { motion } from 'framer-motion';
 
 import media from 'styles/media';
-import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
 import { ShadowStyle } from 'styles/Common/shadow';
+import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
 
 export const SuggestedWrapper = styled.div<{ $listvisible: boolean; $commentvisible: boolean }>`
   ${({ theme }) => theme.flexColumnSet('center', 'start')}
@@ -128,6 +128,7 @@ export const SuggestedInfo = styled(motion.div)`
       width: 100%;
       height: 100%;
       border-radius: 50%;
+      ${ShadowStyle};
     }
   }
 

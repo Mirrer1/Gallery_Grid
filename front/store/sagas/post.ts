@@ -108,7 +108,11 @@ import {
   LOAD_FOLLOWING_POSTS_REQUEST,
   loadFollowingPostsRequestAction,
   LOAD_FOLLOWING_POSTS_SUCCESS,
-  LOAD_FOLLOWING_POSTS_FAILURE
+  LOAD_FOLLOWING_POSTS_FAILURE,
+  LOAD_USER_POSTS_REQUEST,
+  loadUserPostsRequestAction,
+  LOAD_USER_POSTS_SUCCESS,
+  LOAD_USER_POSTS_FAILURE
 } from 'store/types/postType';
 import {
   DECREMENT_BEST_USERS_COMMENT,
@@ -156,6 +160,26 @@ function* loadBestPosts(action: loadBestPostsRequestAction) {
   } catch (error: any) {
     yield put({
       type: LOAD_BEST_POSTS_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
+function loadUserPostsAPI(userId: number, lastId?: number) {
+  return axios.get(`/posts/user?userId=${userId}&lastId=${lastId || 0}`);
+}
+
+function* loadUserPosts(action: loadUserPostsRequestAction) {
+  try {
+    const result: AxiosResponse<Post[]> = yield call(() => loadUserPostsAPI(action.userId, action.lastId));
+
+    yield put({
+      type: LOAD_USER_POSTS_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: LOAD_USER_POSTS_FAILURE,
       error: error.response.data.message
     });
   }
@@ -656,6 +680,10 @@ function* watchLoadBestPosts() {
   yield takeLatest(LOAD_BEST_POSTS_REQUEST, loadBestPosts);
 }
 
+function* watchLoadUserPosts() {
+  yield takeLatest(LOAD_USER_POSTS_REQUEST, loadUserPosts);
+}
+
 function* watchLoadFollowingPosts() {
   yield takeLatest(LOAD_FOLLOWING_POSTS_REQUEST, loadFollowingPosts);
 }
@@ -760,6 +788,7 @@ export default function* postSaga() {
   yield all([
     fork(watchLoadNewPosts),
     fork(watchLoadBestPosts),
+    fork(watchLoadUserPosts),
     fork(watchLoadFollowingPosts),
     fork(watchLoadMyActivityCounts),
     fork(watchLoadMyActivityPosts),

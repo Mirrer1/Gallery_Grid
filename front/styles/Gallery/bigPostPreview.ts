@@ -48,11 +48,13 @@ export const BigPostPreviewImage = styled.div`
   position: relative;
   width: 100%;
   height: 350px;
+  ${({ theme }) => theme.flexSet('normal')};
 
   & > img {
     width: 60%;
     height: 100%;
     border-radius: 5px;
+    ${ShadowStyle};
   }
 
   & > div {

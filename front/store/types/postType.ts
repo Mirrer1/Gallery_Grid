@@ -14,6 +14,10 @@ export const LOAD_FOLLOWING_POSTS_REQUEST = 'LOAD_FOLLOWING_POSTS_REQUEST' as co
 export const LOAD_FOLLOWING_POSTS_SUCCESS = 'LOAD_FOLLOWING_POSTS_SUCCESS' as const;
 export const LOAD_FOLLOWING_POSTS_FAILURE = 'LOAD_FOLLOWING_POSTS_FAILURE' as const;
 
+export const LOAD_USER_POSTS_REQUEST = 'LOAD_USER_POSTS_REQUEST' as const;
+export const LOAD_USER_POSTS_SUCCESS = 'LOAD_USER_POSTS_SUCCESS' as const;
+export const LOAD_USER_POSTS_FAILURE = 'LOAD_USER_POSTS_FAILURE' as const;
+
 export const LOAD_MY_ACTIVITY_COUNTS_REQUEST = 'LOAD_MY_ACTIVITY_COUNTS_REQUEST' as const;
 export const LOAD_MY_ACTIVITY_COUNTS_SUCCESS = 'LOAD_MY_ACTIVITY_COUNTS_SUCCESS' as const;
 export const LOAD_MY_ACTIVITY_COUNTS_FAILURE = 'LOAD_MY_ACTIVITY_COUNTS_FAILURE' as const;
@@ -231,6 +235,7 @@ export interface ActivityCounts {
 
 export type PostState = {
   timelinePosts: Post[];
+  userPosts: Post[];
   myActivityCounts: ActivityCounts;
   myActivityPosts: UserHistoryPost[];
   galleryPosts: UserHistoryPost[];
@@ -250,6 +255,7 @@ export type PostState = {
   activityFocusedCommentId: number | null;
   commentVisiblePostId: number | null;
   hasMoreTimelinePosts: boolean;
+  hasMoreUserPosts: boolean;
   hasMoreMyActivityPosts: boolean;
   isCategoryChanged: boolean;
   loadNewPostsLoading: boolean;
@@ -261,6 +267,9 @@ export type PostState = {
   loadFollowingPostsLoading: boolean;
   loadFollowingPostsDone: boolean;
   loadFollowingPostsError: null | string;
+  loadUserPostsLoading: boolean;
+  loadUserPostsDone: boolean;
+  loadUserPostsError: null | string;
   loadMyActivityCountsLoading: boolean;
   loadMyActivityCountsDone: boolean;
   loadMyActivityCountsError: null | string;
@@ -389,6 +398,22 @@ export interface loadFollowingPostsSuccessAction {
 
 export interface loadFollowingPostsFailureAction {
   type: typeof LOAD_FOLLOWING_POSTS_FAILURE;
+  error: string;
+}
+
+export interface loadUserPostsRequestAction {
+  type: typeof LOAD_USER_POSTS_REQUEST;
+  userId: number;
+  lastId?: number;
+}
+
+export interface loadUserPostsSuccessAction {
+  type: typeof LOAD_USER_POSTS_SUCCESS;
+  data: Post[];
+}
+
+export interface loadUserPostsFailureAction {
+  type: typeof LOAD_USER_POSTS_FAILURE;
   error: string;
 }
 
@@ -954,4 +979,7 @@ export type PostAction =
   | editModalCommentRequestAction
   | editModalCommentSuccessAction
   | editModalCommentFailureAction
-  | setActivityFocusedCommentIdAction;
+  | setActivityFocusedCommentIdAction
+  | loadUserPostsRequestAction
+  | loadUserPostsSuccessAction
+  | loadUserPostsFailureAction;

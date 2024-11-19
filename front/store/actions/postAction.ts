@@ -50,7 +50,8 @@ import {
   INITIALIZE_POST_LIST,
   LOAD_BEST_POSTS_REQUEST,
   LOAD_FOLLOWING_POSTS_REQUEST,
-  DELETE_FOLLOWING_USER_POSTS
+  DELETE_FOLLOWING_USER_POSTS,
+  LOAD_USER_POSTS_REQUEST
 } from 'store/types/postType';
 
 export const initializePostList = () => ({
@@ -73,6 +74,12 @@ export const loadFollowingPostsRequest = (lastCreatedAt?: string, limit: number 
   type: LOAD_FOLLOWING_POSTS_REQUEST,
   lastCreatedAt,
   limit
+});
+
+export const loadUserPostsRequest = (userId: number, lastId?: number) => ({
+  type: LOAD_USER_POSTS_REQUEST,
+  userId,
+  lastId
 });
 
 export const deleteFollowingUserPostsRequest = (data: number) => ({
