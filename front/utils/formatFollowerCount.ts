@@ -4,5 +4,5 @@ export const formatFollowerCount = (followerCount: number): string => {
   } else if (followerCount >= 1000) {
     return `${(followerCount / 1000).toFixed(1)}K`;
   }
-  return followerCount.toString();
+  return followerCount?.toString();
 };

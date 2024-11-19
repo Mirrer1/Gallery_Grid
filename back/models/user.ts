@@ -27,6 +27,7 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
   declare Posts?: Post[];
+  declare ProfileImage?: Image;
 
   public addFollowing!: BelongsToManyAddAssociationMixin<User, number>;
   public removeFollowing!: BelongsToManyRemoveAssociationMixin<User, number>;

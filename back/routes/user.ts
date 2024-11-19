@@ -465,4 +465,48 @@ router.get('/suggest', isLoggedIn, async (req, res, next) => {
   }
 });
 
+router.get('/info/:id', isLoggedIn, async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const user = await User.findByPk(id, {
+      attributes: ['id', 'nickname', 'desc'],
+      include: [
+        {
+          model: Image,
+          as: 'ProfileImage',
+          attributes: ['id', 'src'],
+          required: false
+        }
+      ]
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: '유저가 존재하지 않습니다.' });
+    }
+
+    const posts = await user.getPosts();
+    const postsCount = posts.length;
+
+    const followers = await user.getFollowers();
+    const followersCount = followers.length;
+
+    const followings = await user.getFollowings();
+    const followingsCount = followings.length;
+
+    res.status(200).json({
+      id: user.id,
+      nickname: user.nickname,
+      desc: user.desc,
+      ProfileImage: user.ProfileImage,
+      postsCount,
+      followersCount,
+      followingsCount
+    });
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+});
+
 export default router;

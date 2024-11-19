@@ -4,6 +4,9 @@ import {
   LOAD_MY_INFO_FAILURE,
   LOAD_MY_INFO_REQUEST,
   LOAD_MY_INFO_SUCCESS,
+  LOAD_USER_INFO_FAILURE,
+  LOAD_USER_INFO_REQUEST,
+  LOAD_USER_INFO_SUCCESS,
   LOGIN_FAILURE,
   LOGIN_GOOGLE_FAILURE,
   LOGIN_GOOGLE_REQUEST,
@@ -48,6 +51,7 @@ import {
 
 export const initialState: UserState = {
   me: null,
+  userInfo: null,
   bestUsers: null,
   suggestUsers: null,
   userImagePath: [],
@@ -57,6 +61,9 @@ export const initialState: UserState = {
   loadSuggestUsersLoading: false,
   loadSuggestUsersDone: false,
   loadSuggestUsersError: null,
+  loadUserInfoLoading: false,
+  loadUserInfoDone: false,
+  loadUserInfoError: null,
   loginLoading: false,
   loginDone: false,
   loginError: null,
@@ -117,6 +124,20 @@ const reducer = (state: UserState = initialState, action: UserAction): UserState
       case LOAD_SUGGEST_USERS_FAILURE:
         draft.loadSuggestUsersLoading = false;
         draft.loadSuggestUsersError = action.error;
+        break;
+      case LOAD_USER_INFO_REQUEST:
+        draft.loadUserInfoLoading = true;
+        draft.loadUserInfoDone = false;
+        draft.loadUserInfoError = null;
+        break;
+      case LOAD_USER_INFO_SUCCESS:
+        draft.loadUserInfoLoading = false;
+        draft.loadUserInfoDone = true;
+        draft.userInfo = action.data;
+        break;
+      case LOAD_USER_INFO_FAILURE:
+        draft.loadUserInfoLoading = false;
+        draft.loadUserInfoError = action.error;
         break;
       case LOGIN_REQUEST:
         draft.loginLoading = true;
@@ -242,6 +263,10 @@ const reducer = (state: UserState = initialState, action: UserAction): UserState
 
         const followedUser = draft.bestUsers?.find(user => user.id === action.data);
         if (followedUser) followedUser.followerCount += 1;
+
+        if (draft.userInfo && draft.userInfo.id === action.data) {
+          draft.userInfo.followersCount += 1;
+        }
         break;
       case FOLLOW_USER_FAILURE:
         draft.followUserLoading = false;
@@ -259,6 +284,10 @@ const reducer = (state: UserState = initialState, action: UserAction): UserState
 
         const unfollowedUser = draft.bestUsers?.find(user => user.id === action.data);
         if (unfollowedUser) unfollowedUser.followerCount -= 1;
+
+        if (draft.userInfo && draft.userInfo.id === action.data && draft.userInfo.followersCount > 0) {
+          draft.userInfo.followersCount -= 1;
+        }
         break;
       case UNFOLLOW_USER_FAILURE:
         draft.unFollowUserLoading = false;

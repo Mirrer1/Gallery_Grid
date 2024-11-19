@@ -117,7 +117,7 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
                 <p>Gallery</p>
               </NavbarItem>
 
-              <NavbarItem href="/user" $selected={pathname === '/user'} $message={false}>
+              <NavbarItem href={`/user/${me.id}`} $selected={pathname === '/user'} $message={false}>
                 <div />
                 <AreaChartOutlined />
                 <p>Profile</p>

@@ -8,6 +8,10 @@ export const LOAD_SUGGEST_USERS_REQUEST = 'LOAD_SUGGEST_USERS_REQUEST' as const;
 export const LOAD_SUGGEST_USERS_SUCCESS = 'LOAD_SUGGEST_USERS_SUCCESS' as const;
 export const LOAD_SUGGEST_USERS_FAILURE = 'LOAD_SUGGEST_USERS_FAILURE' as const;
 
+export const LOAD_USER_INFO_REQUEST = 'LOAD_USER_INFO_REQUEST' as const;
+export const LOAD_USER_INFO_SUCCESS = 'LOAD_USER_INFO_SUCCESS' as const;
+export const LOAD_USER_INFO_FAILURE = 'LOAD_USER_INFO_FAILURE' as const;
+
 export const LOGIN_REQUEST = 'LOGIN_REQUEST' as const;
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS' as const;
 export const LOGIN_FAILURE = 'LOGIN_FAILURE' as const;
@@ -55,6 +59,7 @@ export const DECREMENT_BEST_USERS_COMMENT = 'DECREMENT_BEST_USERS_COMMENT' as co
 
 export type UserState = {
   me: User | null;
+  userInfo: DetailedUserInfo | null;
   bestUsers: FeaturedUser[] | null;
   suggestUsers: FeaturedUser[] | null;
   loadBestUsersLoading: boolean;
@@ -63,6 +68,9 @@ export type UserState = {
   loadSuggestUsersLoading: boolean;
   loadSuggestUsersDone: boolean;
   loadSuggestUsersError: null | string;
+  loadUserInfoLoading: boolean;
+  loadUserInfoDone: boolean;
+  loadUserInfoError: null | string;
   userImagePath: string[];
   loginLoading: boolean;
   loginDone: boolean;
@@ -107,28 +115,33 @@ export interface AuthResponse {
   nickname?: string;
 }
 
-export interface FeaturedUser {
+export interface BaseUser {
   id: number;
   nickname: string;
-  desc: string;
+  desc?: string | null;
+  ProfileImage: { id: number; src: string } | null;
+}
+
+export interface FeaturedUser extends BaseUser {
   followerCount: number;
   likeCount: number;
   commentCount: number;
   replyCommentCount: number;
-  ProfileImage: { id: number; src: string } | null;
 }
 
-export interface User {
-  id: number;
+export interface DetailedUserInfo extends BaseUser {
+  postsCount: number;
+  followersCount: number;
+  followingsCount: number;
+}
+
+export interface User extends BaseUser {
   email: string;
-  nickname: string;
-  desc?: string;
   createdAt: string;
   updatedAt: string;
   Posts: number[];
   Followings: { id: number }[];
   Followers: { id: number }[];
-  ProfileImage: { id: number; src: string } | null;
 }
 
 export interface loadBestUsersRequestAction {
@@ -157,6 +170,21 @@ export interface loadSuggestUsersSuccessAction {
 
 export interface loadSuggestUsersFailureAction {
   type: typeof LOAD_SUGGEST_USERS_FAILURE;
+  error: string;
+}
+
+export interface loadUserInfoRequestAction {
+  type: typeof LOAD_USER_INFO_REQUEST;
+  data: number;
+}
+
+export interface loadUserInfoSuccessAction {
+  type: typeof LOAD_USER_INFO_SUCCESS;
+  data: DetailedUserInfo;
+}
+
+export interface loadUserInfoFailureAction {
+  type: typeof LOAD_USER_INFO_FAILURE;
   error: string;
 }
 
@@ -369,4 +397,7 @@ export type UserAction =
   | incrementBestUsersLikeAction
   | decrementBestUsersLikeAction
   | incrementBestUsersCommentAction
-  | decrementBestUsersCommentAction;
+  | decrementBestUsersCommentAction
+  | loadUserInfoRequestAction
+  | loadUserInfoSuccessAction
+  | loadUserInfoFailureAction;

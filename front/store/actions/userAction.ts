@@ -19,7 +19,8 @@ import {
   INCREMENT_BEST_USERS_LIKE,
   INCREMENT_BEST_USERS_COMMENT,
   DECREMENT_BEST_USERS_COMMENT,
-  LOAD_SUGGEST_USERS_REQUEST
+  LOAD_SUGGEST_USERS_REQUEST,
+  LOAD_USER_INFO_REQUEST
 } from 'store/types/userType';
 
 export const loadBestUsersRequest = () => ({
@@ -29,6 +30,11 @@ export const loadBestUsersRequest = () => ({
 export const loadSuggestUsersRequest = (excludeIds: number[] = []) => ({
   type: LOAD_SUGGEST_USERS_REQUEST,
   excludeIds
+});
+
+export const loadUserInfoRequest = (data: number) => ({
+  type: LOAD_USER_INFO_REQUEST,
+  data
 });
 
 export const loginRequest = (data: AuthResponse) => ({
