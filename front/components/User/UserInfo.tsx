@@ -21,20 +21,24 @@ import {
 type InfoProps = {
   selectedActivity: 'posts' | 'follower' | 'following';
   setSelectedActivity: (value: 'posts' | 'follower' | 'following') => void;
+  followLoadingId: number | null;
+  setFollowLoadingId: React.Dispatch<React.SetStateAction<number | null>>;
 };
 
-const UserInfo = ({ selectedActivity, setSelectedActivity }: InfoProps) => {
+const UserInfo = ({ selectedActivity, setSelectedActivity, followLoadingId, setFollowLoadingId }: InfoProps) => {
   const dispatch = useDispatch();
-  const { me, userInfo, followUserLoading, unFollowUserLoading } = useSelector((state: RootState) => state.user);
+  const { me, userInfo } = useSelector((state: RootState) => state.user);
   const { imagePreview, showImagePreview, hideImagePreview } = useImagePreview();
 
   const handleActivity = useCallback((info: 'posts' | 'follower' | 'following') => {
-    if (info === 'follower' || info === 'following') dispatch(setUserFollowType(info));
+    if (info === 'follower' || info === 'following') dispatch(setUserFollowType());
     setSelectedActivity(info);
   }, []);
 
   const onToggleFollow = useCallback(
     (userId: number) => {
+      setFollowLoadingId(userId);
+
       const isFollowing = me.Followings.some((following: { id: number }) => following.id === userId);
 
       if (isFollowing) dispatch(unFollowUserRequest(userId));
@@ -72,7 +76,7 @@ const UserInfo = ({ selectedActivity, setSelectedActivity }: InfoProps) => {
 
           {me.id !== userInfo?.id ? (
             <button type="button" onClick={() => onToggleFollow(userInfo.id)}>
-              {followUserLoading || unFollowUserLoading ? (
+              {followLoadingId === userInfo?.id ? (
                 <LoadingOutlined />
               ) : me.Followings.some((following: { id: number }) => following.id === userInfo?.id) ? (
                 'Unfollow'

@@ -21,10 +21,15 @@ import { UserWrapper } from 'styles/User';
 import { toast } from 'react-toastify';
 
 const user = () => {
-  const { loadUserInfoError } = useSelector((state: RootState) => state.user);
+  const { loadUserInfoError, followUserDone, unFollowUserDone } = useSelector((state: RootState) => state.user);
   const { isPostModalVisible, isDeleteModalVisible } = useSelector((state: RootState) => state.post);
   const [selectedActivity, setSelectedActivity] = useState<'posts' | 'follower' | 'following'>('posts');
+  const [followLoadingId, setFollowLoadingId] = useState<number | null>(null);
   useToastStatus();
+
+  useEffect(() => {
+    if (followUserDone || unFollowUserDone) setFollowLoadingId(null);
+  }, [followUserDone, unFollowUserDone]);
 
   useEffect(() => {
     if (loadUserInfoError) {
@@ -43,9 +48,22 @@ const user = () => {
 
       <AppLayout>
         <UserWrapper>
-          <UserInfo selectedActivity={selectedActivity} setSelectedActivity={setSelectedActivity} />
+          <UserInfo
+            selectedActivity={selectedActivity}
+            setSelectedActivity={setSelectedActivity}
+            followLoadingId={followLoadingId}
+            setFollowLoadingId={setFollowLoadingId}
+          />
 
-          {selectedActivity === 'posts' ? <UserPosts /> : <UserFollowList type={selectedActivity} />}
+          {selectedActivity === 'posts' ? (
+            <UserPosts />
+          ) : (
+            <UserFollowList
+              type={selectedActivity}
+              followLoadingId={followLoadingId}
+              setFollowLoadingId={setFollowLoadingId}
+            />
+          )}
         </UserWrapper>
 
         {isPostModalVisible && <PostModal />}

@@ -153,6 +153,9 @@ const reducer = (state: UserState = initialState, action: UserAction): UserState
         draft.loadUserInfoError = action.error;
         break;
       case LOAD_USER_FOLLOW_INFO_REQUEST:
+        if (action.keyword) {
+          draft.userFollowInfo = [];
+        }
         draft.loadUserFollowInfoLoading = true;
         draft.loadUserFollowInfoDone = false;
         draft.loadUserFollowInfoError = null;
@@ -161,7 +164,7 @@ const reducer = (state: UserState = initialState, action: UserAction): UserState
         draft.loadUserFollowInfoLoading = false;
         draft.loadUserFollowInfoDone = true;
         draft.userFollowInfo = draft.userFollowInfo.concat(action.data);
-        draft.hasMoreUserFollowInfo = action.data.length === 18;
+        draft.hasMoreUserFollowInfo = action.data.length === 20;
         break;
       case LOAD_USER_FOLLOW_INFO_FAILURE:
         draft.loadUserFollowInfoLoading = false;
@@ -284,18 +287,31 @@ const reducer = (state: UserState = initialState, action: UserAction): UserState
         draft.followUserDone = false;
         draft.followUserError = null;
         break;
-      case FOLLOW_USER_SUCCESS:
+      case FOLLOW_USER_SUCCESS: {
         draft.followUserLoading = false;
         draft.followUserDone = true;
+
         if (draft.me) draft.me.Followings.push({ id: action.data });
 
         const followedUser = draft.bestUsers?.find(user => user.id === action.data);
         if (followedUser) followedUser.followerCount += 1;
 
-        if (draft.userInfo && draft.userInfo.id === action.data) {
-          draft.userInfo.followersCount += 1;
+        const userInFollowInfo = draft.userFollowInfo?.find(user => user.id === action.data);
+        if (userInFollowInfo) userInFollowInfo.followerCount += 1;
+
+        if (draft.userInfo) {
+          const { id, followingsCount, followersCount } = draft.userInfo;
+
+          if (id === draft.me?.id) {
+            draft.userInfo.followingsCount = followingsCount + 1;
+          }
+
+          if (id === action.data && id !== draft.me?.id) {
+            draft.userInfo.followersCount = followersCount + 1;
+          }
         }
         break;
+      }
       case FOLLOW_USER_FAILURE:
         draft.followUserLoading = false;
         draft.followUserError = action.error;
@@ -305,18 +321,31 @@ const reducer = (state: UserState = initialState, action: UserAction): UserState
         draft.unFollowUserDone = false;
         draft.unFollowUserError = null;
         break;
-      case UNFOLLOW_USER_SUCCESS:
+      case UNFOLLOW_USER_SUCCESS: {
         draft.unFollowUserLoading = false;
         draft.unFollowUserDone = true;
+
         if (draft.me) draft.me.Followings = draft.me.Followings.filter(following => following.id !== action.data);
 
         const unfollowedUser = draft.bestUsers?.find(user => user.id === action.data);
         if (unfollowedUser) unfollowedUser.followerCount -= 1;
 
-        if (draft.userInfo && draft.userInfo.id === action.data && draft.userInfo.followersCount > 0) {
-          draft.userInfo.followersCount -= 1;
+        const userInFollowInfo = draft.userFollowInfo?.find(user => user.id === action.data);
+        if (userInFollowInfo && userInFollowInfo.followerCount > 0) userInFollowInfo.followerCount -= 1;
+
+        if (draft.userInfo) {
+          const { id, followingsCount, followersCount } = draft.userInfo;
+
+          if (id === draft.me?.id && followingsCount > 0) {
+            draft.userInfo.followingsCount = followingsCount - 1;
+          }
+
+          if (id === action.data && id !== draft.me?.id && followersCount > 0) {
+            draft.userInfo.followersCount = followersCount - 1;
+          }
         }
         break;
+      }
       case UNFOLLOW_USER_FAILURE:
         draft.unFollowUserLoading = false;
         draft.unFollowUserError = action.error;

@@ -194,7 +194,6 @@ export interface loadSuggestUsersFailureAction {
 
 export interface setUserFollowTypeAction {
   type: typeof SET_USER_FOLLOW_TYPE;
-  data: 'follower' | 'following';
 }
 
 export interface loadUserInfoRequestAction {
@@ -218,6 +217,7 @@ export interface loadUserFollowInfoRequestAction {
   userId: number;
   lastId?: number;
   lastFollowerCount?: number;
+  keyword?: string;
 }
 
 export interface loadUserFollowInfoSuccessAction {

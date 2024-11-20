@@ -1,4 +1,4 @@
-import { all, call, delay, fork, put, takeLatest } from 'redux-saga/effects';
+import { all, call, debounce, delay, fork, put, takeLatest } from 'redux-saga/effects';
 import axios, { AxiosResponse } from 'axios';
 
 import {
@@ -123,17 +123,18 @@ function loadUserFollowInfoAPI(
   followType: 'follower' | 'following',
   userId: number,
   lastId?: number,
-  lastFollowerCount?: number
+  lastFollowerCount?: number,
+  keyword?: string
 ) {
   return axios.get(
-    `/user/follow?followType=${followType}&userId=${userId}&lastId=${lastId || 0}&lastFollowerCount=${lastFollowerCount || 0}`
+    `/user/follow?followType=${followType}&userId=${userId}&lastId=${lastId || 0}&lastFollowerCount=${lastFollowerCount || 0}&keyword=${keyword || ''}`
   );
 }
 
 function* loadUserFollowInfo(action: loadUserFollowInfoRequestAction) {
   try {
     const result: AxiosResponse<FollowUser[]> = yield call(() =>
-      loadUserFollowInfoAPI(action.followType, action.userId, action.lastId, action.lastFollowerCount)
+      loadUserFollowInfoAPI(action.followType, action.userId, action.lastId, action.lastFollowerCount, action.keyword)
     );
 
     yield put({
@@ -338,7 +339,7 @@ function* watchLoadUserInfo() {
 }
 
 function* watchLoadUserFollowInfo() {
-  yield takeLatest(LOAD_USER_FOLLOW_INFO_REQUEST, loadUserFollowInfo);
+  yield debounce(500, LOAD_USER_FOLLOW_INFO_REQUEST, loadUserFollowInfo);
 }
 
 function* watchSignUp() {

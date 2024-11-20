@@ -515,6 +515,7 @@ router.get('/follow', isLoggedIn, async (req, res, next) => {
     const userId = parseInt(req.query.userId as string, 10);
     const lastFollowerCount = parseInt(req.query.lastFollowerCount as string, 10) || null;
     const lastId = parseInt(req.query.lastId as string, 10) || null;
+    const keyword = req.query.keyword ? req.query.keyword.toString() : null;
 
     if (!['follower', 'following'].includes(followType)) {
       return res.status(400).json({ message: '잘못된 타입입니다.' });
@@ -555,8 +556,18 @@ router.get('/follow', isLoggedIn, async (req, res, next) => {
         [Sequelize.literal('followerCount'), 'DESC'],
         ['id', 'ASC']
       ],
-      limit: 18
+      limit: 20,
+      where: {}
     };
+
+    if (keyword) {
+      options.where = {
+        ...options.where,
+        nickname: {
+          [Op.like]: `%${keyword}%`
+        }
+      };
+    }
 
     if (lastFollowerCount !== null && lastId !== null) {
       options.where = {

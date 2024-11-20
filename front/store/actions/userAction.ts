@@ -34,9 +34,8 @@ export const loadSuggestUsersRequest = (excludeIds: number[] = []) => ({
   excludeIds
 });
 
-export const setUserFollowType = (data: 'follower' | 'following') => ({
-  type: SET_USER_FOLLOW_TYPE,
-  data
+export const setUserFollowType = () => ({
+  type: SET_USER_FOLLOW_TYPE
 });
 
 export const loadUserInfoRequest = (data: number) => ({
@@ -48,13 +47,15 @@ export const loadUserFollowInfoRequest = (
   followType: 'follower' | 'following',
   userId: number,
   lastId?: number,
-  lastFollowerCount?: number
+  lastFollowerCount?: number,
+  keyword?: string
 ) => ({
   type: LOAD_USER_FOLLOW_INFO_REQUEST,
   followType,
   userId,
   lastId,
-  lastFollowerCount
+  lastFollowerCount,
+  keyword
 });
 
 export const loginRequest = (data: AuthResponse) => ({
