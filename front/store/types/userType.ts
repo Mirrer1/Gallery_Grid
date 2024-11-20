@@ -8,9 +8,14 @@ export const LOAD_SUGGEST_USERS_REQUEST = 'LOAD_SUGGEST_USERS_REQUEST' as const;
 export const LOAD_SUGGEST_USERS_SUCCESS = 'LOAD_SUGGEST_USERS_SUCCESS' as const;
 export const LOAD_SUGGEST_USERS_FAILURE = 'LOAD_SUGGEST_USERS_FAILURE' as const;
 
+export const SET_USER_FOLLOW_TYPE = 'SET_USER_FOLLOW_TYPE' as const;
 export const LOAD_USER_INFO_REQUEST = 'LOAD_USER_INFO_REQUEST' as const;
 export const LOAD_USER_INFO_SUCCESS = 'LOAD_USER_INFO_SUCCESS' as const;
 export const LOAD_USER_INFO_FAILURE = 'LOAD_USER_INFO_FAILURE' as const;
+
+export const LOAD_USER_FOLLOW_INFO_REQUEST = 'LOAD_USER_FOLLOW_INFO_REQUEST' as const;
+export const LOAD_USER_FOLLOW_INFO_SUCCESS = 'LOAD_USER_FOLLOW_INFO_SUCCESS' as const;
+export const LOAD_USER_FOLLOW_INFO_FAILURE = 'LOAD_USER_FOLLOW_INFO_FAILURE' as const;
 
 export const LOGIN_REQUEST = 'LOGIN_REQUEST' as const;
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS' as const;
@@ -60,6 +65,7 @@ export const DECREMENT_BEST_USERS_COMMENT = 'DECREMENT_BEST_USERS_COMMENT' as co
 export type UserState = {
   me: User | null;
   userInfo: DetailedUserInfo | null;
+  userFollowInfo: FollowUser[];
   bestUsers: FeaturedUser[] | null;
   suggestUsers: FeaturedUser[] | null;
   loadBestUsersLoading: boolean;
@@ -71,6 +77,10 @@ export type UserState = {
   loadUserInfoLoading: boolean;
   loadUserInfoDone: boolean;
   loadUserInfoError: null | string;
+  loadUserFollowInfoLoading: boolean;
+  loadUserFollowInfoDone: boolean;
+  loadUserFollowInfoError: null | string;
+  hasMoreUserFollowInfo: boolean;
   userImagePath: string[];
   loginLoading: boolean;
   loginDone: boolean;
@@ -144,6 +154,15 @@ export interface User extends BaseUser {
   Followers: { id: number }[];
 }
 
+export interface FollowUser extends BaseUser {
+  followerCount: number;
+  Followers: {
+    id: number;
+    nickname: string;
+    ProfileImage: string | null;
+  }[];
+}
+
 export interface loadBestUsersRequestAction {
   type: typeof LOAD_BEST_USERS_REQUEST;
 }
@@ -173,6 +192,11 @@ export interface loadSuggestUsersFailureAction {
   error: string;
 }
 
+export interface setUserFollowTypeAction {
+  type: typeof SET_USER_FOLLOW_TYPE;
+  data: 'follower' | 'following';
+}
+
 export interface loadUserInfoRequestAction {
   type: typeof LOAD_USER_INFO_REQUEST;
   data: number;
@@ -185,6 +209,24 @@ export interface loadUserInfoSuccessAction {
 
 export interface loadUserInfoFailureAction {
   type: typeof LOAD_USER_INFO_FAILURE;
+  error: string;
+}
+
+export interface loadUserFollowInfoRequestAction {
+  type: typeof LOAD_USER_FOLLOW_INFO_REQUEST;
+  followType: 'follower' | 'following';
+  userId: number;
+  lastId?: number;
+  lastFollowerCount?: number;
+}
+
+export interface loadUserFollowInfoSuccessAction {
+  type: typeof LOAD_USER_FOLLOW_INFO_SUCCESS;
+  data: FollowUser[];
+}
+
+export interface loadUserFollowInfoFailureAction {
+  type: typeof LOAD_USER_FOLLOW_INFO_FAILURE;
   error: string;
 }
 
@@ -400,4 +442,8 @@ export type UserAction =
   | decrementBestUsersCommentAction
   | loadUserInfoRequestAction
   | loadUserInfoSuccessAction
-  | loadUserInfoFailureAction;
+  | loadUserInfoFailureAction
+  | loadUserFollowInfoRequestAction
+  | loadUserFollowInfoSuccessAction
+  | loadUserFollowInfoFailureAction
+  | setUserFollowTypeAction;

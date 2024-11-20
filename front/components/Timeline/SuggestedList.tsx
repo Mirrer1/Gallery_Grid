@@ -29,12 +29,12 @@ type SuggestedProps = {
 
 const SuggestedList = ({ suggestedListVisible, setSuggestedListVisible }: SuggestedProps) => {
   const dispatch = useDispatch();
+  const { imagePreview, showImagePreview, hideImagePreview } = useImagePreview();
+  const [followActionLoadingUserId, setFollowActionLoadingUserId] = useState<number | null>(null);
+  const { isCommentListVisible } = useSelector((state: RootState) => state.post);
   const { me, suggestUsers, loadSuggestUsersLoading, followUserDone, unFollowUserDone } = useSelector(
     (state: RootState) => state.user
   );
-  const { isCommentListVisible } = useSelector((state: RootState) => state.post);
-  const { imagePreview, showImagePreview, hideImagePreview } = useImagePreview();
-  const [followActionLoadingUserId, setFollowActionLoadingUserId] = useState<number | null>(null);
 
   const hideSuggestedList = useCallback(() => {
     setSuggestedListVisible(false);

@@ -49,7 +49,12 @@ import {
   loadUserInfoRequestAction,
   LOAD_USER_INFO_SUCCESS,
   LOAD_USER_INFO_FAILURE,
-  DetailedUserInfo
+  DetailedUserInfo,
+  loadUserFollowInfoRequestAction,
+  LOAD_USER_FOLLOW_INFO_SUCCESS,
+  LOAD_USER_FOLLOW_INFO_FAILURE,
+  LOAD_USER_FOLLOW_INFO_REQUEST,
+  FollowUser
 } from 'store/types/userType';
 
 function loadBestUsersAPI() {
@@ -109,6 +114,35 @@ function* loadUserInfo(action: loadUserInfoRequestAction) {
   } catch (error: any) {
     yield put({
       type: LOAD_USER_INFO_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
+function loadUserFollowInfoAPI(
+  followType: 'follower' | 'following',
+  userId: number,
+  lastId?: number,
+  lastFollowerCount?: number
+) {
+  return axios.get(
+    `/user/follow?followType=${followType}&userId=${userId}&lastId=${lastId || 0}&lastFollowerCount=${lastFollowerCount || 0}`
+  );
+}
+
+function* loadUserFollowInfo(action: loadUserFollowInfoRequestAction) {
+  try {
+    const result: AxiosResponse<FollowUser[]> = yield call(() =>
+      loadUserFollowInfoAPI(action.followType, action.userId, action.lastId, action.lastFollowerCount)
+    );
+
+    yield put({
+      type: LOAD_USER_FOLLOW_INFO_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: LOAD_USER_FOLLOW_INFO_FAILURE,
       error: error.response.data.message
     });
   }
@@ -303,6 +337,10 @@ function* watchLoadUserInfo() {
   yield takeLatest(LOAD_USER_INFO_REQUEST, loadUserInfo);
 }
 
+function* watchLoadUserFollowInfo() {
+  yield takeLatest(LOAD_USER_FOLLOW_INFO_REQUEST, loadUserFollowInfo);
+}
+
 function* watchSignUp() {
   yield takeLatest(SIGNUP_REQUEST, signUp);
 }
@@ -344,6 +382,7 @@ export default function* userSaga() {
     fork(watchLoadBestUsers),
     fork(watchLoadSuggestUsers),
     fork(watchLoadUserInfo),
+    fork(watchLoadUserFollowInfo),
     fork(watchLogin),
     fork(watchLoginGoogle),
     fork(watchLoadMyInfo),

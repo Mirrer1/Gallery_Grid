@@ -8,7 +8,7 @@ import { DarkShadowStyle } from 'styles/Common/shadow';
 export const UserInfoWrapper = styled(motion.section)`
   width: 40%;
   height: 100%;
-  ${({ theme }) => theme.flexColumnSet('space-between')};
+  ${({ theme }) => theme.flexColumnSet('normal', 'normal')};
   margin-right: 1em;
   padding: 0 1em;
 
@@ -25,7 +25,7 @@ export const UserInfoWrapper = styled(motion.section)`
 export const UserInfoImage = styled.div`
   position: relative;
   width: 100%;
-  height: 56%;
+  height: 52%;
 
   & > img:first-child {
     width: 100%;
@@ -69,7 +69,10 @@ export const UserInfoImage = styled.div`
 `;
 
 export const UserInfoText = styled.div<{ $isFollowing: boolean }>`
+  ${({ theme }) => theme.flexColumnSet('start', 'normal')};
   width: 100%;
+  flex-grow: 1;
+  padding-top: 12%;
 
   & > div {
     ${({ theme }) => theme.flexSet('space-between')};
@@ -102,6 +105,7 @@ export const UserInfoText = styled.div<{ $isFollowing: boolean }>`
   }
 
   & > p {
+    flex-grow: 1;
     font-size: 0.8rem;
     opacity: 60%;
     line-height: 1.3;
@@ -109,6 +113,7 @@ export const UserInfoText = styled.div<{ $isFollowing: boolean }>`
 
   ${media.tablet} {
     margin-bottom: 2em;
+    padding-top: 0;
 
     & > div {
       margin-bottom: 1em;

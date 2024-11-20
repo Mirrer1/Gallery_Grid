@@ -20,7 +20,9 @@ import {
   INCREMENT_BEST_USERS_COMMENT,
   DECREMENT_BEST_USERS_COMMENT,
   LOAD_SUGGEST_USERS_REQUEST,
-  LOAD_USER_INFO_REQUEST
+  LOAD_USER_INFO_REQUEST,
+  LOAD_USER_FOLLOW_INFO_REQUEST,
+  SET_USER_FOLLOW_TYPE
 } from 'store/types/userType';
 
 export const loadBestUsersRequest = () => ({
@@ -32,9 +34,27 @@ export const loadSuggestUsersRequest = (excludeIds: number[] = []) => ({
   excludeIds
 });
 
+export const setUserFollowType = (data: 'follower' | 'following') => ({
+  type: SET_USER_FOLLOW_TYPE,
+  data
+});
+
 export const loadUserInfoRequest = (data: number) => ({
   type: LOAD_USER_INFO_REQUEST,
   data
+});
+
+export const loadUserFollowInfoRequest = (
+  followType: 'follower' | 'following',
+  userId: number,
+  lastId?: number,
+  lastFollowerCount?: number
+) => ({
+  type: LOAD_USER_FOLLOW_INFO_REQUEST,
+  followType,
+  userId,
+  lastId,
+  lastFollowerCount
 });
 
 export const loginRequest = (data: AuthResponse) => ({

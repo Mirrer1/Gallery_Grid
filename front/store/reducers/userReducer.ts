@@ -7,6 +7,9 @@ import {
   LOAD_USER_INFO_FAILURE,
   LOAD_USER_INFO_REQUEST,
   LOAD_USER_INFO_SUCCESS,
+  LOAD_USER_FOLLOW_INFO_FAILURE,
+  LOAD_USER_FOLLOW_INFO_REQUEST,
+  LOAD_USER_FOLLOW_INFO_SUCCESS,
   LOGIN_FAILURE,
   LOGIN_GOOGLE_FAILURE,
   LOGIN_GOOGLE_REQUEST,
@@ -46,12 +49,14 @@ import {
   INCREMENT_BEST_USERS_LIKE,
   DECREMENT_BEST_USERS_LIKE,
   INCREMENT_BEST_USERS_COMMENT,
-  DECREMENT_BEST_USERS_COMMENT
+  DECREMENT_BEST_USERS_COMMENT,
+  SET_USER_FOLLOW_TYPE
 } from 'store/types/userType';
 
 export const initialState: UserState = {
   me: null,
   userInfo: null,
+  userFollowInfo: [],
   bestUsers: null,
   suggestUsers: null,
   userImagePath: [],
@@ -64,6 +69,10 @@ export const initialState: UserState = {
   loadUserInfoLoading: false,
   loadUserInfoDone: false,
   loadUserInfoError: null,
+  loadUserFollowInfoLoading: false,
+  loadUserFollowInfoDone: false,
+  loadUserFollowInfoError: null,
+  hasMoreUserFollowInfo: true,
   loginLoading: false,
   loginDone: false,
   loginError: null,
@@ -125,6 +134,10 @@ const reducer = (state: UserState = initialState, action: UserAction): UserState
         draft.loadSuggestUsersLoading = false;
         draft.loadSuggestUsersError = action.error;
         break;
+      case SET_USER_FOLLOW_TYPE:
+        draft.userFollowInfo = [];
+        draft.hasMoreUserFollowInfo = true;
+        break;
       case LOAD_USER_INFO_REQUEST:
         draft.loadUserInfoLoading = true;
         draft.loadUserInfoDone = false;
@@ -138,6 +151,21 @@ const reducer = (state: UserState = initialState, action: UserAction): UserState
       case LOAD_USER_INFO_FAILURE:
         draft.loadUserInfoLoading = false;
         draft.loadUserInfoError = action.error;
+        break;
+      case LOAD_USER_FOLLOW_INFO_REQUEST:
+        draft.loadUserFollowInfoLoading = true;
+        draft.loadUserFollowInfoDone = false;
+        draft.loadUserFollowInfoError = null;
+        break;
+      case LOAD_USER_FOLLOW_INFO_SUCCESS:
+        draft.loadUserFollowInfoLoading = false;
+        draft.loadUserFollowInfoDone = true;
+        draft.userFollowInfo = draft.userFollowInfo.concat(action.data);
+        draft.hasMoreUserFollowInfo = action.data.length === 18;
+        break;
+      case LOAD_USER_FOLLOW_INFO_FAILURE:
+        draft.loadUserFollowInfoLoading = false;
+        draft.loadUserFollowInfoError = action.error;
         break;
       case LOGIN_REQUEST:
         draft.loginLoading = true;

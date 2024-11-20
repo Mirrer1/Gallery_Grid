@@ -11,11 +11,13 @@ import {
   loadNewPostsRequest,
   loadUserPostsRequest
 } from 'store/actions/postAction';
+import { loadUserFollowInfoRequest } from 'store/actions/userAction';
 
 type UseScrollParams = {
-  type: `timeline-${'best' | 'new' | 'follow'}` | 'activity' | 'user-posts';
+  type: `timeline-${'best' | 'new' | 'follow'}` | 'activity' | `user-${'posts' | 'follow'}`;
   ref: RefObject<HTMLDivElement>;
   userId?: number;
+  followType?: 'follower' | 'following';
 };
 
 type ScrollParams = {
@@ -32,8 +34,11 @@ const breakpoints = {
   mobile: 576
 };
 
-const useScroll = ({ type, ref, userId }: UseScrollParams) => {
+const useScroll = ({ type, ref, userId, followType }: UseScrollParams) => {
   const dispatch = useDispatch();
+  const { userFollowInfo, hasMoreUserFollowInfo, loadUserFollowInfoLoading } = useSelector(
+    (state: RootState) => state.user
+  );
   const {
     timelinePosts,
     hasMoreTimelinePosts,
@@ -92,6 +97,22 @@ const useScroll = ({ type, ref, userId }: UseScrollParams) => {
           hasMore: hasMoreUserPosts,
           loading: loadUserPostsLoading,
           dispatcher: () => loadUserPostsRequest(userId ?? 0, userPosts[userPosts.length - 1]?.id || 0),
+          thresholds: [300, 480, 510]
+        };
+      case 'user-follow':
+        return {
+          items: userFollowInfo,
+          hasMore: hasMoreUserFollowInfo,
+          loading: loadUserFollowInfoLoading,
+          dispatcher: () => {
+            const lastItem = userFollowInfo[userFollowInfo.length - 1];
+            return loadUserFollowInfoRequest(
+              followType as 'follower' | 'following',
+              userId ?? 0,
+              lastItem?.id,
+              lastItem?.followerCount
+            );
+          },
           thresholds: [300, 480, 510]
         };
       case 'activity':

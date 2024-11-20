@@ -40,8 +40,6 @@ const UserPosts = () => {
     [userPosts, me]
   );
 
-  console.log(userPosts);
-
   return (
     <UserPostsWrapper {...slideInFromBottom(0.3)} ref={userContainerRef}>
       {userPosts.map((post: Post, i: number) => (

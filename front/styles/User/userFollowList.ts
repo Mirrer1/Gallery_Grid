@@ -71,7 +71,7 @@ export const UserSearchWrapper = styled.div`
 
 export const UserFollowListItemWrapper = styled.div``;
 
-export const UserFollowListItem = styled.div`
+export const UserFollowListItem = styled.div<{ $isFollowing: boolean }>`
   ${({ theme }) => theme.flexSet('space-between')};
   border-bottom: 1px solid ${({ theme }) => theme.colors.darkBg};
   margin-bottom: 0.8em;
@@ -83,7 +83,7 @@ export const UserFollowListItem = styled.div`
 
   & > div:first-child {
     ${({ theme }) => theme.flexSet('start')};
-    width: 85%;
+    flex-grow: 1;
 
     & > img {
       width: 50px;
@@ -94,7 +94,7 @@ export const UserFollowListItem = styled.div`
     }
 
     & > div {
-      width: 80%;
+      flex-grow: 1;
 
       & > h1 {
         font-weight: 600;
@@ -121,14 +121,15 @@ export const UserFollowListItem = styled.div`
         margin-bottom: 1em;
 
         & > img {
-          width: 15px;
-          height: 15px;
+          width: 20px;
+          height: 20px;
           border-radius: 50%;
           margin-right: 0.2em;
+          cursor: pointer;
         }
 
         & > p {
-          margin-left: 0.5em;
+          margin-right: 0.5em;
         }
       }
     }
@@ -136,12 +137,14 @@ export const UserFollowListItem = styled.div`
 
   & > div:last-child {
     & > button {
+      width: 80px;
+      height: 30px;
       font-size: 0.7rem;
-      background-color: #6ba2e6;
-      color: white;
       font-weight: 500;
-      padding: 0.7em 1.5em;
       border-radius: 5px;
+      background-color: ${props => (props.$isFollowing ? 'white' : '#6BA2E6')};
+      color: ${props => (props.$isFollowing ? '#6BA2E6' : 'white')};
+      border: ${props => props.$isFollowing && '1px solid #6BA2E6'};
       ${HoverStyle('&')};
     }
   }
@@ -183,7 +186,7 @@ export const UserFollowListItem = styled.div`
       margin-bottom: 0.8em;
 
       & > button {
-        width: 65%;
+        width: 100%;
       }
     }
   }

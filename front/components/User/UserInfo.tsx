@@ -1,9 +1,10 @@
 import React, { useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { LoadingOutlined, SettingOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 
 import { RootState } from 'store/reducers';
-import { followUserRequest, unFollowUserRequest } from 'store/actions/userAction';
+import { followUserRequest, setUserFollowType, unFollowUserRequest } from 'store/actions/userAction';
 import { formatFollowerCount } from 'utils/formatFollowerCount';
 import useImagePreview from 'utils/useImagePreview';
 import ImagePreview from 'components/Modal/ImagePreviewModal';
@@ -16,7 +17,6 @@ import {
   UserInfoText,
   UserInfoWrapper
 } from 'styles/User/userInfo';
-import { LoadingOutlined, SettingOutlined } from '@ant-design/icons';
 
 type InfoProps = {
   selectedActivity: 'posts' | 'follower' | 'following';
@@ -29,6 +29,7 @@ const UserInfo = ({ selectedActivity, setSelectedActivity }: InfoProps) => {
   const { imagePreview, showImagePreview, hideImagePreview } = useImagePreview();
 
   const handleActivity = useCallback((info: 'posts' | 'follower' | 'following') => {
+    if (info === 'follower' || info === 'following') dispatch(setUserFollowType(info));
     setSelectedActivity(info);
   }, []);
 

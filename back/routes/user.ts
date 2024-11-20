@@ -4,7 +4,7 @@ import path from 'path';
 import fs from 'fs';
 import bcrypt from 'bcrypt';
 import passport from 'passport';
-import { Op, Sequelize, fn } from 'sequelize';
+import { BelongsToManyGetAssociationsMixinOptions, Op, Sequelize } from 'sequelize';
 
 import User from '../models/user';
 import Image from '../models/image';
@@ -503,6 +503,115 @@ router.get('/info/:id', isLoggedIn, async (req, res, next) => {
       followersCount,
       followingsCount
     });
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+});
+
+router.get('/follow', isLoggedIn, async (req, res, next) => {
+  try {
+    const followType = req.query.followType as 'follower' | 'following';
+    const userId = parseInt(req.query.userId as string, 10);
+    const lastFollowerCount = parseInt(req.query.lastFollowerCount as string, 10) || null;
+    const lastId = parseInt(req.query.lastId as string, 10) || null;
+
+    if (!['follower', 'following'].includes(followType)) {
+      return res.status(400).json({ message: '잘못된 타입입니다.' });
+    }
+
+    const user = await User.findByPk(userId, {
+      attributes: ['id', 'nickname', 'desc'],
+      include: [
+        {
+          model: Image,
+          as: 'ProfileImage',
+          attributes: ['id', 'src'],
+          required: false
+        }
+      ]
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: '유저가 존재하지 않습니다.' });
+    }
+
+    const options: BelongsToManyGetAssociationsMixinOptions = {
+      attributes: [
+        'id',
+        'nickname',
+        'desc',
+        [Sequelize.literal('(SELECT COUNT(*) FROM Follow WHERE Follow.FollowingId = User.id)'), 'followerCount']
+      ],
+      include: [
+        {
+          model: Image,
+          as: 'ProfileImage',
+          attributes: ['id', 'src'],
+          required: false
+        }
+      ],
+      order: [
+        [Sequelize.literal('followerCount'), 'DESC'],
+        ['id', 'ASC']
+      ],
+      limit: 18
+    };
+
+    if (lastFollowerCount !== null && lastId !== null) {
+      options.where = {
+        [Op.or]: [
+          {
+            [Op.and]: [
+              Sequelize.literal(
+                `(SELECT COUNT(*) FROM Follow WHERE Follow.FollowingId = User.id) = ${lastFollowerCount}`
+              ),
+              { id: { [Op.gt]: lastId } }
+            ]
+          },
+          Sequelize.literal(`(SELECT COUNT(*) FROM Follow WHERE Follow.FollowingId = User.id) < ${lastFollowerCount}`)
+        ]
+      };
+    }
+
+    let followData: User[] = [];
+    if (followType === 'follower') {
+      followData = (await user.getFollowers(options)) || [];
+    } else if (followType === 'following') {
+      followData = (await user.getFollowings(options)) || [];
+    }
+
+    const enrichedFollowData = await Promise.all(
+      followData.map(async follow => {
+        const followers = await follow.getFollowers({
+          attributes: [
+            'id',
+            'nickname',
+            [Sequelize.literal('(SELECT COUNT(*) FROM Follow WHERE Follow.FollowingId = User.id)'), 'followerCount']
+          ],
+          include: [
+            {
+              model: Image,
+              as: 'ProfileImage',
+              attributes: ['id', 'src']
+            }
+          ],
+          order: [[Sequelize.literal('followerCount'), 'DESC']],
+          limit: 3
+        });
+
+        return {
+          ...follow.toJSON(),
+          Followers: followers.map(follower => ({
+            id: follower.id,
+            nickname: follower.nickname,
+            ProfileImage: follower.ProfileImage?.src || null
+          }))
+        };
+      })
+    );
+
+    return res.status(200).json(enrichedFollowData);
   } catch (err) {
     console.error(err);
     next(err);
