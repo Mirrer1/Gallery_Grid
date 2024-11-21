@@ -10,6 +10,7 @@ import {
   MoreOutlined,
   ShareAltOutlined
 } from '@ant-design/icons';
+import Link from 'next/link';
 
 import ImagePreview from './ImagePreviewModal';
 import ModalCommentList from './ModalCommentList';
@@ -105,7 +106,7 @@ const ModalContent = () => {
           />
 
           <div>
-            <h1>{singlePost.User.nickname}</h1>
+            <Link href={`/user/${singlePost.UserId}`}>{singlePost.User.nickname}</Link>
             <p>
               {formatDate(singlePost.createdAt)}
               {singlePost.location && ` - ${singlePost.location}`}

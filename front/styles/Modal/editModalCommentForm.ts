@@ -7,6 +7,7 @@ import { DarkShadowStyle } from 'styles/Common/shadow';
 
 export const EditModalCommentWrapper = styled.div<{ $reply: boolean }>`
   padding-left: ${props => (props.$reply ? '2em' : '0')};
+  padding: 0.5em;
 `;
 
 export const EditModalCommentFormSection = styled(motion.form)`
@@ -89,7 +90,7 @@ export const EditModalCommentHeader = styled.header`
       ${({ theme }) => theme.flexSet('flex-start')};
       margin-bottom: 0.3em;
 
-      & > h1 {
+      & > a {
         font-size: 0.9rem;
         font-weight: 500;
         margin-right: 0.3em;
@@ -165,10 +166,6 @@ export const EditModalCommentBtn = styled.button<{ $active: boolean }>`
   span {
     padding: 0em 0.54em;
   }
-
-  ${media.tablet} {
-    font-size: 0.8rem;
-  }
 `;
 
 export const EditModalCancelBtn = styled.button`
@@ -182,9 +179,5 @@ export const EditModalCancelBtn = styled.button`
 
   span {
     padding: 0em 0.54em;
-  }
-
-  ${media.tablet} {
-    font-size: 0.8rem;
   }
 `;

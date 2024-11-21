@@ -27,16 +27,7 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
   const dispatch = useDispatch();
   const { me, logoutDone } = useSelector((state: RootState) => state.user);
   const { imagePreview, showImagePreview, hideImagePreview } = useImagePreview();
-  const [showInput, setShowInput] = useState(false);
   const [pathname, setPathname] = useState<string | null>(null);
-
-  const showSearch = useCallback(() => {
-    if (!showInput) setShowInput(true);
-  }, [showInput]);
-
-  const hideSearch = useCallback(() => {
-    if (showInput) setShowInput(false);
-  }, [showInput]);
 
   const onClickMessage = useCallback(() => {
     Router.push('/message');
@@ -143,9 +134,9 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
 
       <div />
 
-      <MobileHeader showInput={showInput} showSearch={showSearch} hideSearch={hideSearch} />
+      <MobileHeader />
 
-      <main onClick={hideSearch}>{children}</main>
+      <main>{children}</main>
 
       <MobileFooter />
 

@@ -141,7 +141,7 @@ export const SuggestedInfo = styled(motion.div)`
       padding-right: 0.5em;
       margin-bottom: 0.3em;
 
-      & > h2 {
+      & > a {
         color: ${({ theme }) => theme.colors.primary};
         font-size: 0.9rem;
         font-weight: 500;

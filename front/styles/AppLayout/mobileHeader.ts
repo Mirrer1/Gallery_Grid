@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import media from 'styles/media';
-import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
+import { HoverStyle } from 'styles/Common/hover';
 
 export const MobileHeaderWrapper = styled.header`
   display: none;
@@ -58,32 +58,5 @@ export const MobileHeaderContent = styled.div`
   & > div > span {
     font-size: 0.8rem;
     opacity: 40%;
-  }
-`;
-
-export const MobileHeaderInput = styled.div`
-  position: relative;
-  height: 56px;
-
-  & > input {
-    width: 90%;
-    font-size: 0.9rem;
-    color: #242424;
-    padding: 0.4em 1em;
-    min-height: 40px;
-    outline: none;
-    border: none;
-    line-height: 1.15;
-    box-shadow: 0px 10px 20px -18px;
-    transition: all 200ms;
-  }
-
-  & > span {
-    position: absolute;
-    top: 40%;
-    right: 7%;
-    font-size: 0.8rem;
-    opacity: 40%;
-    ${ReverseHoverStyle('&')}
   }
 `;

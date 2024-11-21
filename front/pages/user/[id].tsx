@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { END } from 'redux-saga';
-import Router from 'next/router';
+import { useRouter } from 'next/router';
 import axios from 'axios';
 import Head from 'next/head';
 
@@ -21,6 +21,8 @@ import { UserWrapper } from 'styles/User';
 import { toast } from 'react-toastify';
 
 const user = () => {
+  const router = useRouter();
+  const { id: userId } = router.query;
   const { loadUserInfoError, followUserDone, unFollowUserDone } = useSelector((state: RootState) => state.user);
   const { isPostModalVisible, isDeleteModalVisible } = useSelector((state: RootState) => state.post);
   const [selectedActivity, setSelectedActivity] = useState<'posts' | 'follower' | 'following'>('posts');
@@ -32,9 +34,13 @@ const user = () => {
   }, [followUserDone, unFollowUserDone]);
 
   useEffect(() => {
+    setSelectedActivity('posts');
+  }, [userId]);
+
+  useEffect(() => {
     if (loadUserInfoError) {
       toast.warning('유효하지 않은 사용자입니다.');
-      Router.push('/timeline');
+      router.push('/timeline');
     }
   }, [loadUserInfoError]);
 
@@ -60,6 +66,7 @@ const user = () => {
           ) : (
             <UserFollowList
               type={selectedActivity}
+              setSelectedActivity={setSelectedActivity}
               followLoadingId={followLoadingId}
               setFollowLoadingId={setFollowLoadingId}
             />

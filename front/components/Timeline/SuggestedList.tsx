@@ -7,6 +7,7 @@ import {
   UserAddOutlined,
   UserDeleteOutlined
 } from '@ant-design/icons';
+import Link from 'next/link';
 
 import ImagePreview from 'components/Modal/ImagePreviewModal';
 import useImagePreview from 'utils/useImagePreview';
@@ -92,7 +93,7 @@ const SuggestedList = ({ suggestedListVisible, setSuggestedListVisible }: Sugges
 
               <div>
                 <div>
-                  <h2>{user.nickname}</h2>
+                  <Link href={`/user/${user.id}`}>{user.nickname}</Link>
 
                   {followActionLoadingUserId === user.id ? (
                     <LoadingOutlined />

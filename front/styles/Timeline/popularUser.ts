@@ -115,7 +115,7 @@ export const PopularUserContents = styled.div`
     margin-bottom: 4px;
   }
 
-  & > div > h1 {
+  & > div > a {
     font-size: 0.9rem;
     font-weight: 500;
     margin-bottom: 10px;
@@ -143,7 +143,7 @@ export const PopularUserContents = styled.div`
     border-bottom-right-radius: 5px;
     background-clip: padding-box;
 
-    & > div > h1 {
+    & > div > a {
       color: white;
       margin-bottom: 1%;
     }
@@ -160,7 +160,7 @@ export const PopularUserContents = styled.div`
       margin-bottom: 0.7em;
     }
 
-    & > div > h1 {
+    & > div > a {
       font-size: 0.8rem;
     }
 

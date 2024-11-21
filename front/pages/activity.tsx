@@ -63,11 +63,6 @@ const Activity = () => {
             </div>
           </ActivityHeader>
 
-          {/* <FollowWrapper {...slideInFromBottom()}>
-            <FollowList type="follower" list={followerList} />
-            <FollowList type="following" list={followerList} />
-          </FollowWrapper> */}
-
           <AlertList />
         </ActivityWrapper>
 

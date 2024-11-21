@@ -90,11 +90,10 @@ export const UserFollowListItem = styled.div<{ $isFollowing: boolean }>`
     & > div {
       flex-grow: 1;
 
-      & > h1 {
+      & > a {
         font-size: 0.9rem;
         font-weight: 600;
         cursor: pointer;
-        margin-bottom: 0.3em;
       }
 
       & > p {
@@ -106,7 +105,7 @@ export const UserFollowListItem = styled.div<{ $isFollowing: boolean }>`
         white-space: normal;
         font-size: 0.8rem;
         opacity: 60%;
-        margin-bottom: 0.8em;
+        margin: 0.3em 0 0.8em 0;
       }
 
       & > div {

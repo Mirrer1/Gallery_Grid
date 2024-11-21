@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { CloseCircleOutlined, LoadingOutlined, SearchOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 import { RootState } from 'store/reducers';
 import { FollowUser } from 'store/types/userType';
@@ -23,11 +24,17 @@ import useScroll from 'utils/useScroll';
 
 type UserFollowProps = {
   type: 'follower' | 'following';
+  setSelectedActivity: (value: 'posts' | 'follower' | 'following') => void;
   followLoadingId: number | null;
   setFollowLoadingId: React.Dispatch<React.SetStateAction<number | null>>;
 };
 
-const UserFollowList = ({ type: followType, followLoadingId, setFollowLoadingId }: UserFollowProps) => {
+const UserFollowList = ({
+  type: followType,
+  setSelectedActivity,
+  followLoadingId,
+  setFollowLoadingId
+}: UserFollowProps) => {
   const dispatch = useDispatch();
   const router = useRouter();
   const { id: userId } = router.query;
@@ -64,6 +71,14 @@ const UserFollowList = ({ type: followType, followLoadingId, setFollowLoadingId 
       else dispatch(followUserRequest(userId));
     },
     [me.Followings, userFollowInfo]
+  );
+
+  const onMoveUserProfile = useCallback(
+    (id: number) => {
+      if (Number(userId) === id) setSelectedActivity('posts');
+      else router.push(`/user/${id}`);
+    },
+    [userFollowInfo]
   );
 
   useEffect(() => {
@@ -120,7 +135,7 @@ const UserFollowList = ({ type: followType, followLoadingId, setFollowLoadingId 
                   }
                 />
                 <div>
-                  <h1>{user.nickname}</h1>
+                  <Link href={`/user/${user.id}`}>{user.nickname}</Link>
                   <p>{user?.desc?.trim() ? user.desc : '소개글이 없습니다.'}</p>
                   <div>
                     <p>{formatFollowerCount(user.followerCount)} followers</p>
@@ -129,6 +144,7 @@ const UserFollowList = ({ type: followType, followLoadingId, setFollowLoadingId 
                         key={follower.id}
                         src={follower?.ProfileImage ? `http://localhost:3065/${follower.ProfileImage}` : '/user.jpg'}
                         alt={`팔로워 ${follower.nickname}의 프로필 이미지`}
+                        onClick={() => onMoveUserProfile(follower.id)}
                       />
                     ))}
                   </div>

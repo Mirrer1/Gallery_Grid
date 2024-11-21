@@ -4,6 +4,7 @@ import { CloseOutlined, CompassOutlined, LoadingOutlined, SmileOutlined } from '
 import { toast } from 'react-toastify';
 import EmojiPicker from 'emoji-picker-react';
 import Router from 'next/router';
+import Link from 'next/link';
 
 import ImagePreview from './ImagePreviewModal';
 import useInput from 'utils/useInput';
@@ -91,7 +92,7 @@ const EditModalContent = () => {
           />
 
           <div>
-            <h1>{singlePost.User.nickname}</h1>
+            <Link href={`/user/${singlePost.UserId}`}>{singlePost.User.nickname}</Link>
             <p>
               {formatDate(singlePost.createdAt)}
               {location && ` - ${location}`}

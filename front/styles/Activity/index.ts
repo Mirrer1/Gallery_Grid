@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { motion } from 'framer-motion';
 
 import media from 'styles/media';
 
@@ -86,14 +85,5 @@ export const HeaderItem = styled.div`
     & > p {
       font-size: 1.1rem;
     }
-  }
-`;
-
-export const FollowWrapper = styled(motion.div)`
-  ${({ theme }) => theme.flexSet('center', 'start')};
-  margin-bottom: 0.5em;
-
-  ${media.mobile} {
-    ${({ theme }) => theme.flexColumnSet()};
   }
 `;
