@@ -18,6 +18,9 @@ import {
   LOAD_FOLLOWING_POSTS_REQUEST,
   LOAD_FOLLOWING_POSTS_SUCCESS,
   LOAD_FOLLOWING_POSTS_FAILURE,
+  LOAD_USER_POSTS_REQUEST,
+  LOAD_USER_POSTS_SUCCESS,
+  LOAD_USER_POSTS_FAILURE,
   LOAD_MY_ACTIVITY_POSTS_REQUEST,
   LOAD_MY_ACTIVITY_POSTS_SUCCESS,
   LOAD_MY_ACTIVITY_POSTS_FAILURE,
@@ -112,6 +115,7 @@ import {
 
 export const initialState: PostState = {
   timelinePosts: [],
+  userPosts: [],
   myActivityCounts: { like: 0, comment: 0, follow: 0 },
   myActivityPosts: [],
   galleryPosts: [],
@@ -131,6 +135,7 @@ export const initialState: PostState = {
   activityFocusedCommentId: null,
   commentVisiblePostId: null,
   hasMoreTimelinePosts: true,
+  hasMoreUserPosts: true,
   hasMoreMyActivityPosts: true,
   isCategoryChanged: false,
   loadNewPostsLoading: false,
@@ -142,6 +147,9 @@ export const initialState: PostState = {
   loadFollowingPostsLoading: false,
   loadFollowingPostsDone: false,
   loadFollowingPostsError: null,
+  loadUserPostsLoading: false,
+  loadUserPostsDone: false,
+  loadUserPostsError: null,
   loadMyActivityCountsLoading: false,
   loadMyActivityCountsDone: false,
   loadMyActivityCountsError: null,
@@ -274,6 +282,21 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
         draft.loadFollowingPostsLoading = false;
         draft.loadFollowingPostsError = action.error;
         break;
+      case LOAD_USER_POSTS_REQUEST:
+        draft.loadUserPostsLoading = true;
+        draft.loadUserPostsDone = false;
+        draft.loadUserPostsError = null;
+        break;
+      case LOAD_USER_POSTS_SUCCESS:
+        draft.loadUserPostsLoading = false;
+        draft.loadUserPostsDone = true;
+        draft.userPosts = draft.userPosts.concat(action.data);
+        draft.hasMoreUserPosts = action.data.length === 14;
+        break;
+      case LOAD_USER_POSTS_FAILURE:
+        draft.loadUserPostsLoading = false;
+        draft.loadUserPostsError = action.error;
+        break;
       case DELETE_FOLLOWING_USER_POSTS:
         draft.timelinePosts = draft.timelinePosts.filter(post => post.User.id !== action.data);
         break;
@@ -391,11 +414,26 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
         draft.editPostLoading = false;
         draft.editPostDone = true;
         draft.postEditMode = false;
+        draft.isModalCommentListVisible = false;
         draft.singlePost = action.data;
+
         const postIndex = draft.timelinePosts.findIndex(post => post.id === action.data.id);
         if (postIndex !== -1) draft.timelinePosts[postIndex] = action.data;
+
         const galleryPostIndex = draft.galleryPosts.findIndex(post => post.Post.id === action.data.id);
         if (galleryPostIndex !== -1) draft.galleryPosts[galleryPostIndex].Post = action.data;
+
+        const userPostIndex = draft.userPosts.findIndex(post => post.id === action.data.id);
+        if (userPostIndex !== -1) draft.userPosts[userPostIndex] = action.data;
+
+        draft.myActivityPosts.forEach(activity => {
+          if (activity.Post.id === action.data.id) {
+            activity.Post = {
+              ...activity.Post,
+              ...action.data
+            };
+          }
+        });
         break;
       case EDIT_POST_FAILURE:
         draft.editPostLoading = false;
@@ -406,7 +444,7 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
         draft.deletePostDone = false;
         draft.deletePostError = null;
         break;
-      case DELETE_POST_SUCCESS:
+      case DELETE_POST_SUCCESS: {
         draft.deletePostLoading = false;
         draft.deletePostDone = true;
         draft.isPostModalVisible = false;
@@ -419,6 +457,9 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
 
         const index = draft.timelinePosts.findIndex(post => post.id === action.data);
         if (index !== -1) draft.timelinePosts.splice(index, 1);
+
+        const userPostIndex = draft.userPosts.findIndex(post => post.id === action.data);
+        if (userPostIndex !== -1) draft.userPosts.splice(userPostIndex, 1);
 
         const galleryIndex = draft.galleryPosts.findIndex(post => post.Post.id === action.data);
         if (galleryIndex !== -1) draft.galleryPosts.splice(galleryIndex, 1);
@@ -440,6 +481,7 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
         });
 
         break;
+      }
       case DELETE_POST_FAILURE:
         draft.deletePostLoading = false;
         draft.deletePostError = action.error;
@@ -819,6 +861,29 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
           }
         });
 
+        const userPostIndex = draft.userPosts.findIndex(post => post.id === action.data.comment.PostId);
+        if (userPostIndex !== -1) {
+          const userPostComments = draft.userPosts[userPostIndex].Comments;
+          const userPostParentId = action.data.parentId ? parseInt(action.data.parentId, 10) : null;
+
+          if (userPostParentId) {
+            const userPostParentComment = userPostComments.find(comment => comment.id === userPostParentId);
+            if (userPostParentComment) {
+              userPostParentComment.Replies = userPostParentComment.Replies || [];
+              userPostParentComment.Replies.push(action.data.comment);
+            }
+          } else {
+            userPostComments.push({
+              id: action.data.comment.id,
+              isDeleted: false,
+              User: { id: action.data.comment.UserId },
+              Replies: []
+            });
+          }
+
+          draft.userPosts[userPostIndex].Comments = userPostComments;
+        }
+
         break;
       }
       case ADD_MODAL_COMMENT_FAILURE:
@@ -956,6 +1021,7 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
           }
           draft.timelinePosts[mainPostIndex].Comments = mainComments;
         }
+
         break;
       }
       case EDIT_MODAL_COMMENT_FAILURE:
@@ -1095,6 +1161,28 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
           }
         }
 
+        const userPostIndex = draft.userPosts.findIndex(post => post.id === postId);
+        if (userPostIndex !== -1) {
+          const userPostComments = draft.userPosts[userPostIndex].Comments;
+          if (replyId) {
+            const parentComment = userPostComments.find(comment => comment.id === replyId);
+            if (parentComment) {
+              parentComment.Replies = parentComment.Replies.filter(reply => reply.id !== id);
+
+              if (parentComment.Replies.length === 0 && parentComment.isDeleted) {
+                draft.userPosts[userPostIndex].Comments = userPostComments.filter(comment => comment.id !== replyId);
+              }
+            }
+          } else {
+            if (hasChild) {
+              const commentToUpdate = userPostComments.find(comment => comment.id === id);
+              if (commentToUpdate) commentToUpdate.isDeleted = true;
+            } else {
+              draft.userPosts[userPostIndex].Comments = userPostComments.filter(comment => comment.id !== id);
+            }
+          }
+        }
+
         draft.myActivityPosts.forEach(activity => {
           if (activity.Post.id === postId) {
             const activityComments = activity.Post.Comments;
@@ -1146,6 +1234,11 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
           galleryPost.Post.Likers.push({ id: action.data.UserId });
         }
 
+        const userPost = draft.userPosts.find(post => post.id === action.data.PostId);
+        if (userPost) {
+          userPost.Likers.push({ id: action.data.UserId });
+        }
+
         draft.myActivityPosts.forEach(activity => {
           if (activity.Post.id === action.data.PostId) {
             activity.Post.Likers.push({ id: action.data.UserId });
@@ -1174,6 +1267,11 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
         const galleryPost = draft.galleryPosts.find(userHistory => userHistory.Post.id === action.data.PostId);
         if (galleryPost) {
           galleryPost.Post.Likers = galleryPost.Post.Likers.filter(liker => liker.id !== action.data.UserId);
+        }
+
+        const userPost = draft.userPosts.find(post => post.id === action.data.PostId);
+        if (userPost) {
+          userPost.Likers = userPost.Likers.filter(liker => liker.id !== action.data.UserId);
         }
 
         draft.myActivityPosts.forEach(activity => {

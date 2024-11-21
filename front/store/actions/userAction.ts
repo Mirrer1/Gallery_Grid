@@ -1,3 +1,4 @@
+import { ResponseComment, ResponseDeleteComment, ResponseLike } from 'store/types/postType';
 import {
   LOGIN_REQUEST,
   RESET_SIGNUP_MESSAGE,
@@ -12,8 +13,50 @@ import {
   EDIT_MY_INFO_REQUEST,
   EXECUTE_USER_EDIT,
   FOLLOW_USER_REQUEST,
-  UNFOLLOW_USER_REQUEST
+  UNFOLLOW_USER_REQUEST,
+  LOAD_BEST_USERS_REQUEST,
+  DECREMENT_BEST_USERS_LIKE,
+  INCREMENT_BEST_USERS_LIKE,
+  INCREMENT_BEST_USERS_COMMENT,
+  DECREMENT_BEST_USERS_COMMENT,
+  LOAD_SUGGEST_USERS_REQUEST,
+  LOAD_USER_INFO_REQUEST,
+  LOAD_USER_FOLLOW_INFO_REQUEST,
+  SET_USER_FOLLOW_TYPE
 } from 'store/types/userType';
+
+export const loadBestUsersRequest = () => ({
+  type: LOAD_BEST_USERS_REQUEST
+});
+
+export const loadSuggestUsersRequest = (excludeIds: number[] = []) => ({
+  type: LOAD_SUGGEST_USERS_REQUEST,
+  excludeIds
+});
+
+export const setUserFollowType = () => ({
+  type: SET_USER_FOLLOW_TYPE
+});
+
+export const loadUserInfoRequest = (data: number) => ({
+  type: LOAD_USER_INFO_REQUEST,
+  data
+});
+
+export const loadUserFollowInfoRequest = (
+  followType: 'follower' | 'following',
+  userId: number,
+  lastId?: number,
+  lastFollowerCount?: number,
+  keyword?: string
+) => ({
+  type: LOAD_USER_FOLLOW_INFO_REQUEST,
+  followType,
+  userId,
+  lastId,
+  lastFollowerCount,
+  keyword
+});
 
 export const loginRequest = (data: AuthResponse) => ({
   type: LOGIN_REQUEST,
@@ -70,5 +113,25 @@ export const followUserRequest = (data: number) => ({
 
 export const unFollowUserRequest = (data: number) => ({
   type: UNFOLLOW_USER_REQUEST,
+  data
+});
+
+export const incrementBestUsersLikeRequest = (data: ResponseLike) => ({
+  type: INCREMENT_BEST_USERS_LIKE,
+  data
+});
+
+export const decrementBestUsersLikeRequest = (data: ResponseLike) => ({
+  type: DECREMENT_BEST_USERS_LIKE,
+  data
+});
+
+export const incrementBestUsersCommentRequest = (data: ResponseComment) => ({
+  type: INCREMENT_BEST_USERS_COMMENT,
+  data
+});
+
+export const decrementBestUsersCommentRequest = (data: ResponseDeleteComment) => ({
+  type: DECREMENT_BEST_USERS_COMMENT,
   data
 });

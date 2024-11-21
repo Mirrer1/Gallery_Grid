@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import Link from 'next/link';
 
 import formatDate from 'utils/useListTimes';
 import DeleteModal from 'components/Modal/DeleteModal';
@@ -63,7 +64,7 @@ const ReplyComment = ({
 
           <div>
             <div>
-              <h1>{comment.User.nickname}</h1>
+              <Link href={`/user/${comment.UserId}`}>{comment.User.nickname}</Link>
               {comment.Post?.UserId === comment.UserId && <p>작성자</p>}
             </div>
 

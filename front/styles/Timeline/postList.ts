@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { motion } from 'framer-motion';
 
 import media from 'styles/media';
+import { ShadowStyle } from 'styles/Common/shadow';
 import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
 
 export const PostContainer = styled.div<{ $uploading: boolean }>`
@@ -94,7 +95,7 @@ export const PostHeader = styled.div`
       cursor: pointer;
     }
 
-    & > div > h1 {
+    & > div > a {
       font-size: 0.9rem;
       font-weight: 500;
       margin-bottom: 0.4em;
@@ -113,7 +114,7 @@ export const PostHeader = styled.div`
         margin-right: 0.5em;
       }
 
-      & > div > h1 {
+      & > div > a {
         font-size: 0.8rem;
       }
     }
@@ -161,6 +162,7 @@ export const PostContents = styled.div`
       height: 100%;
       margin-right: 1em;
       border-radius: 5px;
+      ${ShadowStyle};
     }
 
     & > div {

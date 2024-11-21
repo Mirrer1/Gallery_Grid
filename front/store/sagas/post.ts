@@ -108,8 +108,18 @@ import {
   LOAD_FOLLOWING_POSTS_REQUEST,
   loadFollowingPostsRequestAction,
   LOAD_FOLLOWING_POSTS_SUCCESS,
-  LOAD_FOLLOWING_POSTS_FAILURE
+  LOAD_FOLLOWING_POSTS_FAILURE,
+  LOAD_USER_POSTS_REQUEST,
+  loadUserPostsRequestAction,
+  LOAD_USER_POSTS_SUCCESS,
+  LOAD_USER_POSTS_FAILURE
 } from 'store/types/postType';
+import {
+  DECREMENT_BEST_USERS_COMMENT,
+  DECREMENT_BEST_USERS_LIKE,
+  INCREMENT_BEST_USERS_COMMENT,
+  INCREMENT_BEST_USERS_LIKE
+} from 'store/types/userType';
 
 function loadNewPostsAPI(lastId?: number) {
   return axios.get(`/posts/new?lastId=${lastId || 0}`);
@@ -150,6 +160,26 @@ function* loadBestPosts(action: loadBestPostsRequestAction) {
   } catch (error: any) {
     yield put({
       type: LOAD_BEST_POSTS_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
+function loadUserPostsAPI(userId: number, lastId?: number) {
+  return axios.get(`/posts/user?userId=${userId}&lastId=${lastId || 0}`);
+}
+
+function* loadUserPosts(action: loadUserPostsRequestAction) {
+  try {
+    const result: AxiosResponse<Post[]> = yield call(() => loadUserPostsAPI(action.userId, action.lastId));
+
+    yield put({
+      type: LOAD_USER_POSTS_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: LOAD_USER_POSTS_FAILURE,
       error: error.response.data.message
     });
   }
@@ -405,6 +435,11 @@ function* addComment(action: addCommentRequestAction) {
       type: ADD_COMMENT_SUCCESS,
       data: result.data
     });
+
+    yield put({
+      type: INCREMENT_BEST_USERS_COMMENT,
+      data: result.data
+    });
   } catch (error: any) {
     yield put({
       type: ADD_COMMENT_FAILURE,
@@ -443,6 +478,10 @@ function* deleteComment(action: deleteCommentRequestAction) {
 
     yield put({
       type: DELETE_COMMENT_SUCCESS,
+      data: result.data
+    });
+    yield put({
+      type: DECREMENT_BEST_USERS_COMMENT,
       data: result.data
     });
   } catch (error: any) {
@@ -597,6 +636,10 @@ function* likePost(action: likePostRequestAction) {
       type: LIKE_POST_SUCCESS,
       data: result.data
     });
+    yield put({
+      type: INCREMENT_BEST_USERS_LIKE,
+      data: result.data
+    });
   } catch (error: any) {
     yield put({
       type: LIKE_POST_FAILURE,
@@ -617,6 +660,10 @@ function* unLikePost(action: unLikePostRequestAction) {
       type: UNLIKE_POST_SUCCESS,
       data: result.data
     });
+    yield put({
+      type: DECREMENT_BEST_USERS_LIKE,
+      data: result.data
+    });
   } catch (error: any) {
     yield put({
       type: UNLIKE_POST_FAILURE,
@@ -631,6 +678,10 @@ function* watchLoadNewPosts() {
 
 function* watchLoadBestPosts() {
   yield takeLatest(LOAD_BEST_POSTS_REQUEST, loadBestPosts);
+}
+
+function* watchLoadUserPosts() {
+  yield takeLatest(LOAD_USER_POSTS_REQUEST, loadUserPosts);
 }
 
 function* watchLoadFollowingPosts() {
@@ -737,6 +788,7 @@ export default function* postSaga() {
   yield all([
     fork(watchLoadNewPosts),
     fork(watchLoadBestPosts),
+    fork(watchLoadUserPosts),
     fork(watchLoadFollowingPosts),
     fork(watchLoadMyActivityCounts),
     fork(watchLoadMyActivityPosts),

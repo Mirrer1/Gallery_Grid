@@ -1,5 +1,5 @@
 import express from 'express';
-import { Op } from 'sequelize';
+import { Op, Sequelize } from 'sequelize';
 
 import Post from '../models/post';
 import User from '../models/user';
@@ -8,7 +8,7 @@ import Comment from '../models/comment';
 import ReplyComment from '../models/replyComment';
 import UserHistory from '../models/userHistory';
 import { sequelize } from '../models';
-import { isLoggedIn, isNotLoggedIn } from './middleware';
+import { isLoggedIn } from './middleware';
 
 const router = express.Router();
 
@@ -227,6 +227,75 @@ router.get('/following', isLoggedIn, async (req, res, next) => {
     });
 
     return res.status(200).json(posts);
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+});
+
+router.get('/user', isLoggedIn, async (req, res, next) => {
+  try {
+    const where: { id?: { [Op.lt]: number } } = {};
+    const userId = String(req.query.userId);
+    const lastId = parseInt(req.query.lastId as string, 10) || 0;
+
+    if (lastId) {
+      where.id = { [Op.lt]: lastId };
+    }
+
+    const user = await User.findByPk(userId, {
+      attributes: ['id', 'nickname']
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: '유저가 존재하지 않습니다.' });
+    }
+
+    const posts = await user.getPosts({
+      where,
+      limit: 14,
+      order: [['createdAt', 'DESC']],
+      include: [
+        {
+          model: User,
+          attributes: ['id', 'nickname'],
+          include: [
+            {
+              model: Image,
+              as: 'ProfileImage',
+              attributes: ['id', 'src'],
+              required: false
+            }
+          ]
+        },
+        {
+          model: Image,
+          where: { type: 'post' },
+          attributes: ['id', 'src']
+        },
+        {
+          model: User,
+          as: 'Likers',
+          attributes: ['id'],
+          through: { attributes: [] }
+        },
+        {
+          model: Comment,
+          attributes: ['id', 'isDeleted'],
+          include: [
+            { model: User, attributes: ['id'] },
+            {
+              model: ReplyComment,
+              as: 'Replies',
+              attributes: ['id'],
+              include: [{ model: User, attributes: ['id'] }]
+            }
+          ]
+        }
+      ]
+    });
+
+    res.status(200).json(posts);
   } catch (err) {
     console.error(err);
     next(err);

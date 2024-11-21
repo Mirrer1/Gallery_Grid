@@ -8,7 +8,7 @@ import { DarkShadowStyle } from 'styles/Common/shadow';
 export const UserInfoWrapper = styled(motion.section)`
   width: 40%;
   height: 100%;
-  ${({ theme }) => theme.flexColumnSet('space-between')};
+  ${({ theme }) => theme.flexColumnSet('normal', 'normal')};
   margin-right: 1em;
   padding: 0 1em;
 
@@ -25,13 +25,13 @@ export const UserInfoWrapper = styled(motion.section)`
 export const UserInfoImage = styled.div`
   position: relative;
   width: 100%;
-  height: 56%;
+  height: 52%;
 
   & > img:first-child {
     width: 100%;
     height: 100%;
     border-radius: 5px;
-    ${DarkShadowStyle};
+    cursor: pointer;
   }
 
   & > img:last-child {
@@ -42,6 +42,8 @@ export const UserInfoImage = styled.div`
     width: 100px;
     height: 100px;
     border-radius: 50%;
+    cursor: pointer;
+    ${DarkShadowStyle};
   }
 
   ${media.tablet} {
@@ -66,7 +68,12 @@ export const UserInfoImage = styled.div`
   }
 `;
 
-export const UserInfoText = styled.div`
+export const UserInfoText = styled.div<{ $isFollowing: boolean }>`
+  ${({ theme }) => theme.flexColumnSet('start', 'normal')};
+  width: 100%;
+  flex-grow: 1;
+  padding-top: 12%;
+
   & > div {
     ${({ theme }) => theme.flexSet('space-between')};
     margin-bottom: 0.8em;
@@ -77,17 +84,28 @@ export const UserInfoText = styled.div`
     }
 
     & > button {
+      ${({ theme }) => theme.flexSet()};
+      width: 76px;
+      height: 28px;
       font-size: 0.8rem;
-      background-color: ${({ theme }) => theme.colors.primary};
-      color: white;
       font-weight: 500;
-      padding: 0.7em 1.5em;
+      line-height: 1px;
       border-radius: 5px;
+      background-color: ${props => (props.$isFollowing ? 'white' : '#6BA2E6')};
+      color: ${props => (props.$isFollowing ? '#6BA2E6' : 'white')};
+      border: ${props => props.$isFollowing && '1px solid #6BA2E6'};
+      ${HoverStyle('&')}
+    }
+
+    & > a > span {
+      font-size: 1.2rem;
+      opacity: 80%;
       ${HoverStyle('&')}
     }
   }
 
   & > p {
+    flex-grow: 1;
     font-size: 0.8rem;
     opacity: 60%;
     line-height: 1.3;
@@ -95,6 +113,7 @@ export const UserInfoText = styled.div`
 
   ${media.tablet} {
     margin-bottom: 2em;
+    padding-top: 0;
 
     & > div {
       margin-bottom: 1em;
@@ -112,8 +131,9 @@ export const UserActivityWrapper = styled.div`
 `;
 
 export const UserActivityItem = styled.div<{ $selected: boolean }>`
+  width: 30%;
+  padding: 12px 0;
   text-align: center;
-  padding: 4% 8%;
   transition: box-shadow 200ms ease-in-out;
   box-shadow: ${props => (props.$selected ? 'rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px' : 'none')};
 
@@ -124,7 +144,7 @@ export const UserActivityItem = styled.div<{ $selected: boolean }>`
   & > h2 {
     font-size: 0.8rem;
     opacity: 80%;
-    margin-bottom: 0.3em;
+    margin-bottom: 0.5em;
   }
 
   & > p {

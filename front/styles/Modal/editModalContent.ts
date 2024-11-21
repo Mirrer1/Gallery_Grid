@@ -39,7 +39,7 @@ export const EditModalContentHeader = styled.div`
       cursor: pointer;
     }
 
-    & > div > h1 {
+    & > div > a {
       font-size: 0.9rem;
       font-weight: 500;
       margin-bottom: 0.3em;
@@ -61,7 +61,7 @@ export const EditModalContentHeader = styled.div`
         height: 38px;
       }
 
-      & > div > h1 {
+      & > div > a {
         font-size: 0.8rem;
       }
 

@@ -3,14 +3,16 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 import bcrypt from 'bcrypt';
-import { Op } from 'sequelize';
+import passport from 'passport';
+import { BelongsToManyGetAssociationsMixinOptions, Op, Sequelize } from 'sequelize';
 
 import User from '../models/user';
-import passport from 'passport';
 import Image from '../models/image';
 import Post from '../models/post';
-import { isLoggedIn, isNotLoggedIn } from './middleware';
+import Comment from '../models/comment';
 import UserHistory from '../models/userHistory';
+import ReplyComment from '../models/replyComment';
+import { isLoggedIn, isNotLoggedIn } from './middleware';
 
 const router = express.Router();
 
@@ -312,6 +314,318 @@ router.delete('/follow/:id', isLoggedIn, async (req, res, next) => {
   } catch (e) {
     console.error(e);
     next(e);
+  }
+});
+
+router.get('/best', isLoggedIn, async (req, res, next) => {
+  try {
+    const bestUsers = await User.findAll({
+      where: { isRecommended: true },
+      attributes: [
+        'id',
+        'nickname',
+        'desc',
+        [Sequelize.literal('(SELECT COUNT(*) FROM Follow WHERE Follow.FollowingId = User.id)'), 'followerCount'],
+        [
+          Sequelize.literal(
+            '(SELECT COUNT(*) FROM `Like` INNER JOIN posts ON posts.id = `Like`.PostId WHERE posts.UserId = User.id)'
+          ),
+          'likeCount'
+        ],
+        [
+          Sequelize.literal(
+            '(SELECT COUNT(*) FROM comments WHERE comments.PostId IN (SELECT id FROM posts WHERE posts.UserId = User.id))'
+          ),
+          'commentCount'
+        ],
+        [
+          Sequelize.literal(
+            '(SELECT COUNT(*) FROM reply_comments INNER JOIN comments ON reply_comments.CommentId = comments.id WHERE comments.PostId IN (SELECT id FROM posts WHERE posts.UserId = User.id))'
+          ),
+          'replyCommentCount'
+        ]
+      ],
+      include: [
+        {
+          model: Image,
+          as: 'ProfileImage',
+          where: { type: 'user' },
+          attributes: ['id', 'src'],
+          required: false
+        },
+        {
+          model: Post,
+          attributes: [],
+          include: [
+            {
+              model: User,
+              as: 'Likers',
+              attributes: [],
+              through: { attributes: [] }
+            },
+            {
+              model: Comment,
+              attributes: [],
+              include: [
+                {
+                  model: ReplyComment,
+                  as: 'Replies',
+                  attributes: []
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      group: ['User.id'],
+      order: [
+        [
+          Sequelize.literal(
+            '((SELECT COUNT(*) FROM Follow WHERE Follow.FollowingId = User.id) * 2 + ' +
+              '(SELECT COUNT(*) FROM `Like` INNER JOIN posts ON posts.id = `Like`.PostId WHERE posts.UserId = User.id) * 0.5 + ' +
+              '(SELECT COUNT(*) FROM comments WHERE comments.PostId IN (SELECT id FROM posts WHERE posts.UserId = User.id)) * 0.5 + ' +
+              '(SELECT COUNT(*) FROM reply_comments INNER JOIN comments ON reply_comments.CommentId = comments.id WHERE comments.PostId IN (SELECT id FROM posts WHERE posts.UserId = User.id)) * 0.5)'
+          ),
+          'DESC'
+        ]
+      ],
+      limit: 5
+    });
+
+    res.status(200).json(bestUsers);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+router.get('/suggest', isLoggedIn, async (req, res, next) => {
+  try {
+    const userId = req.user!.id;
+    const excludeIds = Array.isArray(req.query.excludeIds)
+      ? req.query.excludeIds.map(Number)
+      : typeof req.query.excludeIds === 'string'
+      ? req.query.excludeIds.split(',').map(Number)
+      : [];
+
+    const popularUsers = await User.findAll({
+      where: {
+        id: {
+          [Op.not]: [userId, ...excludeIds]
+        },
+        isRecommended: true
+      },
+      attributes: [
+        'id',
+        'nickname',
+        'desc',
+        [Sequelize.literal('(SELECT COUNT(*) FROM Follow WHERE Follow.FollowingId = User.id)'), 'followerCount'],
+        [
+          Sequelize.literal(
+            '(SELECT COUNT(*) FROM `Like` INNER JOIN posts ON posts.id = `Like`.PostId WHERE posts.UserId = User.id)'
+          ),
+          'likeCount'
+        ],
+        [
+          Sequelize.literal(
+            '(SELECT COUNT(*) FROM comments WHERE comments.PostId IN (SELECT id FROM posts WHERE posts.UserId = User.id))'
+          ),
+          'commentCount'
+        ],
+        [
+          Sequelize.literal(
+            '(SELECT COUNT(*) FROM reply_comments INNER JOIN comments ON reply_comments.CommentId = comments.id WHERE comments.PostId IN (SELECT id FROM posts WHERE posts.UserId = User.id))'
+          ),
+          'replyCommentCount'
+        ]
+      ],
+      include: [
+        {
+          model: Image,
+          as: 'ProfileImage',
+          where: { type: 'user' },
+          attributes: ['id', 'src'],
+          required: false
+        }
+      ],
+      order: [
+        [
+          Sequelize.literal('(followerCount * 2 + likeCount * 0.5 + commentCount * 0.5 + replyCommentCount * 0.5)'),
+          'DESC'
+        ]
+      ],
+      limit: 100
+    });
+
+    const shuffledUsers = popularUsers.sort(() => 0.5 - Math.random()).slice(0, 3);
+    res.status(200).json(shuffledUsers);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+router.get('/info/:id', isLoggedIn, async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const user = await User.findByPk(id, {
+      attributes: ['id', 'nickname', 'desc'],
+      include: [
+        {
+          model: Image,
+          as: 'ProfileImage',
+          attributes: ['id', 'src'],
+          required: false
+        }
+      ]
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: '유저가 존재하지 않습니다.' });
+    }
+
+    const posts = await user.getPosts();
+    const postsCount = posts.length;
+
+    const followers = await user.getFollowers();
+    const followersCount = followers.length;
+
+    const followings = await user.getFollowings();
+    const followingsCount = followings.length;
+
+    res.status(200).json({
+      id: user.id,
+      nickname: user.nickname,
+      desc: user.desc,
+      ProfileImage: user.ProfileImage,
+      postsCount,
+      followersCount,
+      followingsCount
+    });
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+});
+
+router.get('/follow', isLoggedIn, async (req, res, next) => {
+  try {
+    const followType = req.query.followType as 'follower' | 'following';
+    const userId = parseInt(req.query.userId as string, 10);
+    const lastFollowerCount = parseInt(req.query.lastFollowerCount as string, 10) || null;
+    const lastId = parseInt(req.query.lastId as string, 10) || null;
+    const keyword = req.query.keyword ? req.query.keyword.toString() : null;
+
+    if (!['follower', 'following'].includes(followType)) {
+      return res.status(400).json({ message: '잘못된 타입입니다.' });
+    }
+
+    const user = await User.findByPk(userId, {
+      attributes: ['id', 'nickname', 'desc'],
+      include: [
+        {
+          model: Image,
+          as: 'ProfileImage',
+          attributes: ['id', 'src'],
+          required: false
+        }
+      ]
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: '유저가 존재하지 않습니다.' });
+    }
+
+    const options: BelongsToManyGetAssociationsMixinOptions = {
+      attributes: [
+        'id',
+        'nickname',
+        'desc',
+        [Sequelize.literal('(SELECT COUNT(*) FROM Follow WHERE Follow.FollowingId = User.id)'), 'followerCount']
+      ],
+      include: [
+        {
+          model: Image,
+          as: 'ProfileImage',
+          attributes: ['id', 'src'],
+          required: false
+        }
+      ],
+      order: [
+        [Sequelize.literal('followerCount'), 'DESC'],
+        ['id', 'ASC']
+      ],
+      limit: 20,
+      where: {}
+    };
+
+    if (keyword) {
+      options.where = {
+        ...options.where,
+        nickname: {
+          [Op.like]: `%${keyword}%`
+        }
+      };
+    }
+
+    if (lastFollowerCount !== null && lastId !== null) {
+      options.where = {
+        [Op.or]: [
+          {
+            [Op.and]: [
+              Sequelize.literal(
+                `(SELECT COUNT(*) FROM Follow WHERE Follow.FollowingId = User.id) = ${lastFollowerCount}`
+              ),
+              { id: { [Op.gt]: lastId } }
+            ]
+          },
+          Sequelize.literal(`(SELECT COUNT(*) FROM Follow WHERE Follow.FollowingId = User.id) < ${lastFollowerCount}`)
+        ]
+      };
+    }
+
+    let followData: User[] = [];
+    if (followType === 'follower') {
+      followData = (await user.getFollowers(options)) || [];
+    } else if (followType === 'following') {
+      followData = (await user.getFollowings(options)) || [];
+    }
+
+    const enrichedFollowData = await Promise.all(
+      followData.map(async follow => {
+        const followers = await follow.getFollowers({
+          attributes: [
+            'id',
+            'nickname',
+            [Sequelize.literal('(SELECT COUNT(*) FROM Follow WHERE Follow.FollowingId = User.id)'), 'followerCount']
+          ],
+          include: [
+            {
+              model: Image,
+              as: 'ProfileImage',
+              attributes: ['id', 'src']
+            }
+          ],
+          order: [[Sequelize.literal('followerCount'), 'DESC']],
+          limit: 3
+        });
+
+        return {
+          ...follow.toJSON(),
+          Followers: followers.map(follower => ({
+            id: follower.id,
+            nickname: follower.nickname,
+            ProfileImage: follower.ProfileImage?.src || null
+          }))
+        };
+      })
+    );
+
+    return res.status(200).json(enrichedFollowData);
+  } catch (err) {
+    console.error(err);
+    next(err);
   }
 });
 

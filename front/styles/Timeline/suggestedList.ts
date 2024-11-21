@@ -1,8 +1,9 @@
 import styled from 'styled-components';
+import { motion } from 'framer-motion';
 
 import media from 'styles/media';
-import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
 import { ShadowStyle } from 'styles/Common/shadow';
+import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
 
 export const SuggestedWrapper = styled.div<{ $listvisible: boolean; $commentvisible: boolean }>`
   ${({ theme }) => theme.flexColumnSet('center', 'start')}
@@ -85,7 +86,7 @@ export const SuggestedHeader = styled.div`
   }
 `;
 
-export const SuggestedInfoWrapper = styled.div`
+export const SuggestedInfoWrapper = styled(motion.div)`
   flex-grow: 1;
   width: 100%;
   ${({ theme }) => theme.flexColumnSet('space-between')};
@@ -111,7 +112,7 @@ export const SuggestedInfoWrapper = styled.div`
   }
 `;
 
-export const SuggestedInfo = styled.div`
+export const SuggestedInfo = styled(motion.div)`
   flex: 1;
   width: 100%;
   ${({ theme }) => theme.flexSet('start')}
@@ -127,6 +128,7 @@ export const SuggestedInfo = styled.div`
       width: 100%;
       height: 100%;
       border-radius: 50%;
+      ${ShadowStyle};
     }
   }
 
@@ -139,7 +141,7 @@ export const SuggestedInfo = styled.div`
       padding-right: 0.5em;
       margin-bottom: 0.3em;
 
-      & > h2 {
+      & > a {
         color: ${({ theme }) => theme.colors.primary};
         font-size: 0.9rem;
         font-weight: 500;
@@ -148,12 +150,14 @@ export const SuggestedInfo = styled.div`
 
       & > span {
         ${ReverseHoverStyle('&')}
+        font-size: 1.1rem;
         opacity: 40%;
       }
     }
   }
 
   & > div > p {
+    width: 90%;
     display: -webkit-box;
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
@@ -163,41 +167,5 @@ export const SuggestedInfo = styled.div`
     font-size: 0.8rem;
     opacity: 60%;
     line-height: 1.5;
-  }
-
-  ${media.tablet} {
-    & > img {
-      height: 60px;
-    }
-
-    & > div > div > h2 {
-      font-size: 1rem;
-    }
-
-    & > div > div > span {
-      font-size: 0.9rem;
-    }
-
-    & > div > p {
-      font-size: 0.9rem;
-    }
-  }
-
-  ${media.mobile} {
-    & > img {
-      height: 50px;
-    }
-
-    & > div > div > h2 {
-      font-size: 0.9rem;
-    }
-
-    & > div > div > span {
-      font-size: 0.8rem;
-    }
-
-    & > div > p {
-      font-size: 0.8rem;
-    }
   }
 `;

@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { DeleteOutlined, LoadingOutlined, PaperClipOutlined } from '@ant-design/icons';
 import { toast } from 'react-toastify';
+import Link from 'next/link';
 
 import useInput from 'utils/useInput';
 import formatDate from 'utils/useListTimes';
@@ -106,7 +107,7 @@ const EditCommentForm = ({ reply, comment, replyId, cancelEdit, showImagePreview
 
         <div>
           <div>
-            <h1>{comment.User.nickname}</h1>
+            <Link href={`/user/${comment.UserId}`}>{comment.User.nickname}</Link>
             {comment.Post?.UserId === comment.UserId && <p>작성자</p>}
           </div>
 

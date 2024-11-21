@@ -7,6 +7,8 @@ import {
   HeartOutlined,
   LoadingOutlined
 } from '@ant-design/icons';
+import Router from 'next/router';
+import Link from 'next/link';
 import dayjs from 'dayjs';
 
 import ImagePreview from 'components/Modal/ImagePreviewModal';
@@ -61,7 +63,12 @@ const AlertItem = ({ history }: AlertItemProps) => {
     dispatch(readActivityRequest(history.id));
   }, []);
 
-  console.log(history);
+  const onMoveUserProfile = useCallback(
+    (userId: number) => {
+      Router.push(`/user/${userId}`);
+    },
+    [history]
+  );
 
   return (
     <AlertItemWrapper {...slideInList}>
@@ -83,21 +90,30 @@ const AlertItem = ({ history }: AlertItemProps) => {
 
           <div>
             {activityType === 'like' ? (
-              <h1>
-                <span>{history.Alerter?.nickname}</span>님이 회원님의 게시글을 좋아합니다.
-              </h1>
+              <div>
+                <span>
+                  <Link href={`/user/${history.Alerter.id}`}>{history.Alerter?.nickname}</Link>
+                </span>
+                님이 회원님의 게시글을 좋아합니다.
+              </div>
             ) : activityType === 'comment' ? (
-              <h1>
+              <div>
                 <p>
-                  <span>{history.Alerter?.nickname}</span>님이 게시글에
+                  <span>
+                    <Link href={`/user/${history.Alerter.id}`}>{history.Alerter?.nickname}</Link>
+                  </span>
+                  님이 게시글에
                 </p>
                 <p>{history.Comment ? history.Comment.content : history.ReplyComment?.content}</p>
                 댓글을 남겼습니다.
-              </h1>
+              </div>
             ) : activityType === 'follow' ? (
-              <h1>
-                <span>{history.Alerter?.nickname}</span>님이 회원님을 팔로우하기 시작했습니다.
-              </h1>
+              <div>
+                <span>
+                  <Link href={`/user/${history.Alerter.id}`}>{history.Alerter?.nickname}</Link>
+                </span>
+                님이 회원님을 팔로우하기 시작했습니다.
+              </div>
             ) : null}
 
             <p>{dayjs(history.createdAt).format('HH:mm')}</p>
@@ -124,7 +140,7 @@ const AlertItem = ({ history }: AlertItemProps) => {
               <div>
                 <div>
                   <HeartOutlined />
-                  <span>{history.Post.Likers.length}</span>
+                  <span>{history.Post.Likers.length.toLocaleString()}</span>
                 </div>
 
                 <div>
@@ -138,7 +154,7 @@ const AlertItem = ({ history }: AlertItemProps) => {
                       }
 
                       return total + 1 + repliesCount;
-                    }, 0)}
+                    }, 0).toLocaleString()}
                   </span>
                 </div>
               </div>
@@ -148,7 +164,9 @@ const AlertItem = ({ history }: AlertItemProps) => {
           <AlertContentBtn
             $isFollowing={me.Followings.some((following: { id: number }) => following.id === history.Alerter.id)}
           >
-            <button type="button">Visit</button>
+            <button type="button" onClick={() => onMoveUserProfile(history.Alerter.id)}>
+              Visit
+            </button>
 
             {me.id !== history.Alerter?.id && (
               <button type="button" onClick={() => onToggleFollow(history.Alerter.id)}>

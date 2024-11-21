@@ -8,6 +8,7 @@ import { Comment } from 'store/types/postType';
 import { showDeleteModal } from 'store/actions/postAction';
 import { slideInList } from 'styles/Common/animation';
 import { ModalCommentContainer, ModalCommentListItemImage } from 'styles/Modal/modalCommentList';
+import Link from 'next/link';
 
 type ModalCommentListItemProps = {
   comment: Comment;
@@ -61,7 +62,7 @@ const ModalCommentListItem = ({
 
           <div>
             <div>
-              <h1>{comment.User.nickname}</h1>
+              <Link href={`/user/${comment.UserId}`}>{comment.User.nickname}</Link>
               {comment.Post?.UserId === comment.UserId && <p>작성자</p>}
             </div>
 

@@ -10,6 +10,7 @@ import {
   MoreOutlined,
   ShareAltOutlined
 } from '@ant-design/icons';
+import Link from 'next/link';
 
 import ImagePreview from './ImagePreviewModal';
 import ModalCommentList from './ModalCommentList';
@@ -105,7 +106,7 @@ const ModalContent = () => {
           />
 
           <div>
-            <h1>{singlePost.User.nickname}</h1>
+            <Link href={`/user/${singlePost.UserId}`}>{singlePost.User.nickname}</Link>
             <p>
               {formatDate(singlePost.createdAt)}
               {singlePost.location && ` - ${singlePost.location}`}
@@ -173,7 +174,7 @@ const ModalContent = () => {
         </div>
 
         <div>
-          <p>좋아요 {singlePost.Likers.length}개</p>
+          <p>좋아요 {singlePost.Likers.length.toLocaleString()}개</p>
           <p>
             댓글{' '}
             {singlePost.Comments.reduce((total: number, comment: Comment) => {
@@ -184,7 +185,7 @@ const ModalContent = () => {
               }
 
               return total + 1 + repliesCount;
-            }, 0)}
+            }, 0).toLocaleString()}
             개
           </p>
         </div>

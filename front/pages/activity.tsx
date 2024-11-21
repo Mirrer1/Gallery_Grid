@@ -10,6 +10,7 @@ import PostModal from 'components/Modal/PostModal';
 
 import wrapper from 'store/configureStore';
 import useToastStatus from 'utils/useToast';
+import { formatFollowerCount } from 'utils/formatFollowerCount';
 import { RootState } from 'store/reducers';
 import { loadMyInfoRequest } from 'store/actions/userAction';
 import { loadMyActivityCountsRequest, loadMyActivityPostsRequest } from 'store/actions/postAction';
@@ -35,7 +36,7 @@ const Activity = () => {
 
               <HeaderItem>
                 <h1>Like</h1>
-                <p>{myActivityCounts?.like}</p>
+                <p>{formatFollowerCount(myActivityCounts?.like)}</p>
               </HeaderItem>
 
               <HeaderItem>
@@ -44,7 +45,7 @@ const Activity = () => {
 
               <HeaderItem>
                 <h1>Comment</h1>
-                <p>{myActivityCounts?.comment}</p>
+                <p>{formatFollowerCount(myActivityCounts?.comment)}</p>
               </HeaderItem>
 
               <HeaderItem>
@@ -53,7 +54,7 @@ const Activity = () => {
 
               <HeaderItem>
                 <h1>Follow</h1>
-                <p>{myActivityCounts?.follow}</p>
+                <p>{formatFollowerCount(myActivityCounts?.follow)}</p>
               </HeaderItem>
 
               <HeaderItem>
@@ -61,11 +62,6 @@ const Activity = () => {
               </HeaderItem>
             </div>
           </ActivityHeader>
-
-          {/* <FollowWrapper {...slideInFromBottom()}>
-            <FollowList type="follower" list={followerList} />
-            <FollowList type="following" list={followerList} />
-          </FollowWrapper> */}
 
           <AlertList />
         </ActivityWrapper>

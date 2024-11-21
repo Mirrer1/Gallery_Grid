@@ -145,7 +145,7 @@ export const CommentContainer = styled(motion.div)<{ $reply: boolean }>`
           ${({ theme }) => theme.flexSet('flex-start')};
           margin-bottom: 0.3em;
 
-          & > h1 {
+          & > a {
             font-size: 0.9rem;
             font-weight: 500;
             margin-right: 0.3em;

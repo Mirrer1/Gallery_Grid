@@ -8,6 +8,7 @@ import { showDeleteModal } from 'store/actions/postAction';
 import { IReplyComment } from 'store/types/postType';
 import { slideInList } from 'styles/Common/animation';
 import { ModalCommentContainer, ModalCommentListItemImage } from 'styles/Modal/modalCommentList';
+import Link from 'next/link';
 
 type ModalReplyCommentProps = {
   comment: IReplyComment;
@@ -63,7 +64,7 @@ const ModalReplyComment = ({
 
           <div>
             <div>
-              <h1>{comment.User.nickname}</h1>
+              <Link href={`/user/${comment.UserId}`}>{comment.User.nickname}</Link>
               {comment.Post?.UserId === comment.UserId && <p>작성자</p>}
             </div>
 

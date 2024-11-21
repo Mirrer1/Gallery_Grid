@@ -12,6 +12,7 @@ import {
   MoreOutlined,
   ShareAltOutlined
 } from '@ant-design/icons';
+import Link from 'next/link';
 
 import PostImageCarousel from './PostImageCarousel';
 import DeleteModal from 'components/Modal/DeleteModal';
@@ -205,7 +206,7 @@ const PostList = () => {
                   }
                 />
                 <div>
-                  <h1>{post.User.nickname}</h1>
+                  <Link href={`/user/${post.UserId}`}>{post.User.nickname}</Link>
                   <p>
                     {formatDate(post.createdAt)}
                     {post.location && ` - ${post.location}`}
@@ -282,7 +283,7 @@ const PostList = () => {
                 >
                   <div onClick={() => onToggleLike(post.id)}>
                     <HeartOutlined />
-                    <span>{post.Likers.length}</span>
+                    <span>{post.Likers.length.toLocaleString()}</span>
                   </div>
                   <div onClick={() => onToggleComment(post.id)}>
                     <CommentOutlined />
@@ -294,7 +295,7 @@ const PostList = () => {
                       }
 
                       return total + 1 + repliesCount;
-                    }, 0)}
+                    }, 0).toLocaleString()}
                   </div>
                 </PostOptions>
               </div>

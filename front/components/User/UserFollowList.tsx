@@ -1,231 +1,172 @@
-import React, { useCallback } from 'react';
-import { SearchOutlined } from '@ant-design/icons';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { CloseCircleOutlined, LoadingOutlined, SearchOutlined } from '@ant-design/icons';
+import { useDispatch, useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
 
-import useInput from 'utils/useInput';
+import { RootState } from 'store/reducers';
+import { FollowUser } from 'store/types/userType';
+import { followUserRequest, loadUserFollowInfoRequest, unFollowUserRequest } from 'store/actions/userAction';
 import { formatFollowerCount } from 'utils/formatFollowerCount';
+import useImagePreview from 'utils/useImagePreview';
+import ImagePreview from 'components/Modal/ImagePreviewModal';
+
 import { slideInFromBottom } from 'styles/Common/animation';
 import {
+  NoSearchTextContainer,
   UserFollowListItem,
   UserFollowListItemWrapper,
   UserFollowListWrapper,
+  UserSearchLoading,
   UserSearchWrapper
 } from 'styles/User/userFollowList';
+import useScroll from 'utils/useScroll';
 
 type UserFollowProps = {
   type: 'follower' | 'following';
+  setSelectedActivity: (value: 'posts' | 'follower' | 'following') => void;
+  followLoadingId: number | null;
+  setFollowLoadingId: React.Dispatch<React.SetStateAction<number | null>>;
 };
 
-const UserFollowList = ({ type }: UserFollowProps) => {
-  const list = [
-    {
-      id: 1,
-      profile: 'https://i.pinimg.com/564x/fc/9d/e8/fc9de80da08a4e4f57199ccc16228f2b.jpg',
-      nickname: 'user1',
-      desc: 'Lorem ipsum dolor sit amet consectetur, adipi ipsum dolor sit amet consectetur, adip ipsum dolor sit amet consectetur, adip ipsum dolor sit amet consectetur, adipsicing elit. Blanditiis, placeat.',
-      follower: 250,
-      followerImg: [
-        '	https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg',
-        '	https://i.pinimg.com/564x/b1/bc/32/b1bc32636df7757cc51cf52a71a2a78f.jpg'
-      ]
-    },
-    {
-      id: 2,
-      profile: 'https://i.pinimg.com/564x/fc/9d/e8/fc9de80da08a4e4f57199ccc16228f2b.jpg',
-      nickname: 'user2',
-      desc: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Blanditiis, placeat.',
-      follower: 124342320,
-      followerImg: ['	https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg']
-    },
-    {
-      id: 3,
-      profile: 'https://i.pinimg.com/564x/fc/9d/e8/fc9de80da08a4e4f57199ccc16228f2b.jpg',
-      nickname: 'user3',
-      desc: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Blanditiis, placeat.',
-      follower: 22342342,
-      followerImg: ['	https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg']
-    },
-    {
-      id: 4,
-      profile: 'https://i.pinimg.com/564x/fc/9d/e8/fc9de80da08a4e4f57199ccc16228f2b.jpg',
-      nickname: 'user4',
-      desc: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Blanditiis, placeat.',
-      follower: 22342342,
-      followerImg: ['	https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg']
-    },
-    {
-      id: 5,
-      profile: 'https://i.pinimg.com/564x/fc/9d/e8/fc9de80da08a4e4f57199ccc16228f2b.jpg',
-      nickname: 'user3',
-      desc: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Blanditiis, placeat.',
-      follower: 23,
-      followerImg: ['	https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg']
-    },
-    {
-      id: 6,
-      profile: 'https://i.pinimg.com/564x/fc/9d/e8/fc9de80da08a4e4f57199ccc16228f2b.jpg',
-      nickname: 'user4',
-      desc: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Blanditiis, placeat.',
-      follower: 234637,
-      followerImg: ['	https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg']
-    },
-    {
-      id: 7,
-      profile: 'https://i.pinimg.com/564x/fc/9d/e8/fc9de80da08a4e4f57199ccc16228f2b.jpg',
-      nickname: 'user3',
-      desc: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Blanditiis, placeat.',
-      follower: 423144123,
-      followerImg: ['	https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg']
-    },
-    {
-      id: 8,
-      profile: 'https://i.pinimg.com/564x/fc/9d/e8/fc9de80da08a4e4f57199ccc16228f2b.jpg',
-      nickname: 'user4',
-      desc: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Blanditiis, placeat.',
-      follower: 123412431243124,
-      followerImg: ['	https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg']
-    },
-    {
-      id: 9,
-      profile: 'https://i.pinimg.com/564x/fc/9d/e8/fc9de80da08a4e4f57199ccc16228f2b.jpg',
-      nickname: 'user3',
-      desc: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Blanditiis, placeat.',
-      follower: 12341234423,
-      followerImg: ['	https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg']
-    },
-    {
-      id: 10,
-      profile: 'https://i.pinimg.com/564x/fc/9d/e8/fc9de80da08a4e4f57199ccc16228f2b.jpg',
-      nickname: 'user4',
-      desc: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Blanditiis, placeat.',
-      follower: 34,
-      followerImg: ['	https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg']
-    },
-    {
-      id: 11,
-      profile: 'https://i.pinimg.com/564x/fc/9d/e8/fc9de80da08a4e4f57199ccc16228f2b.jpg',
-      nickname: 'user3',
-      desc: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Blanditiis, placeat.',
-      follower: 123,
-      followerImg: ['	https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg']
-    },
-    {
-      id: 12,
-      profile: 'https://i.pinimg.com/564x/fc/9d/e8/fc9de80da08a4e4f57199ccc16228f2b.jpg',
-      nickname: 'user4',
-      desc: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Blanditiis, placeat.',
-      follower: 1252367237237,
-      followerImg: ['	https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg']
-    },
-    {
-      id: 13,
-      profile: 'https://i.pinimg.com/564x/fc/9d/e8/fc9de80da08a4e4f57199ccc16228f2b.jpg',
-      nickname: 'user3',
-      desc: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Blanditiis, placeat.',
-      follower: 212342341234132,
-      followerImg: ['	https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg']
-    },
-    {
-      id: 14,
-      profile: 'https://i.pinimg.com/564x/fc/9d/e8/fc9de80da08a4e4f57199ccc16228f2b.jpg',
-      nickname: 'user4',
-      desc: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Blanditiis, placeat.',
-      follower: 2345,
-      followerImg: ['	https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg']
-    },
-    {
-      id: 15,
-      profile: 'https://i.pinimg.com/564x/fc/9d/e8/fc9de80da08a4e4f57199ccc16228f2b.jpg',
-      nickname: 'user3',
-      desc: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Blanditiis, placeat.',
-      follower: 5345,
-      followerImg: ['	https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg']
-    },
-    {
-      id: 16,
-      profile: 'https://i.pinimg.com/564x/fc/9d/e8/fc9de80da08a4e4f57199ccc16228f2b.jpg',
-      nickname: 'user4',
-      desc: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Blanditiis, placeat.',
-      follower: 33,
-      followerImg: ['	https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg']
-    },
-    {
-      id: 17,
-      profile: 'https://i.pinimg.com/564x/fc/9d/e8/fc9de80da08a4e4f57199ccc16228f2b.jpg',
-      nickname: 'user3',
-      desc: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Blanditiis, placeat.',
-      follower: 2123345132,
-      followerImg: ['	https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg']
-    },
-    {
-      id: 18,
-      profile: 'https://i.pinimg.com/564x/fc/9d/e8/fc9de80da08a4e4f57199ccc16228f2b.jpg',
-      nickname: 'user4',
-      desc: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Blanditiis, placeat.',
-      follower: 345,
-      followerImg: ['	https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg']
-    },
-    {
-      id: 19,
-      profile: 'https://i.pinimg.com/564x/fc/9d/e8/fc9de80da08a4e4f57199ccc16228f2b.jpg',
-      nickname: 'user3',
-      desc: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Blanditiis, placeat.',
-      follower: 2,
-      followerImg: ['	https://i.pinimg.com/564x/2d/77/a9/2d77a9d02f910055bb43740cc69435ee.jpg']
-    }
-  ];
+const UserFollowList = ({
+  type: followType,
+  setSelectedActivity,
+  followLoadingId,
+  setFollowLoadingId
+}: UserFollowProps) => {
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const { id: userId } = router.query;
+  const userContainerRef = useRef<HTMLDivElement>(null);
+  const { imagePreview, showImagePreview, hideImagePreview } = useImagePreview();
+  const { me, userFollowInfo, loadUserFollowInfoLoading } = useSelector((state: RootState) => state.user);
 
-  const [keyword, onChangeKeyword] = useInput('');
+  const [keyword, setKeyword] = useState('');
+  const [resetTrigger, setResetTrigger] = useState(false);
+  useScroll({ type: 'user-follow', ref: userContainerRef, userId: Number(userId), followType });
 
-  const handleKeyDown = useCallback(
-    (event: React.KeyboardEvent<HTMLInputElement>) => {
-      if (event.key === 'Enter') {
-        console.log(keyword);
-      }
+  const onChangeKeyword = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const value = e.target.value;
+      setKeyword(value);
+
+      dispatch(loadUserFollowInfoRequest(followType, parseInt(userId as string, 10), undefined, undefined, value));
     },
-    [keyword]
+    [followType, userId]
   );
 
+  const onClearKeyword = useCallback(() => {
+    setKeyword('');
+    setResetTrigger(prev => !prev);
+  }, []);
+
+  const onToggleFollow = useCallback(
+    (userId: number) => {
+      setFollowLoadingId(userId);
+
+      const isFollowing = me.Followings.some((following: { id: number }) => following.id === userId);
+
+      if (isFollowing) dispatch(unFollowUserRequest(userId));
+      else dispatch(followUserRequest(userId));
+    },
+    [me.Followings, userFollowInfo]
+  );
+
+  const onMoveUserProfile = useCallback(
+    (id: number) => {
+      if (Number(userId) === id) setSelectedActivity('posts');
+      else router.push(`/user/${id}`);
+    },
+    [userFollowInfo]
+  );
+
+  useEffect(() => {
+    if (typeof userId === 'string') {
+      dispatch(loadUserFollowInfoRequest(followType, parseInt(userId, 10)));
+    }
+  }, [followType, userId, resetTrigger]);
+
+  useEffect(() => {
+    setKeyword('');
+  }, [followType, userId]);
+
   return (
-    <UserFollowListWrapper key={type} {...slideInFromBottom(0.3)}>
+    <UserFollowListWrapper key={followType} ref={userContainerRef}>
       <UserSearchWrapper>
         <label htmlFor="user-search">
           <SearchOutlined />
         </label>
 
-        <input
-          type="text"
-          id="user-search"
-          placeholder="Search"
-          value={keyword}
-          onChange={onChangeKeyword}
-          onKeyDown={handleKeyDown}
-        />
+        <input type="text" id="user-search" placeholder="Search" value={keyword} onChange={onChangeKeyword} />
+
+        {keyword && <CloseCircleOutlined onClick={onClearKeyword} />}
       </UserSearchWrapper>
 
-      <UserFollowListItemWrapper>
-        {list.map(user => (
-          <UserFollowListItem key={user.id}>
-            <div>
-              <img src={user.profile} alt="유저 프로필 이미지" />
-
+      {loadUserFollowInfoLoading && userFollowInfo.length < 20 ? (
+        <UserSearchLoading>
+          <LoadingOutlined />
+        </UserSearchLoading>
+      ) : userFollowInfo.length === 0 ? (
+        <NoSearchTextContainer>
+          {keyword ? (
+            <p>검색 결과가 없습니다.</p>
+          ) : followType === 'follower' ? (
+            <p>No followers yet.</p>
+          ) : (
+            <p>Not following anyone yet.</p>
+          )}
+        </NoSearchTextContainer>
+      ) : (
+        <UserFollowListItemWrapper {...slideInFromBottom(0.3)}>
+          {userFollowInfo.map((user: FollowUser) => (
+            <UserFollowListItem
+              key={user.id}
+              $isFollowing={me.Followings.some((following: { id: number }) => following.id === user?.id)}
+            >
               <div>
-                <h1>{user.nickname}</h1>
-                <p>{user.desc}</p>
-
+                <img
+                  src={user?.ProfileImage ? `http://localhost:3065/${user.ProfileImage.src}` : '/user.jpg'}
+                  alt="유저 프로필 이미지"
+                  onClick={() =>
+                    showImagePreview(
+                      user?.ProfileImage ? `http://localhost:3065/${user.ProfileImage.src}` : '/user.jpg'
+                    )
+                  }
+                />
                 <div>
-                  <img src={user.followerImg[0]} alt="유저 팔로워 이미지1" />
-                  <img src={user.followerImg[1]} alt="유저 팔로워 이미지2" />
-                  <p>{formatFollowerCount(user.follower)} followers</p>
+                  <Link href={`/user/${user.id}`}>{user.nickname}</Link>
+                  <p>{user?.desc?.trim() ? user.desc : '소개글이 없습니다.'}</p>
+                  <div>
+                    <p>{formatFollowerCount(user.followerCount)} followers</p>
+                    {user.Followers.map(follower => (
+                      <img
+                        key={follower.id}
+                        src={follower?.ProfileImage ? `http://localhost:3065/${follower.ProfileImage}` : '/user.jpg'}
+                        alt={`팔로워 ${follower.nickname}의 프로필 이미지`}
+                        onClick={() => onMoveUserProfile(follower.id)}
+                      />
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
+              <div>
+                <button type="button" onClick={() => onToggleFollow(user.id)}>
+                  {followLoadingId === user.id ? (
+                    <LoadingOutlined />
+                  ) : me.Followings.some((following: { id: number }) => following.id === user?.id) ? (
+                    'Unfollow'
+                  ) : (
+                    'Follow'
+                  )}
+                </button>
+              </div>
+            </UserFollowListItem>
+          ))}
+        </UserFollowListItemWrapper>
+      )}
 
-            <div>
-              <button type="button">Follow</button>
-            </div>
-          </UserFollowListItem>
-        ))}
-      </UserFollowListItemWrapper>
+      <ImagePreview imagePreview={imagePreview} hideImagePreview={hideImagePreview} />
     </UserFollowListWrapper>
   );
 };

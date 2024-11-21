@@ -161,7 +161,7 @@ export const AlertHeader = styled.div<{ $type: string }>`
       width: 1px;
       flex-grow: 1;
 
-      & > h1 {
+      & > div {
         ${({ theme }) => theme.flexSet('start')}
         font-size: 0.9rem;
         margin-bottom: 0.2em;
@@ -207,7 +207,7 @@ export const AlertHeader = styled.div<{ $type: string }>`
       }
 
       & > div {
-        & > h1 {
+        & > div {
           font-size: 0.75rem;
 
           & > p:last-child {
@@ -232,7 +232,7 @@ export const AlertHeader = styled.div<{ $type: string }>`
       }
 
       & > div {
-        & > h1 {
+        & > div {
           font-size: 0.7rem;
 
           & > p:last-child {
@@ -266,6 +266,7 @@ export const AlertContent = styled.div<{ $type: 'follow' | 'like' | 'comment' }>
     height: 150px;
     border-radius: 5px;
     margin-right: 0.8em;
+    ${ShadowStyle};
   }
 
   & > div {

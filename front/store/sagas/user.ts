@@ -1,4 +1,4 @@
-import { all, call, delay, fork, put, takeLatest } from 'redux-saga/effects';
+import { all, call, debounce, delay, fork, put, takeLatest } from 'redux-saga/effects';
 import axios, { AxiosResponse } from 'axios';
 
 import {
@@ -36,8 +36,118 @@ import {
   FOLLOW_USER_FAILURE,
   unFollowUserRequestAction,
   UNFOLLOW_USER_SUCCESS,
-  UNFOLLOW_USER_FAILURE
+  UNFOLLOW_USER_FAILURE,
+  LOAD_BEST_USERS_REQUEST,
+  LOAD_BEST_USERS_SUCCESS,
+  LOAD_BEST_USERS_FAILURE,
+  FeaturedUser,
+  LOAD_SUGGEST_USERS_REQUEST,
+  LOAD_SUGGEST_USERS_SUCCESS,
+  LOAD_SUGGEST_USERS_FAILURE,
+  loadSuggestUsersRequestAction,
+  LOAD_USER_INFO_REQUEST,
+  loadUserInfoRequestAction,
+  LOAD_USER_INFO_SUCCESS,
+  LOAD_USER_INFO_FAILURE,
+  DetailedUserInfo,
+  loadUserFollowInfoRequestAction,
+  LOAD_USER_FOLLOW_INFO_SUCCESS,
+  LOAD_USER_FOLLOW_INFO_FAILURE,
+  LOAD_USER_FOLLOW_INFO_REQUEST,
+  FollowUser
 } from 'store/types/userType';
+
+function loadBestUsersAPI() {
+  return axios.get('/user/best');
+}
+
+function* loadBestUsers() {
+  try {
+    const result: AxiosResponse<FeaturedUser[]> = yield call(loadBestUsersAPI);
+
+    yield put({
+      type: LOAD_BEST_USERS_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: LOAD_BEST_USERS_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
+function loadSuggestUsersAPI(excludeIds: number[] = []) {
+  return axios.get('/user/suggest', {
+    params: { excludeIds: excludeIds.length ? excludeIds.join(',') : undefined }
+  });
+}
+
+function* loadSuggestUsers(action: loadSuggestUsersRequestAction) {
+  try {
+    const result: AxiosResponse<FeaturedUser[]> = yield call(loadSuggestUsersAPI, action.excludeIds);
+
+    yield put({
+      type: LOAD_SUGGEST_USERS_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: LOAD_SUGGEST_USERS_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
+function loadUserInfoAPI(data: number) {
+  return axios.get(`/user/info/${data}`);
+}
+
+function* loadUserInfo(action: loadUserInfoRequestAction) {
+  try {
+    const result: AxiosResponse<DetailedUserInfo> = yield call(loadUserInfoAPI, action.data);
+
+    yield put({
+      type: LOAD_USER_INFO_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: LOAD_USER_INFO_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
+function loadUserFollowInfoAPI(
+  followType: 'follower' | 'following',
+  userId: number,
+  lastId?: number,
+  lastFollowerCount?: number,
+  keyword?: string
+) {
+  return axios.get(
+    `/user/follow?followType=${followType}&userId=${userId}&lastId=${lastId || 0}&lastFollowerCount=${lastFollowerCount || 0}&keyword=${keyword || ''}`
+  );
+}
+
+function* loadUserFollowInfo(action: loadUserFollowInfoRequestAction) {
+  try {
+    const result: AxiosResponse<FollowUser[]> = yield call(() =>
+      loadUserFollowInfoAPI(action.followType, action.userId, action.lastId, action.lastFollowerCount, action.keyword)
+    );
+
+    yield put({
+      type: LOAD_USER_FOLLOW_INFO_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: LOAD_USER_FOLLOW_INFO_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
 
 function signUpAPI(data: AuthResponse) {
   return axios.post('/user', data);
@@ -216,6 +326,22 @@ function* unFollowUser(action: unFollowUserRequestAction) {
   }
 }
 
+function* watchLoadBestUsers() {
+  yield takeLatest(LOAD_BEST_USERS_REQUEST, loadBestUsers);
+}
+
+function* watchLoadSuggestUsers() {
+  yield takeLatest(LOAD_SUGGEST_USERS_REQUEST, loadSuggestUsers);
+}
+
+function* watchLoadUserInfo() {
+  yield takeLatest(LOAD_USER_INFO_REQUEST, loadUserInfo);
+}
+
+function* watchLoadUserFollowInfo() {
+  yield debounce(500, LOAD_USER_FOLLOW_INFO_REQUEST, loadUserFollowInfo);
+}
+
 function* watchSignUp() {
   yield takeLatest(SIGNUP_REQUEST, signUp);
 }
@@ -254,6 +380,10 @@ function* watchUnFollowUser() {
 
 export default function* userSaga() {
   yield all([
+    fork(watchLoadBestUsers),
+    fork(watchLoadSuggestUsers),
+    fork(watchLoadUserInfo),
+    fork(watchLoadUserFollowInfo),
     fork(watchLogin),
     fork(watchLoginGoogle),
     fork(watchLoadMyInfo),

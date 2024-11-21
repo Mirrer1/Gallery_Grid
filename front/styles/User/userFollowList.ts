@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { HoverStyle } from 'styles/Common/hover';
 import media from 'styles/media';
 
-export const UserFollowListWrapper = styled(motion.section)`
+export const UserFollowListWrapper = styled.section`
   width: 60%;
   height: 100%;
   overflow-y: scroll;
@@ -18,6 +18,7 @@ export const UserFollowListWrapper = styled(motion.section)`
 
 export const UserSearchWrapper = styled.div`
   width: 100%;
+  ${({ theme }) => theme.flexSet('normal')}
   background-color: ${({ theme }) => theme.colors.lightBg};
   border: 1px solid ${({ theme }) => theme.colors.darkBg};
   border-radius: 10px;
@@ -25,16 +26,15 @@ export const UserSearchWrapper = styled.div`
   margin-bottom: 1em;
 
   & > label > span {
-    font-size: 0.9rem;
     opacity: 40%;
+    cursor: pointer;
   }
 
   & > input {
-    flex-shrink: 1;
+    flex-grow: 1;
     font-size: 0.9rem;
     padding: 0.5em 0 0.5em 0.5em;
     border: none;
-    overflow-x: hidden;
     background-color: ${({ theme }) => theme.colors.lightBg};
 
     &:focus {
@@ -46,35 +46,29 @@ export const UserSearchWrapper = styled.div`
     }
   }
 
-  ${media.tablet} {
-    padding: 0 0.5em;
-
-    & > label > span {
-      font-size: 0.8rem;
-    }
-
-    & > input {
-      font-size: 0.8rem;
-    }
+  & > span {
+    opacity: 60%;
+    cursor: pointer;
   }
 
   ${media.mobile} {
     & > label > span {
-      font-size: 0.7rem;
+      font-size: 0.8rem;
     }
 
     & > input {
-      font-size: 0.7rem;
+      font-size: 0.8rem;
     }
   }
 `;
 
-export const UserFollowListItemWrapper = styled.div``;
+export const UserFollowListItemWrapper = styled(motion.div)``;
 
-export const UserFollowListItem = styled.div`
+export const UserFollowListItem = styled.div<{ $isFollowing: boolean }>`
   ${({ theme }) => theme.flexSet('space-between')};
   border-bottom: 1px solid ${({ theme }) => theme.colors.darkBg};
   margin-bottom: 0.8em;
+  padding: 0.3em 0;
 
   &:last-child {
     margin-bottom: 0;
@@ -83,7 +77,7 @@ export const UserFollowListItem = styled.div`
 
   & > div:first-child {
     ${({ theme }) => theme.flexSet('start')};
-    width: 85%;
+    flex-grow: 1;
 
     & > img {
       width: 50px;
@@ -94,12 +88,12 @@ export const UserFollowListItem = styled.div`
     }
 
     & > div {
-      width: 80%;
+      flex-grow: 1;
 
-      & > h1 {
+      & > a {
+        font-size: 0.9rem;
         font-weight: 600;
         cursor: pointer;
-        margin-bottom: 0.3em;
       }
 
       & > p {
@@ -111,7 +105,7 @@ export const UserFollowListItem = styled.div`
         white-space: normal;
         font-size: 0.8rem;
         opacity: 60%;
-        margin-bottom: 0.8em;
+        margin: 0.3em 0 0.8em 0;
       }
 
       & > div {
@@ -121,14 +115,15 @@ export const UserFollowListItem = styled.div`
         margin-bottom: 1em;
 
         & > img {
-          width: 15px;
-          height: 15px;
+          width: 20px;
+          height: 20px;
           border-radius: 50%;
           margin-right: 0.2em;
+          cursor: pointer;
         }
 
         & > p {
-          margin-left: 0.5em;
+          margin-right: 0.5em;
         }
       }
     }
@@ -136,12 +131,14 @@ export const UserFollowListItem = styled.div`
 
   & > div:last-child {
     & > button {
+      width: 80px;
+      height: 30px;
       font-size: 0.7rem;
-      background-color: #6ba2e6;
-      color: white;
       font-weight: 500;
-      padding: 0.7em 1.5em;
       border-radius: 5px;
+      background-color: ${props => (props.$isFollowing ? 'white' : '#6BA2E6')};
+      color: ${props => (props.$isFollowing ? '#6BA2E6' : 'white')};
+      border: ${props => props.$isFollowing && '1px solid #6BA2E6'};
       ${HoverStyle('&')};
     }
   }
@@ -149,10 +146,6 @@ export const UserFollowListItem = styled.div`
   ${media.tablet} {
     & > div:first-child {
       & > div {
-        & > h1 {
-          font-size: 0.9rem;
-        }
-
         & > p {
           font-size: 0.7rem;
         }
@@ -183,8 +176,36 @@ export const UserFollowListItem = styled.div`
       margin-bottom: 0.8em;
 
       & > button {
-        width: 65%;
+        width: 100%;
       }
     }
+  }
+`;
+
+export const UserSearchLoading = styled.div`
+  ${({ theme }) => theme.flexSet()};
+  height: 85%;
+
+  & > span {
+    font-size: 3rem;
+    color: ${({ theme }) => theme.colors.primary};
+  }
+
+  ${media.tablet} {
+    height: 100vh;
+  }
+`;
+
+export const NoSearchTextContainer = styled.div`
+  ${({ theme }) => theme.flexSet()};
+  height: 85%;
+
+  & > p {
+    text-align: center;
+    color: #aaa;
+  }
+
+  ${media.tablet} {
+    height: 40vh;
   }
 `;

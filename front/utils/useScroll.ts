@@ -2,18 +2,22 @@ import { useEffect, RefObject } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AnyAction } from 'redux';
 
-import { Post, PostComment, UserHistoryPost } from 'store/types/postType';
 import { RootState } from 'store/reducers';
+import { Post, PostComment, UserHistoryPost } from 'store/types/postType';
 import {
   loadBestPostsRequest,
   loadFollowingPostsRequest,
   loadMyActivityPostsRequest,
-  loadNewPostsRequest
+  loadNewPostsRequest,
+  loadUserPostsRequest
 } from 'store/actions/postAction';
+import { loadUserFollowInfoRequest } from 'store/actions/userAction';
 
 type UseScrollParams = {
-  type: `timeline-${'best' | 'new' | 'follow'}` | 'activity';
+  type: `timeline-${'best' | 'new' | 'follow'}` | 'activity' | `user-${'posts' | 'follow'}`;
   ref: RefObject<HTMLDivElement>;
+  userId?: number;
+  followType?: 'follower' | 'following';
 };
 
 type ScrollParams = {
@@ -30,8 +34,11 @@ const breakpoints = {
   mobile: 576
 };
 
-const useScroll = ({ type, ref }: UseScrollParams) => {
+const useScroll = ({ type, ref, userId, followType }: UseScrollParams) => {
   const dispatch = useDispatch();
+  const { userFollowInfo, hasMoreUserFollowInfo, loadUserFollowInfoLoading } = useSelector(
+    (state: RootState) => state.user
+  );
   const {
     timelinePosts,
     hasMoreTimelinePosts,
@@ -39,7 +46,10 @@ const useScroll = ({ type, ref }: UseScrollParams) => {
     myActivityPosts,
     hasMoreMyActivityPosts,
     loadMyActivityPostsLoading,
-    loadBestPostsLoading
+    loadBestPostsLoading,
+    userPosts,
+    hasMoreUserPosts,
+    loadUserPostsLoading
   } = useSelector((state: RootState) => state.post);
 
   const getScrollParams = (type: string): ScrollParams => {
@@ -80,6 +90,30 @@ const useScroll = ({ type, ref }: UseScrollParams) => {
             return loadFollowingPostsRequest(lastPost?.createdAt || null, 10);
           },
           thresholds: [350, 900, 1700]
+        };
+      case 'user-posts':
+        return {
+          items: userPosts,
+          hasMore: hasMoreUserPosts,
+          loading: loadUserPostsLoading,
+          dispatcher: () => loadUserPostsRequest(userId ?? 0, userPosts[userPosts.length - 1]?.id || 0),
+          thresholds: [300, 480, 510]
+        };
+      case 'user-follow':
+        return {
+          items: userFollowInfo,
+          hasMore: hasMoreUserFollowInfo,
+          loading: loadUserFollowInfoLoading,
+          dispatcher: () => {
+            const lastItem = userFollowInfo[userFollowInfo.length - 1];
+            return loadUserFollowInfoRequest(
+              followType as 'follower' | 'following',
+              userId ?? 0,
+              lastItem?.id,
+              lastItem?.followerCount
+            );
+          },
+          thresholds: [300, 480, 510]
         };
       case 'activity':
         return {

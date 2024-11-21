@@ -655,7 +655,7 @@ router.post('/comment/delete', isLoggedIn, async (req, res, next) => {
         }
       }
 
-      return res.status(200).json({ id, replyId, postId });
+      return res.status(200).json({ id, replyId, postId, AuthorId: replyComment.UserId });
     } else {
       const comment = await Comment.findOne({
         where: { id },
@@ -683,7 +683,7 @@ router.post('/comment/delete', isLoggedIn, async (req, res, next) => {
         await Comment.destroy({ where: { id } });
       }
 
-      return res.status(200).json({ id, hasChild, postId });
+      return res.status(200).json({ id, hasChild, postId, AuthorId: comment.UserId });
     }
   } catch (error) {
     console.error(error);
@@ -713,7 +713,7 @@ router.patch('/like/:postId', isLoggedIn, async (req, res, next) => {
       isRead: false
     });
 
-    res.status(200).json({ PostId: post.id, UserId: req.user!.id });
+    res.status(200).json({ PostId: post.id, UserId: req.user!.id, AuthorId: post.UserId });
   } catch (error) {
     console.error(error);
     next(error);
@@ -742,7 +742,7 @@ router.delete('/like/:postId', isLoggedIn, async (req, res, next) => {
         AlertedId: post.UserId
       }
     });
-    res.status(200).json({ PostId: post.id, UserId: req.user!.id });
+    res.status(200).json({ PostId: post.id, UserId: req.user!.id, AuthorId: post.UserId });
   } catch (error) {
     console.error(error);
     next(error);

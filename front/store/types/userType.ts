@@ -1,3 +1,22 @@
+import { ResponseComment, ResponseDeleteComment, ResponseLike } from './postType';
+
+export const LOAD_BEST_USERS_REQUEST = 'LOAD_BEST_USERS_REQUEST' as const;
+export const LOAD_BEST_USERS_SUCCESS = 'LOAD_BEST_USERS_SUCCESS' as const;
+export const LOAD_BEST_USERS_FAILURE = 'LOAD_BEST_USERS_FAILURE' as const;
+
+export const LOAD_SUGGEST_USERS_REQUEST = 'LOAD_SUGGEST_USERS_REQUEST' as const;
+export const LOAD_SUGGEST_USERS_SUCCESS = 'LOAD_SUGGEST_USERS_SUCCESS' as const;
+export const LOAD_SUGGEST_USERS_FAILURE = 'LOAD_SUGGEST_USERS_FAILURE' as const;
+
+export const SET_USER_FOLLOW_TYPE = 'SET_USER_FOLLOW_TYPE' as const;
+export const LOAD_USER_INFO_REQUEST = 'LOAD_USER_INFO_REQUEST' as const;
+export const LOAD_USER_INFO_SUCCESS = 'LOAD_USER_INFO_SUCCESS' as const;
+export const LOAD_USER_INFO_FAILURE = 'LOAD_USER_INFO_FAILURE' as const;
+
+export const LOAD_USER_FOLLOW_INFO_REQUEST = 'LOAD_USER_FOLLOW_INFO_REQUEST' as const;
+export const LOAD_USER_FOLLOW_INFO_SUCCESS = 'LOAD_USER_FOLLOW_INFO_SUCCESS' as const;
+export const LOAD_USER_FOLLOW_INFO_FAILURE = 'LOAD_USER_FOLLOW_INFO_FAILURE' as const;
+
 export const LOGIN_REQUEST = 'LOGIN_REQUEST' as const;
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS' as const;
 export const LOGIN_FAILURE = 'LOGIN_FAILURE' as const;
@@ -38,8 +57,30 @@ export const UNFOLLOW_USER_REQUEST = 'UNFOLLOW_USER_REQUEST' as const;
 export const UNFOLLOW_USER_SUCCESS = 'UNFOLLOW_USER_SUCCESS' as const;
 export const UNFOLLOW_USER_FAILURE = 'UNFOLLOW_USER_FAILURE' as const;
 
+export const INCREMENT_BEST_USERS_LIKE = 'INCREMENT_BEST_USERS_LIKE' as const;
+export const DECREMENT_BEST_USERS_LIKE = 'DECREMENT_BEST_USERS_LIKE' as const;
+export const INCREMENT_BEST_USERS_COMMENT = 'INCREMENT_BEST_USERS_COMMENT' as const;
+export const DECREMENT_BEST_USERS_COMMENT = 'DECREMENT_BEST_USERS_COMMENT' as const;
+
 export type UserState = {
   me: User | null;
+  userInfo: DetailedUserInfo | null;
+  userFollowInfo: FollowUser[];
+  bestUsers: FeaturedUser[] | null;
+  suggestUsers: FeaturedUser[] | null;
+  loadBestUsersLoading: boolean;
+  loadBestUsersDone: boolean;
+  loadBestUsersError: null | string;
+  loadSuggestUsersLoading: boolean;
+  loadSuggestUsersDone: boolean;
+  loadSuggestUsersError: null | string;
+  loadUserInfoLoading: boolean;
+  loadUserInfoDone: boolean;
+  loadUserInfoError: null | string;
+  loadUserFollowInfoLoading: boolean;
+  loadUserFollowInfoDone: boolean;
+  loadUserFollowInfoError: null | string;
+  hasMoreUserFollowInfo: boolean;
   userImagePath: string[];
   loginLoading: boolean;
   loginDone: boolean;
@@ -84,17 +125,109 @@ export interface AuthResponse {
   nickname?: string;
 }
 
-export interface User {
+export interface BaseUser {
   id: number;
-  email: string;
   nickname: string;
-  desc?: string;
+  desc?: string | null;
+  ProfileImage: { id: number; src: string } | null;
+}
+
+export interface FeaturedUser extends BaseUser {
+  followerCount: number;
+  likeCount: number;
+  commentCount: number;
+  replyCommentCount: number;
+}
+
+export interface DetailedUserInfo extends BaseUser {
+  postsCount: number;
+  followersCount: number;
+  followingsCount: number;
+}
+
+export interface User extends BaseUser {
+  email: string;
   createdAt: string;
   updatedAt: string;
   Posts: number[];
   Followings: { id: number }[];
   Followers: { id: number }[];
-  ProfileImage: { id: number; src: string } | null;
+}
+
+export interface FollowUser extends BaseUser {
+  followerCount: number;
+  Followers: {
+    id: number;
+    nickname: string;
+    ProfileImage: string | null;
+  }[];
+}
+
+export interface loadBestUsersRequestAction {
+  type: typeof LOAD_BEST_USERS_REQUEST;
+}
+
+export interface loadBestUsersSuccessAction {
+  type: typeof LOAD_BEST_USERS_SUCCESS;
+  data: FeaturedUser[];
+}
+
+export interface loadBestUsersFailureAction {
+  type: typeof LOAD_BEST_USERS_FAILURE;
+  error: string;
+}
+
+export interface loadSuggestUsersRequestAction {
+  type: typeof LOAD_SUGGEST_USERS_REQUEST;
+  excludeIds?: number[];
+}
+
+export interface loadSuggestUsersSuccessAction {
+  type: typeof LOAD_SUGGEST_USERS_SUCCESS;
+  data: FeaturedUser[];
+}
+
+export interface loadSuggestUsersFailureAction {
+  type: typeof LOAD_SUGGEST_USERS_FAILURE;
+  error: string;
+}
+
+export interface setUserFollowTypeAction {
+  type: typeof SET_USER_FOLLOW_TYPE;
+}
+
+export interface loadUserInfoRequestAction {
+  type: typeof LOAD_USER_INFO_REQUEST;
+  data: number;
+}
+
+export interface loadUserInfoSuccessAction {
+  type: typeof LOAD_USER_INFO_SUCCESS;
+  data: DetailedUserInfo;
+}
+
+export interface loadUserInfoFailureAction {
+  type: typeof LOAD_USER_INFO_FAILURE;
+  error: string;
+}
+
+export interface loadUserFollowInfoRequestAction {
+  type: typeof LOAD_USER_FOLLOW_INFO_REQUEST;
+  followType: 'follower' | 'following';
+  userId: number;
+  lastId?: number;
+  lastFollowerCount?: number;
+  keyword?: string;
+}
+
+export interface loadUserFollowInfoSuccessAction {
+  type: typeof LOAD_USER_FOLLOW_INFO_SUCCESS;
+  data: FollowUser[];
+}
+
+export interface loadUserFollowInfoFailureAction {
+  type: typeof LOAD_USER_FOLLOW_INFO_FAILURE;
+  error: string;
 }
 
 export interface loginRequestAction {
@@ -244,6 +377,26 @@ export interface unFollowUserFailureAction {
   error: string;
 }
 
+export interface incrementBestUsersLikeAction {
+  type: typeof INCREMENT_BEST_USERS_LIKE;
+  data: ResponseLike;
+}
+
+export interface decrementBestUsersLikeAction {
+  type: typeof DECREMENT_BEST_USERS_LIKE;
+  data: ResponseLike;
+}
+
+export interface incrementBestUsersCommentAction {
+  type: typeof INCREMENT_BEST_USERS_COMMENT;
+  data: ResponseComment;
+}
+
+export interface decrementBestUsersCommentAction {
+  type: typeof DECREMENT_BEST_USERS_COMMENT;
+  data: ResponseDeleteComment;
+}
+
 export type UserAction =
   | loginRequestAction
   | loginSuccessAction
@@ -276,4 +429,21 @@ export type UserAction =
   | followUserFailureAction
   | unFollowUserRequestAction
   | unFollowUserSuccessAction
-  | unFollowUserFailureAction;
+  | unFollowUserFailureAction
+  | loadBestUsersRequestAction
+  | loadBestUsersSuccessAction
+  | loadBestUsersFailureAction
+  | loadSuggestUsersRequestAction
+  | loadSuggestUsersSuccessAction
+  | loadSuggestUsersFailureAction
+  | incrementBestUsersLikeAction
+  | decrementBestUsersLikeAction
+  | incrementBestUsersCommentAction
+  | decrementBestUsersCommentAction
+  | loadUserInfoRequestAction
+  | loadUserInfoSuccessAction
+  | loadUserInfoFailureAction
+  | loadUserFollowInfoRequestAction
+  | loadUserFollowInfoSuccessAction
+  | loadUserFollowInfoFailureAction
+  | setUserFollowTypeAction;
