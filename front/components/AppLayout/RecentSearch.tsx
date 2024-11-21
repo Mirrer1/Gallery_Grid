@@ -188,6 +188,50 @@ const RecentSearch = () => {
             <CloseOutlined />
           </div>
         </li>
+        <li>
+          <div>
+            <SearchOutlined />
+            <p>최근 검색어4</p>
+          </div>
+
+          <div>
+            <p>24.1.25</p>
+            <CloseOutlined />
+          </div>
+        </li>
+        <li>
+          <div>
+            <SearchOutlined />
+            <p>최근 검색어4</p>
+          </div>
+
+          <div>
+            <p>24.1.25</p>
+            <CloseOutlined />
+          </div>
+        </li>
+        <li>
+          <div>
+            <SearchOutlined />
+            <p>최근 검색어4</p>
+          </div>
+
+          <div>
+            <p>24.1.25</p>
+            <CloseOutlined />
+          </div>
+        </li>
+        <li>
+          <div>
+            <SearchOutlined />
+            <p>최근 검색어4</p>
+          </div>
+
+          <div>
+            <p>24.1.25</p>
+            <CloseOutlined />
+          </div>
+        </li>
       </RecentSearchList>
     </RecentSearchWrapper>
   );

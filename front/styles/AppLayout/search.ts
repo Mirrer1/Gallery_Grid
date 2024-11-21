@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { motion } from 'framer-motion';
 
 import media from 'styles/media';
-import { HoverStyle } from 'styles/Common/hover';
+import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
 import { InputShadowStyle } from 'styles/Common/shadow';
 
 export const SearchContainer = styled(motion.section)`
@@ -149,7 +149,7 @@ export const SearchInputWrapper = styled.div`
 `;
 
 export const SearchDivider = styled.hr`
-  border: 1px solid ${({ theme }) => theme.colors.bg};
+  border: 1.5px solid ${({ theme }) => theme.colors.bg};
   margin: 2em 0;
 
   ${media.tablet} {
@@ -164,8 +164,14 @@ export const ContentsWrapper = styled(motion.div)`
   padding-right: 1em;
 
   ${media.tablet} {
-    height: 100vh;
+    height: 100%;
+    min-height: 450px;
     overflow-y: visible;
+    padding-right: 0;
+  }
+
+  ${media.mobile} {
+    min-height: 350px;
   }
 `;
 
@@ -205,6 +211,7 @@ export const RecentSearchList = styled.ul`
     & > div:first-child {
       ${({ theme }) => theme.flexSet()};
       ${HoverStyle('&')};
+      cursor: pointer;
 
       & > span {
         ${({ theme }) => theme.flexSet()};
@@ -227,6 +234,7 @@ export const RecentSearchList = styled.ul`
       }
 
       & > span {
+        cursor: pointer;
         ${HoverStyle('&')};
       }
     }
@@ -251,6 +259,43 @@ export const RecentSearchList = styled.ul`
           line-height: 1px;
           margin-right: 0.3em;
         }
+      }
+    }
+  }
+`;
+
+export const SearchResultsWrapper = styled.div<{ $selectedTab: 'users' | 'posts' }>`
+  & > div {
+    & > button {
+      margin-bottom: 2em;
+
+      &:nth-child(1) {
+        font-weight: ${props => (props.$selectedTab === 'users' ? 700 : 400)};
+        opacity: ${props => (props.$selectedTab === 'users' ? '100%' : '40%')};
+        text-decoration: ${props => (props.$selectedTab === 'users' ? 'underline' : 'none')};
+        text-decoration-thickness: ${props => (props.$selectedTab === 'users' ? '3px' : '0')};
+        text-underline-offset: ${props => (props.$selectedTab === 'users' ? '10px' : '0')};
+        text-decoration-color: ${props => props.$selectedTab === 'users' && '#6BA2E6'};
+        margin-right: 1em;
+        ${ReverseHoverStyle('&')}
+      }
+
+      &:nth-child(2) {
+        font-weight: ${props => (props.$selectedTab === 'posts' ? 700 : 400)};
+        opacity: ${props => (props.$selectedTab === 'posts' ? '100%' : '40%')};
+        text-decoration: ${props => (props.$selectedTab === 'posts' ? 'underline' : 'none')};
+        text-decoration-thickness: ${props => (props.$selectedTab === 'posts' ? '3px' : '0')};
+        text-underline-offset: ${props => (props.$selectedTab === 'posts' ? '10px' : '0')};
+        text-decoration-color: ${props => props.$selectedTab === 'posts' && '#6BA2E6'};
+        ${ReverseHoverStyle('&')}
+      }
+    }
+  }
+
+  ${media.tablet} {
+    & > div {
+      & > button {
+        font-size: 0.9rem;
       }
     }
   }

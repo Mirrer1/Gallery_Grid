@@ -42,9 +42,10 @@ export const GalleryWrapper = styled(motion.section)`
     }
 
     & > div:last-child {
+      min-height: 700px;
+      height: 100%;
       padding: 0;
       overflow-y: visible;
-      height: 100%;
     }
   }
 
@@ -53,7 +54,7 @@ export const GalleryWrapper = styled(motion.section)`
     border-radius: 5px;
 
     & > div:last-child {
-      padding: 0;
+      min-height: 500px;
     }
   }
 `;
@@ -182,6 +183,10 @@ export const GalleryLoadingContainer = styled.div`
   }
 
   ${media.tablet} {
-    height: 100vh;
+    height: 90vh;
+  }
+
+  ${media.mobile} {
+    height: 70vh;
   }
 `;
