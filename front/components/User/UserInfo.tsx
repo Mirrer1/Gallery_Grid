@@ -30,10 +30,15 @@ const UserInfo = ({ selectedActivity, setSelectedActivity, followLoadingId, setF
   const { me, userInfo } = useSelector((state: RootState) => state.user);
   const { imagePreview, showImagePreview, hideImagePreview } = useImagePreview();
 
-  const handleActivity = useCallback((info: 'posts' | 'follower' | 'following') => {
-    if (info === 'follower' || info === 'following') dispatch(setUserFollowType());
-    setSelectedActivity(info);
-  }, []);
+  const handleActivity = useCallback(
+    (info: 'posts' | 'follower' | 'following') => {
+      if (selectedActivity === info) return;
+
+      if (info === 'follower' || info === 'following') dispatch(setUserFollowType());
+      setSelectedActivity(info);
+    },
+    [selectedActivity]
+  );
 
   const onToggleFollow = useCallback(
     (userId: number) => {
