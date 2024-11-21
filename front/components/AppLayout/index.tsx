@@ -10,6 +10,7 @@ import {
   MessageOutlined,
   NotificationOutlined,
   PictureOutlined,
+  SearchOutlined,
   SettingOutlined
 } from '@ant-design/icons';
 
@@ -21,13 +22,22 @@ import ImagePreview from 'components/Modal/ImagePreviewModal';
 import useImagePreview from 'utils/useImagePreview';
 import { RootState } from 'store/reducers';
 import { logoutRequest } from 'store/actions/userAction';
-import { LayoutWrapper, NavbarItem, NavbarItems, NavbarLogout, NavbarMessage, NavbarProfile } from 'styles/AppLayout';
+import {
+  LayoutWrapper,
+  NavbarItem,
+  NavbarItems,
+  NavbarLogout,
+  NavbarMessage,
+  NavbarProfile,
+  SearchWrapper
+} from 'styles/AppLayout';
 
 const AppLayout = ({ children }: { children: ReactNode }) => {
   const dispatch = useDispatch();
   const { me, logoutDone } = useSelector((state: RootState) => state.user);
   const { imagePreview, showImagePreview, hideImagePreview } = useImagePreview();
   const [pathname, setPathname] = useState<string | null>(null);
+  const [searchMode, setSearchMode] = useState<boolean>(false);
 
   const onClickMessage = useCallback(() => {
     Router.push('/message');
@@ -35,6 +45,10 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
 
   const onClickLogout = useCallback(() => {
     dispatch(logoutRequest());
+  }, []);
+
+  const excuteSearchMode = useCallback(() => {
+    setSearchMode(true);
   }, []);
 
   useEffect(() => {
@@ -54,7 +68,10 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
       <aside>
         <div>
           <div>
-            <Search />
+            <SearchWrapper onClick={excuteSearchMode}>
+              <SearchOutlined />
+              <p>Search</p>
+            </SearchWrapper>
 
             <NavbarProfile>
               <img
@@ -134,9 +151,15 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
 
       <div />
 
-      <MobileHeader />
+      <MobileHeader setSearchMode={setSearchMode} />
 
-      <main>{children}</main>
+      {searchMode ? (
+        <main>
+          <Search setSearchMode={setSearchMode} />
+        </main>
+      ) : (
+        <main>{children}</main>
+      )}
 
       <MobileFooter />
 

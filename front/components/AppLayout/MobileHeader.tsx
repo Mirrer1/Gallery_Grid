@@ -4,15 +4,20 @@ import { useDispatch, useSelector } from 'react-redux';
 import Router from 'next/router';
 
 import { RootState } from 'store/reducers';
+import { SearchProps } from './Search';
 import { logoutRequest } from 'store/actions/userAction';
 import { MobileHeaderContent, MobileHeaderWrapper } from 'styles/AppLayout/mobileHeader';
 
-const MobileHeader = () => {
+const MobileHeader = ({ setSearchMode }: SearchProps) => {
   const dispatch = useDispatch();
   const { me } = useSelector((state: RootState) => state.user);
 
   const onClickProfile = useCallback(() => {
     Router.push(`/user/${me.id}`);
+  }, []);
+
+  const excuteSearchMode = useCallback(() => {
+    setSearchMode(true);
   }, []);
 
   const onClickLogout = useCallback(() => {
@@ -32,7 +37,7 @@ const MobileHeader = () => {
             />
           </div>
 
-          <div>
+          <div onClick={excuteSearchMode}>
             <SearchOutlined />
           </div>
 

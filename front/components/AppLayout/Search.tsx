@@ -1,36 +1,72 @@
-import React, { useCallback } from 'react';
-import { SearchOutlined } from '@ant-design/icons';
+import React, { useCallback, useState } from 'react';
+import { ArrowLeftOutlined, CloseOutlined, SearchOutlined } from '@ant-design/icons';
 
-import useInput from 'utils/useInput';
-import { SearchWrapper } from 'styles/AppLayout/search';
+import { slideInFromBottom } from 'styles/Common/animation';
+import {
+  ContentsWrapper,
+  SearchBackButton,
+  SearchContainer,
+  SearchDivider,
+  SearchHeader,
+  SearchInputWrapper,
+  SearchMain
+} from 'styles/AppLayout/search';
+import RecentSearch from './RecentSearch';
 
-const Search = () => {
-  const [keyword, onChangeKeyword] = useInput('');
+export type SearchProps = {
+  setSearchMode: React.Dispatch<React.SetStateAction<boolean>>;
+};
 
-  const handleKeyDown = useCallback(
-    (event: React.KeyboardEvent<HTMLInputElement>) => {
-      if (event.key === 'Enter') {
-        console.log(keyword);
-      }
-    },
-    [keyword]
-  );
+const Search = ({ setSearchMode }: SearchProps) => {
+  const [keyword, setKeyword] = useState('');
+
+  const onChangeKeyword = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setKeyword(value);
+  }, []);
+
+  const cancelSearchMode = useCallback(() => {
+    setSearchMode(false);
+  }, []);
 
   return (
-    <SearchWrapper>
-      <label htmlFor="search">
-        <SearchOutlined />
-      </label>
+    <SearchContainer {...slideInFromBottom()}>
+      <SearchBackButton onClick={cancelSearchMode}>
+        <ArrowLeftOutlined />
+      </SearchBackButton>
 
-      <input
-        type="text"
-        id="search"
-        placeholder="Search"
-        value={keyword}
-        onChange={onChangeKeyword}
-        onKeyDown={handleKeyDown}
-      />
-    </SearchWrapper>
+      <SearchHeader>
+        <p>
+          Search<span>.</span>
+        </p>
+        <p>
+          작가와 작품을 탐색하며 <span>당신만의 취향을 발견해보세요.</span>
+        </p>
+      </SearchHeader>
+
+      <SearchMain>
+        <SearchInputWrapper>
+          <input type="text" placeholder="Type artists, artworks.." value={keyword} onChange={onChangeKeyword} />
+
+          <button type="button">
+            <CloseOutlined />
+          </button>
+
+          <button type="button">
+            <SearchOutlined />
+            <p>Search</p>
+          </button>
+        </SearchInputWrapper>
+
+        <SearchDivider />
+
+        <ContentsWrapper {...slideInFromBottom(0.3)}>
+          <RecentSearch />
+
+          {/* <div>검색결과 (유저 + 게시글)</div> */}
+        </ContentsWrapper>
+      </SearchMain>
+    </SearchContainer>
   );
 };
 

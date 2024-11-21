@@ -4,10 +4,10 @@ import { CloseOutlined } from '@ant-design/icons';
 import { slideInModal } from 'styles/Common/animation';
 import { UploadImage, UploadImagePreview } from 'styles/Modal/imagePreviewModal';
 
-interface ImagePreviewProps {
+type ImagePreviewProps = {
   imagePreview: string | null;
   hideImagePreview: () => void;
-}
+};
 
 const ImagePreview: React.FC<ImagePreviewProps> = ({ imagePreview, hideImagePreview }) => {
   if (!imagePreview) return null;
