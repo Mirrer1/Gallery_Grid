@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 
 import RecentSearch from './RecentSearch';
 import UserSearch from './UserSearch';
+import PostSearch from './PostSearch';
 import useInput from 'utils/useInput';
 import { slideInFromBottom } from 'styles/Common/animation';
 import {
@@ -90,7 +91,7 @@ const Search = ({ setSearchMode }: SearchProps) => {
 
         <SearchDivider />
 
-        <ContentsWrapper {...slideInFromBottom(0.3)}>
+        <ContentsWrapper key={selectedTab} {...slideInFromBottom(0.3)}>
           {/* <RecentSearch /> */}
 
           <SearchResultsWrapper $selectedTab={selectedTab}>
@@ -103,7 +104,7 @@ const Search = ({ setSearchMode }: SearchProps) => {
               </button>
             </div>
 
-            <UserSearch />
+            {selectedTab === 'users' ? <UserSearch /> : <PostSearch />}
           </SearchResultsWrapper>
         </ContentsWrapper>
       </SearchMain>

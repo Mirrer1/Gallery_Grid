@@ -153,7 +153,7 @@ export const SearchDivider = styled.hr`
   margin: 2em 0;
 
   ${media.tablet} {
-    margin: 1.5em 0;
+    margin: 1.5em 0 0 0;
   }
 `;
 
@@ -162,12 +162,14 @@ export const ContentsWrapper = styled(motion.div)`
   flex-grow: 1;
   overflow-y: auto;
   padding-right: 1em;
+  margin-bottom: 1em;
 
   ${media.tablet} {
     height: 100%;
     min-height: 450px;
     overflow-y: visible;
-    padding-right: 0;
+    padding: 0;
+    margin-bottom: 0;
   }
 
   ${media.mobile} {
@@ -265,10 +267,17 @@ export const RecentSearchList = styled.ul`
 `;
 
 export const SearchResultsWrapper = styled.div<{ $selectedTab: 'users' | 'posts' }>`
+  & > div:first-child {
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    background-color: white;
+    padding-bottom: 1.5em;
+  }
+
   & > div {
     & > button {
-      margin-bottom: 2em;
-
       &:nth-child(1) {
         font-weight: ${props => (props.$selectedTab === 'users' ? 700 : 400)};
         opacity: ${props => (props.$selectedTab === 'users' ? '100%' : '40%')};
@@ -293,6 +302,10 @@ export const SearchResultsWrapper = styled.div<{ $selectedTab: 'users' | 'posts'
   }
 
   ${media.tablet} {
+    & > div:first-child {
+      padding: 1.5em 0;
+    }
+
     & > div {
       & > button {
         font-size: 0.9rem;
