@@ -1,7 +1,18 @@
-import React from 'react';
-import { UserAddOutlined } from '@ant-design/icons';
+import React, { useCallback, useEffect, useState } from 'react';
+import { LoadingOutlined, UserAddOutlined, UserDeleteOutlined } from '@ant-design/icons';
+import { useSelector, useDispatch } from 'react-redux';
 
+import ImagePreview from 'components/Modal/ImagePreviewModal';
+import formatDate from 'utils/useListTimes';
+import useImagePreview from 'utils/useImagePreview';
+import { RootState } from 'store/reducers';
+import { SearchProps } from './Search';
+import { SearchUsers } from 'store/types/userType';
+import { followUserRequest, unFollowUserRequest } from 'store/actions/userAction';
+
+import { slideInList } from 'styles/Common/animation';
 import {
+  NoSearchUserContainer,
   UserBio,
   UserProfileWrapper,
   UserSearchContainer,
@@ -10,123 +21,106 @@ import {
   UserStatsWrapper
 } from 'styles/AppLayout/userSearch';
 
-const UserSearch = () => {
+const UserSearch = ({ keyword }: SearchProps) => {
+  const dispatch = useDispatch();
+  const { me, searchUsers, followUserDone, unFollowUserDone, searchUsersLoading, searchUsersDone } = useSelector(
+    (state: RootState) => state.user
+  );
+  const [followingUserId, setFollowingUserId] = useState<number | null>(null);
+  const { imagePreview, showImagePreview, hideImagePreview } = useImagePreview();
+
+  const onToggleFollow = useCallback(
+    (userId: number) => {
+      setFollowingUserId(userId);
+
+      const isFollowing = me.Followings.some((following: { id: number }) => following.id === userId);
+
+      if (isFollowing) dispatch(unFollowUserRequest(userId));
+      else dispatch(followUserRequest(userId));
+    },
+    [me.Followings, searchUsers]
+  );
+
+  useEffect(() => {
+    if (followUserDone || unFollowUserDone) setFollowingUserId(null);
+  }, [followUserDone, unFollowUserDone]);
   return (
     <>
-      <UserSearchContainer>
-        <UserSearchContent>
-          <UserProfileWrapper>
-            <img src="https://i.pinimg.com/236x/cb/63/46/cb6346d5fd059c736ccf8232f2d55b0a.jpg" alt="" />
-            <p>LoremLoremLoremi</p>
-          </UserProfileWrapper>
+      {searchUsersLoading && (
+        <NoSearchUserContainer>
+          <LoadingOutlined />
+        </NoSearchUserContainer>
+      )}
 
-          <UserBio>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur error ipsam inventore quae neque eos,
-              unde natus in harum architecto animi perspiciatis impedit, ullam doloremque quos labore dolores non
-              aperiam corporis veniam consequuntur velit. Aspernatur temporibus culpa eveniet ipsum, voluptatum,
-              mollitia dolorum accusantium, consectetur minus doloribus repellat! Enim error minus obcaecati ipsum
-              minima, laudantium nemo voluptate exercitationem deleniti sed ad veniam illum eos nulla beatae magnam quam
-              quisquam soluta quaerat qui ipsa est quod ea dolores? Exercitationem, fuga. Eaque neque dolorum sunt
-              quibusdam culpa. Corporis vitae eligendi, quos, veniam hic possimus deserunt nemo qui repudiandae iste
-              vero enim culpa! Officiis doloremque accusantium atque quaerat ea reprehenderit perferendis pariatur
-              reiciendis, numquam corrupti debitis dolorum consectetur mollitia voluptatum, aliquam autem animi amet
-              placeat, culpa quas molestias sed facere delectus? Deleniti vero repudiandae, maiores tenetur veniam
-              incidunt eligendi soluta, rem atque reiciendis tempore officia iusto hic suscipit harum dolore dolores
-              ipsum unde et minima blanditiis maxime perspiciatis excepturi sit! Facere consectetur impedit inventore
-              maiores. Fugiat assumenda veniam et, est quidem harum consequuntur odio cum? Ea quia consectetur voluptate
-              dignissimos laudantium odio quisquam vel. Rerum, optio? Accusantium, atque. Magnam minus obcaecati laborum
-              amet dignissimos rem nisi, aliquid tempora vitae accusantium inventore nesciunt cupiditate animi!
-            </p>
+      {!searchUsersLoading && searchUsers.length === 0 && searchUsersDone && (
+        <NoSearchUserContainer>
+          <p>&quot;{keyword}&quot;에 대한 유저검색 결과가 없습니다.</p>
+        </NoSearchUserContainer>
+      )}
 
-            <div>
-              <UserAddOutlined />
-            </div>
-          </UserBio>
+      {searchUsers.map((user: SearchUsers) => (
+        <UserSearchContainer key={user.id} {...slideInList}>
+          <UserSearchContent>
+            <UserProfileWrapper>
+              <img
+                src={user?.ProfileImage ? `http://localhost:3065/${user.ProfileImage.src}` : '/user.jpg'}
+                alt="유저 프로필 이미지"
+                onClick={() =>
+                  showImagePreview(user?.ProfileImage ? `http://localhost:3065/${user.ProfileImage.src}` : '/user.jpg')
+                }
+              />
+              <p>{user.nickname}</p>
+            </UserProfileWrapper>
 
-          <UserSearchDivider />
+            <UserBio>
+              <p>{user.desc?.trim() ? user.desc : '소개글이 없습니다.'}</p>
 
-          <UserStatsWrapper>
-            <div>
+              {me.id !== user.id && (
+                <div onClick={() => onToggleFollow(user.id)}>
+                  {followingUserId === user.id ? (
+                    <LoadingOutlined />
+                  ) : me.Followings.some((following: { id: number }) => following.id === user.id) ? (
+                    <UserDeleteOutlined />
+                  ) : (
+                    <UserAddOutlined />
+                  )}
+                </div>
+              )}
+            </UserBio>
+
+            <UserSearchDivider />
+
+            <UserStatsWrapper>
               <div>
-                <span>3</span>
-                <p>Followers</p>
+                <div>
+                  <span>{user.followerCount.toLocaleString()}</span>
+                  <p>Followers</p>
+                </div>
+
+                <div>
+                  <span>{user.followingCount.toLocaleString()}</span>
+                  <p>Followings</p>
+                </div>
               </div>
 
-              <div>
-                <span>3</span>
-                <p>Followings</p>
-              </div>
-            </div>
+              {user.Posts.length > 0 && (
+                <div>
+                  <img
+                    src={`http://localhost:3065/${user.Posts[0].Images[0].src}`}
+                    alt="게시글의 첫번째 이미지"
+                    onClick={() => showImagePreview(`http://localhost:3065/${user.Posts[0].Images[0].src}`)}
+                  />
 
-            <div>
-              <img src="https://i.pinimg.com/236x/cb/63/46/cb6346d5fd059c736ccf8232f2d55b0a.jpg" alt="" />
+                  <p>{user.Posts[0].content}</p>
+                  <time>{formatDate(user.Posts[0].createdAt)}</time>
+                </div>
+              )}
+            </UserStatsWrapper>
+          </UserSearchContent>
+        </UserSearchContainer>
+      ))}
 
-              <p>
-                LoremLoremLoremiLoremLoremLoremiLoremLoremLoremiLoremLoremLoremiLoremLoremLoremiLoremLoremLoremiLoremLoremLoremiLoremLoremLoremi
-              </p>
-              <time>2014.2.20</time>
-            </div>
-          </UserStatsWrapper>
-        </UserSearchContent>
-      </UserSearchContainer>
-      <UserSearchContainer>
-        <UserSearchContent>
-          <UserProfileWrapper>
-            <img src="https://i.pinimg.com/236x/cb/63/46/cb6346d5fd059c736ccf8232f2d55b0a.jpg" alt="" />
-            <p>LoremLoremLoremi</p>
-          </UserProfileWrapper>
-
-          <UserBio>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur error ipsam inventore quae neque eos,
-              unde natus in harum architecto animi perspiciatis impedit, ullam doloremque quos labore dolores non
-              aperiam corporis veniam consequuntur velit. Aspernatur temporibus culpa eveniet ipsum, voluptatum,
-              mollitia dolorum accusantium, consectetur minus doloribus repellat! Enim error minus obcaecati ipsum
-              minima, laudantium nemo voluptate exercitationem deleniti sed ad veniam illum eos nulla beatae magnam quam
-              quisquam soluta quaerat qui ipsa est quod ea dolores? Exercitationem, fuga. Eaque neque dolorum sunt
-              quibusdam culpa. Corporis vitae eligendi, quos, veniam hic possimus deserunt nemo qui repudiandae iste
-              vero enim culpa! Officiis doloremque accusantium atque quaerat ea reprehenderit perferendis pariatur
-              reiciendis, numquam corrupti debitis dolorum consectetur mollitia voluptatum, aliquam autem animi amet
-              placeat, culpa quas molestias sed facere delectus? Deleniti vero repudiandae, maiores tenetur veniam
-              incidunt eligendi soluta, rem atque reiciendis tempore officia iusto hic suscipit harum dolore dolores
-              ipsum unde et minima blanditiis maxime perspiciatis excepturi sit! Facere consectetur impedit inventore
-              maiores. Fugiat assumenda veniam et, est quidem harum consequuntur odio cum? Ea quia consectetur voluptate
-              dignissimos laudantium odio quisquam vel. Rerum, optio? Accusantium, atque. Magnam minus obcaecati laborum
-              amet dignissimos rem nisi, aliquid tempora vitae accusantium inventore nesciunt cupiditate animi!
-            </p>
-
-            <div>
-              <UserAddOutlined />
-            </div>
-          </UserBio>
-
-          <UserSearchDivider />
-
-          <UserStatsWrapper>
-            <div>
-              <div>
-                <span>3</span>
-                <p>Followers</p>
-              </div>
-
-              <div>
-                <span>3</span>
-                <p>Followings</p>
-              </div>
-            </div>
-
-            <div>
-              <img src="https://i.pinimg.com/236x/cb/63/46/cb6346d5fd059c736ccf8232f2d55b0a.jpg" alt="" />
-
-              <p>
-                LoremLoremLoremiLoremLoremLoremiLoremLoremLoremiLoremLoremLoremiLoremLoremLoremiLoremLoremLoremiLoremLoremLoremiLoremLoremLoremi
-              </p>
-              <time>2014.2.20</time>
-            </div>
-          </UserStatsWrapper>
-        </UserSearchContent>
-      </UserSearchContainer>
+      <ImagePreview imagePreview={imagePreview} hideImagePreview={hideImagePreview} />
     </>
   );
 };

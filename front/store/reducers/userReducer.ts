@@ -4,6 +4,9 @@ import {
   LOAD_MY_INFO_FAILURE,
   LOAD_MY_INFO_REQUEST,
   LOAD_MY_INFO_SUCCESS,
+  SEARCH_USERS_FAILURE,
+  SEARCH_USERS_REQUEST,
+  SEARCH_USERS_SUCCESS,
   LOAD_USER_INFO_FAILURE,
   LOAD_USER_INFO_REQUEST,
   LOAD_USER_INFO_SUCCESS,
@@ -50,13 +53,16 @@ import {
   DECREMENT_BEST_USERS_LIKE,
   INCREMENT_BEST_USERS_COMMENT,
   DECREMENT_BEST_USERS_COMMENT,
-  SET_USER_FOLLOW_TYPE
+  SET_USER_FOLLOW_TYPE,
+  INITIALIZE_SEARCH_USERS,
+  INITIALIZE_USER_FOLLOW_INFO
 } from 'store/types/userType';
 
 export const initialState: UserState = {
   me: null,
   userInfo: null,
   userFollowInfo: [],
+  searchUsers: [],
   bestUsers: null,
   suggestUsers: null,
   userImagePath: [],
@@ -73,6 +79,10 @@ export const initialState: UserState = {
   loadUserFollowInfoDone: false,
   loadUserFollowInfoError: null,
   hasMoreUserFollowInfo: true,
+  searchUsersLoading: false,
+  searchUsersDone: false,
+  searchUsersError: null,
+  hasMoreSearchUsers: true,
   loginLoading: false,
   loginDone: false,
   loginError: null,
@@ -152,6 +162,10 @@ const reducer = (state: UserState = initialState, action: UserAction): UserState
         draft.loadUserInfoLoading = false;
         draft.loadUserInfoError = action.error;
         break;
+      case INITIALIZE_USER_FOLLOW_INFO:
+        draft.userFollowInfo = [];
+        draft.hasMoreUserFollowInfo = true;
+        break;
       case LOAD_USER_FOLLOW_INFO_REQUEST:
         if (action.keyword) {
           draft.userFollowInfo = [];
@@ -169,6 +183,25 @@ const reducer = (state: UserState = initialState, action: UserAction): UserState
       case LOAD_USER_FOLLOW_INFO_FAILURE:
         draft.loadUserFollowInfoLoading = false;
         draft.loadUserFollowInfoError = action.error;
+        break;
+      case INITIALIZE_SEARCH_USERS:
+        draft.searchUsers = [];
+        draft.hasMoreSearchUsers = true;
+        break;
+      case SEARCH_USERS_REQUEST:
+        draft.searchUsersLoading = true;
+        draft.searchUsersDone = false;
+        draft.searchUsersError = null;
+        break;
+      case SEARCH_USERS_SUCCESS:
+        draft.searchUsersLoading = false;
+        draft.searchUsersDone = true;
+        draft.searchUsers = draft.searchUsers.concat(action.data);
+        draft.hasMoreSearchUsers = action.data.length === 10;
+        break;
+      case SEARCH_USERS_FAILURE:
+        draft.searchUsersLoading = false;
+        draft.searchUsersError = action.error;
         break;
       case LOGIN_REQUEST:
         draft.loginLoading = true;
@@ -299,6 +332,12 @@ const reducer = (state: UserState = initialState, action: UserAction): UserState
         const userInFollowInfo = draft.userFollowInfo?.find(user => user.id === action.data);
         if (userInFollowInfo) userInFollowInfo.followerCount += 1;
 
+        const userInSearchUsers = draft.searchUsers?.find(user => user.id === action.data);
+        if (userInSearchUsers) userInSearchUsers.followerCount += 1;
+
+        const followingUserInSearchUsers = draft.searchUsers?.find(user => user.id === draft.me?.id);
+        if (followingUserInSearchUsers) followingUserInSearchUsers.followingCount += 1;
+
         if (draft.userInfo) {
           const { id, followingsCount, followersCount } = draft.userInfo;
 
@@ -310,6 +349,7 @@ const reducer = (state: UserState = initialState, action: UserAction): UserState
             draft.userInfo.followersCount = followersCount + 1;
           }
         }
+
         break;
       }
       case FOLLOW_USER_FAILURE:
@@ -332,6 +372,16 @@ const reducer = (state: UserState = initialState, action: UserAction): UserState
 
         const userInFollowInfo = draft.userFollowInfo?.find(user => user.id === action.data);
         if (userInFollowInfo && userInFollowInfo.followerCount > 0) userInFollowInfo.followerCount -= 1;
+
+        const userInSearchUsers = draft.searchUsers?.find(user => user.id === action.data);
+        if (userInSearchUsers && userInSearchUsers.followerCount > 0) {
+          userInSearchUsers.followerCount -= 1;
+        }
+
+        const followingUserInSearchUsers = draft.searchUsers?.find(user => user.id === draft.me?.id);
+        if (followingUserInSearchUsers && followingUserInSearchUsers.followingCount > 0) {
+          followingUserInSearchUsers.followingCount -= 1;
+        }
 
         if (draft.userInfo) {
           const { id, followingsCount, followersCount } = draft.userInfo;

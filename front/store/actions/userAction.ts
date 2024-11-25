@@ -22,7 +22,10 @@ import {
   LOAD_SUGGEST_USERS_REQUEST,
   LOAD_USER_INFO_REQUEST,
   LOAD_USER_FOLLOW_INFO_REQUEST,
-  SET_USER_FOLLOW_TYPE
+  SET_USER_FOLLOW_TYPE,
+  SEARCH_USERS_REQUEST,
+  INITIALIZE_SEARCH_USERS,
+  INITIALIZE_USER_FOLLOW_INFO
 } from 'store/types/userType';
 
 export const loadBestUsersRequest = () => ({
@@ -43,6 +46,10 @@ export const loadUserInfoRequest = (data: number) => ({
   data
 });
 
+export const InitializeUserFollowInfoAction = () => ({
+  type: INITIALIZE_USER_FOLLOW_INFO
+});
+
 export const loadUserFollowInfoRequest = (
   followType: 'follower' | 'following',
   userId: number,
@@ -56,6 +63,17 @@ export const loadUserFollowInfoRequest = (
   lastId,
   lastFollowerCount,
   keyword
+});
+
+export const initializeSearchUsers = () => ({
+  type: INITIALIZE_SEARCH_USERS
+});
+
+export const searchUsersRequest = (keyword: string, followerCount?: number, lastId?: number) => ({
+  type: SEARCH_USERS_REQUEST,
+  keyword,
+  followerCount,
+  lastId
 });
 
 export const loginRequest = (data: AuthResponse) => ({

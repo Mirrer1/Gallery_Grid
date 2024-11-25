@@ -197,6 +197,7 @@ export const RecentSearchHeader = styled.div`
 
   ${media.tablet} {
     font-size: 0.9rem;
+    margin-top: 1.5em;
 
     & > button {
       font-size: 0.8rem;
@@ -232,7 +233,7 @@ export const RecentSearchList = styled.ul`
       color: ${({ theme }) => theme.colors.lightFont};
 
       & > p {
-        margin-right: 0.5em;
+        margin-right: 1.5em;
       }
 
       & > span {
@@ -259,7 +260,7 @@ export const RecentSearchList = styled.ul`
 
         & > p {
           line-height: 1px;
-          margin-right: 0.3em;
+          margin-right: 1em;
         }
       }
     }

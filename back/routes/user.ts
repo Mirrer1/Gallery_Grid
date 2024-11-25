@@ -629,4 +629,109 @@ router.get('/follow', isLoggedIn, async (req, res, next) => {
   }
 });
 
+router.get('/search', isLoggedIn, async (req, res, next) => {
+  try {
+    const keyword = req.query.keyword as string;
+    const followerCount = parseInt(req.query.followerCount as string, 10) || 0;
+    const lastId = parseInt(req.query.lastId as string, 10) || 0;
+
+    if (!keyword || keyword.trim() === '') {
+      return res.status(400).json({ message: '검색어가 유효하지 않습니다.' });
+    }
+
+    const users = await User.findAll({
+      attributes: [
+        'id',
+        'nickname',
+        'desc',
+        [Sequelize.literal('(SELECT COUNT(*) FROM Follow WHERE Follow.FollowingId = User.id)'), 'followerCount'],
+        [Sequelize.literal('(SELECT COUNT(*) FROM Follow WHERE Follow.FollowerId = User.id)'), 'followingCount']
+      ],
+      include: [
+        {
+          model: Image,
+          as: 'ProfileImage',
+          attributes: ['id', 'src']
+        }
+      ],
+      where: {
+        [Op.or]: [{ nickname: { [Op.like]: `%${keyword}%` } }, { desc: { [Op.like]: `%${keyword}%` } }],
+        ...(followerCount > 0 && {
+          [Op.and]: Sequelize.literal(
+            `(SELECT COUNT(*) FROM Follow WHERE Follow.FollowingId = User.id) < ${followerCount} 
+            OR (
+              (SELECT COUNT(*) FROM Follow WHERE Follow.FollowingId = User.id) = ${followerCount} 
+              AND User.id > ${lastId}
+            )`
+          )
+        })
+      },
+      order: [
+        [Sequelize.literal('followerCount'), 'DESC'],
+        ['id', 'ASC']
+      ],
+      limit: 10
+    });
+
+    const usersWithPosts = await Promise.all(
+      users.map(async user => {
+        const posts = await user.getPosts({
+          attributes: ['id', 'content', 'location', 'createdAt'],
+          include: [
+            {
+              model: User,
+              attributes: ['id', 'nickname'],
+              include: [
+                {
+                  model: Image,
+                  as: 'ProfileImage',
+                  where: { type: 'user' },
+                  attributes: ['id', 'src'],
+                  required: false
+                }
+              ]
+            },
+            {
+              model: Image,
+              where: { type: 'post' },
+              attributes: ['id', 'src']
+            },
+            {
+              model: User,
+              as: 'Likers',
+              attributes: ['id'],
+              through: { attributes: [] }
+            },
+            {
+              model: Comment,
+              attributes: ['id', 'isDeleted'],
+              include: [
+                { model: User, attributes: ['id'] },
+                {
+                  model: ReplyComment,
+                  as: 'Replies',
+                  attributes: ['id'],
+                  include: [{ model: User, attributes: ['id'] }]
+                }
+              ]
+            }
+          ],
+          order: [['createdAt', 'DESC']],
+          limit: 1
+        });
+
+        return {
+          ...user.toJSON(),
+          Posts: posts
+        };
+      })
+    );
+
+    return res.status(200).json(usersWithPosts);
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+});
+
 export default router;

@@ -54,7 +54,12 @@ import {
   LOAD_USER_FOLLOW_INFO_SUCCESS,
   LOAD_USER_FOLLOW_INFO_FAILURE,
   LOAD_USER_FOLLOW_INFO_REQUEST,
-  FollowUser
+  FollowUser,
+  SEARCH_USERS_REQUEST,
+  searchUsersRequestAction,
+  SEARCH_USERS_SUCCESS,
+  SEARCH_USERS_FAILURE,
+  SearchUsers
 } from 'store/types/userType';
 
 function loadBestUsersAPI() {
@@ -72,6 +77,31 @@ function* loadBestUsers() {
   } catch (error: any) {
     yield put({
       type: LOAD_BEST_USERS_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
+function searchUsersAPI(keyword: string, followerCount?: number, lastId?: number) {
+  return axios.get(`/user/search?keyword=${keyword}&followerCount=${followerCount || 0}&lastId=${lastId || 0}`);
+}
+
+function* searchUsers(action: searchUsersRequestAction) {
+  try {
+    const result: AxiosResponse<SearchUsers[]> = yield call(
+      searchUsersAPI,
+      action.keyword,
+      action.followerCount,
+      action.lastId
+    );
+
+    yield put({
+      type: SEARCH_USERS_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: SEARCH_USERS_FAILURE,
       error: error.response.data.message
     });
   }
@@ -326,6 +356,10 @@ function* unFollowUser(action: unFollowUserRequestAction) {
   }
 }
 
+function* watchSearchUsers() {
+  yield debounce(500, SEARCH_USERS_REQUEST, searchUsers);
+}
+
 function* watchLoadBestUsers() {
   yield takeLatest(LOAD_BEST_USERS_REQUEST, loadBestUsers);
 }
@@ -380,6 +414,7 @@ function* watchUnFollowUser() {
 
 export default function* userSaga() {
   yield all([
+    fork(watchSearchUsers),
     fork(watchLoadBestUsers),
     fork(watchLoadSuggestUsers),
     fork(watchLoadUserInfo),

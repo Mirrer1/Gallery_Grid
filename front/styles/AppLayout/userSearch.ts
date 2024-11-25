@@ -1,9 +1,10 @@
 import styled from 'styled-components';
+import { motion } from 'framer-motion';
 
-import { HoverStyle } from 'styles/Common/hover';
 import media from 'styles/media';
+import { HoverStyle } from 'styles/Common/hover';
 
-export const UserSearchContainer = styled.div``;
+export const UserSearchContainer = styled(motion.div)``;
 
 export const UserSearchContent = styled.div`
   margin-bottom: 3em;
@@ -107,14 +108,13 @@ export const UserStatsWrapper = styled.div`
     }
 
     & > p {
-      width: 17vw;
+      max-width: 10vw;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
       font-size: 0.9rem;
       font-weight: 700;
       margin-right: 0.3em;
-      cursor: pointer;
     }
 
     & > time {
@@ -135,11 +135,42 @@ export const UserStatsWrapper = styled.div`
       width: 100%;
       justify-content: start;
       margin-left: 0;
-      padding-left: 2em;
+      padding-left: 1em;
 
       & > p {
         flex-grow: 1;
+        max-width: 30vw;
       }
     }
+  }
+
+  ${media.mobile} {
+    & > div:last-child {
+      padding-left: 0.5em;
+
+      & > p {
+        max-width: 40vw;
+      }
+    }
+  }
+`;
+
+export const NoSearchUserContainer = styled.div`
+  ${({ theme }) => theme.flexSet()};
+  color: #aaa;
+  height: 35vh;
+
+  & > span {
+    color: ${({ theme }) => theme.colors.primary};
+    font-size: 3rem;
+  }
+
+  ${media.tablet} {
+    height: 100%;
+    min-height: 500px;
+  }
+
+  ${media.mobile} {
+    min-height: 450px;
   }
 `;

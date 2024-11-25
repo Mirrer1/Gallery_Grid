@@ -1,9 +1,10 @@
 import React from 'react';
 import { ShareAltOutlined, CommentOutlined, HeartOutlined } from '@ant-design/icons';
 
+import { SearchProps } from './Search';
 import { PostCard, PostContentWrapper, PostImageWrapper, PostSearchWrapper } from 'styles/AppLayout/postSearch';
 
-const PostSearch = () => {
+const PostSearch = ({ keyword }: SearchProps) => {
   return (
     <PostSearchWrapper>
       <PostCard>

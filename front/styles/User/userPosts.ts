@@ -15,6 +15,10 @@ export const UserPostsWrapper = styled(PostPreviewWrapper)`
   grid-template-columns: repeat(2, 1fr);
   padding: 0 1em 0.7em 0em;
 
+  & > article {
+    height: fit-content;
+  }
+
   ${media.tablet} {
     width: 100%;
     padding: 0.7em 0 0.2em 0;

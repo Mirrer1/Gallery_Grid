@@ -1,11 +1,16 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { ArrowLeftOutlined, CloseOutlined, SearchOutlined } from '@ant-design/icons';
-import { toast } from 'react-toastify';
 
 import RecentSearch from './RecentSearch';
 import UserSearch from './UserSearch';
 import PostSearch from './PostSearch';
+import PostModal from 'components/Modal/PostModal';
 import useInput from 'utils/useInput';
+import useScroll from 'utils/useScroll';
+import { RootState } from 'store/reducers';
+import { initializeSearchUsers, searchUsersRequest } from 'store/actions/userAction';
+
 import { slideInFromBottom } from 'styles/Common/animation';
 import {
   ContentsWrapper,
@@ -19,32 +24,52 @@ import {
 } from 'styles/AppLayout/search';
 
 export type SearchProps = {
-  setSearchMode: React.Dispatch<React.SetStateAction<boolean>>;
+  setSearchMode?: React.Dispatch<React.SetStateAction<boolean>>;
+  keyword?: string;
 };
 
 const Search = ({ setSearchMode }: SearchProps) => {
-  const [keyword, onChangeKeyword, setKeyword] = useInput('');
+  const dispatch = useDispatch();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const searchContainerRef = useRef<HTMLDivElement>(null);
+  const { isPostModalVisible } = useSelector((state: RootState) => state.post);
+  const {} = useSelector((state: RootState) => state.user);
   const [selectedTab, setSelectedTab] = useState<'users' | 'posts'>('users');
+  const [keyword, onChangeKeyword, setKeyword] = useInput('');
+  useScroll({ type: `search-${selectedTab}`, ref: searchContainerRef, keyword });
 
-  const handleSearch = useCallback(() => {
-    if (keyword.trim()) console.log(`검색어: ${keyword}`);
-    else toast.warning('검색어를 입력해주세요.');
-  }, [keyword]);
+  const enhancedOnChangeKeyword = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      onChangeKeyword(e);
+      const value = e.target.value.trim();
+
+      if (value) {
+        dispatch(initializeSearchUsers());
+        dispatch(searchUsersRequest(value));
+      }
+    },
+    [onChangeKeyword, dispatch]
+  );
 
   const handleKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
-      if (event.key === 'Enter') handleSearch();
-      else if (event.key === 'Escape') handleClearSearch();
+      if (event.key === 'Escape') setKeyword('');
     },
-    [keyword]
+    [setKeyword]
   );
 
   const handleClearSearch = useCallback(() => {
     setKeyword('');
+    setSelectedTab('users');
+    dispatch(initializeSearchUsers());
   }, [setKeyword]);
 
   const cancelSearchMode = useCallback(() => {
-    setSearchMode(false);
+    if (setSearchMode) {
+      setSearchMode(false);
+      setSelectedTab('users');
+      dispatch(initializeSearchUsers());
+    }
   }, []);
 
   const handleTabClick = useCallback(
@@ -53,6 +78,10 @@ const Search = ({ setSearchMode }: SearchProps) => {
     },
     [selectedTab]
   );
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
 
   return (
     <SearchContainer {...slideInFromBottom()}>
@@ -72,10 +101,11 @@ const Search = ({ setSearchMode }: SearchProps) => {
       <SearchMain>
         <SearchInputWrapper>
           <input
+            ref={inputRef}
             type="text"
             placeholder="Type artists, artworks.."
             value={keyword}
-            onChange={onChangeKeyword}
+            onChange={enhancedOnChangeKeyword}
             onKeyDown={handleKeyDown}
           />
 
@@ -83,7 +113,7 @@ const Search = ({ setSearchMode }: SearchProps) => {
             <CloseOutlined />
           </button>
 
-          <button type="button" onClick={handleSearch}>
+          <button type="button">
             <SearchOutlined />
             <p>Search</p>
           </button>
@@ -91,23 +121,33 @@ const Search = ({ setSearchMode }: SearchProps) => {
 
         <SearchDivider />
 
-        <ContentsWrapper key={selectedTab} {...slideInFromBottom(0.3)}>
-          {/* <RecentSearch /> */}
-
+        <ContentsWrapper key={selectedTab} ref={searchContainerRef} {...slideInFromBottom(0.3)}>
           <SearchResultsWrapper $selectedTab={selectedTab}>
-            <div>
-              <button type="button" onClick={() => handleTabClick('users')}>
-                Users
-              </button>
-              <button type="button" onClick={() => handleTabClick('posts')}>
-                Posts
-              </button>
-            </div>
+            {keyword.trim() && (
+              <div>
+                <button type="button" onClick={() => handleTabClick('users')}>
+                  Users
+                </button>
+                <button type="button" onClick={() => handleTabClick('posts')}>
+                  Posts
+                </button>
+              </div>
+            )}
 
-            {selectedTab === 'users' ? <UserSearch /> : <PostSearch />}
+            {keyword.trim() ? (
+              selectedTab === 'users' ? (
+                <UserSearch keyword={keyword} />
+              ) : (
+                <PostSearch keyword={keyword} />
+              )
+            ) : (
+              <RecentSearch />
+            )}
           </SearchResultsWrapper>
         </ContentsWrapper>
       </SearchMain>
+
+      {isPostModalVisible && <PostModal />}
     </SearchContainer>
   );
 };

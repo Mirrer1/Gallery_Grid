@@ -62,6 +62,7 @@ export const PostCard = styled.div`
 export const PostContentWrapper = styled.div`
   ${({ theme }) => theme.flexSet()};
   background-color: white;
+  border-radius: 0 0 10px 10px;
   padding: 0.5em;
 
   & > img {
