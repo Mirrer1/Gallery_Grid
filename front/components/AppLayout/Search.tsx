@@ -33,11 +33,24 @@ const Search = ({ setSearchMode }: SearchProps) => {
   const dispatch = useDispatch();
   const inputRef = useRef<HTMLInputElement>(null);
   const searchContainerRef = useRef<HTMLDivElement>(null);
-  const { isPostModalVisible } = useSelector((state: RootState) => state.post);
-  const {} = useSelector((state: RootState) => state.user);
-  const [selectedTab, setSelectedTab] = useState<'users' | 'posts'>('users');
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const [keyword, onChangeKeyword, setKeyword] = useInput('');
+
+  const { isPostModalVisible } = useSelector((state: RootState) => state.post);
+  const [selectedTab, setSelectedTab] = useState<'users' | 'posts'>('users');
   useScroll({ type: `search-${selectedTab}`, ref: searchContainerRef, keyword });
+
+  const saveSearchKeyword = useCallback((value: string) => {
+    const recentSearches = JSON.parse(localStorage.getItem('recentSearches') || '[]');
+    const currentDate = new Date().toISOString();
+
+    const updatedSearches = [
+      { keyword: value, date: currentDate },
+      ...recentSearches.filter((search: { keyword: string }) => search.keyword !== value)
+    ].slice(0, 10);
+
+    localStorage.setItem('recentSearches', JSON.stringify(updatedSearches));
+  }, []);
 
   const enhancedOnChangeKeyword = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,9 +63,14 @@ const Search = ({ setSearchMode }: SearchProps) => {
 
         dispatch(initializeSearchPosts());
         dispatch(searchPostsRequest(value));
+
+        if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+        debounceTimerRef.current = setTimeout(() => {
+          saveSearchKeyword(value);
+        }, 1000);
       }
     },
-    [onChangeKeyword]
+    [onChangeKeyword, saveSearchKeyword]
   );
 
   const handleKeyDown = useCallback(
@@ -146,7 +164,7 @@ const Search = ({ setSearchMode }: SearchProps) => {
                 <PostSearch keyword={keyword} />
               )
             ) : (
-              <RecentSearch />
+              <RecentSearch setKeyword={setKeyword} />
             )}
           </SearchResultsWrapper>
         </ContentsWrapper>
