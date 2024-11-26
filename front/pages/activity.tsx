@@ -14,6 +14,7 @@ import { formatFollowerCount } from 'utils/formatFollowerCount';
 import { RootState } from 'store/reducers';
 import { loadMyInfoRequest } from 'store/actions/userAction';
 import { loadMyActivityCountsRequest, loadMyActivityPostsRequest } from 'store/actions/postAction';
+import { slideInFromBottom } from 'styles/Common/animation';
 import { ActivityHeader, ActivityWrapper, HeaderItem } from 'styles/Activity';
 
 const Activity = () => {
@@ -28,7 +29,7 @@ const Activity = () => {
 
       <AppLayout>
         <ActivityWrapper>
-          <ActivityHeader>
+          <ActivityHeader {...slideInFromBottom()}>
             <div>
               <HeaderItem>
                 <div />

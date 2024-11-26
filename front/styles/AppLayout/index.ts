@@ -225,3 +225,35 @@ export const NavbarLogout = styled.button`
     }
   }
 `;
+
+export const SearchWrapper = styled.div`
+  ${({ theme }) => theme.flexSet('start')}
+  width: fit-content;
+  padding: 1em 2em;
+  margin-bottom: 15%;
+  opacity: 40%;
+  cursor: pointer;
+
+  & > span {
+    font-size: 1rem;
+    margin-right: 0.5em;
+  }
+
+  & > p {
+    font-size: 0.9rem;
+  }
+
+  ${media.tablet} {
+    padding: 0.5em 1em;
+    margin-bottom: 17%;
+
+    & > span {
+      font-size: 0.95rem;
+      margin-right: 0.4em;
+    }
+
+    & > p {
+      font-size: 0.85rem;
+    }
+  }
+`;

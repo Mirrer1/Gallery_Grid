@@ -563,4 +563,97 @@ router.get('/activities', isLoggedIn, async (req, res, next) => {
   }
 });
 
+router.get('/search', async (req, res, next) => {
+  try {
+    const keyword = req.query.keyword as string;
+    const lastId = req.query.lastId ? parseInt(req.query.lastId as string, 10) : 0;
+    const lastLikeCount = req.query.lastLikeCount ? parseInt(req.query.lastLikeCount as string, 10) : 0;
+    const lastCommentCount = req.query.lastCommentCount ? parseInt(req.query.lastCommentCount as string, 10) : 0;
+
+    const whereClauses: string[] = [];
+
+    if (!keyword || keyword.trim() === '') {
+      return res.status(400).json({ message: '검색어가 유효하지 않습니다.' });
+    }
+
+    whereClauses.push(`Post.content LIKE '%${keyword}%'`);
+
+    if (lastId) {
+      whereClauses.push(`Post.id < ${lastId}`);
+    }
+
+    if (lastLikeCount || lastCommentCount) {
+      const likeCondition = `(SELECT COUNT(*) FROM \`like\` WHERE \`like\`.PostId = Post.id) <= ${lastLikeCount}`;
+      const commentCondition =
+        `(SELECT COUNT(*) FROM Comments WHERE Comments.PostId = Post.id) + ` +
+        `(SELECT COUNT(*) FROM reply_comments AS ReplyComments INNER JOIN Comments ON ReplyComments.CommentId = Comments.id WHERE Comments.PostId = Post.id) <= ${lastCommentCount}`;
+
+      whereClauses.push(`${likeCondition} AND ${commentCondition}`);
+    }
+
+    const whereClause = whereClauses.length > 0 ? sequelize.literal(whereClauses.join(' AND ')) : {};
+
+    const posts = await Post.findAll({
+      limit: 12,
+      order: [
+        [
+          sequelize.literal(
+            '(SELECT COUNT(*) FROM `like` WHERE `like`.PostId = Post.id) + ' +
+              '(SELECT COUNT(*) FROM Comments WHERE Comments.PostId = Post.id) + ' +
+              '(SELECT COUNT(*) FROM reply_comments AS ReplyComments ' +
+              'INNER JOIN Comments ON ReplyComments.CommentId = Comments.id WHERE Comments.PostId = Post.id)'
+          ),
+          'DESC'
+        ],
+        ['createdAt', 'DESC']
+      ],
+      where: whereClause,
+      include: [
+        {
+          model: User,
+          attributes: ['id', 'nickname'],
+          include: [
+            {
+              model: Image,
+              as: 'ProfileImage',
+              where: { type: 'user' },
+              attributes: ['id', 'src'],
+              required: false
+            }
+          ]
+        },
+        {
+          model: Image,
+          where: { type: 'post' },
+          attributes: ['id', 'src']
+        },
+        {
+          model: User,
+          as: 'Likers',
+          attributes: ['id'],
+          through: { attributes: [] }
+        },
+        {
+          model: Comment,
+          attributes: ['id', 'isDeleted'],
+          include: [
+            { model: User, attributes: ['id'] },
+            {
+              model: ReplyComment,
+              as: 'Replies',
+              attributes: ['id'],
+              include: [{ model: User, attributes: ['id'] }]
+            }
+          ]
+        }
+      ]
+    });
+
+    res.status(200).json(posts);
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+});
+
 export default router;

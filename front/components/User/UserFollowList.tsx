@@ -6,10 +6,16 @@ import Link from 'next/link';
 
 import { RootState } from 'store/reducers';
 import { FollowUser } from 'store/types/userType';
-import { followUserRequest, loadUserFollowInfoRequest, unFollowUserRequest } from 'store/actions/userAction';
+import {
+  InitializeUserFollowInfoAction,
+  followUserRequest,
+  loadUserFollowInfoRequest,
+  unFollowUserRequest
+} from 'store/actions/userAction';
 import { formatFollowerCount } from 'utils/formatFollowerCount';
-import useImagePreview from 'utils/useImagePreview';
 import ImagePreview from 'components/Modal/ImagePreviewModal';
+import useImagePreview from 'utils/useImagePreview';
+import useScroll from 'utils/useScroll';
 
 import { slideInFromBottom } from 'styles/Common/animation';
 import {
@@ -20,7 +26,6 @@ import {
   UserSearchLoading,
   UserSearchWrapper
 } from 'styles/User/userFollowList';
-import useScroll from 'utils/useScroll';
 
 type UserFollowProps = {
   type: 'follower' | 'following';
@@ -38,6 +43,7 @@ const UserFollowList = ({
   const dispatch = useDispatch();
   const router = useRouter();
   const { id: userId } = router.query;
+  const inputRef = useRef<HTMLInputElement>(null);
   const userContainerRef = useRef<HTMLDivElement>(null);
   const { imagePreview, showImagePreview, hideImagePreview } = useImagePreview();
   const { me, userFollowInfo, loadUserFollowInfoLoading } = useSelector((state: RootState) => state.user);
@@ -51,6 +57,7 @@ const UserFollowList = ({
       const value = e.target.value;
       setKeyword(value);
 
+      dispatch(InitializeUserFollowInfoAction());
       dispatch(loadUserFollowInfoRequest(followType, parseInt(userId as string, 10), undefined, undefined, value));
     },
     [followType, userId]
@@ -58,6 +65,7 @@ const UserFollowList = ({
 
   const onClearKeyword = useCallback(() => {
     setKeyword('');
+    dispatch(InitializeUserFollowInfoAction());
     setResetTrigger(prev => !prev);
   }, []);
 
@@ -91,6 +99,10 @@ const UserFollowList = ({
     setKeyword('');
   }, [followType, userId]);
 
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, [followType, userId]);
+
   return (
     <UserFollowListWrapper key={followType} ref={userContainerRef}>
       <UserSearchWrapper>
@@ -98,7 +110,14 @@ const UserFollowList = ({
           <SearchOutlined />
         </label>
 
-        <input type="text" id="user-search" placeholder="Search" value={keyword} onChange={onChangeKeyword} />
+        <input
+          ref={inputRef}
+          type="text"
+          id="user-search"
+          placeholder="Search"
+          value={keyword}
+          onChange={onChangeKeyword}
+        />
 
         {keyword && <CloseCircleOutlined onClick={onClearKeyword} />}
       </UserSearchWrapper>

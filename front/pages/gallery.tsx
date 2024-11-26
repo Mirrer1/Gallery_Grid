@@ -107,7 +107,7 @@ const Gallery = () => {
       </Head>
 
       <AppLayout>
-        <GalleryWrapper>
+        <GalleryWrapper {...slideInFromBottom()}>
           <div>
             <h1>FILTER:</h1>
 

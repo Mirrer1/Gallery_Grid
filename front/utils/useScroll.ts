@@ -9,15 +9,21 @@ import {
   loadFollowingPostsRequest,
   loadMyActivityPostsRequest,
   loadNewPostsRequest,
-  loadUserPostsRequest
+  loadUserPostsRequest,
+  searchPostsRequest
 } from 'store/actions/postAction';
-import { loadUserFollowInfoRequest } from 'store/actions/userAction';
+import { loadUserFollowInfoRequest, searchUsersRequest } from 'store/actions/userAction';
 
 type UseScrollParams = {
-  type: `timeline-${'best' | 'new' | 'follow'}` | 'activity' | `user-${'posts' | 'follow'}`;
+  type:
+    | `timeline-${'best' | 'new' | 'follow'}`
+    | 'activity'
+    | `user-${'posts' | 'follow'}`
+    | `search-${'users' | 'posts'}`;
   ref: RefObject<HTMLDivElement>;
   userId?: number;
   followType?: 'follower' | 'following';
+  keyword?: string;
 };
 
 type ScrollParams = {
@@ -34,11 +40,16 @@ const breakpoints = {
   mobile: 576
 };
 
-const useScroll = ({ type, ref, userId, followType }: UseScrollParams) => {
+const useScroll = ({ type, ref, userId, followType, keyword }: UseScrollParams) => {
   const dispatch = useDispatch();
-  const { userFollowInfo, hasMoreUserFollowInfo, loadUserFollowInfoLoading } = useSelector(
-    (state: RootState) => state.user
-  );
+  const {
+    userFollowInfo,
+    hasMoreUserFollowInfo,
+    loadUserFollowInfoLoading,
+    searchUsers,
+    hasMoreSearchUsers,
+    searchUsersLoading
+  } = useSelector((state: RootState) => state.user);
   const {
     timelinePosts,
     hasMoreTimelinePosts,
@@ -49,7 +60,10 @@ const useScroll = ({ type, ref, userId, followType }: UseScrollParams) => {
     loadBestPostsLoading,
     userPosts,
     hasMoreUserPosts,
-    loadUserPostsLoading
+    loadUserPostsLoading,
+    searchPosts,
+    hasMoreSearchPosts,
+    searchPostsLoading
   } = useSelector((state: RootState) => state.post);
 
   const getScrollParams = (type: string): ScrollParams => {
@@ -114,6 +128,38 @@ const useScroll = ({ type, ref, userId, followType }: UseScrollParams) => {
             );
           },
           thresholds: [300, 480, 510]
+        };
+      case 'search-users':
+        return {
+          items: searchUsers,
+          hasMore: hasMoreSearchUsers,
+          loading: searchUsersLoading,
+          dispatcher: () => {
+            const lastUser = searchUsers[searchUsers.length - 1];
+            const nextFollowerCount = lastUser?.followerCount ?? 0;
+            const lastId = lastUser?.id ?? 0;
+            return searchUsersRequest(keyword as string, nextFollowerCount, lastId);
+          },
+          thresholds: [510, 590, 790]
+        };
+      case 'search-posts':
+        return {
+          items: searchPosts,
+          hasMore: hasMoreSearchPosts,
+          loading: searchPostsLoading,
+          dispatcher: () => {
+            const lastPost = searchPosts[searchPosts.length - 1];
+            return searchPostsRequest(
+              keyword as string,
+              lastPost?.id,
+              lastPost?.Likers.length,
+              lastPost?.Comments.reduce(
+                (acc: number, comment: PostComment) => acc + 1 + (comment.Replies?.length || 0),
+                0
+              )
+            );
+          },
+          thresholds: [510, 590, 790]
         };
       case 'activity':
         return {

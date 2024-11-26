@@ -7,7 +7,8 @@ const theme: Theme = {
     bg: '#EEEFF3',
     darkBg: '#E4E5EC',
     lightBg: '#F7F7F9',
-    font: '#222222'
+    font: '#222222',
+    lightFont: '#ACACAC'
   },
   calcRem: pxSize => {
     return `${pxSize / 16}rem`;

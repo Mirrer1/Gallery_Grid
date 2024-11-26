@@ -3,6 +3,7 @@ import { produce } from 'immer';
 import {
   PostAction,
   PostState,
+  INITIALIZE_SEARCH_POSTS,
   SHOW_COMMENT_LIST,
   HIDE_COMMENT_LIST,
   SHOW_POST_MODAL,
@@ -110,12 +111,16 @@ import {
   READ_ACTIVITY_SUCCESS,
   READ_ACTIVITY_FAILURE,
   INITIALIZE_POST_LIST,
-  DELETE_FOLLOWING_USER_POSTS
+  DELETE_FOLLOWING_USER_POSTS,
+  SEARCH_POSTS_REQUEST,
+  SEARCH_POSTS_SUCCESS,
+  SEARCH_POSTS_FAILURE
 } from 'store/types/postType';
 
 export const initialState: PostState = {
   timelinePosts: [],
   userPosts: [],
+  searchPosts: [],
   myActivityCounts: { like: 0, comment: 0, follow: 0 },
   myActivityPosts: [],
   galleryPosts: [],
@@ -136,8 +141,12 @@ export const initialState: PostState = {
   commentVisiblePostId: null,
   hasMoreTimelinePosts: true,
   hasMoreUserPosts: true,
+  hasMoreSearchPosts: true,
   hasMoreMyActivityPosts: true,
   isCategoryChanged: false,
+  searchPostsLoading: false,
+  searchPostsDone: false,
+  searchPostsError: null,
   loadNewPostsLoading: false,
   loadNewPostsDone: false,
   loadNewPostsError: null,
@@ -232,6 +241,25 @@ export const initialState: PostState = {
 const reducer = (state: PostState = initialState, action: PostAction): PostState => {
   return produce(state, draft => {
     switch (action.type) {
+      case INITIALIZE_SEARCH_POSTS:
+        draft.searchPosts = [];
+        draft.hasMoreSearchPosts = true;
+        break;
+      case SEARCH_POSTS_REQUEST:
+        draft.searchPostsLoading = true;
+        draft.searchPostsDone = false;
+        draft.searchPostsError = null;
+        break;
+      case SEARCH_POSTS_SUCCESS:
+        draft.searchPostsLoading = false;
+        draft.searchPostsDone = true;
+        draft.searchPosts = draft.searchPosts.concat(action.data);
+        draft.hasMoreSearchPosts = action.data.length === 12;
+        break;
+      case SEARCH_POSTS_FAILURE:
+        draft.searchPostsLoading = false;
+        draft.searchPostsError = action.error;
+        break;
       case INITIALIZE_POST_LIST:
         draft.timelinePosts = [];
         draft.hasMoreTimelinePosts = true;
@@ -426,6 +454,9 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
         const userPostIndex = draft.userPosts.findIndex(post => post.id === action.data.id);
         if (userPostIndex !== -1) draft.userPosts[userPostIndex] = action.data;
 
+        const searchPostIndex = draft.searchPosts.findIndex(post => post.id === action.data.id);
+        if (searchPostIndex !== -1) draft.searchPosts[searchPostIndex] = action.data;
+
         draft.myActivityPosts.forEach(activity => {
           if (activity.Post.id === action.data.id) {
             activity.Post = {
@@ -463,6 +494,9 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
 
         const galleryIndex = draft.galleryPosts.findIndex(post => post.Post.id === action.data);
         if (galleryIndex !== -1) draft.galleryPosts.splice(galleryIndex, 1);
+
+        const searchPostIndex = draft.searchPosts.findIndex(post => post.id === action.data);
+        if (searchPostIndex !== -1) draft.searchPosts.splice(searchPostIndex, 1);
 
         draft.myActivityPosts = draft.myActivityPosts.filter(post => {
           if (post.Post.id === action.data) {
@@ -884,6 +918,29 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
           draft.userPosts[userPostIndex].Comments = userPostComments;
         }
 
+        const searchPostIndex = draft.searchPosts.findIndex(post => post.id === action.data.comment.PostId);
+        if (searchPostIndex !== -1) {
+          const searchComments = draft.searchPosts[searchPostIndex].Comments;
+          const searchParentId = action.data.parentId ? parseInt(action.data.parentId, 10) : null;
+
+          if (searchParentId) {
+            const searchParentComment = searchComments.find(comment => comment.id === searchParentId);
+            if (searchParentComment) {
+              searchParentComment.Replies = searchParentComment.Replies || [];
+              searchParentComment.Replies.push(action.data.comment);
+            }
+          } else {
+            searchComments.push({
+              id: action.data.comment.id,
+              isDeleted: false,
+              User: { id: action.data.comment.UserId },
+              Replies: []
+            });
+          }
+
+          draft.searchPosts[searchPostIndex].Comments = searchComments;
+        }
+
         break;
       }
       case ADD_MODAL_COMMENT_FAILURE:
@@ -1020,6 +1077,36 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
             }
           }
           draft.timelinePosts[mainPostIndex].Comments = mainComments;
+        }
+
+        const searchPostIndex = draft.searchPosts.findIndex(post => post.id === action.data.comment.PostId);
+        if (searchPostIndex !== -1) {
+          const searchComments = draft.searchPosts[searchPostIndex].Comments;
+          const searchParentId = action.data.parentId ? parseInt(action.data.parentId, 10) : null;
+
+          if (searchParentId) {
+            const searchParentComment = searchComments.find(comment => comment.id === searchParentId);
+            if (searchParentComment) {
+              const searchReplyIndex = searchParentComment.Replies.findIndex(
+                reply => reply.id === action.data.comment.id
+              );
+              if (searchReplyIndex !== -1) {
+                searchParentComment.Replies[searchReplyIndex] = {
+                  ...searchParentComment.Replies[searchReplyIndex],
+                  ...action.data.comment
+                };
+              }
+            }
+          } else {
+            const searchCommentIndex = searchComments.findIndex(comment => comment.id === action.data.comment.id);
+            if (searchCommentIndex !== -1) {
+              searchComments[searchCommentIndex] = {
+                ...searchComments[searchCommentIndex],
+                ...action.data.comment
+              };
+            }
+          }
+          draft.searchPosts[searchPostIndex].Comments = searchComments;
         }
 
         break;
@@ -1207,6 +1294,28 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
           }
         });
 
+        const searchPostIndex = draft.searchPosts.findIndex(post => post.id === postId);
+        if (searchPostIndex !== -1) {
+          const searchComments = draft.searchPosts[searchPostIndex].Comments;
+          if (replyId) {
+            const searchParentComment = searchComments.find(comment => comment.id === replyId);
+            if (searchParentComment) {
+              searchParentComment.Replies = searchParentComment.Replies.filter(reply => reply.id !== id);
+
+              if (searchParentComment.Replies.length === 0 && searchParentComment.isDeleted) {
+                draft.searchPosts[searchPostIndex].Comments = searchComments.filter(comment => comment.id !== replyId);
+              }
+            }
+          } else {
+            if (hasChild) {
+              const commentToUpdate = searchComments.find(comment => comment.id === id);
+              if (commentToUpdate) commentToUpdate.isDeleted = true;
+            } else {
+              draft.searchPosts[searchPostIndex].Comments = searchComments.filter(comment => comment.id !== id);
+            }
+          }
+        }
+
         draft.isDeleteModalVisible = false;
         draft.deleteInfo = null;
         break;
@@ -1237,6 +1346,11 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
         const userPost = draft.userPosts.find(post => post.id === action.data.PostId);
         if (userPost) {
           userPost.Likers.push({ id: action.data.UserId });
+        }
+
+        const searchPost = draft.searchPosts.find(post => post.id === action.data.PostId);
+        if (searchPost) {
+          searchPost.Likers.push({ id: action.data.UserId });
         }
 
         draft.myActivityPosts.forEach(activity => {
@@ -1272,6 +1386,11 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
         const userPost = draft.userPosts.find(post => post.id === action.data.PostId);
         if (userPost) {
           userPost.Likers = userPost.Likers.filter(liker => liker.id !== action.data.UserId);
+        }
+
+        const searchPost = draft.searchPosts.find(post => post.id === action.data.PostId);
+        if (searchPost) {
+          searchPost.Likers = searchPost.Likers.filter(liker => liker.id !== action.data.UserId);
         }
 
         draft.myActivityPosts.forEach(activity => {

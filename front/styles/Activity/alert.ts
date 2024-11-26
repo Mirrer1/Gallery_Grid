@@ -71,9 +71,14 @@ export const AlertWrapper = styled(motion.section)`
   border-radius: 5px 5px 0 0;
 
   ${media.tablet} {
+    min-height: 600px;
     height: 100%;
     overflow-y: visible;
     border-radius: 5px;
+  }
+
+  ${media.mobile} {
+    min-height: 520px;
   }
 `;
 

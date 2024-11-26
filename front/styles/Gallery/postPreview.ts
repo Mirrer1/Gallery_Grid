@@ -63,7 +63,7 @@ export const PostPreviewImage = styled.div`
   position: relative;
   cursor: pointer;
   width: 100%;
-  height: 290px;
+  aspect-ratio: 1/1;
 
   & > img {
     width: 100%;
@@ -104,14 +104,6 @@ export const PostPreviewImage = styled.div`
         margin-right: 0;
       }
     }
-  }
-
-  ${media.tablet} {
-    height: 220px;
-  }
-
-  ${media.mobile} {
-    height: 185px;
   }
 `;
 

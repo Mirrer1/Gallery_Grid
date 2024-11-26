@@ -1,4 +1,4 @@
-import { ResponseComment, ResponseDeleteComment, ResponseLike } from './postType';
+import { Post, ResponseComment, ResponseDeleteComment, ResponseLike } from './postType';
 
 export const LOAD_BEST_USERS_REQUEST = 'LOAD_BEST_USERS_REQUEST' as const;
 export const LOAD_BEST_USERS_SUCCESS = 'LOAD_BEST_USERS_SUCCESS' as const;
@@ -13,9 +13,15 @@ export const LOAD_USER_INFO_REQUEST = 'LOAD_USER_INFO_REQUEST' as const;
 export const LOAD_USER_INFO_SUCCESS = 'LOAD_USER_INFO_SUCCESS' as const;
 export const LOAD_USER_INFO_FAILURE = 'LOAD_USER_INFO_FAILURE' as const;
 
+export const INITIALIZE_USER_FOLLOW_INFO = 'INITIALIZE_USER_FOLLOW_INFO' as const;
 export const LOAD_USER_FOLLOW_INFO_REQUEST = 'LOAD_USER_FOLLOW_INFO_REQUEST' as const;
 export const LOAD_USER_FOLLOW_INFO_SUCCESS = 'LOAD_USER_FOLLOW_INFO_SUCCESS' as const;
 export const LOAD_USER_FOLLOW_INFO_FAILURE = 'LOAD_USER_FOLLOW_INFO_FAILURE' as const;
+
+export const INITIALIZE_SEARCH_USERS = 'INITIALIZE_SEARCH_USERS' as const;
+export const SEARCH_USERS_REQUEST = 'SEARCH_USERS_REQUEST' as const;
+export const SEARCH_USERS_SUCCESS = 'SEARCH_USERS_SUCCESS' as const;
+export const SEARCH_USERS_FAILURE = 'SEARCH_USERS_FAILURE' as const;
 
 export const LOGIN_REQUEST = 'LOGIN_REQUEST' as const;
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS' as const;
@@ -61,59 +67,6 @@ export const INCREMENT_BEST_USERS_LIKE = 'INCREMENT_BEST_USERS_LIKE' as const;
 export const DECREMENT_BEST_USERS_LIKE = 'DECREMENT_BEST_USERS_LIKE' as const;
 export const INCREMENT_BEST_USERS_COMMENT = 'INCREMENT_BEST_USERS_COMMENT' as const;
 export const DECREMENT_BEST_USERS_COMMENT = 'DECREMENT_BEST_USERS_COMMENT' as const;
-
-export type UserState = {
-  me: User | null;
-  userInfo: DetailedUserInfo | null;
-  userFollowInfo: FollowUser[];
-  bestUsers: FeaturedUser[] | null;
-  suggestUsers: FeaturedUser[] | null;
-  loadBestUsersLoading: boolean;
-  loadBestUsersDone: boolean;
-  loadBestUsersError: null | string;
-  loadSuggestUsersLoading: boolean;
-  loadSuggestUsersDone: boolean;
-  loadSuggestUsersError: null | string;
-  loadUserInfoLoading: boolean;
-  loadUserInfoDone: boolean;
-  loadUserInfoError: null | string;
-  loadUserFollowInfoLoading: boolean;
-  loadUserFollowInfoDone: boolean;
-  loadUserFollowInfoError: null | string;
-  hasMoreUserFollowInfo: boolean;
-  userImagePath: string[];
-  loginLoading: boolean;
-  loginDone: boolean;
-  loginError: null | string;
-  loginGoogleLoading: boolean;
-  loginGoogleDone: boolean;
-  loginGoogleError: null | string;
-  loadMyInfoLoading: boolean;
-  loadMyInfoDone: boolean;
-  loadMyInfoError: null | string;
-  logoutLoading: boolean;
-  logoutDone: boolean;
-  logoutError: null | string;
-  signUpLoading: boolean;
-  signUpDone: boolean;
-  signUpError: null | string;
-  signUpMessage: {
-    message: string | null;
-    type: 'success' | 'error' | null;
-  };
-  editMyInfoLoading: boolean;
-  editMyInfoDone: boolean;
-  editMyInfoError: null | string;
-  userUploadImageLoading: boolean;
-  userUploadImageDone: boolean;
-  userUploadImageError: null | string;
-  followUserLoading: boolean;
-  followUserDone: boolean;
-  followUserError: null | string;
-  unFollowUserLoading: boolean;
-  unFollowUserDone: boolean;
-  unFollowUserError: null | string;
-};
 
 export interface ResponseMessage {
   message: string;
@@ -163,6 +116,70 @@ export interface FollowUser extends BaseUser {
   }[];
 }
 
+export interface SearchUsers extends BaseUser {
+  followerCount: number;
+  followingCount: number;
+  Posts: Post[];
+}
+
+export type UserState = {
+  me: User | null;
+  userInfo: DetailedUserInfo | null;
+  userFollowInfo: FollowUser[];
+  bestUsers: FeaturedUser[] | null;
+  suggestUsers: FeaturedUser[] | null;
+  searchUsers: SearchUsers[];
+  loadBestUsersLoading: boolean;
+  loadBestUsersDone: boolean;
+  loadBestUsersError: null | string;
+  loadSuggestUsersLoading: boolean;
+  loadSuggestUsersDone: boolean;
+  loadSuggestUsersError: null | string;
+  loadUserInfoLoading: boolean;
+  loadUserInfoDone: boolean;
+  loadUserInfoError: null | string;
+  loadUserFollowInfoLoading: boolean;
+  loadUserFollowInfoDone: boolean;
+  loadUserFollowInfoError: null | string;
+  hasMoreUserFollowInfo: boolean;
+  hasMoreSearchUsers: boolean;
+  userImagePath: string[];
+  searchUsersLoading: boolean;
+  searchUsersDone: boolean;
+  searchUsersError: null | string;
+  loginLoading: boolean;
+  loginDone: boolean;
+  loginError: null | string;
+  loginGoogleLoading: boolean;
+  loginGoogleDone: boolean;
+  loginGoogleError: null | string;
+  loadMyInfoLoading: boolean;
+  loadMyInfoDone: boolean;
+  loadMyInfoError: null | string;
+  logoutLoading: boolean;
+  logoutDone: boolean;
+  logoutError: null | string;
+  signUpLoading: boolean;
+  signUpDone: boolean;
+  signUpError: null | string;
+  signUpMessage: {
+    message: string | null;
+    type: 'success' | 'error' | null;
+  };
+  editMyInfoLoading: boolean;
+  editMyInfoDone: boolean;
+  editMyInfoError: null | string;
+  userUploadImageLoading: boolean;
+  userUploadImageDone: boolean;
+  userUploadImageError: null | string;
+  followUserLoading: boolean;
+  followUserDone: boolean;
+  followUserError: null | string;
+  unFollowUserLoading: boolean;
+  unFollowUserDone: boolean;
+  unFollowUserError: null | string;
+};
+
 export interface loadBestUsersRequestAction {
   type: typeof LOAD_BEST_USERS_REQUEST;
 }
@@ -211,6 +228,10 @@ export interface loadUserInfoFailureAction {
   error: string;
 }
 
+export interface InitializeUserFollowInfoAction {
+  type: typeof INITIALIZE_USER_FOLLOW_INFO;
+}
+
 export interface loadUserFollowInfoRequestAction {
   type: typeof LOAD_USER_FOLLOW_INFO_REQUEST;
   followType: 'follower' | 'following';
@@ -227,6 +248,27 @@ export interface loadUserFollowInfoSuccessAction {
 
 export interface loadUserFollowInfoFailureAction {
   type: typeof LOAD_USER_FOLLOW_INFO_FAILURE;
+  error: string;
+}
+
+export interface initializeSearchUsersAction {
+  type: typeof INITIALIZE_SEARCH_USERS;
+}
+
+export interface searchUsersRequestAction {
+  type: typeof SEARCH_USERS_REQUEST;
+  keyword: string;
+  followerCount?: number;
+  lastId?: number;
+}
+
+export interface searchUsersSuccessAction {
+  type: typeof SEARCH_USERS_SUCCESS;
+  data: SearchUsers[];
+}
+
+export interface searchUsersFailureAction {
+  type: typeof SEARCH_USERS_FAILURE;
   error: string;
 }
 
@@ -446,4 +488,9 @@ export type UserAction =
   | loadUserFollowInfoRequestAction
   | loadUserFollowInfoSuccessAction
   | loadUserFollowInfoFailureAction
-  | setUserFollowTypeAction;
+  | setUserFollowTypeAction
+  | searchUsersRequestAction
+  | searchUsersSuccessAction
+  | searchUsersFailureAction
+  | initializeSearchUsersAction
+  | InitializeUserFollowInfoAction;

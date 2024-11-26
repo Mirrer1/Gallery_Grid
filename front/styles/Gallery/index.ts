@@ -4,7 +4,7 @@ import media from 'styles/media';
 import { ReverseHoverStyle } from 'styles/Common/hover';
 import { motion } from 'framer-motion';
 
-export const GalleryWrapper = styled.section`
+export const GalleryWrapper = styled(motion.section)`
   background-color: white;
   height: 97%;
   border-radius: 5px 5px 0 0;
@@ -30,7 +30,7 @@ export const GalleryWrapper = styled.section`
 
   ${media.tablet} {
     height: 100%;
-    padding: 0.7em;
+    padding: 1em;
     margin: 0;
     border-radius: 5px;
 
@@ -42,25 +42,19 @@ export const GalleryWrapper = styled.section`
     }
 
     & > div:last-child {
+      min-height: 700px;
+      height: 100%;
       padding: 0;
       overflow-y: visible;
-      height: 100%;
     }
   }
 
   ${media.mobile} {
-    padding: 0.7em;
     margin-bottom: 2.5%;
     border-radius: 5px;
 
-    & > div:first-child {
-      & > h1 {
-        /* margin-bottom: 0.5em; */
-      }
-    }
-
     & > div:last-child {
-      padding: 0;
+      min-height: 500px;
     }
   }
 `;
@@ -189,6 +183,10 @@ export const GalleryLoadingContainer = styled.div`
   }
 
   ${media.tablet} {
-    height: 100vh;
+    height: 90vh;
+  }
+
+  ${media.mobile} {
+    height: 70vh;
   }
 `;

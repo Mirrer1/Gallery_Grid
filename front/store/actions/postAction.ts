@@ -51,8 +51,27 @@ import {
   LOAD_BEST_POSTS_REQUEST,
   LOAD_FOLLOWING_POSTS_REQUEST,
   DELETE_FOLLOWING_USER_POSTS,
-  LOAD_USER_POSTS_REQUEST
+  LOAD_USER_POSTS_REQUEST,
+  INITIALIZE_SEARCH_POSTS,
+  SEARCH_POSTS_REQUEST
 } from 'store/types/postType';
+
+export const initializeSearchPosts = () => ({
+  type: INITIALIZE_SEARCH_POSTS
+});
+
+export const searchPostsRequest = (
+  keyword: string,
+  lastId?: number,
+  lastLikeCount?: number,
+  lastCommentCount?: number
+) => ({
+  type: SEARCH_POSTS_REQUEST,
+  keyword,
+  lastId,
+  lastLikeCount,
+  lastCommentCount
+});
 
 export const initializePostList = () => ({
   type: INITIALIZE_POST_LIST

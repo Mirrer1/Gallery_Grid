@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { motion } from 'framer-motion';
 
 import media from 'styles/media';
 
@@ -18,7 +19,7 @@ export const ActivityWrapper = styled.div`
   }
 `;
 
-export const ActivityHeader = styled.header`
+export const ActivityHeader = styled(motion.header)`
   padding: 1.3em 0;
   background-color: white;
   margin-bottom: 0.8em;

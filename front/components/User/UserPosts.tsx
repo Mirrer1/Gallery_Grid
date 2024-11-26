@@ -70,7 +70,6 @@ const UserPosts = () => {
                 <div>
                   <CommentOutlined />
                   <span>
-                    {' '}
                     {post.Comments.reduce((total, comment) => {
                       const repliesCount = comment.Replies ? comment.Replies.length : 0;
 
