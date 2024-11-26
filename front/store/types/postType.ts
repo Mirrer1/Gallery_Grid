@@ -1,5 +1,10 @@
 import { User } from './userType';
 
+export const INITIALIZE_SEARCH_POSTS = 'INITIALIZE_SEARCH_POSTS' as const;
+export const SEARCH_POSTS_REQUEST = 'SEARCH_POSTS_REQUEST' as const;
+export const SEARCH_POSTS_SUCCESS = 'SEARCH_POSTS_SUCCESS' as const;
+export const SEARCH_POSTS_FAILURE = 'SEARCH_POSTS_FAILURE' as const;
+
 export const INITIALIZE_POST_LIST = 'INITIALIZE_POST_LIST' as const;
 export const LOAD_NEW_POSTS_REQUEST = 'LOAD_NEW_POSTS_REQUEST' as const;
 export const LOAD_NEW_POSTS_SUCCESS = 'LOAD_NEW_POSTS_SUCCESS' as const;
@@ -236,6 +241,7 @@ export interface ActivityCounts {
 export type PostState = {
   timelinePosts: Post[];
   userPosts: Post[];
+  searchPosts: Post[];
   myActivityCounts: ActivityCounts;
   myActivityPosts: UserHistoryPost[];
   galleryPosts: UserHistoryPost[];
@@ -256,6 +262,7 @@ export type PostState = {
   commentVisiblePostId: number | null;
   hasMoreTimelinePosts: boolean;
   hasMoreUserPosts: boolean;
+  hasMoreSearchPosts: boolean;
   hasMoreMyActivityPosts: boolean;
   isCategoryChanged: boolean;
   loadNewPostsLoading: boolean;
@@ -264,6 +271,9 @@ export type PostState = {
   loadBestPostsLoading: boolean;
   loadBestPostsDone: boolean;
   loadBestPostsError: null | string;
+  searchPostsLoading: boolean;
+  searchPostsDone: boolean;
+  searchPostsError: null | string;
   loadFollowingPostsLoading: boolean;
   loadFollowingPostsDone: boolean;
   loadFollowingPostsError: null | string;
@@ -348,6 +358,28 @@ export type PostState = {
   isPostModalVisible: boolean;
   isDeleteModalVisible: boolean;
 };
+
+export interface initializeSearchPostsAction {
+  type: typeof INITIALIZE_SEARCH_POSTS;
+}
+
+export interface searchPostsRequestAction {
+  type: typeof SEARCH_POSTS_REQUEST;
+  keyword: string;
+  lastId?: number;
+  lastLikeCount?: number;
+  lastCommentCount?: number;
+}
+
+export interface searchPostsSuccessAction {
+  type: typeof SEARCH_POSTS_SUCCESS;
+  data: Post[];
+}
+
+export interface searchPostsFailureAction {
+  type: typeof SEARCH_POSTS_FAILURE;
+  error: string;
+}
 
 export interface initializePostListAction {
   type: typeof INITIALIZE_POST_LIST;
@@ -982,4 +1014,8 @@ export type PostAction =
   | setActivityFocusedCommentIdAction
   | loadUserPostsRequestAction
   | loadUserPostsSuccessAction
-  | loadUserPostsFailureAction;
+  | loadUserPostsFailureAction
+  | initializeSearchPostsAction
+  | searchPostsRequestAction
+  | searchPostsSuccessAction
+  | searchPostsFailureAction;

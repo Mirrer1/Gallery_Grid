@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { LoadingOutlined, UserAddOutlined, UserDeleteOutlined } from '@ant-design/icons';
 import { useSelector, useDispatch } from 'react-redux';
+import Link from 'next/link';
 
 import ImagePreview from 'components/Modal/ImagePreviewModal';
 import formatDate from 'utils/useListTimes';
@@ -8,6 +9,8 @@ import useImagePreview from 'utils/useImagePreview';
 import { RootState } from 'store/reducers';
 import { SearchProps } from './Search';
 import { SearchUsers } from 'store/types/userType';
+import { Image } from 'store/types/postType';
+import { showPostCarousel } from 'store/actions/postAction';
 import { followUserRequest, unFollowUserRequest } from 'store/actions/userAction';
 
 import { slideInList } from 'styles/Common/animation';
@@ -20,12 +23,15 @@ import {
   UserSearchDivider,
   UserStatsWrapper
 } from 'styles/AppLayout/userSearch';
+import PostImageCarousel from 'components/Timeline/PostImageCarousel';
 
 const UserSearch = ({ keyword }: SearchProps) => {
   const dispatch = useDispatch();
+  const { isCarouselVisible } = useSelector((state: RootState) => state.post);
   const { me, searchUsers, followUserDone, unFollowUserDone, searchUsersLoading, searchUsersDone } = useSelector(
     (state: RootState) => state.user
   );
+  const [modalImages, setModalImages] = useState<Image[]>([]);
   const [followingUserId, setFollowingUserId] = useState<number | null>(null);
   const { imagePreview, showImagePreview, hideImagePreview } = useImagePreview();
 
@@ -41,9 +47,15 @@ const UserSearch = ({ keyword }: SearchProps) => {
     [me.Followings, searchUsers]
   );
 
+  const showCarousel = useCallback((images: Image[]) => {
+    setModalImages(images);
+    dispatch(showPostCarousel());
+  }, []);
+
   useEffect(() => {
     if (followUserDone || unFollowUserDone) setFollowingUserId(null);
   }, [followUserDone, unFollowUserDone]);
+
   return (
     <>
       {searchUsersLoading && (
@@ -58,9 +70,9 @@ const UserSearch = ({ keyword }: SearchProps) => {
         </NoSearchUserContainer>
       )}
 
-      {searchUsers.map((user: SearchUsers) => (
+      {searchUsers.map((user: SearchUsers, i: number) => (
         <UserSearchContainer key={user.id} {...slideInList}>
-          <UserSearchContent>
+          <UserSearchContent $isLast={i === searchUsers.length - 1}>
             <UserProfileWrapper>
               <img
                 src={user?.ProfileImage ? `http://localhost:3065/${user.ProfileImage.src}` : '/user.jpg'}
@@ -69,7 +81,8 @@ const UserSearch = ({ keyword }: SearchProps) => {
                   showImagePreview(user?.ProfileImage ? `http://localhost:3065/${user.ProfileImage.src}` : '/user.jpg')
                 }
               />
-              <p>{user.nickname}</p>
+
+              <Link href={`/user/${user.id}`}>{user.nickname}</Link>
             </UserProfileWrapper>
 
             <UserBio>
@@ -108,7 +121,7 @@ const UserSearch = ({ keyword }: SearchProps) => {
                   <img
                     src={`http://localhost:3065/${user.Posts[0].Images[0].src}`}
                     alt="게시글의 첫번째 이미지"
-                    onClick={() => showImagePreview(`http://localhost:3065/${user.Posts[0].Images[0].src}`)}
+                    onClick={() => showCarousel(user.Posts[0].Images)}
                   />
 
                   <p>{user.Posts[0].content}</p>
@@ -121,6 +134,7 @@ const UserSearch = ({ keyword }: SearchProps) => {
       ))}
 
       <ImagePreview imagePreview={imagePreview} hideImagePreview={hideImagePreview} />
+      {isCarouselVisible && <PostImageCarousel images={modalImages} />}
     </>
   );
 };

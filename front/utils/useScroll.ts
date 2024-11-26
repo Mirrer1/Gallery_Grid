@@ -9,7 +9,8 @@ import {
   loadFollowingPostsRequest,
   loadMyActivityPostsRequest,
   loadNewPostsRequest,
-  loadUserPostsRequest
+  loadUserPostsRequest,
+  searchPostsRequest
 } from 'store/actions/postAction';
 import { loadUserFollowInfoRequest, searchUsersRequest } from 'store/actions/userAction';
 
@@ -59,7 +60,10 @@ const useScroll = ({ type, ref, userId, followType, keyword }: UseScrollParams) 
     loadBestPostsLoading,
     userPosts,
     hasMoreUserPosts,
-    loadUserPostsLoading
+    loadUserPostsLoading,
+    searchPosts,
+    hasMoreSearchPosts,
+    searchPostsLoading
   } = useSelector((state: RootState) => state.post);
 
   const getScrollParams = (type: string): ScrollParams => {
@@ -135,6 +139,25 @@ const useScroll = ({ type, ref, userId, followType, keyword }: UseScrollParams) 
             const nextFollowerCount = lastUser?.followerCount ?? 0;
             const lastId = lastUser?.id ?? 0;
             return searchUsersRequest(keyword as string, nextFollowerCount, lastId);
+          },
+          thresholds: [510, 590, 790]
+        };
+      case 'search-posts':
+        return {
+          items: searchPosts,
+          hasMore: hasMoreSearchPosts,
+          loading: searchPostsLoading,
+          dispatcher: () => {
+            const lastPost = searchPosts[searchPosts.length - 1];
+            return searchPostsRequest(
+              keyword as string,
+              lastPost?.id,
+              lastPost?.Likers.length,
+              lastPost?.Comments.reduce(
+                (acc: number, comment: PostComment) => acc + 1 + (comment.Replies?.length || 0),
+                0
+              )
+            );
           },
           thresholds: [510, 590, 790]
         };

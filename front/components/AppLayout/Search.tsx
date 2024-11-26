@@ -10,6 +10,7 @@ import useInput from 'utils/useInput';
 import useScroll from 'utils/useScroll';
 import { RootState } from 'store/reducers';
 import { initializeSearchUsers, searchUsersRequest } from 'store/actions/userAction';
+import { initializeSearchPosts, searchPostsRequest } from 'store/actions/postAction';
 
 import { slideInFromBottom } from 'styles/Common/animation';
 import {
@@ -46,9 +47,12 @@ const Search = ({ setSearchMode }: SearchProps) => {
       if (value) {
         dispatch(initializeSearchUsers());
         dispatch(searchUsersRequest(value));
+
+        dispatch(initializeSearchPosts());
+        dispatch(searchPostsRequest(value));
       }
     },
-    [onChangeKeyword, dispatch]
+    [onChangeKeyword]
   );
 
   const handleKeyDown = useCallback(
@@ -62,6 +66,7 @@ const Search = ({ setSearchMode }: SearchProps) => {
     setKeyword('');
     setSelectedTab('users');
     dispatch(initializeSearchUsers());
+    dispatch(initializeSearchPosts());
   }, [setKeyword]);
 
   const cancelSearchMode = useCallback(() => {
@@ -69,6 +74,7 @@ const Search = ({ setSearchMode }: SearchProps) => {
       setSearchMode(false);
       setSelectedTab('users');
       dispatch(initializeSearchUsers());
+      dispatch(initializeSearchPosts());
     }
   }, []);
 
@@ -82,7 +88,6 @@ const Search = ({ setSearchMode }: SearchProps) => {
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
-
   return (
     <SearchContainer {...slideInFromBottom()}>
       <SearchBackButton onClick={cancelSearchMode}>

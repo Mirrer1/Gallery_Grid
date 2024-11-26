@@ -43,6 +43,7 @@ const UserFollowList = ({
   const dispatch = useDispatch();
   const router = useRouter();
   const { id: userId } = router.query;
+  const inputRef = useRef<HTMLInputElement>(null);
   const userContainerRef = useRef<HTMLDivElement>(null);
   const { imagePreview, showImagePreview, hideImagePreview } = useImagePreview();
   const { me, userFollowInfo, loadUserFollowInfoLoading } = useSelector((state: RootState) => state.user);
@@ -98,6 +99,10 @@ const UserFollowList = ({
     setKeyword('');
   }, [followType, userId]);
 
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, [followType, userId]);
+
   return (
     <UserFollowListWrapper key={followType} ref={userContainerRef}>
       <UserSearchWrapper>
@@ -105,7 +110,14 @@ const UserFollowList = ({
           <SearchOutlined />
         </label>
 
-        <input type="text" id="user-search" placeholder="Search" value={keyword} onChange={onChangeKeyword} />
+        <input
+          ref={inputRef}
+          type="text"
+          id="user-search"
+          placeholder="Search"
+          value={keyword}
+          onChange={onChangeKeyword}
+        />
 
         {keyword && <CloseCircleOutlined onClick={onClearKeyword} />}
       </UserSearchWrapper>

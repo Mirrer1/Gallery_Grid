@@ -6,12 +6,8 @@ import { HoverStyle } from 'styles/Common/hover';
 
 export const UserSearchContainer = styled(motion.div)``;
 
-export const UserSearchContent = styled.div`
-  margin-bottom: 3em;
-
-  ${media.tablet} {
-    margin-bottom: 3em;
-  }
+export const UserSearchContent = styled.div<{ $isLast?: boolean }>`
+  margin-bottom: ${props => (props.$isLast ? '1em' : '3em')};
 `;
 
 export const UserProfileWrapper = styled.div`
@@ -26,7 +22,7 @@ export const UserProfileWrapper = styled.div`
     cursor: pointer;
   }
 
-  & > p {
+  & > a {
     font-weight: 700;
     cursor: pointer;
   }

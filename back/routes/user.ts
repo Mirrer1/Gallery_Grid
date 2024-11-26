@@ -695,25 +695,6 @@ router.get('/search', isLoggedIn, async (req, res, next) => {
               model: Image,
               where: { type: 'post' },
               attributes: ['id', 'src']
-            },
-            {
-              model: User,
-              as: 'Likers',
-              attributes: ['id'],
-              through: { attributes: [] }
-            },
-            {
-              model: Comment,
-              attributes: ['id', 'isDeleted'],
-              include: [
-                { model: User, attributes: ['id'] },
-                {
-                  model: ReplyComment,
-                  as: 'Replies',
-                  attributes: ['id'],
-                  include: [{ model: User, attributes: ['id'] }]
-                }
-              ]
             }
           ],
           order: [['createdAt', 'DESC']],

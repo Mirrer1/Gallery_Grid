@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { motion } from 'framer-motion';
 
 import media from 'styles/media';
 import { ReverseHoverStyle } from 'styles/Common/hover';
@@ -47,7 +48,7 @@ export const PostImageWrapper = styled.div`
   }
 `;
 
-export const PostCard = styled.div`
+export const PostCard = styled(motion.div)`
   border: 1px solid ${({ theme }) => theme.colors.lightBg};
   border-radius: 10px;
   cursor: pointer;
@@ -59,7 +60,7 @@ export const PostCard = styled.div`
   }
 `;
 
-export const PostContentWrapper = styled.div`
+export const PostContentWrapper = styled.div<{ $liked: boolean; $hasCommented: boolean }>`
   ${({ theme }) => theme.flexSet()};
   background-color: white;
   border-radius: 0 0 10px 10px;
@@ -94,5 +95,30 @@ export const PostContentWrapper = styled.div`
 
   & > span:nth-child(3) {
     margin-right: 0.5em;
+    color: ${props => (props.$liked ? '#EE6B6E' : 'black')};
+  }
+
+  & > span:last-child {
+    color: ${props => (props.$hasCommented ? '#6BA2E6' : 'black')};
+  }
+`;
+
+export const NoSearchPostContainer = styled.div`
+  ${({ theme }) => theme.flexSet()};
+  color: #aaa;
+  height: 35vh;
+
+  & > span {
+    color: ${({ theme }) => theme.colors.primary};
+    font-size: 3rem;
+  }
+
+  ${media.tablet} {
+    height: 100%;
+    min-height: 500px;
+  }
+
+  ${media.mobile} {
+    min-height: 450px;
   }
 `;

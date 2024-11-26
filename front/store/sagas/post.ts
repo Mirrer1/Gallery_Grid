@@ -1,4 +1,4 @@
-import { all, call, fork, put, takeLatest } from 'redux-saga/effects';
+import { all, call, debounce, fork, put, takeLatest } from 'redux-saga/effects';
 import axios, { AxiosResponse } from 'axios';
 
 import {
@@ -112,7 +112,11 @@ import {
   LOAD_USER_POSTS_REQUEST,
   loadUserPostsRequestAction,
   LOAD_USER_POSTS_SUCCESS,
-  LOAD_USER_POSTS_FAILURE
+  LOAD_USER_POSTS_FAILURE,
+  SEARCH_POSTS_REQUEST,
+  searchPostsRequestAction,
+  SEARCH_POSTS_SUCCESS,
+  SEARCH_POSTS_FAILURE
 } from 'store/types/postType';
 import {
   DECREMENT_BEST_USERS_COMMENT,
@@ -672,6 +676,30 @@ function* unLikePost(action: unLikePostRequestAction) {
   }
 }
 
+function searchPostsAPI(keyword: string, lastId?: number, lastLikeCount?: number, lastCommentCount?: number) {
+  return axios.get(
+    `/posts/search?keyword=${keyword}&${lastId || 0}&lastLikeCount=${lastLikeCount || 0}&lastCommentCount=${lastCommentCount || 0}`
+  );
+}
+
+function* searchPosts(action: searchPostsRequestAction) {
+  try {
+    const result: AxiosResponse<Post[]> = yield call(() =>
+      searchPostsAPI(action.keyword, action.lastId, action.lastLikeCount, action.lastCommentCount)
+    );
+
+    yield put({
+      type: SEARCH_POSTS_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: SEARCH_POSTS_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
 function* watchLoadNewPosts() {
   yield takeLatest(LOAD_NEW_POSTS_REQUEST, loadNewPosts);
 }
@@ -784,6 +812,10 @@ function* watchUnLikePost() {
   yield takeLatest(UNLIKE_POST_REQUEST, unLikePost);
 }
 
+function* watchSearchPosts() {
+  yield debounce(500, SEARCH_POSTS_REQUEST, searchPosts);
+}
+
 export default function* postSaga() {
   yield all([
     fork(watchLoadNewPosts),
@@ -813,6 +845,7 @@ export default function* postSaga() {
     fork(watchEditModalCommentUploadImage),
     fork(watchDeleteModalComment),
     fork(watchLikePost),
-    fork(watchUnLikePost)
+    fork(watchUnLikePost),
+    fork(watchSearchPosts)
   ]);
 }

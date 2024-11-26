@@ -332,12 +332,6 @@ const reducer = (state: UserState = initialState, action: UserAction): UserState
         const userInFollowInfo = draft.userFollowInfo?.find(user => user.id === action.data);
         if (userInFollowInfo) userInFollowInfo.followerCount += 1;
 
-        const userInSearchUsers = draft.searchUsers?.find(user => user.id === action.data);
-        if (userInSearchUsers) userInSearchUsers.followerCount += 1;
-
-        const followingUserInSearchUsers = draft.searchUsers?.find(user => user.id === draft.me?.id);
-        if (followingUserInSearchUsers) followingUserInSearchUsers.followingCount += 1;
-
         if (draft.userInfo) {
           const { id, followingsCount, followersCount } = draft.userInfo;
 
@@ -347,6 +341,18 @@ const reducer = (state: UserState = initialState, action: UserAction): UserState
 
           if (id === action.data && id !== draft.me?.id) {
             draft.userInfo.followersCount = followersCount + 1;
+          }
+        }
+
+        const followedSearchUser = draft.searchUsers.find(user => user.id === action.data);
+        if (followedSearchUser) {
+          followedSearchUser.followerCount += 1;
+        }
+
+        if (draft.me) {
+          const followingSearchUser = draft.searchUsers.find(user => user.id === draft.me?.id);
+          if (followingSearchUser) {
+            followingSearchUser.followingCount += 1;
           }
         }
 
@@ -373,16 +379,6 @@ const reducer = (state: UserState = initialState, action: UserAction): UserState
         const userInFollowInfo = draft.userFollowInfo?.find(user => user.id === action.data);
         if (userInFollowInfo && userInFollowInfo.followerCount > 0) userInFollowInfo.followerCount -= 1;
 
-        const userInSearchUsers = draft.searchUsers?.find(user => user.id === action.data);
-        if (userInSearchUsers && userInSearchUsers.followerCount > 0) {
-          userInSearchUsers.followerCount -= 1;
-        }
-
-        const followingUserInSearchUsers = draft.searchUsers?.find(user => user.id === draft.me?.id);
-        if (followingUserInSearchUsers && followingUserInSearchUsers.followingCount > 0) {
-          followingUserInSearchUsers.followingCount -= 1;
-        }
-
         if (draft.userInfo) {
           const { id, followingsCount, followersCount } = draft.userInfo;
 
@@ -394,6 +390,19 @@ const reducer = (state: UserState = initialState, action: UserAction): UserState
             draft.userInfo.followersCount = followersCount - 1;
           }
         }
+
+        const unfollowedSearchUser = draft.searchUsers.find(user => user.id === action.data);
+        if (unfollowedSearchUser && unfollowedSearchUser.followerCount > 0) {
+          unfollowedSearchUser.followerCount -= 1;
+        }
+
+        if (draft.me) {
+          const unfollowingSearchUser = draft.searchUsers.find(user => user.id === draft.me?.id);
+          if (unfollowingSearchUser && unfollowingSearchUser.followingCount > 0) {
+            unfollowingSearchUser.followingCount -= 1;
+          }
+        }
+
         break;
       }
       case UNFOLLOW_USER_FAILURE:
