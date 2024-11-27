@@ -14,10 +14,10 @@ import { ContactIcon, HeaderWrapper, MenuButton } from 'styles/Landing/header';
 
 const Landing = () => {
   const { me } = useSelector((state: RootState) => state.user);
-  const [selectMenu, setSelectMenu] = useState<'home' | 'login' | 'signup' | 'contact'>('home');
+  const [selectMenu, setSelectMenu] = useState<'home' | 'login' | 'signup' | 'contact' | 'recovery'>('home');
   useToastStatus();
 
-  const onClickMenu = useCallback((menu: 'home' | 'login' | 'signup' | 'contact') => {
+  const onClickMenu = useCallback((menu: 'home' | 'login' | 'signup' | 'contact' | 'recovery') => {
     setSelectMenu(menu);
   }, []);
 

@@ -32,6 +32,10 @@ const LoginForm = ({ selectMenu, onClickMenu }: MenuProps) => {
     onClickMenu('signup');
   }, [onClickMenu]);
 
+  const onMoveRecovery = useCallback(() => {
+    onClickMenu('recovery');
+  }, [onClickMenu]);
+
   const onSubmitForm = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
@@ -115,7 +119,9 @@ const LoginForm = ({ selectMenu, onClickMenu }: MenuProps) => {
             <label htmlFor="rememberId">아이디 저장</label>
           </div>
 
-          <button type="button">Forget your password?</button>
+          <button type="button" onClick={onMoveRecovery}>
+            Forget your password?
+          </button>
         </AuthOptionsWrapper>
 
         <AccountBtn $menu={selectMenu}>

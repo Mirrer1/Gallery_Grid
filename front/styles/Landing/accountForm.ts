@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 
 import media from 'styles/media';
 import { HoverStyle } from 'styles/Common/hover';
-import { DarkShadowStyle } from 'styles/Common/shadow';
+import { DarkShadowStyle, ShadowStyle } from 'styles/Common/shadow';
 
 export const AccountWrapper = styled(motion.section)`
   ${({ theme }) => theme.flexColumnSet()};
@@ -102,7 +102,7 @@ export const AccountForm = styled.form`
   }
 `;
 
-export const AccountInput = styled.div<{ $largemargin: string }>`
+export const AccountInput = styled(motion.div)<{ $largemargin: string }>`
   width: 100%;
   position: relative;
   margin-bottom: ${props => (props.$largemargin === 'true' ? '1.8em' : '0.2em')};
@@ -128,6 +128,11 @@ export const AccountInput = styled.div<{ $largemargin: string }>`
     outline: none;
   }
 
+  & > input[readonly] {
+    color: #b3b3b3;
+    cursor: not-allowed;
+  }
+
   & > span {
     display: block;
     position: absolute;
@@ -149,7 +154,8 @@ export const AccountInput = styled.div<{ $largemargin: string }>`
   }
 
   & > input:focus ~ label,
-  & > input:valid ~ label {
+  & > input:valid ~ label,
+  & > input[readonly] ~ label {
     font-size: 0.9rem;
     bottom: 32px;
     color: #666;
@@ -157,8 +163,40 @@ export const AccountInput = styled.div<{ $largemargin: string }>`
   }
 
   & > input:focus ~ span,
-  & > input:valid ~ span {
+  & > input:valid ~ span,
+  & > input[readonly] ~ span {
     width: 100%;
+  }
+
+  & > button {
+    position: absolute;
+    bottom: 4px;
+    right: 0;
+    ${({ theme }) => theme.flexSet()};
+    width: 80px;
+    height: 24px;
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: ${({ theme }) => theme.colors.primary};
+    border: 1px solid ${({ theme }) => theme.colors.primary};
+    z-index: 50;
+    ${HoverStyle('&')}
+    ${ShadowStyle}
+
+    & > span {
+      color: ${({ theme }) => theme.colors.primary};
+    }
+
+    &:disabled {
+      color: #b3b3b3;
+      background-color: #f5f5f5;
+      border-color: #d9d9d9;
+      cursor: not-allowed;
+
+      &:hover {
+        opacity: 100%;
+      }
+    }
   }
 
   ${media.tablet} {

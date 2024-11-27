@@ -3,7 +3,7 @@ import Sequelize, { CreationOptional, InferAttributes, InferCreationAttributes, 
 class Auth extends Model<InferAttributes<Auth>, InferCreationAttributes<Auth>> {
   declare id: CreationOptional<number>;
   declare email: string;
-  declare code: number;
+  declare code: string;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 
@@ -20,7 +20,7 @@ class Auth extends Model<InferAttributes<Auth>, InferCreationAttributes<Auth>> {
           allowNull: false
         },
         code: {
-          type: Sequelize.INTEGER,
+          type: Sequelize.STRING(6),
           allowNull: false
         },
         createdAt: Sequelize.DATE,
