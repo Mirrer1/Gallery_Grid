@@ -4,19 +4,22 @@ import { toast } from 'react-toastify';
 import LandingCarousel from './LandingCarousel';
 import LoginForm from './LoginForm';
 import SignUpForm from './SignUpForm';
+import ContactForm from './ContactForm';
+import RecoveryForm from './RecoveryForm';
+
 import { slideInFromBottom } from 'styles/Common/animation';
 import { ContentsText, ContentsWrapper, HeaderBreak } from 'styles/Landing/menuContents';
 
 export type MenuProps = {
-  selectMenu: string;
-  onClickMenu: (menu: string) => void;
+  selectMenu: 'home' | 'login' | 'signup' | 'contact' | 'recovery';
+  onClickMenu: (menu: 'home' | 'login' | 'signup' | 'contact' | 'recovery') => void;
 };
 
 const MenuContents = ({ selectMenu, onClickMenu }: MenuProps) => {
   const onClickMore = useCallback(() => {
     toast.warning('로그인이 필요한 서비스입니다.');
     onClickMenu('login');
-  }, []);
+  }, [onClickMenu]);
 
   return (
     <ContentsWrapper $selected={selectMenu}>
@@ -39,6 +42,18 @@ const MenuContents = ({ selectMenu, onClickMenu }: MenuProps) => {
             <div />
             <p>3</p>
           </div>
+        ) : selectMenu === 'contact' ? (
+          <div>
+            <p>Contact</p>
+            <div />
+            <p>4</p>
+          </div>
+        ) : selectMenu === 'recovery' ? (
+          <div>
+            <p>Password Recovery</p>
+            <div />
+            <p>5</p>
+          </div>
         ) : null}
 
         {selectMenu === 'home' ? (
@@ -58,6 +73,18 @@ const MenuContents = ({ selectMenu, onClickMenu }: MenuProps) => {
             Create&nbsp;Your&nbsp;
             <HeaderBreak $selected={selectMenu} />
             Future
+          </h1>
+        ) : selectMenu === 'contact' ? (
+          <h1>
+            Get&nbsp;In&nbsp;
+            <HeaderBreak $selected={selectMenu} />
+            Touch
+          </h1>
+        ) : selectMenu === 'recovery' ? (
+          <h1>
+            Password&nbsp;
+            <HeaderBreak $selected={selectMenu} />
+            Recovery
           </h1>
         ) : null}
 
@@ -81,6 +108,22 @@ const MenuContents = ({ selectMenu, onClickMenu }: MenuProps) => {
             <br />
             Gallery Grid에서 당신만의 예술을 선보이고, 무한한 영감을 얻으세요.
           </p>
+        ) : selectMenu === 'contact' ? (
+          <p>
+            문의 사항이 있으신가요? 언제든지 연락주세요.
+            <br />
+            Gallery Grid 팀이 빠르게 답변을 드리겠습니다.
+            <br />
+            여러분의 소중한 의견을 기다립니다.
+          </p>
+        ) : selectMenu === 'recovery' ? (
+          <p>
+            비밀번호를 잊으셨나요? 걱정하지 마세요.
+            <br />
+            아래의 안내를 따라 비밀번호를 재설정하세요.
+            <br />
+            Gallery Grid에서 다시 창작의 세계로 돌아오세요.
+          </p>
         ) : null}
 
         {selectMenu === 'home' && (
@@ -96,6 +139,10 @@ const MenuContents = ({ selectMenu, onClickMenu }: MenuProps) => {
         <LoginForm selectMenu={selectMenu} onClickMenu={onClickMenu} />
       ) : selectMenu === 'signup' ? (
         <SignUpForm selectMenu={selectMenu} onClickMenu={onClickMenu} />
+      ) : selectMenu === 'contact' ? (
+        <ContactForm selectMenu={selectMenu} onClickMenu={onClickMenu} />
+      ) : selectMenu === 'recovery' ? (
+        <RecoveryForm selectMenu={selectMenu} onClickMenu={onClickMenu} />
       ) : null}
     </ContentsWrapper>
   );

@@ -53,7 +53,8 @@ import {
   DELETE_FOLLOWING_USER_POSTS,
   LOAD_USER_POSTS_REQUEST,
   INITIALIZE_SEARCH_POSTS,
-  SEARCH_POSTS_REQUEST
+  SEARCH_POSTS_REQUEST,
+  LOAD_POST_REQUEST
 } from 'store/types/postType';
 
 export const initializeSearchPosts = () => ({
@@ -71,6 +72,11 @@ export const searchPostsRequest = (
   lastId,
   lastLikeCount,
   lastCommentCount
+});
+
+export const loadPostRequest = (postId: number) => ({
+  type: LOAD_POST_REQUEST,
+  postId
 });
 
 export const initializePostList = () => ({

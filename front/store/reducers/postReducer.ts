@@ -31,6 +31,9 @@ import {
   ADD_POST_REQUEST,
   ADD_POST_SUCCESS,
   ADD_POST_FAILURE,
+  LOAD_POST_REQUEST,
+  LOAD_POST_SUCCESS,
+  LOAD_POST_FAILURE,
   POST_UPLOAD_IMAGES_REQUEST,
   POST_UPLOAD_IMAGES_SUCCESS,
   POST_UPLOAD_IMAGES_FAILURE,
@@ -147,6 +150,9 @@ export const initialState: PostState = {
   searchPostsLoading: false,
   searchPostsDone: false,
   searchPostsError: null,
+  loadPostLoading: false,
+  loadPostDone: false,
+  loadPostError: null,
   loadNewPostsLoading: false,
   loadNewPostsDone: false,
   loadNewPostsError: null,
@@ -309,6 +315,21 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
       case LOAD_FOLLOWING_POSTS_FAILURE:
         draft.loadFollowingPostsLoading = false;
         draft.loadFollowingPostsError = action.error;
+        break;
+      case LOAD_POST_REQUEST:
+        draft.loadPostLoading = true;
+        draft.loadPostDone = false;
+        draft.loadPostError = null;
+        break;
+      case LOAD_POST_SUCCESS:
+        draft.loadPostLoading = false;
+        draft.loadPostDone = true;
+        draft.isPostModalVisible = true;
+        draft.singlePost = action.data;
+        break;
+      case LOAD_POST_FAILURE:
+        draft.loadPostLoading = false;
+        draft.loadPostError = action.error;
         break;
       case LOAD_USER_POSTS_REQUEST:
         draft.loadUserPostsLoading = true;

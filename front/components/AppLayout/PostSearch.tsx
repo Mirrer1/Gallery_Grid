@@ -4,7 +4,9 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import ImagePreview from 'components/Modal/ImagePreviewModal';
 import DeleteModal from 'components/Modal/DeleteModal';
+import useClipboard from 'utils/useClipboard';
 import useImagePreview from 'utils/useImagePreview';
+
 import { SearchProps } from './Search';
 import { RootState } from 'store/reducers';
 import { showPostModal } from 'store/actions/postAction';
@@ -24,6 +26,7 @@ const PostSearch = ({ keyword }: SearchProps) => {
   const { searchPosts, searchPostsLoading, searchPostsDone, isDeleteModalVisible } = useSelector(
     (state: RootState) => state.post
   );
+  const { copyToClipboard } = useClipboard();
   const { imagePreview, showImagePreview, hideImagePreview } = useImagePreview();
 
   const liked = useMemo(
@@ -50,6 +53,11 @@ const PostSearch = ({ keyword }: SearchProps) => {
     [searchPosts]
   );
 
+  const handleShareButtonClick = (e: React.MouseEvent<HTMLElement>, postId: number) => {
+    e.stopPropagation();
+    copyToClipboard(`${window.location.origin}/post/${postId}`);
+  };
+
   return (
     <>
       {searchPostsLoading && (
@@ -69,7 +77,7 @@ const PostSearch = ({ keyword }: SearchProps) => {
           <PostCard key={post.id} onClick={() => onClickPost(post)} {...slideInList}>
             <PostImageWrapper>
               <img src={`http://localhost:3065/${post.Images[0].src}`} alt="게시글의 첫번째 이미지" />
-              <ShareAltOutlined />
+              <ShareAltOutlined onClick={e => handleShareButtonClick(e, post.id)} />
             </PostImageWrapper>
 
             <PostContentWrapper $liked={liked[i]} $hasCommented={hasCommented[i]}>

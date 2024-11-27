@@ -1,5 +1,9 @@
 import { User } from './userType';
 
+export const LOAD_POST_REQUEST = 'LOAD_POST_REQUEST' as const;
+export const LOAD_POST_SUCCESS = 'LOAD_POST_SUCCESS' as const;
+export const LOAD_POST_FAILURE = 'LOAD_POST_FAILURE' as const;
+
 export const INITIALIZE_SEARCH_POSTS = 'INITIALIZE_SEARCH_POSTS' as const;
 export const SEARCH_POSTS_REQUEST = 'SEARCH_POSTS_REQUEST' as const;
 export const SEARCH_POSTS_SUCCESS = 'SEARCH_POSTS_SUCCESS' as const;
@@ -265,6 +269,9 @@ export type PostState = {
   hasMoreSearchPosts: boolean;
   hasMoreMyActivityPosts: boolean;
   isCategoryChanged: boolean;
+  loadPostLoading: boolean;
+  loadPostDone: boolean;
+  loadPostError: null | string;
   loadNewPostsLoading: boolean;
   loadNewPostsDone: boolean;
   loadNewPostsError: null | string;
@@ -430,6 +437,21 @@ export interface loadFollowingPostsSuccessAction {
 
 export interface loadFollowingPostsFailureAction {
   type: typeof LOAD_FOLLOWING_POSTS_FAILURE;
+  error: string;
+}
+
+export interface loadPostRequestAction {
+  type: typeof LOAD_POST_REQUEST;
+  postId: number;
+}
+
+export interface loadPostSuccessAction {
+  type: typeof LOAD_POST_SUCCESS;
+  data: Post;
+}
+
+export interface loadPostFailureAction {
+  type: typeof LOAD_POST_FAILURE;
   error: string;
 }
 
@@ -1018,4 +1040,7 @@ export type PostAction =
   | initializeSearchPostsAction
   | searchPostsRequestAction
   | searchPostsSuccessAction
-  | searchPostsFailureAction;
+  | searchPostsFailureAction
+  | loadPostRequestAction
+  | loadPostSuccessAction
+  | loadPostFailureAction;

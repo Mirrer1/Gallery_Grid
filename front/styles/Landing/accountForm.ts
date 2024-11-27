@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 
 import media from 'styles/media';
 import { HoverStyle } from 'styles/Common/hover';
-import { DarkShadowStyle } from 'styles/Common/shadow';
+import { DarkShadowStyle, ShadowStyle } from 'styles/Common/shadow';
 
 export const AccountWrapper = styled(motion.section)`
   ${({ theme }) => theme.flexColumnSet()};
@@ -102,7 +102,7 @@ export const AccountForm = styled.form`
   }
 `;
 
-export const AccountInput = styled.div<{ $largemargin: string }>`
+export const AccountInput = styled(motion.div)<{ $largemargin: string }>`
   width: 100%;
   position: relative;
   margin-bottom: ${props => (props.$largemargin === 'true' ? '1.8em' : '0.2em')};
@@ -128,6 +128,11 @@ export const AccountInput = styled.div<{ $largemargin: string }>`
     outline: none;
   }
 
+  & > input[readonly] {
+    color: #b3b3b3;
+    cursor: not-allowed;
+  }
+
   & > span {
     display: block;
     position: absolute;
@@ -149,16 +154,56 @@ export const AccountInput = styled.div<{ $largemargin: string }>`
   }
 
   & > input:focus ~ label,
-  & > input:valid ~ label {
+  & > input:valid ~ label,
+  & > input[readonly] ~ label {
     font-size: 0.9rem;
-    bottom: 35px;
+    bottom: 32px;
     color: #666;
     font-weight: bold;
   }
 
   & > input:focus ~ span,
-  & > input:valid ~ span {
+  & > input:valid ~ span,
+  & > input[readonly] ~ span {
     width: 100%;
+  }
+
+  & > button {
+    position: absolute;
+    bottom: 4px;
+    right: 0;
+    ${({ theme }) => theme.flexSet()};
+    width: 80px;
+    height: 24px;
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: ${({ theme }) => theme.colors.primary};
+    border: 1px solid ${({ theme }) => theme.colors.primary};
+    z-index: 50;
+    ${HoverStyle('&')}
+    ${ShadowStyle}
+
+    & > span {
+      color: ${({ theme }) => theme.colors.primary};
+    }
+
+    &:disabled {
+      color: #b3b3b3;
+      background-color: #f5f5f5;
+      border-color: #d9d9d9;
+      cursor: not-allowed;
+
+      &:hover {
+        opacity: 100%;
+      }
+    }
+  }
+
+  ${media.tablet} {
+    & > input:focus ~ label,
+    & > input:valid ~ label {
+      bottom: 30px;
+    }
   }
 
   ${media.mobile} {
@@ -173,6 +218,102 @@ export const AccountInput = styled.div<{ $largemargin: string }>`
     & > input:focus ~ label,
     & > input:valid ~ label {
       font-size: 0.8rem;
+      bottom: 26px;
+    }
+  }
+`;
+
+export const AccountTextarea = styled.div`
+  position: relative;
+  width: 100%;
+  margin-top: 2.5em;
+
+  & > textarea {
+    width: 100%;
+    height: 250px;
+    font-size: 0.9rem;
+    color: ${({ theme }) => theme.colors.font};
+    border: none;
+    border-bottom: solid #aaaaaa 1px;
+    padding-bottom: 8px;
+    padding-left: 10px;
+    position: relative;
+    background: none;
+    z-index: 5;
+    resize: none;
+    overflow-y: scroll;
+  }
+
+  & > textarea {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  & > textarea::-webkit-scrollbar {
+    display: none;
+  }
+
+  & > textarea::placeholder {
+    color: #aaaaaa;
+  }
+
+  & > textarea:focus {
+    outline: none;
+  }
+
+  & > span {
+    display: block;
+    position: absolute;
+    bottom: 1%;
+    left: 0%;
+    background-color: #666;
+    width: 0;
+    height: 1px;
+    border-radius: 2px;
+    transition: 0.5s;
+  }
+
+  & > label {
+    position: absolute;
+    color: #aaa;
+    left: 5px;
+    top: -10%;
+    transition: all 0.2s;
+  }
+
+  & > textarea:focus ~ label,
+  & > textarea:valid ~ label {
+    font-size: 0.9rem;
+    bottom: 32px;
+    color: #666;
+    font-weight: bold;
+  }
+
+  & > textarea:focus ~ span,
+  & > textarea:valid ~ span {
+    width: 100%;
+  }
+
+  ${media.tablet} {
+    & > textarea:focus ~ label,
+    & > textarea:valid ~ label {
+      bottom: 30px;
+    }
+  }
+
+  ${media.mobile} {
+    & > textarea {
+      font-size: 0.8rem;
+    }
+
+    & > label {
+      font-size: 0.9rem;
+    }
+
+    & > textarea:focus ~ label,
+    & > textarea:valid ~ label {
+      font-size: 0.8rem;
+      bottom: 26px;
     }
   }
 `;
@@ -184,12 +325,19 @@ export const AccountAlert = styled.p<{ $login: string }>`
   margin-bottom: ${props => (props.$login === 'true' ? '2em' : '2.5em')};
 
   ${media.tablet} {
-    font-size: 0.6rem;
+    font-size: 0.65rem;
   }
 
-  ${media.mobile} {
-    font-size: 0.55rem;
+  ${media.tablet} {
+    margin-bottom: 2em;
   }
+`;
+
+export const TextAlert = styled.p`
+  font-size: 0.8rem;
+  opacity: 50%;
+  text-align: end;
+  margin: 0.5em 0 1.8em 0;
 `;
 
 export const AuthOptionsWrapper = styled.div<{ $menu: string }>`
@@ -252,22 +400,17 @@ export const AccountBtn = styled.div<{ $menu: string }>`
   margin-bottom: 2em;
 
   & > button {
-    ${HoverStyle('&')}
-    ${DarkShadowStyle}
+    ${({ theme }) => theme.flexSet()};
+    width: 186px;
+    height: 28px;
     font-size: 0.8rem;
     font-weight: 500;
-    padding: 0.5em 2em 0.6em 2em;
     border: 1px solid rgba(217, 217, 217, 1);
+    ${HoverStyle('&')}
+    ${DarkShadowStyle}
 
     & > span {
-      padding: ${props => (props.$menu === 'login' ? '0 2em;' : '0 5em')};
       color: ${({ theme }) => theme.colors.primary};
-    }
-  }
-
-  ${media.tablet} {
-    & > button {
-      font-size: 0.7rem;
     }
   }
 `;

@@ -39,8 +39,20 @@ const useToastStatus = () => {
     readActivityDone,
     readActivityError
   } = useSelector((state: RootState) => state.post);
+
   const { editMyInfoDone, editMyInfoError, followUserDone, followUserError, unFollowUserDone, unFollowUserError } =
     useSelector((state: RootState) => state.user);
+
+  const {
+    contactDone,
+    contactError,
+    emailAuthDone,
+    emailAuthError,
+    checkCodeDone,
+    checkCodeError,
+    changePasswordDone,
+    changePasswordError
+  } = useSelector((state: RootState) => state.mail);
 
   const postStatusList = [
     {
@@ -134,6 +146,7 @@ const useToastStatus = () => {
       errorMessage: readActivityError
     }
   ];
+
   const userStatusList = [
     {
       done: editMyInfoDone,
@@ -155,6 +168,33 @@ const useToastStatus = () => {
     }
   ];
 
+  const mailStatusList = [
+    {
+      done: emailAuthDone,
+      error: emailAuthError,
+      successMessage: '메일이 발송되었습니다.',
+      errorMessage: emailAuthError
+    },
+    {
+      done: checkCodeDone,
+      error: checkCodeError,
+      successMessage: '메일이 인증되었습니다.',
+      errorMessage: checkCodeError
+    },
+    {
+      done: changePasswordDone,
+      error: changePasswordError,
+      successMessage: '비밀번호가 변경되었습니다.',
+      errorMessage: changePasswordError
+    },
+    {
+      done: contactDone,
+      error: contactError,
+      successMessage: '소중한 의견 감사합니다.',
+      errorMessage: contactError
+    }
+  ];
+
   postStatusList.forEach(({ done, error, successMessage, errorMessage }) => {
     useEffect(() => {
       if (!isInitialRender) {
@@ -165,6 +205,15 @@ const useToastStatus = () => {
   });
 
   userStatusList.forEach(({ done, error, successMessage, errorMessage }) => {
+    useEffect(() => {
+      if (!isInitialRender) {
+        if (done) toast.success(successMessage);
+        if (error) toast.error(errorMessage);
+      }
+    }, [done, error]);
+  });
+
+  mailStatusList.forEach(({ done, error, successMessage, errorMessage }) => {
     useEffect(() => {
       if (!isInitialRender) {
         if (done) toast.success(successMessage);

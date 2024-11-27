@@ -20,3 +20,9 @@ export const UserWrapper = styled.div`
     margin-bottom: 2%;
   }
 `;
+
+export const SharedPostWrapper = styled.div`
+  width: 100vw;
+  height: 100vh;
+  background-color: ${({ theme }) => theme.colors.darkBg};
+`;

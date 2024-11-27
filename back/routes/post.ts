@@ -10,7 +10,7 @@ import Image from '../models/image';
 import Comment from '../models/comment';
 import ReplyComment from '../models/replyComment';
 import UserHistory from '../models/userHistory';
-import { isLoggedIn } from './middleware';
+import { isLoggedIn, isNotLoggedIn } from './middleware';
 
 const router = express.Router();
 
@@ -238,7 +238,7 @@ router.delete('/:postId', isLoggedIn, async (req, res, next) => {
   }
 });
 
-router.get('/comment/:postId', isLoggedIn, async (req, res, next) => {
+router.get('/comment/:postId', async (req, res, next) => {
   try {
     const postId = req.params.postId;
 
@@ -791,6 +791,70 @@ router.post('/activities', isLoggedIn, async (req, res, next) => {
   } catch (e) {
     console.error(e);
     next(e);
+  }
+});
+
+router.get('/single', async (req, res, next) => {
+  try {
+    const postId = Number(req.query.postId);
+
+    console.log(postId);
+
+    const post = await Post.findOne({
+      where: { id: postId },
+      order: [
+        ['createdAt', 'DESC'],
+        [Comment, 'createdAt', 'DESC']
+      ],
+      include: [
+        {
+          model: User,
+          attributes: ['id', 'nickname'],
+          include: [
+            {
+              model: Image,
+              as: 'ProfileImage',
+              where: { type: 'user' },
+              attributes: ['id', 'src'],
+              required: false
+            }
+          ]
+        },
+        {
+          model: Image,
+          where: { type: 'post' },
+          attributes: ['id', 'src']
+        },
+        {
+          model: User,
+          as: 'Likers',
+          attributes: ['id'],
+          through: { attributes: [] }
+        },
+        {
+          model: Comment,
+          attributes: ['id', 'isDeleted'],
+          include: [
+            { model: User, attributes: ['id'] },
+            {
+              model: ReplyComment,
+              as: 'Replies',
+              attributes: ['id'],
+              include: [{ model: User, attributes: ['id'] }]
+            }
+          ]
+        }
+      ]
+    });
+
+    if (!post) {
+      return res.status(401).json({ message: '게시글이 존재하지 않습니다.' });
+    }
+
+    res.status(200).json(post);
+  } catch (err) {
+    console.error(err);
+    next(err);
   }
 });
 

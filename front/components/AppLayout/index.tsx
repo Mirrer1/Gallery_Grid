@@ -105,7 +105,7 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
                 <p>Activity</p>
               </NavbarItem>
 
-              <NavbarMessage $selected={pathname === '/message'}>
+              {/* <NavbarMessage $selected={pathname === '/message'}>
                 <NavbarItem href="/message" $selected={pathname === '/message'} $message={true}>
                   <div />
                   <MessageOutlined />
@@ -117,7 +117,7 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
                     <p>5</p>
                   </button>
                 </div>
-              </NavbarMessage>
+              </NavbarMessage> */}
 
               <NavbarItem href="/gallery" $selected={pathname === '/gallery'} $message={false}>
                 <div />
