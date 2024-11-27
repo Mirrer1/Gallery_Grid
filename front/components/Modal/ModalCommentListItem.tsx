@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
 
 import DeleteModal from './DeleteModal';
 import formatDate from 'utils/useListTimes';
@@ -82,7 +83,9 @@ const ModalCommentListItem = ({
           </div>
         ) : (
           <div>
-            <button type="button">신고</button>
+            <button type="button" onClick={() => toast.info('서비스 준비 중입니다.')}>
+              신고
+            </button>
           </div>
         )}
       </div>
@@ -100,9 +103,11 @@ const ModalCommentListItem = ({
 
       <p>{comment.content}</p>
 
-      <button type="button" onClick={() => onClickReply(comment.id, comment.User.nickname)}>
-        답글쓰기
-      </button>
+      {me && (
+        <button type="button" onClick={() => onClickReply(comment.id, comment.User.nickname)}>
+          답글쓰기
+        </button>
+      )}
 
       {isDeleteModalVisible && <DeleteModal />}
     </ModalCommentContainer>

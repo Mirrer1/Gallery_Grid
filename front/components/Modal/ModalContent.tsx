@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useRouter } from 'next/router';
 import {
   AlertOutlined,
   CommentOutlined,
@@ -10,12 +11,15 @@ import {
   MoreOutlined,
   ShareAltOutlined
 } from '@ant-design/icons';
+import { toast } from 'react-toastify';
 import Link from 'next/link';
 
 import ImagePreview from './ImagePreviewModal';
 import ModalCommentList from './ModalCommentList';
 import formatDate from 'utils/useListTimes';
+import useClipboard from 'utils/useClipboard';
 import useImagePreview from 'utils/useImagePreview';
+
 import { RootState } from 'store/reducers';
 import { Comment, PostLike } from 'store/types/postType';
 import {
@@ -38,7 +42,9 @@ import {
 import { followUserRequest, unFollowUserRequest } from 'store/actions/userAction';
 
 const ModalContent = () => {
+  const router = useRouter();
   const dispatch = useDispatch();
+  const { copyToClipboard } = useClipboard();
   const { imagePreview, showImagePreview, hideImagePreview } = useImagePreview();
   const { me, followUserLoading, unFollowUserLoading } = useSelector((state: RootState) => state.user);
   const { singlePost, modalCommentImagePath, isModalCommentListVisible } = useSelector(
@@ -59,6 +65,12 @@ const ModalContent = () => {
     setIsTooltipVisible(false);
   }, []);
 
+  const handleUserLinkClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (router.pathname === '/post/[id]') {
+      e.preventDefault();
+    }
+  };
+
   const onToggleComment = useCallback(() => {
     if (isModalCommentListVisible) dispatch(hideModalCommentList());
     else dispatch(showModalCommentList());
@@ -66,6 +78,11 @@ const ModalContent = () => {
 
   const onToggleLike = useCallback(
     (postId: number) => {
+      if (!me) {
+        toast.warning('로그인이 필요한 서비스입니다.');
+        return;
+      }
+
       if (singlePost.Likers.some((liker: PostLike) => liker.id === me?.id)) dispatch(unLikePostRequest(postId));
       else dispatch(likePostRequest(postId));
     },
@@ -79,8 +96,13 @@ const ModalContent = () => {
       if (isFollowing) dispatch(unFollowUserRequest(userId));
       else dispatch(followUserRequest(userId));
     },
-    [me.Followings]
+    [me?.Followings]
   );
+
+  const handleShareButtonClick = (postId: number) => {
+    copyToClipboard(`${window.location.origin}/post/${postId}`);
+    setIsTooltipVisible(false);
+  };
 
   const openEditModal = useCallback(() => {
     setIsTooltipVisible(false);
@@ -90,7 +112,7 @@ const ModalContent = () => {
   return (
     <ModalContentWrapper>
       <ModalContentHeader
-        $isFollowing={me.Followings.some((following: { id: number }) => following.id === singlePost.UserId)}
+        $isFollowing={me?.Followings.some((following: { id: number }) => following.id === singlePost.UserId)}
       >
         <div>
           <img
@@ -106,7 +128,9 @@ const ModalContent = () => {
           />
 
           <div>
-            <Link href={`/user/${singlePost.UserId}`}>{singlePost.User.nickname}</Link>
+            <Link href={`/user/${singlePost.UserId}`} onClick={handleUserLinkClick}>
+              {singlePost.User.nickname}
+            </Link>
             <p>
               {formatDate(singlePost.createdAt)}
               {singlePost.location && ` - ${singlePost.location}`}
@@ -115,7 +139,7 @@ const ModalContent = () => {
         </div>
 
         <div>
-          {me.id !== singlePost.UserId && (
+          {me && me?.id !== singlePost.UserId && (
             <button type="button" onClick={() => onToggleFollow(singlePost.UserId)}>
               {followUserLoading || unFollowUserLoading ? (
                 <LoadingOutlined />
@@ -146,11 +170,11 @@ const ModalContent = () => {
                 </TooltipBtn>
               ) : (
                 <TooltipBtn>
-                  <button type="button">
+                  <button type="button" onClick={() => handleShareButtonClick(singlePost.id)}>
                     <ShareAltOutlined />
                     공유
                   </button>
-                  <button type="button">
+                  <button type="button" onClick={() => toast.info('서비스 준비 중입니다.')}>
                     <AlertOutlined />
                     신고
                   </button>

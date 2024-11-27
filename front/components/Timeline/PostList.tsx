@@ -12,6 +12,7 @@ import {
   MoreOutlined,
   ShareAltOutlined
 } from '@ant-design/icons';
+import { toast } from 'react-toastify';
 import Link from 'next/link';
 
 import PostImageCarousel from './PostImageCarousel';
@@ -21,7 +22,9 @@ import ImagePreview from 'components/Modal/ImagePreviewModal';
 
 import useScroll from 'utils/useScroll';
 import formatDate from 'utils/useListTimes';
+import useClipboard from 'utils/useClipboard';
 import useImagePreview from 'utils/useImagePreview';
+
 import { RootState } from 'store/reducers';
 import { Image, Post, PostLike } from 'store/types/postType';
 import {
@@ -72,6 +75,7 @@ const PostList = () => {
     isCommentListVisible
   } = useSelector((state: RootState) => state.post);
 
+  const { copyToClipboard } = useClipboard();
   const [category, setCategory] = useState<'best' | 'new' | 'follow'>('best');
   const [modalImages, setModalImages] = useState<Image[]>([]);
   const [isTooltipVisible, setIsTooltipVisible] = useState<number | null>(null);
@@ -142,6 +146,11 @@ const PostList = () => {
     },
     [me.Followings, category]
   );
+
+  const handleShareButtonClick = (postId: number) => {
+    copyToClipboard(`${window.location.origin}/post/${postId}`);
+    setIsTooltipVisible(null);
+  };
 
   useEffect(() => {
     if (firstPostRef.current) {
@@ -247,11 +256,11 @@ const PostList = () => {
                       </TooltipBtn>
                     ) : (
                       <TooltipBtn>
-                        <button type="button">
+                        <button type="button" onClick={() => handleShareButtonClick(post.id)}>
                           <ShareAltOutlined />
                           공유
                         </button>
-                        <button type="button">
+                        <button type="button" onClick={() => toast.info('서비스 준비 중입니다.')}>
                           <AlertOutlined />
                           신고
                         </button>

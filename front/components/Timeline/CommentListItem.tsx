@@ -2,6 +2,7 @@ import React, { useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from 'store/reducers';
 import { Comment } from 'store/types/postType';
+import { toast } from 'react-toastify';
 import Link from 'next/link';
 
 import DeleteModal from 'components/Modal/DeleteModal';
@@ -81,7 +82,9 @@ const CommentListItem = ({
           </div>
         ) : (
           <div>
-            <button type="button">신고</button>
+            <button type="button" onClick={() => toast.info('서비스 준비 중입니다.')}>
+              신고
+            </button>
           </div>
         )}
       </div>

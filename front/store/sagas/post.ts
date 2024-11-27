@@ -116,7 +116,11 @@ import {
   SEARCH_POSTS_REQUEST,
   searchPostsRequestAction,
   SEARCH_POSTS_SUCCESS,
-  SEARCH_POSTS_FAILURE
+  SEARCH_POSTS_FAILURE,
+  LOAD_POST_REQUEST,
+  loadPostRequestAction,
+  LOAD_POST_SUCCESS,
+  LOAD_POST_FAILURE
 } from 'store/types/postType';
 import {
   DECREMENT_BEST_USERS_COMMENT,
@@ -628,6 +632,26 @@ function* deleteModalComment(action: deleteCommentRequestAction) {
   }
 }
 
+function loadPostAPI(postId: number) {
+  return axios.get(`/post/single?postId=${postId}`);
+}
+
+function* loadPost(action: loadPostRequestAction) {
+  try {
+    const result: AxiosResponse<Post> = yield call(loadPostAPI, action.postId);
+
+    yield put({
+      type: LOAD_POST_SUCCESS,
+      data: result.data
+    });
+  } catch (error: any) {
+    yield put({
+      type: LOAD_POST_FAILURE,
+      error: error.response.data.message
+    });
+  }
+}
+
 function likePostAPI(data: number) {
   return axios.patch(`/post/like/${data}`);
 }
@@ -804,6 +828,10 @@ function* watchDeleteModalComment() {
   yield takeLatest(DELETE_MODAL_COMMENT_REQUEST, deleteModalComment);
 }
 
+function* watchLoadPost() {
+  yield takeLatest(LOAD_POST_REQUEST, loadPost);
+}
+
 function* watchLikePost() {
   yield takeLatest(LIKE_POST_REQUEST, likePost);
 }
@@ -846,6 +874,7 @@ export default function* postSaga() {
     fork(watchDeleteModalComment),
     fork(watchLikePost),
     fork(watchUnLikePost),
+    fork(watchLoadPost),
     fork(watchSearchPosts)
   ]);
 }

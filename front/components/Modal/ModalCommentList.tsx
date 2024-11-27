@@ -30,6 +30,7 @@ const ModalCommentList = () => {
   const dispatch = useDispatch();
   const commentRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
   const { imagePreview, showImagePreview, hideImagePreview } = useImagePreview();
+  const { me } = useSelector((state: RootState) => state.user);
   const {
     singlePost,
     modalComments,
@@ -188,12 +189,14 @@ const ModalCommentList = () => {
         </ModalNoCommentsContainer>
       )}
 
-      <ModalCommentForm
-        showImagePreview={showImagePreview}
-        replyId={replyId}
-        replyUser={replyUser}
-        setReplyId={setReplyId}
-      />
+      {me && (
+        <ModalCommentForm
+          showImagePreview={showImagePreview}
+          replyId={replyId}
+          replyUser={replyUser}
+          setReplyId={setReplyId}
+        />
+      )}
 
       <ImagePreview imagePreview={imagePreview} hideImagePreview={hideImagePreview} />
     </ModalCommentListContainer>
