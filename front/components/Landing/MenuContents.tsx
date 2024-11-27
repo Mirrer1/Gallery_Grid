@@ -4,19 +4,21 @@ import { toast } from 'react-toastify';
 import LandingCarousel from './LandingCarousel';
 import LoginForm from './LoginForm';
 import SignUpForm from './SignUpForm';
+import ContactForm from './ContactForm';
+
 import { slideInFromBottom } from 'styles/Common/animation';
 import { ContentsText, ContentsWrapper, HeaderBreak } from 'styles/Landing/menuContents';
 
 export type MenuProps = {
   selectMenu: string;
-  onClickMenu: (menu: string) => void;
+  onClickMenu: (menu: 'home' | 'login' | 'signup' | 'contact') => void;
 };
 
 const MenuContents = ({ selectMenu, onClickMenu }: MenuProps) => {
   const onClickMore = useCallback(() => {
     toast.warning('로그인이 필요한 서비스입니다.');
     onClickMenu('login');
-  }, []);
+  }, [onClickMenu]);
 
   return (
     <ContentsWrapper $selected={selectMenu}>
@@ -39,6 +41,12 @@ const MenuContents = ({ selectMenu, onClickMenu }: MenuProps) => {
             <div />
             <p>3</p>
           </div>
+        ) : selectMenu === 'contact' ? (
+          <div>
+            <p>Contact</p>
+            <div />
+            <p>4</p>
+          </div>
         ) : null}
 
         {selectMenu === 'home' ? (
@@ -58,6 +66,12 @@ const MenuContents = ({ selectMenu, onClickMenu }: MenuProps) => {
             Create&nbsp;Your&nbsp;
             <HeaderBreak $selected={selectMenu} />
             Future
+          </h1>
+        ) : selectMenu === 'contact' ? (
+          <h1>
+            Get&nbsp;In&nbsp;
+            <HeaderBreak $selected={selectMenu} />
+            Touch
           </h1>
         ) : null}
 
@@ -81,6 +95,14 @@ const MenuContents = ({ selectMenu, onClickMenu }: MenuProps) => {
             <br />
             Gallery Grid에서 당신만의 예술을 선보이고, 무한한 영감을 얻으세요.
           </p>
+        ) : selectMenu === 'contact' ? (
+          <p>
+            문의 사항이 있으신가요? 언제든지 연락주세요.
+            <br />
+            Gallery Grid 팀이 빠르게 답변을 드리겠습니다.
+            <br />
+            여러분의 소중한 의견을 기다립니다.
+          </p>
         ) : null}
 
         {selectMenu === 'home' && (
@@ -96,6 +118,8 @@ const MenuContents = ({ selectMenu, onClickMenu }: MenuProps) => {
         <LoginForm selectMenu={selectMenu} onClickMenu={onClickMenu} />
       ) : selectMenu === 'signup' ? (
         <SignUpForm selectMenu={selectMenu} onClickMenu={onClickMenu} />
+      ) : selectMenu === 'contact' ? (
+        <ContactForm selectMenu={selectMenu} onClickMenu={onClickMenu} />
       ) : null}
     </ContentsWrapper>
   );

@@ -3,12 +3,15 @@ import { AnyAction, combineReducers } from 'redux';
 
 import user from 'store/reducers/userReducer';
 import post from 'store/reducers/postReducer';
+import mail from 'store/reducers/mailReducer';
 import { UserState } from 'store/types/userType';
 import { PostState } from 'store/types/postType';
+import { MailState } from 'store/types/mailType';
 
 type AppState = {
   user: UserState;
   post: PostState;
+  mail: MailState;
 };
 
 const rootReducer = (state: AppState | undefined, action: AnyAction) => {
@@ -18,7 +21,8 @@ const rootReducer = (state: AppState | undefined, action: AnyAction) => {
     default: {
       const combineReducer = combineReducers({
         user,
-        post
+        post,
+        mail
       });
       return combineReducer(state, action);
     }

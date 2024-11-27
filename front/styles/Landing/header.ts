@@ -40,11 +40,9 @@ export const MenuButton = styled.button<{ $selected: boolean }>`
   }
 
   ${media.mobile} {
-    font-size: 0.7rem;
+    font-size: 0.8rem;
     margin-right: 2.2em;
     padding-bottom: 0.5em;
-    text-decoration-thickness: ${props => (props.$selected ? '1.2px' : '0')};
-    text-underline-offset: ${props => (props.$selected ? '5px' : '0')};
   }
 `;
 

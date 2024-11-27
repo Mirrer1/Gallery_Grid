@@ -39,8 +39,11 @@ const useToastStatus = () => {
     readActivityDone,
     readActivityError
   } = useSelector((state: RootState) => state.post);
+
   const { editMyInfoDone, editMyInfoError, followUserDone, followUserError, unFollowUserDone, unFollowUserError } =
     useSelector((state: RootState) => state.user);
+
+  const { contactDone, contactError } = useSelector((state: RootState) => state.mail);
 
   const postStatusList = [
     {
@@ -134,6 +137,7 @@ const useToastStatus = () => {
       errorMessage: readActivityError
     }
   ];
+
   const userStatusList = [
     {
       done: editMyInfoDone,
@@ -155,6 +159,15 @@ const useToastStatus = () => {
     }
   ];
 
+  const mailStatusList = [
+    {
+      done: contactDone,
+      error: contactError,
+      successMessage: '메일이 발송되었습니다.',
+      errorMessage: contactError
+    }
+  ];
+
   postStatusList.forEach(({ done, error, successMessage, errorMessage }) => {
     useEffect(() => {
       if (!isInitialRender) {
@@ -165,6 +178,15 @@ const useToastStatus = () => {
   });
 
   userStatusList.forEach(({ done, error, successMessage, errorMessage }) => {
+    useEffect(() => {
+      if (!isInitialRender) {
+        if (done) toast.success(successMessage);
+        if (error) toast.error(errorMessage);
+      }
+    }, [done, error]);
+  });
+
+  mailStatusList.forEach(({ done, error, successMessage, errorMessage }) => {
     useEffect(() => {
       if (!isInitialRender) {
         if (done) toast.success(successMessage);

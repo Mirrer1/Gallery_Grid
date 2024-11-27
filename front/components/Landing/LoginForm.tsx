@@ -30,7 +30,7 @@ const LoginForm = ({ selectMenu, onClickMenu }: MenuProps) => {
 
   const onMoveSignup = useCallback(() => {
     onClickMenu('signup');
-  }, []);
+  }, [onClickMenu]);
 
   const onSubmitForm = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
@@ -91,13 +91,13 @@ const LoginForm = ({ selectMenu, onClickMenu }: MenuProps) => {
 
       <AccountForm onSubmit={onSubmitForm}>
         <AccountInput $largemargin="true">
-          <input type="text" value={email} onChange={onChangeEmail} />
+          <input type="text" value={email} onChange={onChangeEmail} required />
           <label>Email address</label>
           <span />
         </AccountInput>
 
         <AccountInput $largemargin="false">
-          <input type="password" value={password} onChange={onChangePassword} />
+          <input type="password" value={password} onChange={onChangePassword} required />
           <label>Password</label>
           <span />
         </AccountInput>

@@ -10,6 +10,7 @@ import cors from 'cors';
 import userRouter from './routes/user';
 import postRouter from './routes/post';
 import postsRouter from './routes/posts';
+import mailRouter from './routes/mail';
 import passportConfig from './passport';
 import { sequelize } from './models';
 
@@ -55,6 +56,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/user', userRouter);
 app.use('/post', postRouter);
 app.use('/posts', postsRouter);
+app.use('/mail', mailRouter);
 
 app.get('/', (req, res, next) => {
   res.send('Gallery Grid server is functioning correctly!');
