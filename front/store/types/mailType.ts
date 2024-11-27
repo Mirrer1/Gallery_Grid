@@ -37,6 +37,7 @@ export type MailState = {
 
 export interface emailAuthRequestAction {
   type: typeof EMAIL_AUTH_REQUEST;
+  selectMenu: 'signup' | 'recovery';
   email: string;
 }
 

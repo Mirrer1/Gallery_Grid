@@ -11,7 +11,7 @@ import { slideInFromBottom } from 'styles/Common/animation';
 import { ContentsText, ContentsWrapper, HeaderBreak } from 'styles/Landing/menuContents';
 
 export type MenuProps = {
-  selectMenu: string;
+  selectMenu: 'home' | 'login' | 'signup' | 'contact' | 'recovery';
   onClickMenu: (menu: 'home' | 'login' | 'signup' | 'contact' | 'recovery') => void;
 };
 

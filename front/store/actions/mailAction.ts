@@ -7,8 +7,9 @@ import {
   INITIALIZE_CONTACT
 } from 'store/types/mailType';
 
-export const emailAuthRequest = (email: string) => ({
+export const emailAuthRequest = (selectMenu: 'signup' | 'recovery', email: string) => ({
   type: EMAIL_AUTH_REQUEST,
+  selectMenu,
   email
 });
 

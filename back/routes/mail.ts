@@ -13,10 +13,15 @@ const router = express.Router();
 
 router.post('/auth', isNotLoggedIn, async (req, res, next) => {
   try {
-    const { email } = req.body;
+    const { selectMenu, email } = req.body;
 
     const user = await User.findOne({ where: { email } });
-    if (!user) {
+
+    if (selectMenu === 'signup' && user) {
+      return res.status(400).json({ message: '이미 가입된 회원입니다.' });
+    }
+
+    if (selectMenu === 'recovery' && !user) {
       return res.status(404).json({ message: '서비스에 가입된 회원이 아닙니다.' });
     }
 

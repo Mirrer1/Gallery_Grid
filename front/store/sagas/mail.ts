@@ -21,15 +21,16 @@ import {
   CHANGE_PASSWORD_FAILURE
 } from 'store/types/mailType';
 
-function emailAuthAPI(email: string) {
+function emailAuthAPI(selectMenu: 'signup' | 'recovery', email: string) {
   return axios.post('/mail/auth', {
+    selectMenu,
     email
   });
 }
 
 function* emailAuth(action: emailAuthRequestAction) {
   try {
-    const result: AxiosResponse<MailResponse> = yield call(emailAuthAPI, action.email);
+    const result: AxiosResponse<MailResponse> = yield call(emailAuthAPI, action.selectMenu, action.email);
 
     yield put({
       type: EMAIL_AUTH_SUCCESS,

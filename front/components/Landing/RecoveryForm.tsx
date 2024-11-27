@@ -62,7 +62,7 @@ const RecoveryForm = ({ selectMenu, onClickMenu }: MenuProps) => {
 
     if (!isValid) return;
 
-    dispatch(emailAuthRequest(email));
+    dispatch(emailAuthRequest('recovery', email));
   }, [email]);
 
   const handleVerifyCode = useCallback(() => {
