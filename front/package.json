@@ -1,15 +1,18 @@
 {
   "name": "gallery-grid",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
+    "build": "cross-env ANALYZE=true NODE_ENV=production next build",
+    "start": "cross-env NODE_ENV=production next start",
     "lint": "next lint"
   },
   "dependencies": {
     "@ant-design/icons": "^5.2.5",
+    "@next/bundle-analyzer": "^15.0.3",
     "axios": "^1.6.8",
+    "cross-env": "^7.0.3",
     "dayjs": "^1.11.11",
     "emoji-picker-react": "^4.11.1",
     "framer-motion": "^11.0.3",
@@ -22,7 +25,7 @@
     "react-toastify": "^10.0.4",
     "redux": "4.1",
     "redux-saga": "^1.3.0",
-    "styled-components": "^6.1.8",
+    "styled-components": "^6.1.13",
     "styled-reset": "^4.5.2",
     "swiper": "^9.0.3"
   },

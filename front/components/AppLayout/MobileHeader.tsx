@@ -17,8 +17,8 @@ const MobileHeader = ({ setSearchMode }: SearchProps) => {
   }, []);
 
   const excuteSearchMode = useCallback(() => {
-    setSearchMode(true);
-  }, []);
+    if (setSearchMode) setSearchMode(true);
+  }, [setSearchMode]);
 
   const onClickLogout = useCallback(() => {
     dispatch(logoutRequest());
