@@ -33,8 +33,20 @@ if (process.env.NODE_ENV === 'production') {
   app.use(morgan('combined'));
   app.use(hpp());
   app.use(helmet());
+  app.use(
+    cors({
+      origin: 'http://gallerygrd.com',
+      credentials: true
+    })
+  );
 } else {
   app.use(morgan('dev'));
+  app.use(
+    cors({
+      origin: true,
+      credentials: true
+    })
+  );
 }
 
 app.use(morgan('dev'));
@@ -53,13 +65,6 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
-
-app.use(
-  cors({
-    origin: ['http://localhost:3000', 'http://gallerygrd.com'],
-    credentials: true
-  })
-);
 app.use('/', express.static(path.join(__dirname, 'uploads')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
