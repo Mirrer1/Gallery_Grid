@@ -3,6 +3,7 @@ import { LogoutOutlined, SearchOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import Router from 'next/router';
 
+import { backURL } from 'config';
 import { RootState } from 'store/reducers';
 import { SearchProps } from './Search';
 import { logoutRequest } from 'store/actions/userAction';
@@ -31,10 +32,7 @@ const MobileHeader = ({ setSearchMode }: SearchProps) => {
 
         <MobileHeaderContent>
           <div onClick={onClickProfile}>
-            <img
-              src={me?.ProfileImage ? `http://localhost:3065/${me.ProfileImage.src}` : '/user.jpg'}
-              alt="유저 프로필 이미지"
-            />
+            <img src={me?.ProfileImage ? `${backURL}/${me.ProfileImage.src}` : '/user.jpg'} alt="유저 프로필 이미지" />
           </div>
 
           <div onClick={excuteSearchMode}>

@@ -20,6 +20,7 @@ import DeleteModal from 'components/Modal/DeleteModal';
 import PostModal from 'components/Modal/PostModal';
 import ImagePreview from 'components/Modal/ImagePreviewModal';
 
+import { backURL } from 'config';
 import useScroll from 'utils/useScroll';
 import formatDate from 'utils/useListTimes';
 import useClipboard from 'utils/useClipboard';
@@ -207,12 +208,10 @@ const PostList = () => {
             <PostHeader>
               <div>
                 <img
-                  src={post.User.ProfileImage ? `http://localhost:3065/${post.User.ProfileImage.src}` : '/user.jpg'}
+                  src={post.User.ProfileImage ? `${backURL}/${post.User.ProfileImage.src}` : '/user.jpg'}
                   alt="유저 프로필 이미지"
                   onClick={() =>
-                    showImagePreview(
-                      post.User.ProfileImage ? `http://localhost:3065/${post.User.ProfileImage.src}` : '/user.jpg'
-                    )
+                    showImagePreview(post.User.ProfileImage ? `${backURL}/${post.User.ProfileImage.src}` : '/user.jpg')
                   }
                 />
                 <div>
@@ -274,7 +273,7 @@ const PostList = () => {
             <PostContents>
               <div>
                 <img
-                  src={`http://localhost:3065/${post.Images[0].src}`}
+                  src={`${backURL}/${post.Images[0].src}`}
                   alt="게시글의 첫번째 이미지"
                   onClick={() => showCarousel(post.Images)}
                 />

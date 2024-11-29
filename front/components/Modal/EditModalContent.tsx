@@ -6,6 +6,7 @@ import EmojiPicker from 'emoji-picker-react';
 import Router from 'next/router';
 import Link from 'next/link';
 
+import { backURL } from 'config';
 import ImagePreview from './ImagePreviewModal';
 import useInput from 'utils/useInput';
 import formatDate from 'utils/useListTimes';
@@ -80,13 +81,11 @@ const EditModalContent = () => {
       <EditModalContentHeader>
         <div>
           <img
-            src={
-              singlePost.User.ProfileImage ? `http://localhost:3065/${singlePost.User.ProfileImage.src}` : '/user.jpg'
-            }
+            src={singlePost.User.ProfileImage ? `${backURL}/${singlePost.User.ProfileImage.src}` : '/user.jpg'}
             alt="유저 프로필 이미지"
             onClick={() =>
               showImagePreview(
-                singlePost.User.ProfileImage ? `http://localhost:3065/${singlePost.User.ProfileImage.src}` : '/user.jpg'
+                singlePost.User.ProfileImage ? `${backURL}/${singlePost.User.ProfileImage.src}` : '/user.jpg'
               )
             }
           />

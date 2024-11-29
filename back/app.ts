@@ -51,7 +51,7 @@ app.use(passport.session());
 
 app.use(
   cors({
-    origin: ['http://localhost:3000', 'gallerygrd.com'],
+    origin: ['http://localhost:3000', 'gallerygrd.com', 'http://52.79.188.105'],
     credentials: true
   })
 );

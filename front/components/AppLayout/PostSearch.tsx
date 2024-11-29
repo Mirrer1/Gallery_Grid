@@ -2,6 +2,7 @@ import React, { useCallback, useMemo } from 'react';
 import { ShareAltOutlined, CommentOutlined, HeartOutlined, LoadingOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { backURL } from 'config';
 import ImagePreview from 'components/Modal/ImagePreviewModal';
 import DeleteModal from 'components/Modal/DeleteModal';
 import useClipboard from 'utils/useClipboard';
@@ -76,18 +77,16 @@ const PostSearch = ({ keyword }: SearchProps) => {
         {searchPosts.map((post: Post, i: number) => (
           <PostCard key={post.id} onClick={() => onClickPost(post)} {...slideInList}>
             <PostImageWrapper>
-              <img src={`http://localhost:3065/${post.Images[0].src}`} alt="게시글의 첫번째 이미지" />
+              <img src={`${backURL}/${post.Images[0].src}`} alt="게시글의 첫번째 이미지" />
               <ShareAltOutlined onClick={e => handleShareButtonClick(e, post.id)} />
             </PostImageWrapper>
 
             <PostContentWrapper $liked={liked[i]} $hasCommented={hasCommented[i]}>
               <img
-                src={post.User.ProfileImage ? `http://localhost:3065/${post.User.ProfileImage.src}` : '/user.jpg'}
+                src={post.User.ProfileImage ? `${backURL}/${post.User.ProfileImage.src}` : '/user.jpg'}
                 alt="유저 프로필 이미지"
                 onClick={() =>
-                  showImagePreview(
-                    post.User.ProfileImage ? `http://localhost:3065/${post.User.ProfileImage.src}` : '/user.jpg'
-                  )
+                  showImagePreview(post.User.ProfileImage ? `${backURL}/${post.User.ProfileImage.src}` : '/user.jpg')
                 }
               />
 

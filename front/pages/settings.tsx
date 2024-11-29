@@ -5,6 +5,7 @@ import { END } from 'redux-saga';
 import axios from 'axios';
 import Head from 'next/head';
 
+import { backURL } from 'config';
 import AppLayout from 'components/AppLayout';
 import SettingForm from 'components/Settings/SettingForm';
 import wrapper from 'store/configureStore';
@@ -41,7 +42,7 @@ const Settings = () => {
           <SettingProfile {...slideInFromBottom()} $loading={userUploadImageLoading}>
             <label htmlFor="setting-image">
               <img
-                src={userImagePath.length > 0 ? `http://localhost:3065/${userImagePath}` : '/user.jpg'}
+                src={userImagePath.length > 0 ? `${backURL}/${userImagePath}` : '/user.jpg'}
                 alt="유저 프로필 이미지"
               />
             </label>

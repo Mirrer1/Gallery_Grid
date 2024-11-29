@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import Router from 'next/router';
 import Link from 'next/link';
 
+import { backURL } from 'config';
 import { RootState } from 'store/reducers';
 import { FeaturedUser } from 'store/types/userType';
 import { formatFollowerCount } from 'utils/formatFollowerCount';
@@ -40,7 +41,7 @@ const PopularUser = () => {
         {bestUsers?.map((user: FeaturedUser) => (
           <div key={user.id} onClick={() => onMoveUserProfile(user.id)}>
             <img
-              src={user?.ProfileImage ? `http://localhost:3065/${user.ProfileImage.src}` : '/user.jpg'}
+              src={user?.ProfileImage ? `${backURL}/${user.ProfileImage.src}` : '/user.jpg'}
               alt={`${user.nickname}의 프로필 이미지`}
             />
 

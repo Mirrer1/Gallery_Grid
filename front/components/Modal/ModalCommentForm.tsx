@@ -11,6 +11,7 @@ import {
 import { toast } from 'react-toastify';
 import EmojiPicker from 'emoji-picker-react';
 
+import { backURL } from 'config';
 import useInput from 'utils/useInput';
 import useFileUpload from 'utils/useFileUpload';
 import useEmojiPicker from 'utils/useEmojiPicker';
@@ -20,6 +21,7 @@ import {
   modalCommentRemoveUploadedImage,
   modalCommentUploadImageRequest
 } from 'store/actions/postAction';
+
 import { slideInTooltip, slideInUploadImage } from 'styles/Common/animation';
 import {
   ModalCommentEmojiPicker,
@@ -142,9 +144,9 @@ const ModalCommentForm = ({ replyId, replyUser, setReplyId, showImagePreview }: 
           {modalCommentImagePath.length !== 0 && (
             <ModalCommentFormImage key={modalCommentImagePath} {...slideInUploadImage}>
               <img
-                src={`http://localhost:3065/${modalCommentImagePath}`}
+                src={`${backURL}/${modalCommentImagePath}`}
                 alt="입력한 댓글의 첨부 이미지"
-                onClick={() => showImagePreview(`http://localhost:3065/${modalCommentImagePath}`)}
+                onClick={() => showImagePreview(`${backURL}/${modalCommentImagePath}`)}
               />
               <DeleteOutlined onClick={handleRemoveImage} />
             </ModalCommentFormImage>

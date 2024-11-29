@@ -20,8 +20,10 @@ import formatDate from 'utils/useListTimes';
 import useClipboard from 'utils/useClipboard';
 import useImagePreview from 'utils/useImagePreview';
 
+import { backURL } from 'config';
 import { RootState } from 'store/reducers';
 import { Comment, PostLike } from 'store/types/postType';
+import { followUserRequest, unFollowUserRequest } from 'store/actions/userAction';
 import {
   executePostEdit,
   hideModalCommentList,
@@ -39,7 +41,6 @@ import {
   ModalContentText,
   ModalContentWrapper
 } from 'styles/Modal/modalContent';
-import { followUserRequest, unFollowUserRequest } from 'store/actions/userAction';
 
 const ModalContent = () => {
   const router = useRouter();
@@ -116,13 +117,11 @@ const ModalContent = () => {
       >
         <div>
           <img
-            src={
-              singlePost.User.ProfileImage ? `http://localhost:3065/${singlePost.User.ProfileImage.src}` : '/user.jpg'
-            }
+            src={singlePost.User.ProfileImage ? `${backURL}/${singlePost.User.ProfileImage.src}` : '/user.jpg'}
             alt="유저 프로필 이미지"
             onClick={() =>
               showImagePreview(
-                singlePost.User.ProfileImage ? `http://localhost:3065/${singlePost.User.ProfileImage.src}` : '/user.jpg'
+                singlePost.User.ProfileImage ? `${backURL}/${singlePost.User.ProfileImage.src}` : '/user.jpg'
               )
             }
           />

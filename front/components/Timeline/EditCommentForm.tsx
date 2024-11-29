@@ -4,6 +4,7 @@ import { DeleteOutlined, LoadingOutlined, PaperClipOutlined } from '@ant-design/
 import { toast } from 'react-toastify';
 import Link from 'next/link';
 
+import { backURL } from 'config';
 import useInput from 'utils/useInput';
 import formatDate from 'utils/useListTimes';
 import useFileUpload from 'utils/useFileUpload';
@@ -15,6 +16,7 @@ import {
   editCommentUploadImageRequest,
   executeCommentEdit
 } from 'store/actions/postAction';
+
 import { slideInTooltip, slideInUploadImage } from 'styles/Common/animation';
 import {
   EditCommentFormSection,
@@ -96,12 +98,10 @@ const EditCommentForm = ({ reply, comment, replyId, cancelEdit, showImagePreview
     <EditCommentWrapper $reply={reply}>
       <EditCommentHeader>
         <img
-          src={comment.User.ProfileImage ? `http://localhost:3065/${comment.User.ProfileImage.src}` : '/user.jpg'}
+          src={comment.User.ProfileImage ? `${backURL}/${comment.User.ProfileImage.src}` : '/user.jpg'}
           alt={`${comment.User.nickname}의 프로필 이미지`}
           onClick={() =>
-            showImagePreview(
-              comment.User.ProfileImage ? `http://localhost:3065/${comment.User.ProfileImage.src}` : '/user.jpg'
-            )
+            showImagePreview(comment.User.ProfileImage ? `${backURL}/${comment.User.ProfileImage.src}` : '/user.jpg')
           }
         />
 
@@ -129,9 +129,9 @@ const EditCommentForm = ({ reply, comment, replyId, cancelEdit, showImagePreview
           <EditCommentImageWrapper>
             <EditCommentImage key={editCommentImagePath} {...slideInUploadImage}>
               <img
-                src={`http://localhost:3065/${editCommentImagePath}`}
+                src={`${backURL}/${editCommentImagePath}`}
                 alt="입력한 댓글의 첨부 이미지"
-                onClick={() => showImagePreview(`http://localhost:3065/${editCommentImagePath}`)}
+                onClick={() => showImagePreview(`${backURL}/${editCommentImagePath}`)}
               />
               <DeleteOutlined onClick={handleRemoveImage} />
             </EditCommentImage>

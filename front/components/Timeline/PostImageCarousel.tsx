@@ -7,6 +7,7 @@ import 'swiper/css/effect-coverflow';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 
+import { backURL } from 'config';
 import { Image } from 'store/types/postType';
 import { hidePostCarousel } from 'store/actions/postAction';
 import { slideInModal } from 'styles/Common/animation';
@@ -43,7 +44,7 @@ const PostImageCarousel = ({ images }: CarouselProps) => {
       </CarouselOutsideArea>
 
       <ImageCarouselWrapper {...slideInModal}>
-        <BackgroundImageContainer $background={`http://localhost:3065/${images[activeIndex].src}`} />
+        <BackgroundImageContainer $background={`${backURL}/${images[activeIndex].src}`} />
 
         <Swiper
           effect="coverflow"
@@ -67,7 +68,7 @@ const PostImageCarousel = ({ images }: CarouselProps) => {
         >
           {images.map((image: Image, i: number) => (
             <SwiperSlide key={i}>
-              <img src={`http://localhost:3065/${image.src}`} alt={`게시글의 ${i}번째 이미지`} />
+              <img src={`${backURL}/${image.src}`} alt={`게시글의 ${i}번째 이미지`} />
             </SwiperSlide>
           ))}
         </Swiper>
