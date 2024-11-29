@@ -43,7 +43,12 @@ app.use(
   session({
     resave: false,
     saveUninitialized: false,
-    secret: process.env.COOKIE_SECRET!
+    secret: process.env.COOKIE_SECRET!,
+    cookie: {
+      httpOnly: true,
+      secure: false,
+      domain: process.env.NODE_ENV === 'production' ? '.gallerygrd.com' : undefined
+    }
   })
 );
 app.use(passport.initialize());
@@ -51,7 +56,7 @@ app.use(passport.session());
 
 app.use(
   cors({
-    origin: ['http://localhost:3000', 'gallerygrd.com', 'http://52.79.188.105'],
+    origin: ['http://localhost:3000', 'http://gallerygrd.com'],
     credentials: true
   })
 );
