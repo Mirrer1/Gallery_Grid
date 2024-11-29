@@ -72,7 +72,8 @@ const PostList = () => {
     isPostModalVisible,
     commentVisiblePostId,
     isCategoryChanged,
-    isCommentListVisible
+    isCommentListVisible,
+    loadFollowingPostsDone
   } = useSelector((state: RootState) => state.post);
 
   const { copyToClipboard } = useClipboard();
@@ -194,7 +195,7 @@ const PostList = () => {
         </CategoryItem>
       </PostCategory>
 
-      {timelinePosts.length === 0 && category === 'follow' ? (
+      {timelinePosts.length === 0 && category === 'follow' && loadFollowingPostsDone ? (
         <NoFollowingPostsContainer>
           <CloseSquareTwoTone twoToneColor="#6BA2E6" />
           <h1>No posts yet.</h1>

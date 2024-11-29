@@ -7,7 +7,7 @@ import {
   AreaChartOutlined,
   FieldTimeOutlined,
   LogoutOutlined,
-  MessageOutlined,
+  // MessageOutlined,
   NotificationOutlined,
   PictureOutlined,
   SearchOutlined,
@@ -27,7 +27,7 @@ import {
   NavbarItem,
   NavbarItems,
   NavbarLogout,
-  NavbarMessage,
+  // NavbarMessage,
   NavbarProfile,
   SearchWrapper
 } from 'styles/AppLayout';
@@ -39,9 +39,9 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
   const [pathname, setPathname] = useState<string | null>(null);
   const [searchMode, setSearchMode] = useState<boolean>(false);
 
-  const onClickMessage = useCallback(() => {
-    Router.push('/message');
-  }, []);
+  // const onClickMessage = useCallback(() => {
+  //   Router.push('/message');
+  // }, []);
 
   const onClickLogout = useCallback(() => {
     dispatch(logoutRequest());
