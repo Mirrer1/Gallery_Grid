@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "next dev",
-    "build": "cross-env ANALYZE=true NODE_ENV=production next build",
+    "build": "cross-env ANALYZE=true GENERATE_SOURCEMAP=false NODE_ENV=production next build",
     "start": "cross-env NODE_ENV=production next start",
     "lint": "next lint"
   },
