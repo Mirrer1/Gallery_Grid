@@ -12,7 +12,7 @@ import { motion } from 'framer-motion';
 import { toast } from 'react-toastify';
 import EmojiPicker from 'emoji-picker-react';
 
-import backURL from 'config';
+import { backURL } from 'config';
 import ImagePreview from 'components/Modal/ImagePreviewModal';
 import useInput from 'utils/useInput';
 import useFileUpload from 'utils/useFileUpload';
