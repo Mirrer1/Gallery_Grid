@@ -4,8 +4,10 @@ import session from 'express-session';
 import passport from 'passport';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
+import helmet from 'helmet';
 import path from 'path';
 import cors from 'cors';
+import hpp from 'hpp';
 
 import userRouter from './routes/user';
 import postRouter from './routes/post';
@@ -27,6 +29,14 @@ sequelize
     console.error(err);
   });
 
+if (process.env.NODE_ENV === 'production') {
+  app.use(morgan('combined'));
+  app.use(hpp());
+  app.use(helmet());
+} else {
+  app.use(morgan('dev'));
+}
+
 app.use(morgan('dev'));
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(
@@ -34,10 +44,6 @@ app.use(
     resave: false,
     saveUninitialized: false,
     secret: process.env.COOKIE_SECRET!
-    // cookie: {
-    //   httpOnly: true,
-    //   secure: false
-    // }
   })
 );
 app.use(passport.initialize());
@@ -45,7 +51,7 @@ app.use(passport.session());
 
 app.use(
   cors({
-    origin: true,
+    origin: ['http://localhost:3000', 'gallerygrd.com'],
     credentials: true
   })
 );
