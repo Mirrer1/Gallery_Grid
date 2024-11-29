@@ -18,6 +18,7 @@ import { sequelize } from './models';
 
 dotenv.config();
 const app = express();
+const PORT = process.env.NODE_ENV === 'production' ? 80 : 3065;
 passportConfig();
 
 sequelize
@@ -83,6 +84,6 @@ app.use((err: any, req: Request, res: Response, next: NextFunction): void => {
   res.status(500).send('Server error occurred! Please check the server console.');
 });
 
-app.listen(3065, () => {
+app.listen(PORT, () => {
   console.log('Running the express server.');
 });
