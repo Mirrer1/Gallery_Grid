@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon",
-    "start": "tsc && node index"
+    "start": "tsc && node dist/app.js"
   },
   "author": "Mirrer",
   "license": "ISC",

@@ -3,6 +3,8 @@
     "files": true
   },
   "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./",
     "target": "es2016",
     "module": "commonjs",
     "moduleResolution": "node",
@@ -12,5 +14,5 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true
   },
-  "exclude": ["**/*.js"]
+  "exclude": ["**/*.js", "node_modules"]
 }
