@@ -7,7 +7,7 @@ export const GOOGLE_CONFIG = {
   clientID: process.env.GOOGLE_ID!,
   clientSecret: process.env.GOOGLE_SECRET!,
   callbackURL: isProduction
-    ? 'http://gallerygrd.com/user/google/callback'
+    ? 'http://api.gallerygrd.com/user/google/callback'
     : 'http://localhost:3065/user/google/callback'
 };
 
