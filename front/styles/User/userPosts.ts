@@ -8,11 +8,11 @@ import {
   PostPreviewWrapper
 } from 'styles/Gallery/postPreview';
 
-export const UserPostsWrapper = styled(PostPreviewWrapper)`
+export const UserPostsWrapper = styled(PostPreviewWrapper)<{ $isGridDisabled?: boolean }>`
   width: 60%;
   height: 100%;
   overflow-y: scroll;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: ${props => (props.$isGridDisabled ? 'none' : 'repeat(2, 1fr)')};
   padding: 0 1em 0.7em 0em;
 
   & > article {

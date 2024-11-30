@@ -182,9 +182,9 @@ export const UserFollowListItem = styled.div<{ $isFollowing: boolean }>`
   }
 `;
 
-export const UserSearchLoading = styled.div`
+export const UserSearchLoading = styled.div<{ $isGridDisabled?: boolean }>`
   ${({ theme }) => theme.flexSet()};
-  height: 85%;
+  height: ${props => (props.$isGridDisabled ? '100%' : '85%')};
 
   & > span {
     font-size: 3rem;
@@ -196,9 +196,9 @@ export const UserSearchLoading = styled.div`
   }
 `;
 
-export const NoSearchTextContainer = styled.div`
+export const NoSearchTextContainer = styled.div<{ $isGridDisabled?: boolean }>`
   ${({ theme }) => theme.flexSet()};
-  height: 85%;
+  height: ${props => (props.$isGridDisabled ? '100%' : '85%')};
 
   & > p {
     text-align: center;
