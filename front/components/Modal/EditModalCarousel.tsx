@@ -4,7 +4,6 @@ import { DeleteOutlined, LoadingOutlined, UploadOutlined } from '@ant-design/ico
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, Navigation } from 'swiper';
 
-import { backURL } from 'config';
 import useFileUpload from 'utils/useFileUpload';
 import { RootState } from 'store/reducers';
 import { editPostRemoveUploadedImage, editPostUploadImagesRequest } from 'store/actions/postAction';
@@ -75,10 +74,7 @@ const EditModalCarousel = () => {
   return (
     <EditModalCarouselWrapper>
       <EditModalSelectedImage key={selectedImage} {...slideInSeletedImage}>
-        <img
-          src={editPostImagePaths.length > 0 ? `${backURL}/${selectedImage}` : '/no-image.png'}
-          alt="클릭한 게시글 이미지"
-        />
+        <img src={editPostImagePaths.length > 0 ? `${selectedImage}` : '/no-image.png'} alt="클릭한 게시글 이미지" />
       </EditModalSelectedImage>
 
       <EditModalSwiperImages>
@@ -96,7 +92,7 @@ const EditModalCarousel = () => {
           {editPostImagePaths.map((image: string, i: number) => (
             <SwiperSlide key={image}>
               <EditModalSwiperImageItem
-                src={`${backURL}/${image}`}
+                src={`${image}`}
                 alt={`게시글의 ${i}번째 이미지`}
                 onClick={() => handleImageClick(image)}
                 selected={selectedImage === image}

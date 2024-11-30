@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { LoadingOutlined, SettingOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 
-import { backURL } from 'config';
 import { RootState } from 'store/reducers';
 import { followUserRequest, setUserFollowType, unFollowUserRequest } from 'store/actions/userAction';
 import { formatFollowerCount } from 'utils/formatFollowerCount';
@@ -57,18 +56,14 @@ const UserInfo = ({ selectedActivity, setSelectedActivity, followLoadingId, setF
     <UserInfoWrapper {...slideInFromBottom()}>
       <UserInfoImage>
         <img
-          src={userInfo?.ProfileImage ? `${backURL}/${userInfo.ProfileImage.src}` : '/user.jpg'}
+          src={userInfo?.ProfileImage ? `${userInfo.ProfileImage.src}` : '/user.jpg'}
           alt="유저 프로필 배경 이미지"
-          onClick={() =>
-            showImagePreview(userInfo?.ProfileImage ? `${backURL}/${userInfo.ProfileImage.src}` : '/user.jpg')
-          }
+          onClick={() => showImagePreview(userInfo?.ProfileImage ? `${userInfo.ProfileImage.src}` : '/user.jpg')}
         />
         <img
-          src={userInfo?.ProfileImage ? `${backURL}/${userInfo.ProfileImage.src}` : '/user.jpg'}
+          src={userInfo?.ProfileImage ? `${userInfo.ProfileImage.src}` : '/user.jpg'}
           alt="유저 프로필 이미지"
-          onClick={() =>
-            showImagePreview(userInfo?.ProfileImage ? `${backURL}/${userInfo.ProfileImage.src}` : '/user.jpg')
-          }
+          onClick={() => showImagePreview(userInfo?.ProfileImage ? `${userInfo.ProfileImage.src}` : '/user.jpg')}
         />
       </UserInfoImage>
 

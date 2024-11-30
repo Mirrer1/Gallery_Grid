@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 
-import { backURL } from 'config';
 import { RootState } from 'store/reducers';
 import { FollowUser } from 'store/types/userType';
 import {
@@ -146,11 +145,9 @@ const UserFollowList = ({
             >
               <div>
                 <img
-                  src={user?.ProfileImage ? `${backURL}/${user.ProfileImage.src}` : '/user.jpg'}
+                  src={user?.ProfileImage ? `${user.ProfileImage.src}` : '/user.jpg'}
                   alt="유저 프로필 이미지"
-                  onClick={() =>
-                    showImagePreview(user?.ProfileImage ? `${backURL}/${user.ProfileImage.src}` : '/user.jpg')
-                  }
+                  onClick={() => showImagePreview(user?.ProfileImage ? `${user.ProfileImage.src}` : '/user.jpg')}
                 />
                 <div>
                   <Link href={`/user/${user.id}`}>{user.nickname}</Link>
@@ -160,7 +157,7 @@ const UserFollowList = ({
                     {user.Followers.map(follower => (
                       <img
                         key={follower.id}
-                        src={follower?.ProfileImage ? `${backURL}/${follower.ProfileImage}` : '/user.jpg'}
+                        src={follower?.ProfileImage ? `${follower.ProfileImage}` : '/user.jpg'}
                         alt={`팔로워 ${follower.nickname}의 프로필 이미지`}
                         onClick={() => onMoveUserProfile(follower.id)}
                       />

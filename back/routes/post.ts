@@ -2,6 +2,9 @@ import express from 'express';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
+import AWS from 'aws-sdk';
+import multerS3 from 'multer-s3';
+import dotenv from 'dotenv';
 import { Op } from 'sequelize';
 
 import Post from '../models/post';
@@ -10,9 +13,10 @@ import Image from '../models/image';
 import Comment from '../models/comment';
 import ReplyComment from '../models/replyComment';
 import UserHistory from '../models/userHistory';
-import { isLoggedIn, isNotLoggedIn } from './middleware';
+import { isLoggedIn } from './middleware';
 
 const router = express.Router();
+dotenv.config();
 
 try {
   fs.accessSync('uploads');
@@ -21,17 +25,18 @@ try {
   fs.mkdirSync('uploads');
 }
 
-const upload = multer({
-  storage: multer.diskStorage({
-    destination(req, file, done) {
-      done(null, 'uploads');
-    },
-    filename(req, file, done) {
-      const ext = path.extname(file.originalname);
-      let basename = Buffer.from(path.basename(file.originalname, ext), 'latin1').toString('utf8');
-      basename = basename.replace(/[^가-힣a-zA-Z0-9]/g, '');
+AWS.config.update({
+  accessKeyId: process.env.S3_ACCESS_KEY_ID,
+  secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+  region: 'ap-northeast-2'
+});
 
-      done(null, basename + '_' + new Date().getTime() + ext);
+const upload = multer({
+  storage: multerS3({
+    s3: new AWS.S3() as any,
+    bucket: 'gallery-grid',
+    key(req, file, cb) {
+      cb(null, `original/${Date.now()}_${path.basename(file.originalname)}`);
     }
   }),
   limits: { fileSize: 20 * 1024 * 1024 }
@@ -198,7 +203,7 @@ router.post('/images', isLoggedIn, upload.array('image'), async (req, res, next)
   try {
     const files = req.files as Express.Multer.File[];
 
-    res.status(200).json(files.map(v => v.filename));
+    res.status(200).json(files.map(file => (file as any).location));
   } catch (err) {
     console.error(err);
     next(err);

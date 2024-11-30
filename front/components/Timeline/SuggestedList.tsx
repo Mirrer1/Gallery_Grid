@@ -9,7 +9,6 @@ import {
 } from '@ant-design/icons';
 import Link from 'next/link';
 
-import { backURL } from 'config';
 import ImagePreview from 'components/Modal/ImagePreviewModal';
 import useImagePreview from 'utils/useImagePreview';
 import { RootState } from 'store/reducers';
@@ -83,11 +82,9 @@ const SuggestedList = ({ suggestedListVisible, setSuggestedListVisible }: Sugges
             <SuggestedInfo key={user.id} {...suggestedItemAnimation}>
               <div>
                 <img
-                  src={user?.ProfileImage ? `${backURL}/${user.ProfileImage.src}` : '/user.jpg'}
+                  src={user?.ProfileImage ? `${user.ProfileImage.src}` : '/user.jpg'}
                   alt={`${user.nickname}의 프로필 이미지`}
-                  onClick={() =>
-                    showImagePreview(user?.ProfileImage ? `${backURL}/${user.ProfileImage.src}` : '/user.jpg')
-                  }
+                  onClick={() => showImagePreview(user?.ProfileImage ? `${user.ProfileImage.src}` : '/user.jpg')}
                 />
               </div>
 

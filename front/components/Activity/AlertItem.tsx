@@ -11,7 +11,6 @@ import Router from 'next/router';
 import Link from 'next/link';
 import dayjs from 'dayjs';
 
-import { backURL } from 'config';
 import ImagePreview from 'components/Modal/ImagePreviewModal';
 import useImagePreview from 'utils/useImagePreview';
 import { RootState } from 'store/reducers';
@@ -76,12 +75,10 @@ const AlertItem = ({ history }: AlertItemProps) => {
       <AlertHeader $type={activityType}>
         <div>
           <img
-            src={history.Alerter?.ProfileImage ? `${backURL}/${history.Alerter?.ProfileImage.src}` : '/user.jpg'}
+            src={history.Alerter?.ProfileImage ? `${history.Alerter?.ProfileImage.src}` : '/user.jpg'}
             alt="유저 프로필 이미지"
             onClick={() =>
-              showImagePreview(
-                history.Alerter?.ProfileImage ? `${backURL}/${history.Alerter?.ProfileImage.src}` : '/user.jpg'
-              )
+              showImagePreview(history.Alerter?.ProfileImage ? `${history.Alerter?.ProfileImage.src}` : '/user.jpg')
             }
           />
 
@@ -129,7 +126,7 @@ const AlertItem = ({ history }: AlertItemProps) => {
       <AlertContentWrapper onClick={onClickPost}>
         {activityType === 'like' || activityType === 'comment' ? (
           <AlertContent onClick={onClickPost} $type={activityType}>
-            <img src={`${backURL}/${history.Post.Images[0].src}`} alt="게시글의 첫번째 이미지" />
+            <img src={`${history.Post.Images[0].src}`} alt="게시글의 첫번째 이미지" />
 
             <div>
               <p>{history.Post.content}</p>

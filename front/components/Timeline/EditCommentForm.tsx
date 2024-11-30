@@ -4,7 +4,6 @@ import { DeleteOutlined, LoadingOutlined, PaperClipOutlined } from '@ant-design/
 import { toast } from 'react-toastify';
 import Link from 'next/link';
 
-import { backURL } from 'config';
 import useInput from 'utils/useInput';
 import formatDate from 'utils/useListTimes';
 import useFileUpload from 'utils/useFileUpload';
@@ -98,11 +97,9 @@ const EditCommentForm = ({ reply, comment, replyId, cancelEdit, showImagePreview
     <EditCommentWrapper $reply={reply}>
       <EditCommentHeader>
         <img
-          src={comment.User.ProfileImage ? `${backURL}/${comment.User.ProfileImage.src}` : '/user.jpg'}
+          src={comment.User.ProfileImage ? `${comment.User.ProfileImage.src}` : '/user.jpg'}
           alt={`${comment.User.nickname}의 프로필 이미지`}
-          onClick={() =>
-            showImagePreview(comment.User.ProfileImage ? `${backURL}/${comment.User.ProfileImage.src}` : '/user.jpg')
-          }
+          onClick={() => showImagePreview(comment.User.ProfileImage ? `${comment.User.ProfileImage.src}` : '/user.jpg')}
         />
 
         <div>
@@ -129,9 +126,9 @@ const EditCommentForm = ({ reply, comment, replyId, cancelEdit, showImagePreview
           <EditCommentImageWrapper>
             <EditCommentImage key={editCommentImagePath} {...slideInUploadImage}>
               <img
-                src={`${backURL}/${editCommentImagePath}`}
+                src={`${editCommentImagePath}`}
                 alt="입력한 댓글의 첨부 이미지"
-                onClick={() => showImagePreview(`${backURL}/${editCommentImagePath}`)}
+                onClick={() => showImagePreview(`${editCommentImagePath}`)}
               />
               <DeleteOutlined onClick={handleRemoveImage} />
             </EditCommentImage>

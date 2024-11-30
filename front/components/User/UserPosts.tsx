@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { ArrowsAltOutlined, CommentOutlined, HeartOutlined } from '@ant-design/icons';
 
-import { backURL } from 'config';
 import useScroll from 'utils/useScroll';
 import { RootState } from 'store/reducers';
 import { showPostModal } from 'store/actions/postAction';
@@ -46,7 +45,7 @@ const UserPosts = () => {
       {userPosts.map((post: Post, i: number) => (
         <article key={post.id} onClick={() => onClickPost(post)}>
           <UserPostImage>
-            <img src={`${backURL}/${post.Images[0].src}`} alt="게시글의 첫번째 이미지" />
+            <img src={`${post.Images[0].src}`} alt="게시글의 첫번째 이미지" />
 
             <ArrowsAltOutlined />
 

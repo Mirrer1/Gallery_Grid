@@ -2,7 +2,6 @@ import React, { useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { CaretLeftOutlined, CaretRightOutlined } from '@ant-design/icons';
 
-import { backURL } from 'config';
 import { RootState } from 'store/reducers';
 import { Image } from 'store/types/postType';
 import {
@@ -74,7 +73,7 @@ const ModalCarousel = () => {
       >
         {singlePost.Images.map((image: Image, i: number) => (
           <div key={i}>
-            <img src={`${backURL}/${image.src}`} alt={`게시글의 ${i}번째 이미지`} />
+            <img src={`${image.src}`} alt={`게시글의 ${i}번째 이미지`} />
 
             {singlePost.Images.length > 1 && (
               <ModalCarouselBtn $alignleft="true" onClick={prev}>

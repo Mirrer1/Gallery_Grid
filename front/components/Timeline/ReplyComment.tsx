@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import Link from 'next/link';
 
-import { backURL } from 'config';
 import formatDate from 'utils/useListTimes';
 import DeleteModal from 'components/Modal/DeleteModal';
 import { RootState } from 'store/reducers';
@@ -55,10 +54,10 @@ const ReplyComment = ({
       <div>
         <div>
           <img
-            src={comment.User.ProfileImage ? `${backURL}/${comment.User.ProfileImage.src}` : '/user.jpg'}
+            src={comment.User.ProfileImage ? `${comment.User.ProfileImage.src}` : '/user.jpg'}
             alt={`${comment.User.nickname}의 프로필 이미지`}
             onClick={() =>
-              showImagePreview(comment.User.ProfileImage ? `${backURL}/${comment.User.ProfileImage.src}` : '/user.jpg')
+              showImagePreview(comment.User.ProfileImage ? `${comment.User.ProfileImage.src}` : '/user.jpg')
             }
           />
 
@@ -90,8 +89,8 @@ const ReplyComment = ({
         )}
       </div>
       {comment.ReplyImage && (
-        <CommentListItemImage onClick={() => showImagePreview(`${backURL}/${comment.ReplyImage?.src}`)}>
-          <img src={`${backURL}/${comment.ReplyImage.src}`} alt={`${comment.User.nickname}의 댓글 이미지`} />
+        <CommentListItemImage onClick={() => showImagePreview(`${comment.ReplyImage?.src}`)}>
+          <img src={`${comment.ReplyImage.src}`} alt={`${comment.User.nickname}의 댓글 이미지`} />
         </CommentListItemImage>
       )}
       <p>{comment.content}</p>

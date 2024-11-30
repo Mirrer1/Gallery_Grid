@@ -12,7 +12,6 @@ import { motion } from 'framer-motion';
 import { toast } from 'react-toastify';
 import EmojiPicker from 'emoji-picker-react';
 
-import { backURL } from 'config';
 import ImagePreview from 'components/Modal/ImagePreviewModal';
 import useInput from 'utils/useInput';
 import useFileUpload from 'utils/useFileUpload';
@@ -100,11 +99,7 @@ const PostingForm = () => {
         <UploadImages>
           {postImagePaths.map((path: string, i: number) => (
             <motion.div key={path} {...slideInUploadImage}>
-              <img
-                src={`${backURL}/${path}`}
-                alt={`업로드한 ${i}번째 이미지`}
-                onClick={() => showImagePreview(`${backURL}/${path}`)}
-              />
+              <img src={`${path}`} alt={`업로드한 ${i}번째 이미지`} onClick={() => showImagePreview(`${path}`)} />
               <DeleteOutlined onClick={() => handleRemoveImage(path)} />
             </motion.div>
           ))}

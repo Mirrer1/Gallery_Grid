@@ -2,7 +2,6 @@ import React, { useCallback, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { ArrowsAltOutlined, CommentOutlined, HeartOutlined } from '@ant-design/icons';
 
-import { backURL } from 'config';
 import { RootState } from 'store/reducers';
 import { showPostModal } from 'store/actions/postAction';
 import { Image, PostComment, PostLike, UserHistoryPost } from 'store/types/postType';
@@ -65,7 +64,7 @@ const PostPreview = ({ userHistory, selectMode, selectedPostIds, setSelectedPost
       )}
 
       <PostPreviewImage onClick={onClickPost}>
-        <img src={`${backURL}/${userHistory.Post.Images[0].src}`} alt="게시글의 첫번째 이미지" />
+        <img src={`${userHistory.Post.Images[0].src}`} alt="게시글의 첫번째 이미지" />
 
         <ArrowsAltOutlined />
 

@@ -5,7 +5,6 @@ import { Comment } from 'store/types/postType';
 import { toast } from 'react-toastify';
 import Link from 'next/link';
 
-import { backURL } from 'config';
 import DeleteModal from 'components/Modal/DeleteModal';
 import formatDate from 'utils/useListTimes';
 import { showDeleteModal } from 'store/actions/postAction';
@@ -53,10 +52,10 @@ const CommentListItem = ({
       <div>
         <div>
           <img
-            src={comment.User.ProfileImage ? `${backURL}/${comment.User.ProfileImage.src}` : '/user.jpg'}
+            src={comment.User.ProfileImage ? `${comment.User.ProfileImage.src}` : '/user.jpg'}
             alt={`${comment.User.nickname}의 프로필 이미지`}
             onClick={() =>
-              showImagePreview(comment.User.ProfileImage ? `${backURL}/${comment.User.ProfileImage.src}` : '/user.jpg')
+              showImagePreview(comment.User.ProfileImage ? `${comment.User.ProfileImage.src}` : '/user.jpg')
             }
           />
 
@@ -89,8 +88,8 @@ const CommentListItem = ({
       </div>
 
       {comment.CommentImage && (
-        <CommentListItemImage onClick={() => showImagePreview(`${backURL}/${comment.CommentImage?.src}`)}>
-          <img src={`${backURL}/${comment.CommentImage.src}`} alt={`${comment.User.nickname}의 댓글 이미지`} />
+        <CommentListItemImage onClick={() => showImagePreview(`${comment.CommentImage?.src}`)}>
+          <img src={`${comment.CommentImage.src}`} alt={`${comment.User.nickname}의 댓글 이미지`} />
         </CommentListItemImage>
       )}
 

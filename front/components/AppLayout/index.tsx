@@ -14,7 +14,6 @@ import {
   SettingOutlined
 } from '@ant-design/icons';
 
-import { backURL } from 'config';
 import Search from './Search';
 import MobileHeader from './MobileHeader';
 import MobileFooter from './MobileFooter';
@@ -76,9 +75,9 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
 
             <NavbarProfile>
               <img
-                src={me?.ProfileImage ? `${backURL}/${me.ProfileImage.src}` : '/user.jpg'}
+                src={me?.ProfileImage ? `${me.ProfileImage.src}` : '/user.jpg'}
                 alt="유저 프로필 이미지"
-                onClick={() => showImagePreview(me?.ProfileImage ? `${backURL}/${me.ProfileImage.src}` : '/user.jpg')}
+                onClick={() => showImagePreview(me?.ProfileImage ? `${me.ProfileImage.src}` : '/user.jpg')}
               />
 
               <h1>{me?.nickname}</h1>

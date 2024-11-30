@@ -20,7 +20,6 @@ import formatDate from 'utils/useListTimes';
 import useClipboard from 'utils/useClipboard';
 import useImagePreview from 'utils/useImagePreview';
 
-import { backURL } from 'config';
 import { RootState } from 'store/reducers';
 import { Comment, PostLike } from 'store/types/postType';
 import { followUserRequest, unFollowUserRequest } from 'store/actions/userAction';
@@ -117,12 +116,10 @@ const ModalContent = () => {
       >
         <div>
           <img
-            src={singlePost.User.ProfileImage ? `${backURL}/${singlePost.User.ProfileImage.src}` : '/user.jpg'}
+            src={singlePost.User.ProfileImage ? `${singlePost.User.ProfileImage.src}` : '/user.jpg'}
             alt="유저 프로필 이미지"
             onClick={() =>
-              showImagePreview(
-                singlePost.User.ProfileImage ? `${backURL}/${singlePost.User.ProfileImage.src}` : '/user.jpg'
-              )
+              showImagePreview(singlePost.User.ProfileImage ? `${singlePost.User.ProfileImage.src}` : '/user.jpg')
             }
           />
 
