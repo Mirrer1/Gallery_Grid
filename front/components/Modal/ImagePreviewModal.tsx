@@ -19,7 +19,7 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({ imagePreview, hideImagePrev
       </div>
 
       <UploadImage {...slideInModal}>
-        <img src={imagePreview.replace(/\/thumb\//, '/original/')} alt="업로드한 이미지" />
+        <img src={imagePreview} alt="업로드한 이미지" />
       </UploadImage>
     </UploadImagePreview>
   );
