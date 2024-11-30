@@ -202,8 +202,7 @@ router.patch('/:postId', isLoggedIn, upload.none(), async (req, res, next) => {
 router.post('/images', isLoggedIn, upload.array('image'), async (req, res, next) => {
   try {
     const files = req.files as Express.Multer.File[];
-
-    res.status(200).json(files.map(file => (file as any).location));
+    res.status(200).json(files.map(file => (file as any).location.replace(/\/original\//, '/thumb/')));
   } catch (err) {
     console.error(err);
     next(err);

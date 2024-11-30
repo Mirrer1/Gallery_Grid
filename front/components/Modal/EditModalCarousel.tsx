@@ -74,7 +74,10 @@ const EditModalCarousel = () => {
   return (
     <EditModalCarouselWrapper>
       <EditModalSelectedImage key={selectedImage} {...slideInSeletedImage}>
-        <img src={editPostImagePaths.length > 0 ? `${selectedImage}` : '/no-image.png'} alt="클릭한 게시글 이미지" />
+        <img
+          src={editPostImagePaths.length > 0 ? `${selectedImage?.replace(/\/thumb\//, '/original/')}` : '/no-image.png'}
+          alt="클릭한 게시글 이미지"
+        />
       </EditModalSelectedImage>
 
       <EditModalSwiperImages>
