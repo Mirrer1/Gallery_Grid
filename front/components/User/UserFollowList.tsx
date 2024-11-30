@@ -100,7 +100,9 @@ const UserFollowList = ({
   }, [followType, userId]);
 
   useEffect(() => {
-    inputRef.current?.focus();
+    if (window.innerWidth > 992) {
+      inputRef.current?.focus();
+    }
   }, [followType, userId]);
 
   return (
@@ -123,11 +125,11 @@ const UserFollowList = ({
       </UserSearchWrapper>
 
       {loadUserFollowInfoLoading && userFollowInfo.length < 20 ? (
-        <UserSearchLoading>
+        <UserSearchLoading $isGridDisabled={false}>
           <LoadingOutlined />
         </UserSearchLoading>
       ) : userFollowInfo.length === 0 ? (
-        <NoSearchTextContainer>
+        <NoSearchTextContainer $isGridDisabled={false}>
           {keyword ? (
             <p>검색 결과가 없습니다.</p>
           ) : followType === 'follower' ? (
