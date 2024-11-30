@@ -96,13 +96,9 @@ const EditModalCommentForm = ({ reply, comment, replyId, cancelEdit, showImagePr
     <EditModalCommentWrapper $reply={reply}>
       <EditModalCommentHeader>
         <img
-          src={comment.User.ProfileImage ? `http://localhost:3065/${comment.User.ProfileImage.src}` : '/user.jpg'}
+          src={comment.User.ProfileImage ? `${comment.User.ProfileImage.src}` : '/user.jpg'}
           alt={`${comment.User.nickname}의 프로필 이미지`}
-          onClick={() =>
-            showImagePreview(
-              comment.User.ProfileImage ? `http://localhost:3065/${comment.User.ProfileImage.src}` : '/user.jpg'
-            )
-          }
+          onClick={() => showImagePreview(comment.User.ProfileImage ? `${comment.User.ProfileImage.src}` : '/user.jpg')}
         />
 
         <div>
@@ -129,9 +125,9 @@ const EditModalCommentForm = ({ reply, comment, replyId, cancelEdit, showImagePr
           <EditModalCommentImageWrapper>
             <EditModalCommentImage key={editModalCommentImagePath} {...slideInUploadImage}>
               <img
-                src={`http://localhost:3065/${editModalCommentImagePath}`}
+                src={`${editModalCommentImagePath}`}
                 alt="입력한 댓글의 첨부 이미지"
-                onClick={() => showImagePreview(`http://localhost:3065/${editModalCommentImagePath}`)}
+                onClick={() => showImagePreview(`${editModalCommentImagePath}`)}
               />
               <DeleteOutlined onClick={handleRemoveImage} />
             </EditModalCommentImage>

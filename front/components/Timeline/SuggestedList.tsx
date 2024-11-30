@@ -14,6 +14,7 @@ import useImagePreview from 'utils/useImagePreview';
 import { RootState } from 'store/reducers';
 import { FeaturedUser } from 'store/types/userType';
 import { followUserRequest, loadSuggestUsersRequest, unFollowUserRequest } from 'store/actions/userAction';
+
 import { suggestedItemAnimation, suggestedListAnimation } from 'styles/Common/animation';
 import {
   SuggestedHeader,
@@ -81,13 +82,9 @@ const SuggestedList = ({ suggestedListVisible, setSuggestedListVisible }: Sugges
             <SuggestedInfo key={user.id} {...suggestedItemAnimation}>
               <div>
                 <img
-                  src={user?.ProfileImage ? `http://localhost:3065/${user.ProfileImage.src}` : '/user.jpg'}
+                  src={user?.ProfileImage ? `${user.ProfileImage.src}` : '/user.jpg'}
                   alt={`${user.nickname}의 프로필 이미지`}
-                  onClick={() =>
-                    showImagePreview(
-                      user?.ProfileImage ? `http://localhost:3065/${user.ProfileImage.src}` : '/user.jpg'
-                    )
-                  }
+                  onClick={() => showImagePreview(user?.ProfileImage ? `${user.ProfileImage.src}` : '/user.jpg')}
                 />
               </div>
 

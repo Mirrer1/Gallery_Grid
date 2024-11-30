@@ -20,6 +20,7 @@ import useImagePreview from 'utils/useImagePreview';
 import { useLocation } from 'utils/useLocation';
 import { RootState } from 'store/reducers';
 import { addPostRequest, postRemoveUploadedImage, postUploadImagesRequest } from 'store/actions/postAction';
+
 import { slideInUploadImage } from 'styles/Common/animation';
 import { PostingBtn, PostingEmojiPicker, PostingWrapper, UploadImages } from 'styles/Timeline/postingForm';
 
@@ -98,11 +99,7 @@ const PostingForm = () => {
         <UploadImages>
           {postImagePaths.map((path: string, i: number) => (
             <motion.div key={path} {...slideInUploadImage}>
-              <img
-                src={`http://localhost:3065/${path}`}
-                alt={`업로드한 ${i}번째 이미지`}
-                onClick={() => showImagePreview(`http://localhost:3065/${path}`)}
-              />
+              <img src={`${path}`} alt={`업로드한 ${i}번째 이미지`} onClick={() => showImagePreview(`${path}`)} />
               <DeleteOutlined onClick={() => handleRemoveImage(path)} />
             </motion.div>
           ))}

@@ -52,12 +52,10 @@ const CommentListItem = ({
       <div>
         <div>
           <img
-            src={comment.User.ProfileImage ? `http://localhost:3065/${comment.User.ProfileImage.src}` : '/user.jpg'}
+            src={comment.User.ProfileImage ? `${comment.User.ProfileImage.src}` : '/user.jpg'}
             alt={`${comment.User.nickname}의 프로필 이미지`}
             onClick={() =>
-              showImagePreview(
-                comment.User.ProfileImage ? `http://localhost:3065/${comment.User.ProfileImage.src}` : '/user.jpg'
-              )
+              showImagePreview(comment.User.ProfileImage ? `${comment.User.ProfileImage.src}` : '/user.jpg')
             }
           />
 
@@ -90,11 +88,8 @@ const CommentListItem = ({
       </div>
 
       {comment.CommentImage && (
-        <CommentListItemImage onClick={() => showImagePreview(`http://localhost:3065/${comment.CommentImage?.src}`)}>
-          <img
-            src={`http://localhost:3065/${comment.CommentImage.src}`}
-            alt={`${comment.User.nickname}의 댓글 이미지`}
-          />
+        <CommentListItemImage onClick={() => showImagePreview(`${comment.CommentImage?.src}`)}>
+          <img src={`${comment.CommentImage.src}`} alt={`${comment.User.nickname}의 댓글 이미지`} />
         </CommentListItemImage>
       )}
 

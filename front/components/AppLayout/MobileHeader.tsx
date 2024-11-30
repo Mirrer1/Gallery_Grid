@@ -31,10 +31,7 @@ const MobileHeader = ({ setSearchMode }: SearchProps) => {
 
         <MobileHeaderContent>
           <div onClick={onClickProfile}>
-            <img
-              src={me?.ProfileImage ? `http://localhost:3065/${me.ProfileImage.src}` : '/user.jpg'}
-              alt="유저 프로필 이미지"
-            />
+            <img src={me?.ProfileImage ? `${me.ProfileImage.src}` : '/user.jpg'} alt="유저 프로필 이미지" />
           </div>
 
           <div onClick={excuteSearchMode}>

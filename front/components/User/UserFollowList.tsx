@@ -145,13 +145,9 @@ const UserFollowList = ({
             >
               <div>
                 <img
-                  src={user?.ProfileImage ? `http://localhost:3065/${user.ProfileImage.src}` : '/user.jpg'}
+                  src={user?.ProfileImage ? `${user.ProfileImage.src}` : '/user.jpg'}
                   alt="유저 프로필 이미지"
-                  onClick={() =>
-                    showImagePreview(
-                      user?.ProfileImage ? `http://localhost:3065/${user.ProfileImage.src}` : '/user.jpg'
-                    )
-                  }
+                  onClick={() => showImagePreview(user?.ProfileImage ? `${user.ProfileImage.src}` : '/user.jpg')}
                 />
                 <div>
                   <Link href={`/user/${user.id}`}>{user.nickname}</Link>
@@ -161,7 +157,7 @@ const UserFollowList = ({
                     {user.Followers.map(follower => (
                       <img
                         key={follower.id}
-                        src={follower?.ProfileImage ? `http://localhost:3065/${follower.ProfileImage}` : '/user.jpg'}
+                        src={follower?.ProfileImage ? `${follower.ProfileImage}` : '/user.jpg'}
                         alt={`팔로워 ${follower.nickname}의 프로필 이미지`}
                         onClick={() => onMoveUserProfile(follower.id)}
                       />

@@ -4,8 +4,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import Link from 'next/link';
 
 import ImagePreview from 'components/Modal/ImagePreviewModal';
+import PostImageCarousel from 'components/Timeline/PostImageCarousel';
 import formatDate from 'utils/useListTimes';
 import useImagePreview from 'utils/useImagePreview';
+
 import { RootState } from 'store/reducers';
 import { SearchProps } from './Search';
 import { SearchUsers } from 'store/types/userType';
@@ -23,7 +25,6 @@ import {
   UserSearchDivider,
   UserStatsWrapper
 } from 'styles/AppLayout/userSearch';
-import PostImageCarousel from 'components/Timeline/PostImageCarousel';
 
 const UserSearch = ({ keyword }: SearchProps) => {
   const dispatch = useDispatch();
@@ -75,11 +76,9 @@ const UserSearch = ({ keyword }: SearchProps) => {
           <UserSearchContent $isLast={i === searchUsers.length - 1}>
             <UserProfileWrapper>
               <img
-                src={user?.ProfileImage ? `http://localhost:3065/${user.ProfileImage.src}` : '/user.jpg'}
+                src={user?.ProfileImage ? `${user.ProfileImage.src}` : '/user.jpg'}
                 alt="유저 프로필 이미지"
-                onClick={() =>
-                  showImagePreview(user?.ProfileImage ? `http://localhost:3065/${user.ProfileImage.src}` : '/user.jpg')
-                }
+                onClick={() => showImagePreview(user?.ProfileImage ? `${user.ProfileImage.src}` : '/user.jpg')}
               />
 
               <Link href={`/user/${user.id}`}>{user.nickname}</Link>
@@ -119,7 +118,7 @@ const UserSearch = ({ keyword }: SearchProps) => {
               {user.Posts.length > 0 && (
                 <div>
                   <img
-                    src={`http://localhost:3065/${user.Posts[0].Images[0].src}`}
+                    src={`${user.Posts[0].Images[0].src}`}
                     alt="게시글의 첫번째 이미지"
                     onClick={() => showCarousel(user.Posts[0].Images)}
                   />

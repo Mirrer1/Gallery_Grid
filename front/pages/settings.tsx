@@ -41,7 +41,7 @@ const Settings = () => {
           <SettingProfile {...slideInFromBottom()} $loading={userUploadImageLoading}>
             <label htmlFor="setting-image">
               <img
-                src={userImagePath.length > 0 ? `http://localhost:3065/${userImagePath}` : '/user.jpg'}
+                src={userImagePath.length > 0 ? `${userImagePath?.replace(/\/thumb\//, '/original/')}` : '/user.jpg'}
                 alt="유저 프로필 이미지"
               />
             </label>

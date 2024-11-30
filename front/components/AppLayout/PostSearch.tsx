@@ -76,19 +76,15 @@ const PostSearch = ({ keyword }: SearchProps) => {
         {searchPosts.map((post: Post, i: number) => (
           <PostCard key={post.id} onClick={() => onClickPost(post)} {...slideInList}>
             <PostImageWrapper>
-              <img src={`http://localhost:3065/${post.Images[0].src}`} alt="게시글의 첫번째 이미지" />
+              <img src={`${post.Images[0].src}`} alt="게시글의 첫번째 이미지" />
               <ShareAltOutlined onClick={e => handleShareButtonClick(e, post.id)} />
             </PostImageWrapper>
 
             <PostContentWrapper $liked={liked[i]} $hasCommented={hasCommented[i]}>
               <img
-                src={post.User.ProfileImage ? `http://localhost:3065/${post.User.ProfileImage.src}` : '/user.jpg'}
+                src={post.User.ProfileImage ? `${post.User.ProfileImage.src}` : '/user.jpg'}
                 alt="유저 프로필 이미지"
-                onClick={() =>
-                  showImagePreview(
-                    post.User.ProfileImage ? `http://localhost:3065/${post.User.ProfileImage.src}` : '/user.jpg'
-                  )
-                }
+                onClick={() => showImagePreview(post.User.ProfileImage ? `${post.User.ProfileImage.src}` : '/user.jpg')}
               />
 
               <p>{post.User.nickname}</p>

@@ -64,7 +64,7 @@ const PostPreview = ({ userHistory, selectMode, selectedPostIds, setSelectedPost
       )}
 
       <PostPreviewImage onClick={onClickPost}>
-        <img src={`http://localhost:3065/${userHistory.Post.Images[0].src}`} alt="게시글의 첫번째 이미지" />
+        <img src={`${userHistory.Post.Images[0].src}`} alt="게시글의 첫번째 이미지" />
 
         <ArrowsAltOutlined />
 

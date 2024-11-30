@@ -75,7 +75,7 @@ const EditModalCarousel = () => {
     <EditModalCarouselWrapper>
       <EditModalSelectedImage key={selectedImage} {...slideInSeletedImage}>
         <img
-          src={editPostImagePaths.length > 0 ? `http://localhost:3065/${selectedImage}` : '/no-image.png'}
+          src={editPostImagePaths.length > 0 ? `${selectedImage?.replace(/\/thumb\//, '/original/')}` : '/no-image.png'}
           alt="클릭한 게시글 이미지"
         />
       </EditModalSelectedImage>
@@ -95,7 +95,7 @@ const EditModalCarousel = () => {
           {editPostImagePaths.map((image: string, i: number) => (
             <SwiperSlide key={image}>
               <EditModalSwiperImageItem
-                src={`http://localhost:3065/${image}`}
+                src={`${image}`}
                 alt={`게시글의 ${i}번째 이미지`}
                 onClick={() => handleImageClick(image)}
                 selected={selectedImage === image}

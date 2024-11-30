@@ -12,6 +12,7 @@ import Post from '../models/post';
 import Comment from '../models/comment';
 import UserHistory from '../models/userHistory';
 import ReplyComment from '../models/replyComment';
+import { REDIRECT_CONFIG } from '../config/auth';
 import { isLoggedIn, isNotLoggedIn } from './middleware';
 
 const router = express.Router();
@@ -163,17 +164,17 @@ router.get('/google', passport.authenticate('google', { scope: ['profile', 'emai
 
 router.get(
   '/google/callback',
-  passport.authenticate('google', { failureRedirect: 'http://localhost:3000' }),
+  passport.authenticate('google', { failureRedirect: REDIRECT_CONFIG.failureRedirect }),
   (req, res) => {
     if (req.user) {
       req.login(req.user, (err: any) => {
         if (err) {
-          return res.redirect('http://localhost:3000');
+          return res.redirect(REDIRECT_CONFIG.failureRedirect);
         }
-        res.redirect('http://localhost:3000/auth');
+        res.redirect(REDIRECT_CONFIG.successRedirect);
       });
     } else {
-      res.redirect('http://localhost:3000');
+      res.redirect(REDIRECT_CONFIG.failureRedirect);
     }
   }
 );

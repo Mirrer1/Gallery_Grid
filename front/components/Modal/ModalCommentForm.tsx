@@ -20,6 +20,7 @@ import {
   modalCommentRemoveUploadedImage,
   modalCommentUploadImageRequest
 } from 'store/actions/postAction';
+
 import { slideInTooltip, slideInUploadImage } from 'styles/Common/animation';
 import {
   ModalCommentEmojiPicker,
@@ -142,9 +143,9 @@ const ModalCommentForm = ({ replyId, replyUser, setReplyId, showImagePreview }: 
           {modalCommentImagePath.length !== 0 && (
             <ModalCommentFormImage key={modalCommentImagePath} {...slideInUploadImage}>
               <img
-                src={`http://localhost:3065/${modalCommentImagePath}`}
+                src={`${modalCommentImagePath}`}
                 alt="입력한 댓글의 첨부 이미지"
-                onClick={() => showImagePreview(`http://localhost:3065/${modalCommentImagePath}`)}
+                onClick={() => showImagePreview(`${modalCommentImagePath}`)}
               />
               <DeleteOutlined onClick={handleRemoveImage} />
             </ModalCommentFormImage>

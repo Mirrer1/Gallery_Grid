@@ -1,15 +1,16 @@
 import React, { useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
+import Link from 'next/link';
 
 import DeleteModal from './DeleteModal';
 import formatDate from 'utils/useListTimes';
 import { RootState } from 'store/reducers';
 import { Comment } from 'store/types/postType';
 import { showDeleteModal } from 'store/actions/postAction';
+
 import { slideInList } from 'styles/Common/animation';
 import { ModalCommentContainer, ModalCommentListItemImage } from 'styles/Modal/modalCommentList';
-import Link from 'next/link';
 
 type ModalCommentListItemProps = {
   comment: Comment;
@@ -52,12 +53,10 @@ const ModalCommentListItem = ({
       <div>
         <div>
           <img
-            src={comment.User.ProfileImage ? `http://localhost:3065/${comment.User.ProfileImage.src}` : '/user.jpg'}
+            src={comment.User.ProfileImage ? `${comment.User.ProfileImage.src}` : '/user.jpg'}
             alt={`${comment.User.nickname}의 프로필 이미지`}
             onClick={() =>
-              showImagePreview(
-                comment.User.ProfileImage ? `http://localhost:3065/${comment.User.ProfileImage.src}` : '/user.jpg'
-              )
+              showImagePreview(comment.User.ProfileImage ? `${comment.User.ProfileImage.src}` : '/user.jpg')
             }
           />
 
@@ -91,13 +90,8 @@ const ModalCommentListItem = ({
       </div>
 
       {comment.CommentImage && (
-        <ModalCommentListItemImage
-          onClick={() => showImagePreview(`http://localhost:3065/${comment.CommentImage?.src}`)}
-        >
-          <img
-            src={`http://localhost:3065/${comment.CommentImage.src}`}
-            alt={`${comment.User.nickname}의 댓글 이미지`}
-          />
+        <ModalCommentListItemImage onClick={() => showImagePreview(`${comment.CommentImage?.src}`)}>
+          <img src={`${comment.CommentImage.src}`} alt={`${comment.User.nickname}의 댓글 이미지`} />
         </ModalCommentListItemImage>
       )}
 

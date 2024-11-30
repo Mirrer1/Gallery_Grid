@@ -32,11 +32,11 @@ const LandingCarousel = () => {
     <CarouselWrapper>
       <CarouselImage as={motion.div} key={currentIndex} {...slideInFromBottom(0.3)}>
         <img
-          src={`http://localhost:3065/${bestProducts[currentIndex]?.Images[0].src}`}
+          src={`${bestProducts[currentIndex]?.Images[0].src}`}
           alt={`${bestProducts[currentIndex]?.User.nickname}의 작품 배경 이미지`}
         />
         <img
-          src={`http://localhost:3065/${bestProducts[currentIndex]?.Images[0].src}`}
+          src={`${bestProducts[currentIndex]?.Images[0].src}`}
           alt={`${bestProducts[currentIndex]?.User.nickname}의 작품 이미지`}
         />
         <p>@Made by {bestProducts[currentIndex]?.User.nickname}</p>

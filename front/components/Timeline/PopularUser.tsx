@@ -40,7 +40,7 @@ const PopularUser = () => {
         {bestUsers?.map((user: FeaturedUser) => (
           <div key={user.id} onClick={() => onMoveUserProfile(user.id)}>
             <img
-              src={user?.ProfileImage ? `http://localhost:3065/${user.ProfileImage.src}` : '/user.jpg'}
+              src={user?.ProfileImage ? `${user.ProfileImage.src}` : '/user.jpg'}
               alt={`${user.nickname}의 프로필 이미지`}
             />
 

@@ -73,7 +73,7 @@ const ModalCarousel = () => {
       >
         {singlePost.Images.map((image: Image, i: number) => (
           <div key={i}>
-            <img src={`http://localhost:3065/${image.src}`} alt={`게시글의 ${i}번째 이미지`} />
+            <img src={`${image.src.replace(/\/thumb\//, '/original/')}`} alt={`게시글의 ${i}번째 이미지`} />
 
             {singlePost.Images.length > 1 && (
               <ModalCarouselBtn $alignleft="true" onClick={prev}>
