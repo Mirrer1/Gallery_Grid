@@ -11,9 +11,9 @@ import {
 import { motion } from 'framer-motion';
 import { toast } from 'react-toastify';
 import { END } from 'redux-saga';
-import Head from 'next/head';
 import axios from 'axios';
 
+import PageHead from 'components/PageHead';
 import AppLayout from 'components/AppLayout';
 import BigPostPreview from 'components/Gallery/BigPostPreview';
 import PostPreview from 'components/Gallery/PostPreview';
@@ -40,6 +40,7 @@ import {
 const Gallery = () => {
   const dispatch = useDispatch();
   const galleryContainerRef = useRef<HTMLDivElement>(null);
+  const { me } = useSelector((state: RootState) => state.user);
   const {
     isPostModalVisible,
     galleryPosts,
@@ -102,9 +103,12 @@ const Gallery = () => {
 
   return (
     <>
-      <Head>
-        <title>Gallery Grid | Gallery</title>
-      </Head>
+      <PageHead
+        title={`Gallery Grid | ${me?.nickname || '사용자'}'s Gallery`}
+        description={`${me?.nickname || '사용자'}가 좋아요하거나 댓글을 단 게시글을 Gallery Grid에서 확인하세요.`}
+        imageUrl={galleryPosts?.[0]?.Post?.Images?.[0]?.src}
+        url="https://gallerygrd.com/gallery"
+      />
 
       <AppLayout>
         <GalleryWrapper {...slideInFromBottom()}>

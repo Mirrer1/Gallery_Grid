@@ -43,7 +43,7 @@ const PostImageCarousel = ({ images }: CarouselProps) => {
       </CarouselOutsideArea>
 
       <ImageCarouselWrapper {...slideInModal}>
-        <BackgroundImageContainer $background={`${images[activeIndex].src.replace(/\/thumb\//, '/original/')}`} />
+        <BackgroundImageContainer $background={`${images[activeIndex].src}`} />
 
         <Swiper
           effect="coverflow"
@@ -67,7 +67,7 @@ const PostImageCarousel = ({ images }: CarouselProps) => {
         >
           {images.map((image: Image, i: number) => (
             <SwiperSlide key={i}>
-              <img src={`${image.src.replace(/\/thumb\//, '/original/')}`} alt={`게시글의 ${i}번째 이미지`} />
+              <img src={`${image.src}`} alt={`게시글의 ${i}번째 이미지`} />
             </SwiperSlide>
           ))}
         </Swiper>

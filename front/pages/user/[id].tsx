@@ -3,8 +3,8 @@ import { useSelector } from 'react-redux';
 import { END } from 'redux-saga';
 import { useRouter } from 'next/router';
 import axios from 'axios';
-import Head from 'next/head';
 
+import PageHead from 'components/PageHead';
 import AppLayout from 'components/AppLayout';
 import UserInfo from 'components/User/UserInfo';
 import UserPosts from 'components/User/UserPosts';
@@ -23,7 +23,9 @@ import { toast } from 'react-toastify';
 const user = () => {
   const router = useRouter();
   const { id: userId } = router.query;
-  const { loadUserInfoError, followUserDone, unFollowUserDone } = useSelector((state: RootState) => state.user);
+  const { userInfo, loadUserInfoError, followUserDone, unFollowUserDone } = useSelector(
+    (state: RootState) => state.user
+  );
   const { isPostModalVisible, isDeleteModalVisible } = useSelector((state: RootState) => state.post);
   const [selectedActivity, setSelectedActivity] = useState<'posts' | 'follower' | 'following'>('posts');
   const [followLoadingId, setFollowLoadingId] = useState<number | null>(null);
@@ -48,9 +50,12 @@ const user = () => {
 
   return (
     <>
-      <Head>
-        <title>Gallery Grid | User</title>
-      </Head>
+      <PageHead
+        title={`Gallery Grid | ${userInfo?.nickname || 'Unknown User'}'s Profile`}
+        description={userInfo?.desc || '소개글이 없습니다.'}
+        imageUrl={userInfo?.ProfileImage?.src}
+        url={`https://gallerygrd.com/user/${userInfo?.id || ''}`}
+      />
 
       <AppLayout>
         <UserWrapper>

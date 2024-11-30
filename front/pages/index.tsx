@@ -4,6 +4,7 @@ import { END } from 'redux-saga';
 import Router from 'next/router';
 import axios from 'axios';
 
+import PageHead from 'components/PageHead';
 import wrapper from 'store/configureStore';
 import useToastStatus from 'utils/useToast';
 import MenuContents from 'components/Landing/MenuContents';
@@ -14,6 +15,7 @@ import { ContactIcon, HeaderWrapper, MenuButton } from 'styles/Landing/header';
 
 const Landing = () => {
   const { me } = useSelector((state: RootState) => state.user);
+  const { timelinePosts } = useSelector((state: RootState) => state.post);
   const [selectMenu, setSelectMenu] = useState<'home' | 'login' | 'signup' | 'contact' | 'recovery'>('home');
   useToastStatus();
 
@@ -31,6 +33,13 @@ const Landing = () => {
 
   return (
     <>
+      <PageHead
+        title="Gallery Grid | Explore Popular Posts"
+        description="로그인, 회원가입, 비밀번호 복구 등 다양한 서비스를 이용하고 Gallery Grid에서 인기 게시글을 확인하세요."
+        imageUrl={timelinePosts?.[0]?.Images?.[0]?.src}
+        url="https://gallerygrd.com/"
+      />
+
       <HeaderWrapper>
         <img src="/logo.jpg" alt="사이트 메인 로고 이미지" onClick={onClickLogo} />
 

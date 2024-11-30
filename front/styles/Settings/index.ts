@@ -130,7 +130,7 @@ export const SettingProfile = styled(motion.div)<{ $loading: boolean }>`
 
   ${media.mobile} {
     ${({ theme }) => theme.flexSet('start')};
-    height: 15%;
+    height: 20%;
     border-bottom: 1.5px solid ${({ theme }) => theme.colors.darkBg};
     padding: 0.5em 0.5em 1em 0.5em;
     margin-bottom: 0.5em;
@@ -149,12 +149,12 @@ export const SettingProfile = styled(motion.div)<{ $loading: boolean }>`
       flex-grow: 1;
 
       & > h1 {
-        font-size: 1.2rem;
-        margin-bottom: 0.3em;
+        font-size: 1rem;
+        margin-bottom: 0.2em;
       }
 
       & > p {
-        font-size: 0.75rem;
+        font-size: 0.7rem;
         -webkit-line-clamp: 3;
         padding-left: 0.1em;
       }

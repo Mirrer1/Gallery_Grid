@@ -3,8 +3,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { CameraOutlined, DeleteOutlined, LoadingOutlined } from '@ant-design/icons';
 import { END } from 'redux-saga';
 import axios from 'axios';
-import Head from 'next/head';
 
+import PageHead from 'components/PageHead';
 import AppLayout from 'components/AppLayout';
 import SettingForm from 'components/Settings/SettingForm';
 import wrapper from 'store/configureStore';
@@ -32,18 +32,18 @@ const Settings = () => {
 
   return (
     <>
-      <Head>
-        <title>Gallery Grid | Settings</title>
-      </Head>
+      <PageHead
+        title={`Gallery Grid | ${me?.nickname || '사용자'}'s Settings`}
+        description={`${me?.nickname || '사용자'}님의 프로필을 수정하고 정보를 업데이트하세요. Gallery Grid에서 나만의 프로필을 완성해보세요.`}
+        imageUrl={me?.ProfileImage?.src}
+        url="https://gallerygrd.com/settings"
+      />
 
       <AppLayout>
         <SettingWrapper>
           <SettingProfile {...slideInFromBottom()} $loading={userUploadImageLoading}>
             <label htmlFor="setting-image">
-              <img
-                src={userImagePath.length > 0 ? `${userImagePath?.replace(/\/thumb\//, '/original/')}` : '/user.jpg'}
-                alt="유저 프로필 이미지"
-              />
+              <img src={userImagePath.length > 0 ? `${userImagePath}` : '/user.jpg'} alt="유저 프로필 이미지" />
             </label>
 
             <div>
