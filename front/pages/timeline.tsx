@@ -2,9 +2,9 @@ import React, { useCallback, useState } from 'react';
 import { UsergroupAddOutlined } from '@ant-design/icons';
 import { useSelector } from 'react-redux';
 import { END } from 'redux-saga';
-import Head from 'next/head';
 import axios from 'axios';
 
+import PageHead from 'components/PageHead';
 import AppLayout from 'components/AppLayout';
 import PostingForm from 'components/Timeline/PostingForm';
 import PostList from 'components/Timeline/PostList';
@@ -21,7 +21,8 @@ import { slideInFromBottom } from 'styles/Common/animation';
 import { CommunitySection, MobileSuggestedBtn, PostsSection, TimelineWrapper } from 'styles/Timeline';
 
 const Timeline = () => {
-  const { isCommentListVisible } = useSelector((state: RootState) => state.post);
+  const { me } = useSelector((state: RootState) => state.user);
+  const { timelinePosts, isCommentListVisible } = useSelector((state: RootState) => state.post);
   const [suggestedListVisible, setSuggestedListVisible] = useState(false);
   const isMobileOrTablet = typeof window !== 'undefined' && window.innerWidth <= 992;
   const delay1 = isMobileOrTablet ? 0.3 : 0;
@@ -34,9 +35,12 @@ const Timeline = () => {
 
   return (
     <>
-      <Head>
-        <title>Gallery Grid | Timeline</title>
-      </Head>
+      <PageHead
+        title={`Gallery Grid | ${me?.nickname || '사용자'}'s Timeline`}
+        description={`${me?.nickname || '사용자'}님의 타임라인에서 인기 게시글, 최신 게시글, 팔로잉한 사람들의 게시글을 확인하고, 자신만의 게시글을 작성하며, 추천 유저와 인기 유저를 만나보세요.`}
+        imageUrl={timelinePosts?.[0]?.Images?.[0]?.src}
+        url="https://gallerygrd.com/timeline"
+      />
 
       <AppLayout>
         <TimelineWrapper>

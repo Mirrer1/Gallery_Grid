@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {
   AreaChartOutlined,
   FieldTimeOutlined,
-  MessageOutlined,
+  // MessageOutlined,
   PictureOutlined,
   SettingOutlined
 } from '@ant-design/icons';
@@ -41,11 +41,11 @@ const MobileFooter = () => {
         onClick={() => navigateTo('/timeline')}
       />
 
-      <MobileFooterItem
+      {/* <MobileFooterItem
         as={MessageOutlined}
         $selected={pathname === '/message'}
         onClick={() => navigateTo('/message')}
-      />
+      /> */}
 
       <MobileFooterItem
         as={SettingOutlined}

@@ -1,9 +1,9 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { END } from 'redux-saga';
-import Head from 'next/head';
 import axios from 'axios';
 
+import PageHead from 'components/PageHead';
 import AppLayout from 'components/AppLayout';
 import AlertList from 'components/Activity/AlertList';
 import PostModal from 'components/Modal/PostModal';
@@ -18,14 +18,18 @@ import { slideInFromBottom } from 'styles/Common/animation';
 import { ActivityHeader, ActivityWrapper, HeaderItem } from 'styles/Activity';
 
 const Activity = () => {
+  const { me } = useSelector((state: RootState) => state.user);
   const { myActivityCounts, isPostModalVisible } = useSelector((state: RootState) => state.post);
   useToastStatus();
 
   return (
     <>
-      <Head>
-        <title>Gallery Grid | Activity</title>
-      </Head>
+      <PageHead
+        title={`Gallery Grid | ${me?.nickname || '사용자'}'s Activity`}
+        description={`${me?.nickname || '사용자'}님의 활동 페이지: 좋아요, 댓글, 팔로잉 등과 관련된 알림을 확인하세요.`}
+        imageUrl={me?.ProfileImage?.src}
+        url="https://gallerygrd.com/activity"
+      />
 
       <AppLayout>
         <ActivityWrapper>

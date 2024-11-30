@@ -5,6 +5,7 @@ import { LoadingOutlined } from '@ant-design/icons';
 import Router from 'next/router';
 import axios from 'axios';
 
+import PageHead from 'components/PageHead';
 import wrapper from 'store/configureStore';
 import { RootState } from 'store/reducers';
 import { loadMyInfoRequest } from 'store/actions/userAction';
@@ -32,21 +33,30 @@ const Auth = () => {
   }, []);
 
   return (
-    <AuthLoaderWrapper>
-      <AuthLoader>
-        <div>
-          <img src="/mark.png" alt="사이트 서브 로고 이미지" />
+    <>
+      <PageHead
+        title="Gallery Grid | Google Sign In"
+        description="Google 계정에 연결하는 중입니다. 잠시만 기다려 주세요."
+        imageUrl="https://gallerygrd.com/favicon.ico"
+        url="https://gallerygrd.com/auth"
+      />
 
+      <AuthLoaderWrapper>
+        <AuthLoader>
           <div>
-            <h1>Waiting for Google Sign In{dots}</h1>
+            <img src="/mark.png" alt="사이트 서브 로고 이미지" />
+
+            <div>
+              <h1>Waiting for Google Sign In{dots}</h1>
+            </div>
           </div>
-        </div>
 
-        <p>Google 계정에 연결하는 동안 잠시만 기다려 주세요.</p>
+          <p>Google 계정에 연결하는 동안 잠시만 기다려 주세요.</p>
 
-        <LoadingOutlined />
-      </AuthLoader>
-    </AuthLoaderWrapper>
+          <LoadingOutlined />
+        </AuthLoader>
+      </AuthLoaderWrapper>
+    </>
   );
 };
 
