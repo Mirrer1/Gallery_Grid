@@ -39,32 +39,8 @@ export const CommentListHeader = styled.div`
     ${HoverStyle('&')};
   }
 
-  & > div {
-    display: none;
-  }
-
   ${media.tablet} {
-    justify-content: center;
     padding: 1em;
-
-    & > span {
-      display: none;
-    }
-
-    & > div {
-      display: block;
-      width: 15%;
-      height: 8px;
-      background-color: ${({ theme }) => theme.colors.darkBg};
-      border-radius: 10px;
-    }
-  }
-
-  ${media.mobile} {
-    & > div {
-      width: 30%;
-      height: 6px;
-    }
   }
 `;
 

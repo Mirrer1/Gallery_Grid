@@ -121,7 +121,7 @@ const CommentForm = ({ showImagePreview, replyId, replyUser, setReplyId }: Comme
   }, [comment]);
 
   useEffect(() => {
-    if (textareaRef.current) {
+    if (window.innerWidth > 992 && textareaRef.current) {
       textareaRef.current.focus();
     }
   }, []);

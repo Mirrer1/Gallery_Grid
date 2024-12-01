@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 
@@ -14,18 +14,32 @@ import { ModalOutsideArea, PostModalContentsWrapper, PostModalBtn, PostModalWrap
 const PostModal = () => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const { postEditMode } = useSelector((state: RootState) => state.post);
+  const { postEditMode, isPostModalVisible } = useSelector((state: RootState) => state.post);
 
   const hideModal = useCallback(() => {
-    if (router.pathname === '/post/[id]') {
-      return;
-    }
-
+    if (router.pathname === '/post/[id]') return;
     dispatch(hidePostModal());
   }, []);
 
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+  }, []);
+
+  useEffect(() => {
+    if (isPostModalVisible) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isPostModalVisible]);
+
   return (
-    <PostModalWrapper>
+    <PostModalWrapper onTouchMove={handleTouchMove}>
       <ModalOutsideArea onClick={hideModal}>
         {router.pathname !== '/post/[id]' && <PostModalBtn onClick={hideModal} />}
       </ModalOutsideArea>

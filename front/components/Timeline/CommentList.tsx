@@ -43,9 +43,6 @@ const CommentList = () => {
     type: null
   });
 
-  const [translateY, setTranslateY] = useState(0);
-  const [touchStartY, setTouchStartY] = useState<number | null>(null);
-
   const onHideComment = useCallback(() => {
     dispatch(hideCommentList());
   }, []);
@@ -64,33 +61,6 @@ const CommentList = () => {
     setEditingComment({ id: null, type: null });
     dispatch(editCommentRemoveUploadedImage());
   }, []);
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    if (window.innerWidth <= 992) {
-      setTouchStartY(e.touches[0].clientY);
-    }
-  };
-
-  const handleTouchMove = (e: React.TouchEvent) => {
-    if (window.innerWidth <= 992 && touchStartY !== null) {
-      const deltaY = e.touches[0].clientY - touchStartY;
-      if (deltaY > 0) {
-        setTranslateY(deltaY);
-      }
-    }
-  };
-
-  const handleTouchEnd = () => {
-    if (translateY > 300) {
-      setTranslateY(window.innerHeight);
-      setTimeout(() => {
-        onHideComment();
-      }, 300);
-    } else {
-      setTranslateY(0);
-    }
-    setTouchStartY(null);
-  };
 
   useEffect(() => {
     if (editCommentDone) cancelEdit();
@@ -113,12 +83,10 @@ const CommentList = () => {
     <CommentListWrapper
       key={commentVisiblePostId}
       $isCommentListVisible={isCommentListVisible}
-      style={{ bottom: `${-translateY}px` }}
       {...slideInFromBottom()}
     >
-      <CommentListHeader onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
+      <CommentListHeader>
         <CaretDownOutlined onClick={onHideComment} />
-        <div />
       </CommentListHeader>
 
       {loadCommentsLoading ? (

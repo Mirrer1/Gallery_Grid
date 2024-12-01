@@ -124,7 +124,7 @@ const ModalCommentForm = ({ replyId, replyUser, setReplyId, showImagePreview }: 
   }, [comment]);
 
   useEffect(() => {
-    if (textareaRef.current) {
+    if (window.innerWidth > 992 && textareaRef.current) {
       textareaRef.current.focus();
     }
   }, []);

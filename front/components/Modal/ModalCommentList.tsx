@@ -49,9 +49,6 @@ const ModalCommentList = () => {
     type: null
   });
 
-  const [translateY, setTranslateY] = useState(0);
-  const [touchStartY, setTouchStartY] = useState<number | null>(null);
-
   const onHideComment = useCallback(() => {
     dispatch(hideModalCommentList());
   }, []);
@@ -70,33 +67,6 @@ const ModalCommentList = () => {
     setEditingComment({ id: null, type: null });
     dispatch(editModalCommentRemoveUploadedImage());
   }, []);
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    if (window.innerWidth <= 992) {
-      setTouchStartY(e.touches[0].clientY);
-    }
-  };
-
-  const handleTouchMove = (e: React.TouchEvent) => {
-    if (window.innerWidth <= 992 && touchStartY !== null) {
-      const deltaY = e.touches[0].clientY - touchStartY;
-      if (deltaY > 0) {
-        setTranslateY(deltaY);
-      }
-    }
-  };
-
-  const handleTouchEnd = () => {
-    if (translateY > 200) {
-      setTranslateY(window.innerHeight);
-      setTimeout(() => {
-        onHideComment();
-      }, 300);
-    } else {
-      setTranslateY(0);
-    }
-    setTouchStartY(null);
-  };
 
   useEffect(() => {
     if (editModalCommentDone) cancelEdit();
@@ -122,10 +92,9 @@ const ModalCommentList = () => {
   }, []);
 
   return (
-    <ModalCommentListContainer style={{ bottom: `${-translateY}px` }} {...slideInFromBottom()}>
-      <ModalCommentListHeader onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
+    <ModalCommentListContainer {...slideInFromBottom()}>
+      <ModalCommentListHeader>
         <CaretDownOutlined onClick={onHideComment} />
-        <div />
       </ModalCommentListHeader>
 
       {loadModalCommentsLoading ? (

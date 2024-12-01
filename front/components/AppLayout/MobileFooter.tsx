@@ -24,6 +24,12 @@ const MobileFooter = () => {
   return (
     <MobileFooterWrapper>
       <MobileFooterItem
+        as={FieldTimeOutlined}
+        $selected={pathname === '/timeline'}
+        onClick={() => navigateTo('/timeline')}
+      />
+
+      <MobileFooterItem
         as={AreaChartOutlined}
         $selected={pathname === '/activity'}
         onClick={() => navigateTo('/activity')}
@@ -33,12 +39,6 @@ const MobileFooter = () => {
         as={PictureOutlined}
         $selected={pathname === '/gallery'}
         onClick={() => navigateTo('/gallery')}
-      />
-
-      <MobileFooterItem
-        as={FieldTimeOutlined}
-        $selected={pathname === '/timeline'}
-        onClick={() => navigateTo('/timeline')}
       />
 
       {/* <MobileFooterItem

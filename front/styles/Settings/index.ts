@@ -175,7 +175,7 @@ export const MobileImageBtn = styled.label`
     background-color: ${({ theme }) => theme.colors.primary};
     color: white;
     font-weight: 500;
-    padding: 0.7em 1.2em;
+    padding: 0.7em 1.5em;
     border-radius: 5px;
     margin-top: 1em;
   }

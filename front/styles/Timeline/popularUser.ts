@@ -85,7 +85,7 @@ export const PopularUserWrapper = styled.div<{ $commentvisible: boolean }>`
 
         & > img {
           width: 100%;
-          height: 100%;
+          aspect-ratio: 1/1;
           border-radius: 5px;
         }
       }
