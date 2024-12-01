@@ -34,7 +34,7 @@ const Landing = () => {
   return (
     <>
       <PageHead
-        title="Gallery Grid | Explore Popular Posts"
+        title="Gallery Grid"
         description="로그인, 회원가입, 비밀번호 복구 등 다양한 서비스를 이용하고 Gallery Grid에서 인기 게시글을 확인하세요."
         imageUrl={timelinePosts?.[0]?.Images?.[0]?.src}
         url="https://gallerygrd.com/"
