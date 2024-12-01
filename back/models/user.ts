@@ -91,7 +91,7 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
     User.hasMany(Post);
     User.hasMany(Comment);
     User.hasMany(Alert);
-    User.belongsToMany(Post, { through: 'Like', as: 'Liked' });
+    User.belongsToMany(Post, { through: 'like', as: 'Liked' });
     User.hasMany(Chat, { as: 'SentMessages', foreignKey: 'SenderId' });
     User.hasMany(Chat, { as: 'ReceivedMessages', foreignKey: 'ReceiverId' });
     User.hasMany(Report, { foreignKey: 'ReporterId', as: 'ReportsFiled' });
