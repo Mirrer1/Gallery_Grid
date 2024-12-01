@@ -68,7 +68,7 @@ class Post extends Model<InferAttributes<Post>, InferCreationAttributes<Post>> {
     Post.hasMany(Alert);
     Post.belongsTo(User, { foreignKey: 'UserId' });
     Post.hasMany(Report, { foreignKey: 'PostId', as: 'Reports' });
-    Post.belongsToMany(User, { through: 'like', as: 'Likers' });
+    Post.belongsToMany(User, { through: 'Like', as: 'Likers' });
   }
 }
 
