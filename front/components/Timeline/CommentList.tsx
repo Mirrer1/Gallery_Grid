@@ -4,7 +4,6 @@ import { CaretDownOutlined, CloseSquareTwoTone, LoadingOutlined } from '@ant-des
 
 import CommentForm from './CommentForm';
 import CommentListItem from './CommentListItem';
-import EditCommentForm from './EditCommentForm';
 import ReplyComment from './ReplyComment';
 import ImagePreview from 'components/Modal/ImagePreviewModal';
 
@@ -101,14 +100,6 @@ const CommentList = () => {
                 <div key={comment.id} ref={el => (commentRefs.current[comment.id] = el)}>
                   {comment.isDeleted ? (
                     <DeleteCommentText>삭제된 댓글입니다.</DeleteCommentText>
-                  ) : editingComment.id === comment.id && editingComment.type === 'comment' ? (
-                    <EditCommentForm
-                      reply={false}
-                      comment={comment}
-                      replyId={null}
-                      cancelEdit={cancelEdit}
-                      showImagePreview={showImagePreview}
-                    />
                   ) : (
                     <CommentListItem
                       comment={comment}
@@ -116,29 +107,23 @@ const CommentList = () => {
                       setReplyUser={setReplyUser}
                       showImagePreview={showImagePreview}
                       onEditClick={() => handleEditClick(comment.id, 'comment')}
+                      isEditing={editingComment.id === comment.id && editingComment.type === 'comment'}
+                      cancelEdit={cancelEdit}
                     />
                   )}
 
                   {comment.Replies.map((reply: IReplyComment) => (
                     <div key={reply.id} ref={el => (commentRefs.current[reply.id] = el)}>
-                      {editingComment.id === reply.id && editingComment.type === 'reply' ? (
-                        <EditCommentForm
-                          reply={true}
-                          comment={reply}
-                          replyId={comment.id}
-                          cancelEdit={cancelEdit}
-                          showImagePreview={showImagePreview}
-                        />
-                      ) : (
-                        <ReplyComment
-                          comment={reply}
-                          replyId={comment.id}
-                          setReplyId={setReplyId}
-                          setReplyUser={setReplyUser}
-                          showImagePreview={showImagePreview}
-                          onEditClick={() => handleEditClick(reply.id, 'reply')}
-                        />
-                      )}
+                      <ReplyComment
+                        comment={reply}
+                        replyId={comment.id}
+                        setReplyId={setReplyId}
+                        setReplyUser={setReplyUser}
+                        showImagePreview={showImagePreview}
+                        onEditClick={() => handleEditClick(reply.id, 'reply')}
+                        isEditing={editingComment.id === reply.id && editingComment.type === 'reply'}
+                        cancelEdit={cancelEdit}
+                      />
                     </div>
                   ))}
                 </div>

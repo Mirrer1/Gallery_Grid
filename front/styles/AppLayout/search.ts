@@ -28,6 +28,7 @@ export const SearchContainer = styled(motion.section)`
 
 export const SearchBackButton = styled.div`
   margin-bottom: 1em;
+  cursor: pointer;
 
   & > span {
     font-size: 1.3rem;

@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { LoadingOutlined, UserAddOutlined, UserDeleteOutlined } from '@ant-design/icons';
 import { useSelector, useDispatch } from 'react-redux';
-import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 import ImagePreview from 'components/Modal/ImagePreviewModal';
 import PostImageCarousel from 'components/Timeline/PostImageCarousel';
@@ -26,7 +26,8 @@ import {
   UserStatsWrapper
 } from 'styles/AppLayout/userSearch';
 
-const UserSearch = ({ keyword }: SearchProps) => {
+const UserSearch = ({ keyword, setSearchMode }: SearchProps) => {
+  const router = useRouter();
   const dispatch = useDispatch();
   const { isCarouselVisible } = useSelector((state: RootState) => state.post);
   const { me, searchUsers, followUserDone, unFollowUserDone, searchUsersLoading, searchUsersDone } = useSelector(
@@ -35,6 +36,16 @@ const UserSearch = ({ keyword }: SearchProps) => {
   const [modalImages, setModalImages] = useState<Image[]>([]);
   const [followingUserId, setFollowingUserId] = useState<number | null>(null);
   const { imagePreview, showImagePreview, hideImagePreview } = useImagePreview();
+
+  const onClickUser = useCallback(
+    async (userId: number) => {
+      if (String(router.query.id) !== String(userId)) {
+        await router.push(`/user/${userId}`);
+      }
+      setSearchMode?.(false);
+    },
+    [router, setSearchMode]
+  );
 
   const onToggleFollow = useCallback(
     (userId: number) => {
@@ -81,7 +92,7 @@ const UserSearch = ({ keyword }: SearchProps) => {
                 onClick={() => showImagePreview(user?.ProfileImage ? `${user.ProfileImage.src}` : '/user.jpg')}
               />
 
-              <Link href={`/user/${user.id}`}>{user.nickname}</Link>
+              <p onClick={() => onClickUser(user.id)}>{user.nickname}</p>
             </UserProfileWrapper>
 
             <UserBio>

@@ -29,9 +29,25 @@ const EditModalCarousel = () => {
     (state: RootState) => state.post
   );
 
-  const handleImageClick = useCallback((image: string) => {
-    setSelectedImage(image);
-  }, []);
+  const handleImageClick = useCallback(
+    (image: string, index: number) => {
+      setSelectedImage(image);
+
+      if (swiperRef.current) {
+        const totalSlides = editPostImagePaths.length;
+        let targetSlide = index;
+
+        if (index === totalSlides - 1 && totalSlides > 3) {
+          targetSlide = totalSlides - 3;
+        } else if (index > 0) {
+          targetSlide = index - 1;
+        }
+
+        swiperRef.current.swiper.slideTo(targetSlide);
+      }
+    },
+    [editPostImagePaths]
+  );
 
   const handleRemoveImage = useCallback(
     (image: string) => {
@@ -94,7 +110,7 @@ const EditModalCarousel = () => {
               <EditModalSwiperImageItem
                 src={`${image}`}
                 alt={`게시글의 ${i}번째 이미지`}
-                onClick={() => handleImageClick(image)}
+                onClick={() => handleImageClick(image, i)}
                 selected={selectedImage === image}
               />
               <DeleteOutlined onClick={() => handleRemoveImage(image)} />

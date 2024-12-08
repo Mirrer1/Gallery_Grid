@@ -132,26 +132,20 @@ export const SuggestedInfo = styled(motion.div)`
     }
   }
 
-  & > div:last-child {
+  & > div:nth-child(2) {
     width: 1px;
     flex-grow: 1;
 
     & > div {
       ${({ theme }) => theme.flexSet('space-between')}
       padding-right: 0.5em;
-      margin-bottom: 0.3em;
+      margin-bottom: 0.1em;
 
       & > a {
         color: ${({ theme }) => theme.colors.primary};
         font-size: 0.9rem;
         font-weight: 500;
         cursor: pointer;
-      }
-
-      & > span {
-        ${ReverseHoverStyle('&')}
-        font-size: 1.1rem;
-        opacity: 40%;
       }
     }
   }
@@ -167,5 +161,13 @@ export const SuggestedInfo = styled(motion.div)`
     font-size: 0.8rem;
     opacity: 60%;
     line-height: 1.5;
+  }
+
+  & > div:last-child {
+    & > span {
+      ${ReverseHoverStyle('&')}
+      font-size: 1.1rem;
+      opacity: 40%;
+    }
   }
 `;

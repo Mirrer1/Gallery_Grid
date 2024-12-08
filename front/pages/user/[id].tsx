@@ -60,6 +60,7 @@ const user = () => {
       <AppLayout>
         <UserWrapper>
           <UserInfo
+            userId={Number(userId)}
             selectedActivity={selectedActivity}
             setSelectedActivity={setSelectedActivity}
             followLoadingId={followLoadingId}

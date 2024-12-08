@@ -3,8 +3,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import Link from 'next/link';
 
-import formatDate from 'utils/useListTimes';
 import DeleteModal from 'components/Modal/DeleteModal';
+import EditCommentForm from './EditCommentForm';
+import formatDate from 'utils/useListTimes';
 import { RootState } from 'store/reducers';
 import { IReplyComment } from 'store/types/postType';
 import { showDeleteModal } from 'store/actions/postAction';
@@ -18,6 +19,8 @@ type ReplyCommentProps = {
   setReplyUser: (user: string | null) => void;
   showImagePreview: (src: string) => void;
   onEditClick: () => void;
+  isEditing: boolean;
+  cancelEdit: () => void;
 };
 
 const ReplyComment = ({
@@ -26,7 +29,9 @@ const ReplyComment = ({
   setReplyId,
   setReplyUser,
   showImagePreview,
-  onEditClick
+  onEditClick,
+  isEditing,
+  cancelEdit
 }: ReplyCommentProps) => {
   const dispatch = useDispatch();
   const { me } = useSelector((state: RootState) => state.user);
@@ -88,16 +93,30 @@ const ReplyComment = ({
           </div>
         )}
       </div>
+
       {comment.ReplyImage && (
         <CommentListItemImage onClick={() => showImagePreview(`${comment.ReplyImage?.src}`)}>
           <img src={`${comment.ReplyImage.src}`} alt={`${comment.User.nickname}의 댓글 이미지`} />
         </CommentListItemImage>
       )}
-      <p>{comment.content}</p>
 
-      <button type="button" onClick={() => onClickReply(comment.User.nickname)}>
-        답글쓰기
-      </button>
+      {isEditing ? (
+        <EditCommentForm
+          reply={true}
+          comment={comment}
+          replyId={replyId}
+          cancelEdit={cancelEdit}
+          showImagePreview={showImagePreview}
+        />
+      ) : (
+        <>
+          <p>{comment.content.replace(/\\n/g, '\n').replace(/␣/g, ' ')}</p>
+
+          <button type="button" onClick={() => onClickReply(comment.User.nickname)}>
+            답글쓰기
+          </button>
+        </>
+      )}
 
       {isDeleteModalVisible && <DeleteModal />}
     </CommentContainer>

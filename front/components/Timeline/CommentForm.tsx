@@ -169,7 +169,7 @@ const CommentForm = ({ showImagePreview, replyId, replyUser, setReplyId }: Comme
           <textarea
             placeholder="Type a Comment..."
             ref={textareaRef}
-            value={comment}
+            value={comment.replace(/\\n/g, '\n').replace(/␣/g, ' ')}
             onChange={onChangeComment}
             onKeyDown={handleKeyDown}
             onInput={autoResize}

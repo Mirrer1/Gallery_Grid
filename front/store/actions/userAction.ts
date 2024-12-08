@@ -22,7 +22,6 @@ import {
   LOAD_SUGGEST_USERS_REQUEST,
   LOAD_USER_INFO_REQUEST,
   LOAD_USER_FOLLOW_INFO_REQUEST,
-  SET_USER_FOLLOW_TYPE,
   SEARCH_USERS_REQUEST,
   INITIALIZE_SEARCH_USERS,
   INITIALIZE_USER_FOLLOW_INFO
@@ -35,10 +34,6 @@ export const loadBestUsersRequest = () => ({
 export const loadSuggestUsersRequest = (excludeIds: number[] = []) => ({
   type: LOAD_SUGGEST_USERS_REQUEST,
   excludeIds
-});
-
-export const setUserFollowType = () => ({
-  type: SET_USER_FOLLOW_TYPE
 });
 
 export const loadUserInfoRequest = (data: number) => ({

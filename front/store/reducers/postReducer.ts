@@ -106,7 +106,6 @@ import {
   DELETE_MY_INTERACTIONS_POSTS_REQUEST,
   DELETE_MY_INTERACTIONS_POSTS_SUCCESS,
   DELETE_MY_INTERACTIONS_POSTS_FAILURE,
-  SET_ACTIVITY_FOCUSED_COMMENT_ID,
   LOAD_MY_ACTIVITY_COUNTS_REQUEST,
   LOAD_MY_ACTIVITY_COUNTS_SUCCESS,
   LOAD_MY_ACTIVITY_COUNTS_FAILURE,
@@ -117,7 +116,9 @@ import {
   DELETE_FOLLOWING_USER_POSTS,
   SEARCH_POSTS_REQUEST,
   SEARCH_POSTS_SUCCESS,
-  SEARCH_POSTS_FAILURE
+  SEARCH_POSTS_FAILURE,
+  INITIALIZE_USER_POSTS,
+  SET_ACTIVITY_FOCUSED_COMMENT
 } from 'store/types/postType';
 
 export const initialState: PostState = {
@@ -140,7 +141,7 @@ export const initialState: PostState = {
   modalComments: [],
   lastChangedCommentId: null,
   lastChangedModalCommentId: null,
-  activityFocusedCommentId: null,
+  focusedComment: null,
   commentVisiblePostId: null,
   hasMoreTimelinePosts: true,
   hasMoreUserPosts: true,
@@ -330,6 +331,10 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
       case LOAD_POST_FAILURE:
         draft.loadPostLoading = false;
         draft.loadPostError = action.error;
+        break;
+      case INITIALIZE_USER_POSTS:
+        draft.userPosts = [];
+        draft.hasMoreUserPosts = true;
         break;
       case LOAD_USER_POSTS_REQUEST:
         draft.loadUserPostsLoading = true;
@@ -1443,10 +1448,10 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
       case HIDE_MODAL_COMMENT_LIST:
         draft.isModalCommentListVisible = false;
         draft.modalCommentImagePath = [];
-        draft.activityFocusedCommentId = null;
+        draft.focusedComment = null;
         break;
-      case SET_ACTIVITY_FOCUSED_COMMENT_ID:
-        draft.activityFocusedCommentId = action.data;
+      case SET_ACTIVITY_FOCUSED_COMMENT:
+        draft.focusedComment = action.data;
         draft.isModalCommentListVisible = true;
         draft.modalCommentImagePath = [];
         break;
@@ -1467,7 +1472,7 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
         draft.isPostModalVisible = false;
         draft.isModalCommentListVisible = false;
         draft.lastChangedModalCommentId = null;
-        draft.activityFocusedCommentId = null;
+        draft.focusedComment = null;
         break;
       case EXECUTE_POST_EDIT:
         draft.postEditMode = true;

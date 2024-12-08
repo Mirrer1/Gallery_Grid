@@ -6,7 +6,6 @@ import ModalReplyComment from './ModalReplyComment';
 import ModalCommentListItem from './ModalCommentListItem';
 import ImagePreview from './ImagePreviewModal';
 import ModalCommentForm from './ModalCommentForm';
-import EditModalCommentForm from './EditModalCommentForm';
 
 import useImagePreview from 'utils/useImagePreview';
 import { RootState } from 'store/reducers';
@@ -38,7 +37,7 @@ const ModalCommentList = () => {
     addModalCommentDone,
     lastChangedModalCommentId,
     editModalCommentDone,
-    activityFocusedCommentId,
+    focusedComment,
     loadModalCommentsDone
   } = useSelector((state: RootState) => state.post);
 
@@ -82,10 +81,10 @@ const ModalCommentList = () => {
   }, [addModalCommentDone, lastChangedModalCommentId]);
 
   useEffect(() => {
-    if (loadModalCommentsDone && activityFocusedCommentId && commentRefs.current[activityFocusedCommentId]) {
-      commentRefs.current[activityFocusedCommentId]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    if (loadModalCommentsDone && focusedComment?.id && commentRefs.current[focusedComment.id]) {
+      commentRefs.current[focusedComment.id]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
-  }, [loadModalCommentsDone, activityFocusedCommentId]);
+  }, [loadModalCommentsDone, focusedComment]);
 
   useEffect(() => {
     dispatch(loadModalCommentsRequest(singlePost.id));
@@ -107,14 +106,6 @@ const ModalCommentList = () => {
             <div key={comment.id} ref={el => (commentRefs.current[comment.id] = el)}>
               {comment.isDeleted ? (
                 <DeleteModalCommentText>삭제된 댓글입니다.</DeleteModalCommentText>
-              ) : editingComment.id === comment.id && editingComment.type === 'comment' ? (
-                <EditModalCommentForm
-                  reply={false}
-                  comment={comment}
-                  replyId={null}
-                  cancelEdit={cancelEdit}
-                  showImagePreview={showImagePreview}
-                />
               ) : (
                 <ModalCommentListItem
                   comment={comment}
@@ -122,29 +113,23 @@ const ModalCommentList = () => {
                   setReplyUser={setReplyUser}
                   showImagePreview={showImagePreview}
                   onEditClick={() => handleEditClick(comment.id, 'comment')}
+                  isEditing={editingComment.id === comment.id && editingComment.type === 'comment'}
+                  cancelEdit={cancelEdit}
                 />
               )}
 
               {comment.Replies.map((reply: IReplyComment) => (
                 <div key={reply.id} ref={el => (commentRefs.current[reply.id] = el)}>
-                  {editingComment.id === reply.id && editingComment.type === 'reply' ? (
-                    <EditModalCommentForm
-                      reply={true}
-                      comment={reply}
-                      replyId={comment.id}
-                      cancelEdit={cancelEdit}
-                      showImagePreview={showImagePreview}
-                    />
-                  ) : (
-                    <ModalReplyComment
-                      comment={reply}
-                      replyId={comment.id}
-                      setReplyId={setReplyId}
-                      setReplyUser={setReplyUser}
-                      showImagePreview={showImagePreview}
-                      onEditClick={() => handleEditClick(reply.id, 'reply')}
-                    />
-                  )}
+                  <ModalReplyComment
+                    comment={reply}
+                    replyId={comment.id}
+                    setReplyId={setReplyId}
+                    setReplyUser={setReplyUser}
+                    showImagePreview={showImagePreview}
+                    onEditClick={() => handleEditClick(reply.id, 'reply')}
+                    isEditing={editingComment.id === reply.id && editingComment.type === 'reply'}
+                    cancelEdit={cancelEdit}
+                  />
                 </div>
               ))}
             </div>

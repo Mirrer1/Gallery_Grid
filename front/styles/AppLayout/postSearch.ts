@@ -114,11 +114,8 @@ export const NoSearchPostContainer = styled.div`
   }
 
   ${media.tablet} {
-    height: 100%;
-    min-height: 500px;
-  }
-
-  ${media.mobile} {
-    min-height: 450px;
+    height: 100vh;
+    align-items: start;
+    padding-top: 20%;
   }
 `;

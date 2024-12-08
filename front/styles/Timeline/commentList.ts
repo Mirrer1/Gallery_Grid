@@ -129,12 +129,14 @@ export const CommentContainer = styled(motion.div)<{ $reply: boolean }>`
           }
 
           & > p {
+            ${({ theme }) => theme.flexSet()};
+            width: 38px;
+            height: 18px;
             font-size: 0.6rem;
             font-weight: 500;
             color: ${({ theme }) => theme.colors.primary};
             background-color: #d6e4f8;
             border-radius: 10px;
-            padding: 0 0.6em;
             line-height: 2;
             text-align: center;
           }
@@ -165,6 +167,7 @@ export const CommentContainer = styled(motion.div)<{ $reply: boolean }>`
     font-size: 0.75rem;
     line-height: 1.5;
     margin-left: 0.5em;
+    white-space: pre-wrap;
   }
 
   & > button {

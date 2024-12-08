@@ -118,7 +118,6 @@ export const PopularUserContents = styled.div`
   & > div > a {
     font-size: 0.9rem;
     font-weight: 500;
-    margin-bottom: 10px;
     cursor: pointer;
   }
 
@@ -132,6 +131,7 @@ export const PopularUserContents = styled.div`
     font-size: 0.8rem;
     opacity: 60%;
     line-height: 1.5;
+    margin-top: 10px;
   }
 
   ${media.tablet} {
@@ -145,12 +145,12 @@ export const PopularUserContents = styled.div`
 
     & > div > a {
       color: white;
-      margin-bottom: 1%;
     }
 
     & > div > p {
       color: white;
       -webkit-line-clamp: 1;
+      margin-top: 1%;
     }
   }
 

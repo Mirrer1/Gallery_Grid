@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   AreaChartOutlined,
   FieldTimeOutlined,
@@ -13,9 +13,14 @@ import { MobileFooterItem, MobileFooterWrapper } from 'styles/AppLayout/mobileFo
 const MobileFooter = () => {
   const [pathname, setPathname] = useState<string | null>(null);
 
-  const navigateTo = (path: string) => {
-    Router.push(path);
-  };
+  const navigateTo = useCallback(
+    (path: string) => {
+      if (pathname !== path) {
+        Router.push(path);
+      }
+    },
+    [pathname]
+  );
 
   useEffect(() => {
     if (typeof window !== 'undefined') setPathname(Router.pathname);
@@ -42,10 +47,10 @@ const MobileFooter = () => {
       />
 
       {/* <MobileFooterItem
-        as={MessageOutlined}
-        $selected={pathname === '/message'}
-        onClick={() => navigateTo('/message')}
-      /> */}
+      as={MessageOutlined}
+      $selected={pathname === '/message'}
+      onClick={() => navigateTo('/message')}
+    /> */}
 
       <MobileFooterItem
         as={SettingOutlined}

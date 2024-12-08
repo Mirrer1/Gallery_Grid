@@ -4,9 +4,8 @@ import { HoverStyle } from 'styles/Common/hover';
 import media from 'styles/media';
 
 export const EditModalContentWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 45%;
+  flex: 1;
+  ${({ theme }) => theme.flexColumnSet('normal', 'normal')};
   height: 100%;
   background-color: white;
   border-radius: 0 5px 5px 0;

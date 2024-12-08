@@ -44,7 +44,6 @@ import {
   LOAD_MY_INTERACTIONS_POSTS_REQUEST,
   DELETE_MY_INTERACTIONS_POSTS_REQUEST,
   LOAD_MY_ACTIVITY_POSTS_REQUEST,
-  SET_ACTIVITY_FOCUSED_COMMENT_ID,
   LOAD_MY_ACTIVITY_COUNTS_REQUEST,
   READ_ACTIVITY_REQUEST,
   INITIALIZE_POST_LIST,
@@ -54,7 +53,10 @@ import {
   LOAD_USER_POSTS_REQUEST,
   INITIALIZE_SEARCH_POSTS,
   SEARCH_POSTS_REQUEST,
-  LOAD_POST_REQUEST
+  LOAD_POST_REQUEST,
+  INITIALIZE_USER_POSTS,
+  FocusedComment,
+  SET_ACTIVITY_FOCUSED_COMMENT
 } from 'store/types/postType';
 
 export const initializeSearchPosts = () => ({
@@ -99,6 +101,10 @@ export const loadFollowingPostsRequest = (lastCreatedAt?: string, limit: number 
   type: LOAD_FOLLOWING_POSTS_REQUEST,
   lastCreatedAt,
   limit
+});
+
+export const initializeUserPosts = () => ({
+  type: INITIALIZE_USER_POSTS
 });
 
 export const loadUserPostsRequest = (userId: number, lastId?: number) => ({
@@ -320,7 +326,7 @@ export const executeModalCommentEdit = (data: string) => ({
   data
 });
 
-export const setActivityFocusedCommentId = (data: number) => ({
-  type: SET_ACTIVITY_FOCUSED_COMMENT_ID,
+export const setActivityFocusedComment = (data: FocusedComment) => ({
+  type: SET_ACTIVITY_FOCUSED_COMMENT,
   data
 });

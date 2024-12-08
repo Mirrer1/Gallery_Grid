@@ -181,7 +181,9 @@ const ModalContent = () => {
         </div>
       </ModalContentHeader>
 
-      <ModalContentText $isModalCommentListVisible={isModalCommentListVisible}>{singlePost.content}</ModalContentText>
+      <ModalContentText $isModalCommentListVisible={isModalCommentListVisible}>
+        {singlePost.content.replace(/\\n/g, '\n').replace(/␣/g, ' ')}
+      </ModalContentText>
       {isModalCommentListVisible && <ModalCommentList />}
 
       <ModalContentOptions

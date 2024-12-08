@@ -101,7 +101,7 @@ const EditModalContent = () => {
         <textarea
           maxLength={2000}
           placeholder="당신의 작품에 대한 이야기를 들려주세요."
-          value={content}
+          value={content.replace(/\\n/g, '\n').replace(/␣/g, ' ')}
           onChange={onChangeContent}
         />
 

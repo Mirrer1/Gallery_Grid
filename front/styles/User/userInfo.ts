@@ -6,11 +6,10 @@ import { HoverStyle } from 'styles/Common/hover';
 import { DarkShadowStyle } from 'styles/Common/shadow';
 
 export const UserInfoWrapper = styled(motion.section)`
-  width: 40%;
+  width: 45%;
   height: 100%;
   ${({ theme }) => theme.flexColumnSet('normal', 'normal')};
   margin-right: 1em;
-  padding: 0 1em;
 
   ${media.tablet} {
     width: 100%;
@@ -26,6 +25,7 @@ export const UserInfoImage = styled.div`
   position: relative;
   width: 100%;
   height: 52%;
+  margin-bottom: 5vh;
 
   & > img:first-child {
     width: 100%;
@@ -71,8 +71,7 @@ export const UserInfoImage = styled.div`
 export const UserInfoText = styled.div<{ $isFollowing: boolean }>`
   ${({ theme }) => theme.flexColumnSet('start', 'normal')};
   width: 100%;
-  flex-grow: 1;
-  padding-top: 12%;
+  flex: 1;
 
   & > div {
     ${({ theme }) => theme.flexSet('space-between')};

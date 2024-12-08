@@ -124,3 +124,15 @@ export const suggestedItemAnimation = {
     }
   }
 };
+
+export const slideInPostingUploadImage = (index: number, batchStart: number) => ({
+  initial: { opacity: 0, x: 100 },
+  animate: { opacity: 1, x: 0 },
+  exit: { opacity: 0, x: -100 },
+  transition: {
+    delay: (index - batchStart) * 0.2,
+    type: 'spring',
+    stiffness: 50,
+    damping: 20
+  }
+});

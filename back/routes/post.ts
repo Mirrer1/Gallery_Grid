@@ -36,7 +36,10 @@ const upload = multer({
     s3: new AWS.S3() as any,
     bucket: 'gallery-grid',
     key(req, file, cb) {
-      cb(null, `original/${Date.now()}_${path.basename(file.originalname)}`);
+      const uniqueName = `${Date.now()}_${Math.random().toString(36).substring(2, 10)}${path.extname(
+        file.originalname
+      )}`;
+      cb(null, `original/${uniqueName}`);
     }
   }),
   limits: { fileSize: 20 * 1024 * 1024 }
@@ -211,8 +214,12 @@ router.post('/images', isLoggedIn, upload.array('image'), async (req, res, next)
 
 router.delete('/:postId', isLoggedIn, async (req, res, next) => {
   try {
-    const postId = req.params.postId;
+    const postId = parseInt(req.params.postId, 10);
     const userId = req.user!.id;
+
+    if (postId === 1) {
+      return res.status(403).json({ message: '해당 게시글의 삭제는 관리자 권한이 필요합니다.' });
+    }
 
     const post = await Post.findOne({
       where: { id: postId, UserId: userId }

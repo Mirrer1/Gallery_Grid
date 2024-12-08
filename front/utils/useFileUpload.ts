@@ -24,7 +24,9 @@ const useFileUpload = (dispatchAction: DispatchActionProps, options: UseFileUplo
 
       const imageFormData = new FormData();
       Array.from(files).forEach((file: File) => {
-        imageFormData.append('image', file);
+        const sanitizedFileName = file.name.replace(/\s+/g, '').toLowerCase();
+        const renamedFile = new File([file], sanitizedFileName, { type: file.type });
+        imageFormData.append('image', renamedFile);
       });
 
       dispatch(dispatchAction(imageFormData));

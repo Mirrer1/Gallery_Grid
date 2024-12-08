@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import Link from 'next/link';
 
 import DeleteModal from 'components/Modal/DeleteModal';
+import EditCommentForm from './EditCommentForm';
 import formatDate from 'utils/useListTimes';
 import { showDeleteModal } from 'store/actions/postAction';
 import { slideInList } from 'styles/Common/animation';
@@ -17,6 +18,8 @@ type CommentListItemProps = {
   setReplyUser: (user: string | null) => void;
   showImagePreview: (src: string) => void;
   onEditClick: () => void;
+  isEditing: boolean;
+  cancelEdit: () => void;
 };
 
 const CommentListItem = ({
@@ -24,7 +27,9 @@ const CommentListItem = ({
   setReplyId,
   setReplyUser,
   showImagePreview,
-  onEditClick
+  onEditClick,
+  isEditing,
+  cancelEdit
 }: CommentListItemProps) => {
   const dispatch = useDispatch();
   const { me } = useSelector((state: RootState) => state.user);
@@ -93,11 +98,23 @@ const CommentListItem = ({
         </CommentListItemImage>
       )}
 
-      <p>{comment.content}</p>
+      {isEditing ? (
+        <EditCommentForm
+          reply={false}
+          comment={comment}
+          replyId={null}
+          cancelEdit={cancelEdit}
+          showImagePreview={showImagePreview}
+        />
+      ) : (
+        <>
+          <p>{comment.content.replace(/\\n/g, '\n').replace(/␣/g, ' ')}</p>
 
-      <button type="button" onClick={() => onClickReply(comment.id, comment.User.nickname)}>
-        답글쓰기
-      </button>
+          <button type="button" onClick={() => onClickReply(comment.id, comment.User.nickname)}>
+            답글쓰기
+          </button>
+        </>
+      )}
 
       {isDeleteModalVisible && <DeleteModal />}
     </CommentContainer>

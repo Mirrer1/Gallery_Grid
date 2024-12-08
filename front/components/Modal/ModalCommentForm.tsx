@@ -172,7 +172,7 @@ const ModalCommentForm = ({ replyId, replyUser, setReplyId, showImagePreview }: 
           <textarea
             placeholder="Type a Comment..."
             ref={textareaRef}
-            value={comment}
+            value={comment.replace(/\\n/g, '\n').replace(/␣/g, ' ')}
             onChange={onChangeComment}
             onKeyDown={handleKeyDown}
             onInput={autoResize}

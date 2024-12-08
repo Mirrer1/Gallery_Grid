@@ -28,7 +28,7 @@ export const ModalCarouselBtn = styled.div<{ $alignleft: string }>`
 
 export const ModalCarouselWrapper = styled.div`
   position: relative;
-  width: 55%;
+  width: 65%;
   height: 100%;
   background-color: ${({ theme }) => theme.colors.lightBg};
   border-radius: 5px 0 0 5px;

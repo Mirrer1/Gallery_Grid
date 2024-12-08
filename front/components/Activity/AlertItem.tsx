@@ -16,7 +16,7 @@ import useImagePreview from 'utils/useImagePreview';
 import { RootState } from 'store/reducers';
 import { UserHistoryPost } from 'store/types/postType';
 import { followUserRequest, unFollowUserRequest } from 'store/actions/userAction';
-import { readActivityRequest, setActivityFocusedCommentId, showPostModal } from 'store/actions/postAction';
+import { readActivityRequest, setActivityFocusedComment, showPostModal } from 'store/actions/postAction';
 import { slideInList } from 'styles/Common/animation';
 import {
   AlertContentWrapper,
@@ -38,12 +38,24 @@ const AlertItem = ({ history }: AlertItemProps) => {
   const activityType = history.type === 'replyComment' ? 'comment' : history.type;
 
   const onClickPost = useCallback(() => {
+    console.log(history);
+
     if (history.type === 'follow') return;
 
     if (history.type === 'comment' && history.Comment?.id) {
-      dispatch(setActivityFocusedCommentId(history.Comment.id));
+      dispatch(
+        setActivityFocusedComment({
+          activityType: 'comment',
+          id: history.Comment.id
+        })
+      );
     } else if (history.type === 'replyComment' && history.ReplyComment?.id) {
-      dispatch(setActivityFocusedCommentId(history.ReplyComment.id));
+      dispatch(
+        setActivityFocusedComment({
+          activityType: 'replyComment',
+          id: history.ReplyComment.id
+        })
+      );
     }
 
     dispatch(showPostModal(history.Post));

@@ -17,7 +17,7 @@ import ImagePreview from 'components/Modal/ImagePreviewModal';
 import useImagePreview from 'utils/useImagePreview';
 import useScroll from 'utils/useScroll';
 
-import { slideInFromBottom } from 'styles/Common/animation';
+import { slideInList } from 'styles/Common/animation';
 import {
   NoSearchTextContainer,
   UserFollowListItem,
@@ -46,7 +46,9 @@ const UserFollowList = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const userContainerRef = useRef<HTMLDivElement>(null);
   const { imagePreview, showImagePreview, hideImagePreview } = useImagePreview();
-  const { me, userFollowInfo, loadUserFollowInfoLoading } = useSelector((state: RootState) => state.user);
+  const { me, userFollowInfo, loadUserFollowInfoLoading, loadUserFollowInfoDone } = useSelector(
+    (state: RootState) => state.user
+  );
 
   const [keyword, setKeyword] = useState('');
   const [resetTrigger, setResetTrigger] = useState(false);
@@ -128,7 +130,7 @@ const UserFollowList = ({
         <UserSearchLoading $isGridDisabled={false}>
           <LoadingOutlined />
         </UserSearchLoading>
-      ) : userFollowInfo.length === 0 ? (
+      ) : loadUserFollowInfoDone && userFollowInfo.length === 0 ? (
         <NoSearchTextContainer $isGridDisabled={false}>
           {keyword ? (
             <p>검색 결과가 없습니다.</p>
@@ -139,11 +141,12 @@ const UserFollowList = ({
           )}
         </NoSearchTextContainer>
       ) : (
-        <UserFollowListItemWrapper {...slideInFromBottom(0.3)}>
+        <UserFollowListItemWrapper>
           {userFollowInfo.map((user: FollowUser) => (
             <UserFollowListItem
               key={user.id}
               $isFollowing={me.Followings.some((following: { id: number }) => following.id === user?.id)}
+              {...slideInList}
             >
               <div>
                 <img

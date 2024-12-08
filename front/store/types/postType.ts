@@ -23,6 +23,7 @@ export const LOAD_FOLLOWING_POSTS_REQUEST = 'LOAD_FOLLOWING_POSTS_REQUEST' as co
 export const LOAD_FOLLOWING_POSTS_SUCCESS = 'LOAD_FOLLOWING_POSTS_SUCCESS' as const;
 export const LOAD_FOLLOWING_POSTS_FAILURE = 'LOAD_FOLLOWING_POSTS_FAILURE' as const;
 
+export const INITIALIZE_USER_POSTS = 'INITIALIZE_USER_POSTS' as const;
 export const LOAD_USER_POSTS_REQUEST = 'LOAD_USER_POSTS_REQUEST' as const;
 export const LOAD_USER_POSTS_SUCCESS = 'LOAD_USER_POSTS_SUCCESS' as const;
 export const LOAD_USER_POSTS_FAILURE = 'LOAD_USER_POSTS_FAILURE' as const;
@@ -142,13 +143,18 @@ export const HIDE_POST_MODAL = 'HIDE_POST_MODAL' as const;
 
 export const SHOW_MODAL_COMMENT_LIST = 'SHOW_MODAL_COMMENT_LIST' as const;
 export const HIDE_MODAL_COMMENT_LIST = 'HIDE_MODAL_COMMENT_LIST' as const;
-export const SET_ACTIVITY_FOCUSED_COMMENT_ID = 'SET_ACTIVITY_FOCUSED_COMMENT_ID' as const;
+export const SET_ACTIVITY_FOCUSED_COMMENT = 'SET_ACTIVITY_FOCUSED_COMMENT' as const;
 
 export const EXECUTE_POST_EDIT = 'EXECUTE_POST_EDIT' as const;
 export const CANCEL_POST_EDIT = 'CANCEL_POST_EDIT' as const;
 
 export const SHOW_DELETE_MODAL = 'SHOW_DELETE_MODAL' as const;
 export const HIDE_DELETE_MODAL = 'HIDE_DELETE_MODAL' as const;
+
+export interface FocusedComment {
+  activityType: 'comment' | 'replyComment';
+  id: number;
+}
 
 export interface DeleteInfo {
   type?: '댓글' | '게시글' | 'Gallery 게시글';
@@ -262,7 +268,7 @@ export type PostState = {
   modalComments: Comment[] | null;
   lastChangedCommentId: number | null;
   lastChangedModalCommentId: number | null;
-  activityFocusedCommentId: number | null;
+  focusedComment: FocusedComment | null;
   commentVisiblePostId: number | null;
   hasMoreTimelinePosts: boolean;
   hasMoreUserPosts: boolean;
@@ -453,6 +459,10 @@ export interface loadPostSuccessAction {
 export interface loadPostFailureAction {
   type: typeof LOAD_POST_FAILURE;
   error: string;
+}
+
+export interface initializeUserPosts {
+  type: typeof INITIALIZE_USER_POSTS;
 }
 
 export interface loadUserPostsRequestAction {
@@ -924,9 +934,9 @@ export interface executeModalCommentEditAction {
   data: string;
 }
 
-export interface setActivityFocusedCommentIdAction {
-  type: typeof SET_ACTIVITY_FOCUSED_COMMENT_ID;
-  data: number;
+export interface SetActivityFocusedCommentAction {
+  type: typeof SET_ACTIVITY_FOCUSED_COMMENT;
+  data: FocusedComment;
 }
 
 export type PostAction =
@@ -1033,7 +1043,7 @@ export type PostAction =
   | editModalCommentRequestAction
   | editModalCommentSuccessAction
   | editModalCommentFailureAction
-  | setActivityFocusedCommentIdAction
+  | SetActivityFocusedCommentAction
   | loadUserPostsRequestAction
   | loadUserPostsSuccessAction
   | loadUserPostsFailureAction
@@ -1043,4 +1053,5 @@ export type PostAction =
   | searchPostsFailureAction
   | loadPostRequestAction
   | loadPostSuccessAction
-  | loadPostFailureAction;
+  | loadPostFailureAction
+  | initializeUserPosts;

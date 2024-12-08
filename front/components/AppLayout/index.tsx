@@ -1,7 +1,7 @@
 import React, { ReactNode, useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import Router from 'next/router';
+import { useRouter } from 'next/router';
 import Link from 'next/link';
 import {
   AreaChartOutlined,
@@ -34,6 +34,7 @@ import {
 
 const AppLayout = ({ children }: { children: ReactNode }) => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const { me, logoutDone } = useSelector((state: RootState) => state.user);
   const { imagePreview, showImagePreview, hideImagePreview } = useImagePreview();
   const [pathname, setPathname] = useState<string | null>(null);
@@ -51,15 +52,24 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
     setSearchMode(true);
   }, []);
 
+  const handleNavigation = useCallback(
+    (href: string) => {
+      if (router.pathname !== href) {
+        router.push(href);
+      }
+    },
+    [router]
+  );
+
   useEffect(() => {
     if (logoutDone) {
-      Router.replace('/');
+      router.push('/');
       toast.success('정상적으로 로그아웃 되었습니다.');
     }
   }, [logoutDone]);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') setPathname(Router.pathname);
+    if (typeof window !== 'undefined') setPathname(router.pathname);
     window.scrollTo(0, 0);
   }, []);
 
@@ -91,13 +101,21 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
             </NavbarProfile>
 
             <NavbarItems>
-              <NavbarItem href="/timeline" $selected={pathname === '/timeline'} $message={false}>
+              <NavbarItem
+                onClick={() => handleNavigation('/timeline')}
+                $selected={pathname === '/timeline'}
+                $message={false}
+              >
                 <div />
                 <FieldTimeOutlined />
                 <p>Timeline</p>
               </NavbarItem>
 
-              <NavbarItem href="/activity" $selected={pathname === '/activity'} $message={false}>
+              <NavbarItem
+                onClick={() => handleNavigation('/activity')}
+                $selected={pathname === '/activity'}
+                $message={false}
+              >
                 <div />
                 <NotificationOutlined />
                 <p>Activity</p>
@@ -117,13 +135,21 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
                 </div>
               </NavbarMessage> */}
 
-              <NavbarItem href="/gallery" $selected={pathname === '/gallery'} $message={false}>
+              <NavbarItem
+                onClick={() => handleNavigation('/gallery')}
+                $selected={pathname === '/gallery'}
+                $message={false}
+              >
                 <div />
                 <PictureOutlined />
                 <p>Gallery</p>
               </NavbarItem>
 
-              <NavbarItem href={`/user/${me.id}`} $selected={pathname === '/user'} $message={false}>
+              <NavbarItem
+                onClick={() => handleNavigation(`/user/${me.id}`)}
+                $selected={pathname === `/user/${me.id}`}
+                $message={false}
+              >
                 <div />
                 <AreaChartOutlined />
                 <p>Profile</p>
@@ -132,7 +158,11 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
           </div>
 
           <NavbarItems>
-            <NavbarItem href="/settings" $selected={pathname === '/settings'} $message={false}>
+            <NavbarItem
+              onClick={() => handleNavigation('/settings')}
+              $selected={pathname === '/settings'}
+              $message={false}
+            >
               <div />
               <SettingOutlined />
               <p>Settings</p>

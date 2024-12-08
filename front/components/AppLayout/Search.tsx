@@ -104,8 +104,11 @@ const Search = ({ setSearchMode }: SearchProps) => {
   );
 
   useEffect(() => {
-    inputRef.current?.focus();
+    if (window.innerWidth > 992) {
+      inputRef.current?.focus();
+    }
   }, []);
+
   return (
     <SearchContainer {...slideInFromBottom()}>
       <SearchBackButton onClick={cancelSearchMode}>
@@ -159,7 +162,7 @@ const Search = ({ setSearchMode }: SearchProps) => {
 
             {keyword.trim() ? (
               selectedTab === 'users' ? (
-                <UserSearch keyword={keyword} />
+                <UserSearch keyword={keyword} setSearchMode={setSearchMode} />
               ) : (
                 <PostSearch keyword={keyword} />
               )

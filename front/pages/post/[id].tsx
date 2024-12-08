@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import axios from 'axios';
 
 import PageHead from 'components/PageHead';
+import useToastStatus from 'utils/useToast';
 import wrapper from 'store/configureStore';
 import PostModal from 'components/Modal/PostModal';
 import { RootState } from 'store/reducers';
@@ -18,6 +19,7 @@ const user = () => {
   const { id: postId } = router.query;
   const { me } = useSelector((state: RootState) => state.user);
   const { loadPostError, singlePost } = useSelector((state: RootState) => state.post);
+  useToastStatus();
 
   useEffect(() => {
     if (loadPostError) {

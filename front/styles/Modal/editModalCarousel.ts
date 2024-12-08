@@ -5,7 +5,7 @@ import { ReverseHoverStyle } from 'styles/Common/hover';
 import media from 'styles/media';
 
 export const EditModalCarouselWrapper = styled.div`
-  width: 55%;
+  width: 65%;
   height: 100%;
   background-color: ${({ theme }) => theme.colors.lightBg};
   border-radius: 5px 0 0 5px;
@@ -146,11 +146,11 @@ export const EditModalUploadBtn = styled.div`
   }
 
   ${media.tablet} {
-    height: 3.5%;
+    height: 5%;
   }
 
   ${media.mobile} {
-    height: 5%;
+    height: 7%;
 
     & > div {
       padding: 0.5em;

@@ -39,9 +39,9 @@ export const PostModalBtn = styled(CloseOutlined)`
   cursor: pointer;
   ${HoverStyle('&')}
 
-  ${media.mobile} {
-    top: 10px;
-    right: 10px;
+  ${media.tablet} {
+    top: 6px;
+    right: 6px;
     font-size: 1.1rem;
   }
 `;
@@ -56,19 +56,20 @@ export const PostModalContentsWrapper = styled(motion.div)`
   right: 0;
   bottom: 0;
   margin: auto;
-  width: 65%;
+  width: 75%;
   height: 90%;
   z-index: 500;
 
   ${media.tablet} {
     width: 100%;
-    height: 95%;
-    top: 5%;
+    height: 100%;
+    padding-top: 4%;
   }
 
   ${media.mobile} {
     flex-direction: column;
     justify-content: start;
     overflow-y: auto;
+    padding-top: 10%;
   }
 `;

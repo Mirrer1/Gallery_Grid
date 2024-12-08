@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { LogoutOutlined, SearchOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
-import Router from 'next/router';
+import { useRouter } from 'next/router';
 
 import { RootState } from 'store/reducers';
 import { SearchProps } from './Search';
@@ -10,11 +10,14 @@ import { MobileHeaderContent, MobileHeaderWrapper } from 'styles/AppLayout/mobil
 
 const MobileHeader = ({ setSearchMode }: SearchProps) => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const { me } = useSelector((state: RootState) => state.user);
 
   const onClickProfile = useCallback(() => {
-    Router.push(`/user/${me.id}`);
-  }, []);
+    if (router.pathname !== `/user/${me.id}`) {
+      router.push(`/user/${me.id}`);
+    }
+  }, [router, me]);
 
   const excuteSearchMode = useCallback(() => {
     if (setSearchMode) setSearchMode(true);

@@ -15,6 +15,8 @@ const useInput = <T>(initialValue: T): ReturnTypes<T> => {
 
     if (target instanceof HTMLInputElement && target.type === 'checkbox') {
       newValue = target.checked as unknown as T;
+    } else if (target instanceof HTMLTextAreaElement) {
+      newValue = target.value.replace(/\n/g, '\\n').replace(/ /g, '␣') as T;
     } else {
       newValue = target.value as unknown as T;
     }

@@ -12,8 +12,9 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <meta charSet="utf-8" />
         <title>Gallery Grid</title>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" />
       </Head>
 
       <GlobalStyle />

@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import Link from 'next/link';
 
 import DeleteModal from './DeleteModal';
+import EditModalCommentForm from './EditModalCommentForm';
 import formatDate from 'utils/useListTimes';
 import { RootState } from 'store/reducers';
 import { showDeleteModal } from 'store/actions/postAction';
@@ -18,6 +19,8 @@ type ModalReplyCommentProps = {
   setReplyUser: (user: string | null) => void;
   showImagePreview: (src: string) => void;
   onEditClick: () => void;
+  isEditing: boolean;
+  cancelEdit: () => void;
 };
 
 const ModalReplyComment = ({
@@ -26,11 +29,13 @@ const ModalReplyComment = ({
   setReplyId,
   setReplyUser,
   showImagePreview,
-  onEditClick
+  onEditClick,
+  isEditing,
+  cancelEdit
 }: ModalReplyCommentProps) => {
   const dispatch = useDispatch();
   const { me } = useSelector((state: RootState) => state.user);
-  const { isDeleteModalVisible, activityFocusedCommentId } = useSelector((state: RootState) => state.post);
+  const { isDeleteModalVisible, focusedComment } = useSelector((state: RootState) => state.post);
 
   const openDeleteModal = useCallback(
     (commentId: number) => {
@@ -50,7 +55,11 @@ const ModalReplyComment = ({
   }, []);
 
   return (
-    <ModalCommentContainer $reply={true} $isFocused={activityFocusedCommentId === comment.id} {...slideInList}>
+    <ModalCommentContainer
+      $reply={true}
+      $isFocused={focusedComment?.activityType === 'replyComment' && focusedComment?.id === comment.id}
+      {...slideInList}
+    >
       <div>
         <div>
           <img
@@ -89,17 +98,31 @@ const ModalReplyComment = ({
           </div>
         )}
       </div>
+
       {comment.ReplyImage && (
         <ModalCommentListItemImage onClick={() => showImagePreview(`${comment.ReplyImage?.src}`)}>
           <img src={`${comment.ReplyImage.src}`} alt={`${comment.User.nickname}의 댓글 이미지`} />
         </ModalCommentListItemImage>
       )}
-      <p>{comment.content}</p>
 
-      {me && (
-        <button type="button" onClick={() => onClickReply(comment.User.nickname)}>
-          답글쓰기
-        </button>
+      {isEditing ? (
+        <EditModalCommentForm
+          reply={true}
+          comment={comment}
+          replyId={replyId}
+          cancelEdit={cancelEdit}
+          showImagePreview={showImagePreview}
+        />
+      ) : (
+        <>
+          <p>{comment.content.replace(/\\n/g, '\n').replace(/␣/g, ' ')}</p>
+
+          {me && (
+            <button type="button" onClick={() => onClickReply(comment.User.nickname)}>
+              답글쓰기
+            </button>
+          )}
+        </>
       )}
 
       {isDeleteModalVisible && <DeleteModal />}

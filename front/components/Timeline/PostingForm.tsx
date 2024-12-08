@@ -21,7 +21,7 @@ import { useLocation } from 'utils/useLocation';
 import { RootState } from 'store/reducers';
 import { addPostRequest, postRemoveUploadedImage, postUploadImagesRequest } from 'store/actions/postAction';
 
-import { slideInUploadImage } from 'styles/Common/animation';
+import { slideInPostingUploadImage } from 'styles/Common/animation';
 import { PostingBtn, PostingEmojiPicker, PostingWrapper, UploadImages } from 'styles/Timeline/postingForm';
 
 const PostingForm = () => {
@@ -91,14 +91,17 @@ const PostingForm = () => {
         rows={6}
         maxLength={2000}
         placeholder="당신의 작품에 대한 이야기를 들려주세요."
-        value={content}
+        value={content.replace(/\\n/g, '\n').replace(/␣/g, ' ')}
         onChange={onChangeContent}
       />
 
       {postImagePaths.length > 0 && (
         <UploadImages>
           {postImagePaths.map((path: string, i: number) => (
-            <motion.div key={path} {...slideInUploadImage}>
+            <motion.div
+              key={path}
+              {...slideInPostingUploadImage(i, postImagePaths.length - 1 - (postImagePaths.length % 5) + 1)}
+            >
               <img src={`${path}`} alt={`업로드한 ${i}번째 이미지`} onClick={() => showImagePreview(`${path}`)} />
               <DeleteOutlined onClick={() => handleRemoveImage(path)} />
             </motion.div>

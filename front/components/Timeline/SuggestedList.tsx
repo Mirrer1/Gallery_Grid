@@ -91,17 +91,19 @@ const SuggestedList = ({ suggestedListVisible, setSuggestedListVisible }: Sugges
               <div>
                 <div>
                   <Link href={`/user/${user.id}`}>{user.nickname}</Link>
-
-                  {followActionLoadingUserId === user.id ? (
-                    <LoadingOutlined />
-                  ) : me.Followings.some((following: { id: number }) => following.id === user.id) ? (
-                    <UserDeleteOutlined onClick={() => onToggleFollow(user.id)} />
-                  ) : (
-                    <UserAddOutlined onClick={() => onToggleFollow(user.id)} />
-                  )}
                 </div>
 
                 <p>{user.desc?.trim() ? user.desc : '소개글이 없습니다.'}</p>
+              </div>
+
+              <div>
+                {followActionLoadingUserId === user.id ? (
+                  <LoadingOutlined />
+                ) : me.Followings.some((following: { id: number }) => following.id === user.id) ? (
+                  <UserDeleteOutlined onClick={() => onToggleFollow(user.id)} />
+                ) : (
+                  <UserAddOutlined onClick={() => onToggleFollow(user.id)} />
+                )}
               </div>
             </SuggestedInfo>
           ))}

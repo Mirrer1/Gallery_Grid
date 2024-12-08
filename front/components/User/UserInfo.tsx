@@ -4,7 +4,7 @@ import { LoadingOutlined, SettingOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 
 import { RootState } from 'store/reducers';
-import { followUserRequest, setUserFollowType, unFollowUserRequest } from 'store/actions/userAction';
+import { InitializeUserFollowInfoAction, followUserRequest, unFollowUserRequest } from 'store/actions/userAction';
 import { formatFollowerCount } from 'utils/formatFollowerCount';
 import useImagePreview from 'utils/useImagePreview';
 import ImagePreview from 'components/Modal/ImagePreviewModal';
@@ -17,15 +17,23 @@ import {
   UserInfoText,
   UserInfoWrapper
 } from 'styles/User/userInfo';
+import { initializeUserPosts, loadUserPostsRequest } from 'store/actions/postAction';
 
 type InfoProps = {
+  userId: number;
   selectedActivity: 'posts' | 'follower' | 'following';
   setSelectedActivity: (value: 'posts' | 'follower' | 'following') => void;
   followLoadingId: number | null;
   setFollowLoadingId: React.Dispatch<React.SetStateAction<number | null>>;
 };
 
-const UserInfo = ({ selectedActivity, setSelectedActivity, followLoadingId, setFollowLoadingId }: InfoProps) => {
+const UserInfo = ({
+  userId,
+  selectedActivity,
+  setSelectedActivity,
+  followLoadingId,
+  setFollowLoadingId
+}: InfoProps) => {
   const dispatch = useDispatch();
   const { me, userInfo } = useSelector((state: RootState) => state.user);
   const { imagePreview, showImagePreview, hideImagePreview } = useImagePreview();
@@ -34,7 +42,13 @@ const UserInfo = ({ selectedActivity, setSelectedActivity, followLoadingId, setF
     (info: 'posts' | 'follower' | 'following') => {
       if (selectedActivity === info) return;
 
-      if (info === 'follower' || info === 'following') dispatch(setUserFollowType());
+      if (info === 'posts') {
+        dispatch(initializeUserPosts());
+        dispatch(loadUserPostsRequest(userId));
+      }
+
+      if (info === 'follower' || info === 'following') dispatch(InitializeUserFollowInfoAction());
+
       setSelectedActivity(info);
     },
     [selectedActivity]

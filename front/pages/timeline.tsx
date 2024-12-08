@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { UsergroupAddOutlined } from '@ant-design/icons';
 import { useSelector } from 'react-redux';
 import { END } from 'redux-saga';
@@ -32,6 +32,18 @@ const Timeline = () => {
   const showSuggestedList = useCallback(() => {
     setSuggestedListVisible(true);
   }, []);
+
+  useEffect(() => {
+    if (isCommentListVisible) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isCommentListVisible]);
 
   return (
     <>

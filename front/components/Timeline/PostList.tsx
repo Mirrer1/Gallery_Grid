@@ -55,14 +55,15 @@ import {
   CategoryItem,
   PostContainer,
   PostFollowBtn,
-  NoFollowingPostsContainer
+  NoFollowingPostsContainer,
+  TimelineLoadingContainer
 } from 'styles/Timeline/postList';
 
 const PostList = () => {
   const dispatch = useDispatch();
   const firstPostRef = useRef<HTMLDivElement>(null);
   const postContainerRef = useRef<HTMLDivElement>(null);
-  const { me, followUserLoading, unFollowUserLoading } = useSelector((state: RootState) => state.user);
+  const { me, followUserDone, unFollowUserDone } = useSelector((state: RootState) => state.user);
   const {
     timelinePosts,
     postImagePaths,
@@ -73,12 +74,16 @@ const PostList = () => {
     commentVisiblePostId,
     isCategoryChanged,
     isCommentListVisible,
-    loadFollowingPostsDone
+    loadFollowingPostsDone,
+    loadNewPostsLoading,
+    loadBestPostsLoading,
+    loadFollowingPostsLoading
   } = useSelector((state: RootState) => state.post);
 
   const { copyToClipboard } = useClipboard();
   const [category, setCategory] = useState<'best' | 'new' | 'follow'>('best');
   const [modalImages, setModalImages] = useState<Image[]>([]);
+  const [followPostId, setFollowPostId] = useState<number | null>(null);
   const [isTooltipVisible, setIsTooltipVisible] = useState<number | null>(null);
   const { imagePreview, showImagePreview, hideImagePreview } = useImagePreview();
   useScroll({ type: `timeline-${category}`, ref: postContainerRef });
@@ -135,7 +140,8 @@ const PostList = () => {
   );
 
   const onToggleFollow = useCallback(
-    (userId: number) => {
+    (postId: number, userId: number) => {
+      setFollowPostId(postId);
       const isFollowing = me.Followings.some((following: { id: number }) => following.id === userId);
 
       if (isFollowing) {
@@ -154,7 +160,13 @@ const PostList = () => {
   };
 
   useEffect(() => {
-    if (firstPostRef.current) {
+    if (followUserDone || unFollowUserDone) {
+      setFollowPostId(null);
+    }
+  }, [followUserDone, unFollowUserDone]);
+
+  useEffect(() => {
+    if (window.innerWidth > 992 && firstPostRef.current) {
       firstPostRef.current.scrollIntoView({
         behavior: 'smooth',
         block: 'start'
@@ -195,7 +207,11 @@ const PostList = () => {
         </CategoryItem>
       </PostCategory>
 
-      {timelinePosts.length === 0 && category === 'follow' && loadFollowingPostsDone ? (
+      {loadNewPostsLoading || loadBestPostsLoading || loadFollowingPostsLoading ? (
+        <TimelineLoadingContainer>
+          <LoadingOutlined />
+        </TimelineLoadingContainer>
+      ) : timelinePosts.length === 0 && category === 'follow' && loadFollowingPostsDone ? (
         <NoFollowingPostsContainer>
           <CloseSquareTwoTone twoToneColor="#6BA2E6" />
           <h1>No posts yet.</h1>
@@ -225,10 +241,10 @@ const PostList = () => {
                 {me.id !== post.UserId && (
                   <PostFollowBtn
                     type="button"
-                    onClick={() => onToggleFollow(post.UserId)}
+                    onClick={() => onToggleFollow(post.id, post.UserId)}
                     $isFollowing={me.Followings.some((following: { id: number }) => following.id === post.UserId)}
                   >
-                    {followUserLoading || unFollowUserLoading ? (
+                    {followPostId === post.id ? (
                       <LoadingOutlined />
                     ) : me.Followings.some((following: { id: number }) => following.id === post.UserId) ? (
                       'Unfollow'
@@ -284,7 +300,8 @@ const PostList = () => {
                 <ArrowsAltOutlined onClick={() => showCarousel(post.Images)} />
               </div>
               <div>
-                <p>{post.content}</p>
+                <p>{post.content.replace(/\\n/g, '\n').replace(/␣/g, ' ')}</p>
+
                 <PostOptions
                   $liked={post.Likers.some(liker => liker.id === me?.id)}
                   $commentVisiblePostId={commentVisiblePostId === post.id}

@@ -241,7 +241,7 @@ export const AlertHeader = styled.div<{ $type: string }>`
           font-size: 0.7rem;
 
           & > p:last-child {
-            max-width: 26%;
+            display: none;
           }
         }
       }

@@ -2,10 +2,8 @@ import React, { useCallback, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { DeleteOutlined, LoadingOutlined, PaperClipOutlined } from '@ant-design/icons';
 import { toast } from 'react-toastify';
-import Link from 'next/link';
 
 import useInput from 'utils/useInput';
-import formatDate from 'utils/useListTimes';
 import useFileUpload from 'utils/useFileUpload';
 import { RootState } from 'store/reducers';
 import { Comment, IReplyComment } from 'store/types/postType';
@@ -20,7 +18,6 @@ import {
   EditModalCancelBtn,
   EditModalCommentBtn,
   EditModalCommentFormSection,
-  EditModalCommentHeader,
   EditModalCommentImage,
   EditModalCommentImageWrapper,
   EditModalCommentWrapper
@@ -93,31 +90,14 @@ const EditModalCommentForm = ({ reply, comment, replyId, cancelEdit, showImagePr
   }, []);
 
   return (
-    <EditModalCommentWrapper $reply={reply}>
-      <EditModalCommentHeader>
-        <img
-          src={comment.User.ProfileImage ? `${comment.User.ProfileImage.src}` : '/user.jpg'}
-          alt={`${comment.User.nickname}의 프로필 이미지`}
-          onClick={() => showImagePreview(comment.User.ProfileImage ? `${comment.User.ProfileImage.src}` : '/user.jpg')}
-        />
-
-        <div>
-          <div>
-            <Link href={`/user/${comment.UserId}`}>{comment.User.nickname}</Link>
-            {comment.Post?.UserId === comment.UserId && <p>작성자</p>}
-          </div>
-
-          <p>{formatDate(comment.createdAt)}</p>
-        </div>
-      </EditModalCommentHeader>
-
-      <EditModalCommentFormSection {...slideInTooltip} encType="multipart/form-data" onSubmit={onSubmitForm}>
+    <EditModalCommentWrapper {...slideInTooltip}>
+      <EditModalCommentFormSection encType="multipart/form-data" onSubmit={onSubmitForm}>
         <textarea
           ref={textareaRef}
           rows={6}
           maxLength={500}
           placeholder="댓글을 작성해주세요."
-          value={text}
+          value={text.replace(/\\n/g, '\n').replace(/␣/g, ' ')}
           onChange={onChangeText}
         />
 

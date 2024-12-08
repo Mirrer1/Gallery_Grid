@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import Link from 'next/link';
 
 import DeleteModal from './DeleteModal';
+import EditModalCommentForm from './EditModalCommentForm';
 import formatDate from 'utils/useListTimes';
 import { RootState } from 'store/reducers';
 import { Comment } from 'store/types/postType';
@@ -18,6 +19,8 @@ type ModalCommentListItemProps = {
   setReplyUser: (user: string | null) => void;
   showImagePreview: (src: string) => void;
   onEditClick: () => void;
+  isEditing: boolean;
+  cancelEdit: () => void;
 };
 
 const ModalCommentListItem = ({
@@ -25,11 +28,13 @@ const ModalCommentListItem = ({
   setReplyId,
   setReplyUser,
   showImagePreview,
-  onEditClick
+  onEditClick,
+  isEditing,
+  cancelEdit
 }: ModalCommentListItemProps) => {
   const dispatch = useDispatch();
   const { me } = useSelector((state: RootState) => state.user);
-  const { isDeleteModalVisible, activityFocusedCommentId } = useSelector((state: RootState) => state.post);
+  const { isDeleteModalVisible, focusedComment } = useSelector((state: RootState) => state.post);
 
   const openDeleteModal = useCallback(
     (commentId: number) => {
@@ -49,7 +54,11 @@ const ModalCommentListItem = ({
   }, []);
 
   return (
-    <ModalCommentContainer $reply={false} $isFocused={activityFocusedCommentId === comment.id} {...slideInList}>
+    <ModalCommentContainer
+      $reply={false}
+      $isFocused={focusedComment?.activityType === 'comment' && focusedComment?.id === comment.id}
+      {...slideInList}
+    >
       <div>
         <div>
           <img
@@ -95,12 +104,24 @@ const ModalCommentListItem = ({
         </ModalCommentListItemImage>
       )}
 
-      <p>{comment.content}</p>
+      {isEditing ? (
+        <EditModalCommentForm
+          reply={false}
+          comment={comment}
+          replyId={null}
+          cancelEdit={cancelEdit}
+          showImagePreview={showImagePreview}
+        />
+      ) : (
+        <>
+          <p>{comment.content.replace(/\\n/g, '\n').replace(/␣/g, ' ')}</p>
 
-      {me && (
-        <button type="button" onClick={() => onClickReply(comment.id, comment.User.nickname)}>
-          답글쓰기
-        </button>
+          {me && (
+            <button type="button" onClick={() => onClickReply(comment.id, comment.User.nickname)}>
+              답글쓰기
+            </button>
+          )}
+        </>
       )}
 
       {isDeleteModalVisible && <DeleteModal />}
