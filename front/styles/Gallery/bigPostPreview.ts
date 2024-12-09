@@ -125,6 +125,7 @@ export const BigPostPreviewContent = styled.div<{ $selectMode: boolean }>`
     text-overflow: ellipsis;
     white-space: normal;
     margin-bottom: 0.5em;
+    white-space: pre-wrap;
   }
 
   & > p {

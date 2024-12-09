@@ -75,7 +75,7 @@ const UserPosts = () => {
 
             <UserPostContent $selectMode={false}>
               <div>
-                <h1>{post.content}</h1>
+                <h1>{post.content.replace(/\\n/g, '\n').replace(/␣/g, ' ')}</h1>
                 <p>{post.User.nickname}</p>
 
                 <UserPostOption $liked={liked[i]} $hasCommented={hasCommented[i]}>

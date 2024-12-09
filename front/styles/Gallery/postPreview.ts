@@ -113,7 +113,6 @@ export const PostPreviewContent = styled.div<{ $selectMode: boolean }>`
   width: 100%;
   padding: 0.7em 1em;
   cursor: pointer;
-  /* background: linear-gradient(to top, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0)); */
   background: linear-gradient(to top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.2) 50%, rgba(0, 0, 0, 0) 100%);
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
@@ -134,6 +133,7 @@ export const PostPreviewContent = styled.div<{ $selectMode: boolean }>`
       text-overflow: ellipsis;
       white-space: normal;
       margin-bottom: 0.5em;
+      white-space: pre-wrap;
     }
 
     & > p {

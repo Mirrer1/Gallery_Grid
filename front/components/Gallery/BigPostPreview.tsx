@@ -77,7 +77,7 @@ const BigPostPreview = ({ userHistory, selectMode, selectedPostIds, setSelectedP
       </BigPostPreviewImage>
 
       <BigPostPreviewContent $selectMode={selectMode}>
-        <h1>{userHistory.Post.content}</h1>
+        <h1>{userHistory.Post.content.replace(/\\n/g, '\n').replace(/␣/g, ' ')}</h1>
         <p>{userHistory.Post.User.nickname}</p>
 
         <BigPostPreviewOption $liked={liked} $hasCommented={hasCommented}>

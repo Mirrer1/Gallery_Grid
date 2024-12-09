@@ -141,7 +141,7 @@ const AlertItem = ({ history }: AlertItemProps) => {
             <img src={`${history.Post.Images[0].src}`} alt="게시글의 첫번째 이미지" />
 
             <div>
-              <p>{history.Post.content}</p>
+              <p>{history.Post.content.replace(/\\n/g, '\n').replace(/␣/g, ' ')}</p>
 
               <div>
                 <div>

@@ -292,6 +292,7 @@ export const AlertContent = styled.div<{ $type: 'follow' | 'like' | 'comment' }>
       opacity: 60%;
       line-height: 1.5;
       margin-bottom: 0.5em;
+      white-space: pre-wrap;
     }
 
     & > div {

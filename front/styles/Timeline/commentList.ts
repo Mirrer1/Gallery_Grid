@@ -260,14 +260,14 @@ export const CommentFormReply = styled(motion.div)`
 export const CommentFormInput = styled.form<{ $active: boolean }>`
   position: relative;
   height: 100%;
-  ${({ theme }) => theme.flexSet('space-between')}
+  ${({ theme }) => theme.flexSet('normal')}
   background-color: white;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   padding: 0.5em;
 
   & > div:first-child {
-    flex-grow: 1;
-    ${({ theme }) => theme.flexSet('start')}
+    flex: 1;
+    ${({ theme }) => theme.flexSet('normal')}
 
     & > span {
       font-size: 1rem;
@@ -284,7 +284,7 @@ export const CommentFormInput = styled.form<{ $active: boolean }>`
     }
 
     & > textarea {
-      flex-grow: 1;
+      flex: 1;
       min-height: 34px;
       max-height: 700px;
       font-size: 0.8rem;
@@ -307,15 +307,18 @@ export const CommentFormInput = styled.form<{ $active: boolean }>`
   }
 
   & > button {
-    ${({ theme }) => theme.flexSet('end')}
+    width: 28px;
+    height: 28px;
 
     & > span {
+      ${({ theme }) => theme.flexSet()};
+      width: 100%;
+      height: 100%;
       font-size: 0.85rem;
       color: white;
       opacity: ${props => (props.$active ? '40%' : '100%')};
       background-color: ${({ theme }) => theme.colors.primary};
       border-radius: 50%;
-      padding: 0.5em;
       ${HoverStyle('&')};
 
       & > svg {
