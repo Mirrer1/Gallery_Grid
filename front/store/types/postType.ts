@@ -64,11 +64,13 @@ export const POST_UPLOAD_IMAGES_REQUEST = 'POST_UPLOAD_IMAGES_REQUEST' as const;
 export const POST_UPLOAD_IMAGES_SUCCESS = 'POST_UPLOAD_IMAGES_SUCCESS' as const;
 export const POST_UPLOAD_IMAGES_FAILURE = 'POST_UPLOAD_IMAGES_FAILURE' as const;
 export const POST_REMOVE_UPLOADED_IMAGE = 'POST_REMOVE_UPLOADED_IMAGE' as const;
+export const POST_REORDER_UPLOADED_IMAGE = 'POST_REORDER_UPLOADED_IMAGE' as const;
 
 export const EDIT_POST_UPLOAD_IMAGES_REQUEST = 'EDIT_POST_UPLOAD_IMAGES_REQUEST' as const;
 export const EDIT_POST_UPLOAD_IMAGES_SUCCESS = 'EDIT_POST_UPLOAD_IMAGES_SUCCESS' as const;
 export const EDIT_POST_UPLOAD_IMAGES_FAILURE = 'EDIT_POST_UPLOAD_IMAGES_FAILURE' as const;
 export const EDIT_POST_REMOVE_UPLOADED_IMAGE = 'EDIT_POST_REMOVE_UPLOADED_IMAGE' as const;
+export const EDIT_POST_REORDER_UPLOADED_IMAGE = 'EDIT_POST_REORDER_UPLOADED_IMAGE' as const;
 
 export const LOAD_COMMENTS_REQUEST = 'LOAD_COMMENTS_REQUEST' as const;
 export const LOAD_COMMENTS_SUCCESS = 'LOAD_COMMENTS_SUCCESS' as const;
@@ -627,6 +629,11 @@ export interface postRemoveUploadedImageAction {
   data: string;
 }
 
+export interface postReorderUploadedImageAction {
+  type: typeof POST_REORDER_UPLOADED_IMAGE;
+  data: string[];
+}
+
 export interface editPostUploadImagesRequestAction {
   type: typeof EDIT_POST_UPLOAD_IMAGES_REQUEST;
   data: FormData;
@@ -645,6 +652,11 @@ export interface editPostUploadImagesFailureAction {
 export interface editPostRemoveUploadedImageAction {
   type: typeof EDIT_POST_REMOVE_UPLOADED_IMAGE;
   data: string;
+}
+
+export interface editPostReorderUploadedImageAction {
+  type: typeof EDIT_POST_REORDER_UPLOADED_IMAGE;
+  data: string[];
 }
 
 export interface loadCommentsRequestAction {
@@ -1054,4 +1066,6 @@ export type PostAction =
   | loadPostRequestAction
   | loadPostSuccessAction
   | loadPostFailureAction
-  | initializeUserPosts;
+  | initializeUserPosts
+  | postReorderUploadedImageAction
+  | editPostReorderUploadedImageAction;

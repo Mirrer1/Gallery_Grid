@@ -136,3 +136,13 @@ export const slideInPostingUploadImage = (index: number, batchStart: number) => 
     damping: 20
   }
 });
+
+export const reorderPostingUploadImage = {
+  layout: true,
+  transition: {
+    type: 'spring',
+    stiffness: 100,
+    damping: 18,
+    mass: 0.9
+  }
+};

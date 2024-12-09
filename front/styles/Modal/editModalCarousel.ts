@@ -1,8 +1,8 @@
-import { motion } from 'framer-motion';
 import styled from 'styled-components';
-import { ReverseHoverStyle } from 'styles/Common/hover';
+import { motion } from 'framer-motion';
 
 import media from 'styles/media';
+import { ReverseHoverStyle } from 'styles/Common/hover';
 
 export const EditModalCarouselWrapper = styled.div`
   width: 65%;
@@ -81,16 +81,6 @@ export const EditModalSwiperImages = styled.div`
     height: 100%;
   }
 
-  .swiper-slide span {
-    position: absolute;
-    top: 2%;
-    right: 2%;
-    font-size: 0.9rem;
-    opacity: 40%;
-    cursor: pointer;
-    ${ReverseHoverStyle('&')}
-  }
-
   ${media.tablet} {
     height: 27%;
   }
@@ -115,6 +105,34 @@ export const EditModalSwiperImages = styled.div`
 export const EditModalSwiperImageItem = styled.img<{ selected: boolean }>`
   border: ${props => (props.selected ? '2px solid #6BA2E6' : 'none')};
   cursor: pointer;
+`;
+
+export const EditModalOptionBtn = styled.div`
+  position: absolute;
+  top: 3%;
+  right: 3%;
+
+  & > span {
+    opacity: 40%;
+    cursor: pointer;
+    ${ReverseHoverStyle('&')}
+  }
+
+  & > span:first-child,
+  span:nth-child(2) {
+    margin-right: 0.4em;
+  }
+
+  ${media.tablet} {
+    & > span {
+      font-size: 0.9rem;
+    }
+
+    & > span:first-child,
+    span:nth-child(2) {
+      margin-right: 0.3em;
+    }
+  }
 `;
 
 export const EditModalUploadBtn = styled.div`

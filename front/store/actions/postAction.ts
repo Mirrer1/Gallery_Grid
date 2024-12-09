@@ -56,7 +56,9 @@ import {
   LOAD_POST_REQUEST,
   INITIALIZE_USER_POSTS,
   FocusedComment,
-  SET_ACTIVITY_FOCUSED_COMMENT
+  SET_ACTIVITY_FOCUSED_COMMENT,
+  POST_REORDER_UPLOADED_IMAGE,
+  EDIT_POST_REORDER_UPLOADED_IMAGE
 } from 'store/types/postType';
 
 export const initializeSearchPosts = () => ({
@@ -166,6 +168,16 @@ export const postUploadImagesRequest = (data: FormData) => ({
 
 export const postRemoveUploadedImage = (data: string) => ({
   type: POST_REMOVE_UPLOADED_IMAGE,
+  data
+});
+
+export const postReorderUploadedImage = (data: string[]) => ({
+  type: POST_REORDER_UPLOADED_IMAGE,
+  data
+});
+
+export const editPostReorderUploadedImage = (data: string[]) => ({
+  type: EDIT_POST_REORDER_UPLOADED_IMAGE,
   data
 });
 

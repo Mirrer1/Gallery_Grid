@@ -130,28 +130,13 @@ router.patch('/:postId', isLoggedIn, upload.none(), async (req, res, next) => {
       }
     );
 
-    const currentImages = await Image.findAll({ where: { PostId: postId } });
-    const currentImageSrcs = currentImages.map(img => img.src);
-    const incomingImageSrcs = images ? (Array.isArray(images) ? images : [images]) : [];
+    await Image.destroy({ where: { PostId: postId } });
 
-    const imagesToAdd = incomingImageSrcs.filter(src => !currentImageSrcs.includes(src));
-    const imagesToRemove = currentImageSrcs.filter(src => !incomingImageSrcs.includes(src));
+    if (images) {
+      const incomingImageSrcs = Array.isArray(images) ? images : [images];
 
-    if (imagesToRemove.length > 0) {
       await Promise.all(
-        imagesToRemove.map(async (src: string) => {
-          const image = await Image.findOne({ where: { src, PostId: postId } });
-
-          if (image) {
-            await image.update({ PostId: null });
-          }
-        })
-      );
-    }
-
-    if (imagesToAdd.length > 0) {
-      await Promise.all(
-        imagesToAdd.map((src: string) => Image.create({ type: 'post', src, PostId: parseInt(postId, 10) }))
+        incomingImageSrcs.map((src: string) => Image.create({ type: 'post', src, PostId: parseInt(postId, 10) }))
       );
     }
 

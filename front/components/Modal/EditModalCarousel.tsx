@@ -1,19 +1,30 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { DeleteOutlined, LoadingOutlined, UploadOutlined } from '@ant-design/icons';
+import {
+  CaretLeftOutlined,
+  CaretRightOutlined,
+  DeleteOutlined,
+  LoadingOutlined,
+  UploadOutlined
+} from '@ant-design/icons';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, Navigation } from 'swiper';
 
 import useFileUpload from 'utils/useFileUpload';
 import { RootState } from 'store/reducers';
-import { editPostRemoveUploadedImage, editPostUploadImagesRequest } from 'store/actions/postAction';
+import {
+  editPostRemoveUploadedImage,
+  editPostReorderUploadedImage,
+  editPostUploadImagesRequest
+} from 'store/actions/postAction';
 import { slideInSeletedImage } from 'styles/Common/animation';
 import {
   EditModalCarouselWrapper,
   EditModalSwiperImages,
   EditModalSelectedImage,
   EditModalUploadBtn,
-  EditModalSwiperImageItem
+  EditModalSwiperImageItem,
+  EditModalOptionBtn
 } from 'styles/Modal/editModalCarousel';
 
 import 'swiper/css';
@@ -65,6 +76,24 @@ const EditModalCarousel = () => {
     [dispatch, editPostImagePaths, selectedImage]
   );
 
+  const handleSwapImage = useCallback(
+    (currentIndex: number, direction: 'left' | 'right') => {
+      const offset = direction === 'left' ? -1 : 1;
+      const newIndex = (currentIndex + offset + editPostImagePaths.length) % editPostImagePaths.length;
+      const newImagePaths = [...editPostImagePaths];
+
+      [newImagePaths[currentIndex], newImagePaths[newIndex]] = [newImagePaths[newIndex], newImagePaths[currentIndex]];
+
+      dispatch(editPostReorderUploadedImage(newImagePaths));
+      setSelectedImage(newImagePaths[newIndex]);
+
+      const slidesPerView = 3;
+      const centerIndex = Math.max(0, newIndex - Math.floor(slidesPerView / 2));
+      swiperRef.current?.swiper.slideTo(centerIndex);
+    },
+    [editPostImagePaths, dispatch]
+  );
+
   const onClickImageUpload = useCallback(() => {
     if (fileInputRef.current) fileInputRef.current.click();
   }, []);
@@ -113,7 +142,13 @@ const EditModalCarousel = () => {
                 onClick={() => handleImageClick(image, i)}
                 selected={selectedImage === image}
               />
-              <DeleteOutlined onClick={() => handleRemoveImage(image)} />
+
+              <EditModalOptionBtn>
+                {editPostImagePaths.length > 1 && <CaretLeftOutlined onClick={() => handleSwapImage(i, 'left')} />}
+                {editPostImagePaths.length > 1 && <CaretRightOutlined onClick={() => handleSwapImage(i, 'right')} />}
+
+                <DeleteOutlined onClick={() => handleRemoveImage(image)} />
+              </EditModalOptionBtn>
             </SwiperSlide>
           ))}
         </Swiper>

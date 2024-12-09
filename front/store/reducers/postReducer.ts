@@ -118,7 +118,9 @@ import {
   SEARCH_POSTS_SUCCESS,
   SEARCH_POSTS_FAILURE,
   INITIALIZE_USER_POSTS,
-  SET_ACTIVITY_FOCUSED_COMMENT
+  SET_ACTIVITY_FOCUSED_COMMENT,
+  POST_REORDER_UPLOADED_IMAGE,
+  EDIT_POST_REORDER_UPLOADED_IMAGE
 } from 'store/types/postType';
 
 export const initialState: PostState = {
@@ -564,6 +566,9 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
       case POST_REMOVE_UPLOADED_IMAGE:
         draft.postImagePaths = draft.postImagePaths.filter(path => path !== action.data);
         break;
+      case POST_REORDER_UPLOADED_IMAGE:
+        draft.postImagePaths = action.data;
+        break;
       case EDIT_POST_UPLOAD_IMAGES_REQUEST:
         draft.editPostUploadImagesLoading = true;
         draft.editPostUploadImagesDone = false;
@@ -581,6 +586,9 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
         break;
       case EDIT_POST_REMOVE_UPLOADED_IMAGE:
         draft.editPostImagePaths = draft.editPostImagePaths.filter(path => path !== action.data);
+        break;
+      case EDIT_POST_REORDER_UPLOADED_IMAGE:
+        draft.editPostImagePaths = action.data;
         break;
       case LOAD_COMMENTS_REQUEST:
         draft.loadCommentsLoading = true;

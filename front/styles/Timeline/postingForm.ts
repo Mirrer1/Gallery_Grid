@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { motion } from 'framer-motion';
 
 import media from 'styles/media';
 import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
@@ -106,35 +107,8 @@ export const PostingWrapper = styled.form<{ $uploading: boolean }>`
 
 export const UploadImages = styled.section`
   ${({ theme }) => theme.flexSet('start')};
-  padding: 0 1em;
   gap: 8px;
-
-  & > div {
-    width: 15%;
-    aspect-ratio: 1/1;
-    cursor: pointer;
-    position: relative;
-
-    & > img {
-      width: 100%;
-      height: 100%;
-      border-radius: 5px;
-    }
-
-    & > span {
-      position: absolute;
-      top: 2%;
-      right: 2%;
-      font-size: 0.9rem;
-      opacity: 40%;
-      cursor: pointer;
-      ${ReverseHoverStyle('&')}
-    }
-  }
-
-  & > div:last-child {
-    margin-right: 0;
-  }
+  padding: 0 1em;
 
   ${media.tablet} {
     & > div {
@@ -147,9 +121,47 @@ export const UploadImages = styled.section`
 
   ${media.mobile} {
     padding: 0 0.8em;
+  }
+`;
 
-    & > div {
-      width: 18%;
+export const PostingUploadImageWrapper = styled(motion.div)`
+  ${({ theme }) => theme.flexSet('start')};
+  gap: 8px;
+  width: 15%;
+  aspect-ratio: 1 / 1;
+
+  ${media.mobile} {
+    width: 18%;
+  }
+`;
+
+export const PostingUploadImageItem = styled(motion.div)`
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+  position: relative;
+
+  & > img {
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+  }
+
+  & > span {
+    position: absolute;
+    top: 2%;
+    right: 2%;
+    font-size: 0.9rem;
+    opacity: 40%;
+    cursor: pointer;
+    ${ReverseHoverStyle('&')}
+  }
+
+  ${media.tablet} {
+    & > span {
+      font-size: 0.8rem;
+      opacity: 60%;
     }
   }
 `;
