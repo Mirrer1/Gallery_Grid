@@ -15,24 +15,16 @@ import {
 import { toast } from 'react-toastify';
 import Link from 'next/link';
 
-import PostImageCarousel from './PostImageCarousel';
-import DeleteModal from 'components/Modal/DeleteModal';
-import PostModal from 'components/Modal/PostModal';
-import ImagePreview from 'components/Modal/ImagePreviewModal';
-
 import useScroll from 'utils/useScroll';
 import formatDate from 'utils/useListTimes';
+import useOverlays from 'utils/useOverlays';
 import useClipboard from 'utils/useClipboard';
-import useImagePreview from 'utils/useImagePreview';
 
 import { RootState } from 'store/reducers';
 import { Image, Post, PostLike } from 'store/types/postType';
 import {
   hideCommentList,
   showCommentList,
-  showPostCarousel,
-  showDeleteModal,
-  showPostModal,
   executePostEdit,
   likePostRequest,
   unLikePostRequest,
@@ -67,10 +59,7 @@ const PostList = () => {
   const {
     timelinePosts,
     postImagePaths,
-    isCarouselVisible,
-    isDeleteModalVisible,
     addPostDone,
-    isPostModalVisible,
     commentVisiblePostId,
     isCategoryChanged,
     isCommentListVisible,
@@ -80,12 +69,11 @@ const PostList = () => {
     loadFollowingPostsLoading
   } = useSelector((state: RootState) => state.post);
 
+  const { openOverlay } = useOverlays();
   const { copyToClipboard } = useClipboard();
   const [category, setCategory] = useState<'best' | 'new' | 'follow'>('best');
-  const [modalImages, setModalImages] = useState<Image[]>([]);
   const [followPostId, setFollowPostId] = useState<number | null>(null);
   const [isTooltipVisible, setIsTooltipVisible] = useState<number | null>(null);
-  const { imagePreview, showImagePreview, hideImagePreview } = useImagePreview();
   useScroll({ type: `timeline-${category}`, ref: postContainerRef });
 
   const onClickCategory = useCallback((category: 'best' | 'new' | 'follow') => {
@@ -94,19 +82,22 @@ const PostList = () => {
   }, []);
 
   const showCarousel = useCallback((images: Image[]) => {
-    setModalImages(images);
-    dispatch(showPostCarousel());
+    openOverlay('carousel', images);
   }, []);
 
   const openDeleteModal = useCallback((postId: number) => {
-    dispatch(showDeleteModal({ type: '게시글', id: postId }));
+    openOverlay('delete', { type: '게시글', id: postId });
     setIsTooltipVisible(null);
   }, []);
 
   const openEditModal = useCallback((post: Post) => {
     setIsTooltipVisible(null);
-    dispatch(showPostModal(post));
+    openOverlay('post', post);
     dispatch(executePostEdit());
+  }, []);
+
+  const openImagePreview = useCallback((image: string) => {
+    openOverlay('preview', image);
   }, []);
 
   const handleTooltip = useCallback(
@@ -226,7 +217,7 @@ const PostList = () => {
                   src={post.User.ProfileImage ? `${post.User.ProfileImage.src}` : '/user.jpg'}
                   alt="유저 프로필 이미지"
                   onClick={() =>
-                    showImagePreview(post.User.ProfileImage ? `${post.User.ProfileImage.src}` : '/user.jpg')
+                    openImagePreview(post.User.ProfileImage ? `${post.User.ProfileImage.src}` : '/user.jpg')
                   }
                 />
                 <div>
@@ -328,11 +319,6 @@ const PostList = () => {
           </PostWrapper>
         ))
       )}
-
-      {isCarouselVisible && <PostImageCarousel images={modalImages} />}
-      {isPostModalVisible && <PostModal />}
-      {isDeleteModalVisible && <DeleteModal />}
-      <ImagePreview imagePreview={imagePreview} hideImagePreview={hideImagePreview} />
     </PostContainer>
   );
 };

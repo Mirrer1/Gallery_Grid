@@ -58,7 +58,10 @@ import {
   FocusedComment,
   SET_ACTIVITY_FOCUSED_COMMENT,
   POST_REORDER_UPLOADED_IMAGE,
-  EDIT_POST_REORDER_UPLOADED_IMAGE
+  EDIT_POST_REORDER_UPLOADED_IMAGE,
+  Image,
+  SHOW_IMAGE_PREVIEW,
+  HIDE_IMAGE_PREVIEW
 } from 'store/types/postType';
 
 export const initializeSearchPosts = () => ({
@@ -294,8 +297,18 @@ export const hideModalCommentList = () => ({
   type: HIDE_MODAL_COMMENT_LIST
 });
 
-export const showPostCarousel = () => ({
-  type: SHOW_POST_CAROUSEL
+export const showImagePreview = (data: string) => ({
+  type: SHOW_IMAGE_PREVIEW,
+  data
+});
+
+export const hideImagePreview = () => ({
+  type: HIDE_IMAGE_PREVIEW
+});
+
+export const showPostCarousel = (data: Image[]) => ({
+  type: SHOW_POST_CAROUSEL,
+  data
 });
 
 export const hidePostCarousel = () => ({

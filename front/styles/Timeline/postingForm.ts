@@ -135,6 +135,35 @@ export const PostingUploadImageWrapper = styled(motion.div)`
   }
 `;
 
+export const PostingUploadTooltip = styled.div`
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #505052;
+  color: #e7e7e9;
+  padding: 8px 12px;
+  border-radius: 5px;
+  font-size: 11px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.2s ease-in-out,
+    visibility 0.2s ease-in-out;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 6px;
+    border-style: solid;
+    border-color: #505052 transparent transparent transparent;
+  }
+`;
+
 export const PostingUploadImageItem = styled(motion.div)`
   flex: 1;
   width: 100%;
@@ -156,6 +185,11 @@ export const PostingUploadImageItem = styled(motion.div)`
     opacity: 40%;
     cursor: pointer;
     ${ReverseHoverStyle('&')}
+  }
+
+  &:hover ${PostingUploadTooltip} {
+    opacity: 100%;
+    visibility: visible;
   }
 
   ${media.tablet} {

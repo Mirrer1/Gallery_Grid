@@ -4,6 +4,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 
+import useScroll from 'utils/useScroll';
+import useOverlays from 'utils/useOverlays';
+import { formatFollowerCount } from 'utils/formatFollowerCount';
 import { RootState } from 'store/reducers';
 import { FollowUser } from 'store/types/userType';
 import {
@@ -12,10 +15,6 @@ import {
   loadUserFollowInfoRequest,
   unFollowUserRequest
 } from 'store/actions/userAction';
-import { formatFollowerCount } from 'utils/formatFollowerCount';
-import ImagePreview from 'components/Modal/ImagePreviewModal';
-import useImagePreview from 'utils/useImagePreview';
-import useScroll from 'utils/useScroll';
 
 import { slideInList } from 'styles/Common/animation';
 import {
@@ -40,12 +39,12 @@ const UserFollowList = ({
   followLoadingId,
   setFollowLoadingId
 }: UserFollowProps) => {
-  const dispatch = useDispatch();
   const router = useRouter();
+  const dispatch = useDispatch();
+  const { openOverlay } = useOverlays();
   const { id: userId } = router.query;
   const inputRef = useRef<HTMLInputElement>(null);
   const userContainerRef = useRef<HTMLDivElement>(null);
-  const { imagePreview, showImagePreview, hideImagePreview } = useImagePreview();
   const { me, userFollowInfo, loadUserFollowInfoLoading, loadUserFollowInfoDone } = useSelector(
     (state: RootState) => state.user
   );
@@ -90,6 +89,10 @@ const UserFollowList = ({
     },
     [userFollowInfo]
   );
+
+  const openImagePreview = useCallback((image: string) => {
+    openOverlay('preview', image);
+  }, []);
 
   useEffect(() => {
     if (typeof userId === 'string') {
@@ -152,7 +155,7 @@ const UserFollowList = ({
                 <img
                   src={user?.ProfileImage ? `${user.ProfileImage.src}` : '/user.jpg'}
                   alt="유저 프로필 이미지"
-                  onClick={() => showImagePreview(user?.ProfileImage ? `${user.ProfileImage.src}` : '/user.jpg')}
+                  onClick={() => openImagePreview(user?.ProfileImage ? `${user.ProfileImage.src}` : '/user.jpg')}
                 />
                 <div>
                   <Link href={`/user/${user.id}`}>{user.nickname}</Link>
@@ -185,8 +188,6 @@ const UserFollowList = ({
           ))}
         </UserFollowListItemWrapper>
       )}
-
-      <ImagePreview imagePreview={imagePreview} hideImagePreview={hideImagePreview} />
     </UserFollowListWrapper>
   );
 };

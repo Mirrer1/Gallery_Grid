@@ -5,9 +5,7 @@ import { CaretDownOutlined, CloseSquareTwoTone, LoadingOutlined } from '@ant-des
 import CommentForm from './CommentForm';
 import CommentListItem from './CommentListItem';
 import ReplyComment from './ReplyComment';
-import ImagePreview from 'components/Modal/ImagePreviewModal';
 
-import useImagePreview from 'utils/useImagePreview';
 import { RootState } from 'store/reducers';
 import { Comment, IReplyComment } from 'store/types/postType';
 import { editCommentRemoveUploadedImage, hideCommentList, loadCommentsRequest } from 'store/actions/postAction';
@@ -24,7 +22,6 @@ import {
 const CommentList = () => {
   const dispatch = useDispatch();
   const commentRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
-  const { imagePreview, showImagePreview, hideImagePreview } = useImagePreview();
   const {
     isCommentListVisible,
     commentVisiblePostId,
@@ -105,7 +102,6 @@ const CommentList = () => {
                       comment={comment}
                       setReplyId={setReplyId}
                       setReplyUser={setReplyUser}
-                      showImagePreview={showImagePreview}
                       onEditClick={() => handleEditClick(comment.id, 'comment')}
                       isEditing={editingComment.id === comment.id && editingComment.type === 'comment'}
                       cancelEdit={cancelEdit}
@@ -119,7 +115,6 @@ const CommentList = () => {
                         replyId={comment.id}
                         setReplyId={setReplyId}
                         setReplyUser={setReplyUser}
-                        showImagePreview={showImagePreview}
                         onEditClick={() => handleEditClick(reply.id, 'reply')}
                         isEditing={editingComment.id === reply.id && editingComment.type === 'reply'}
                         cancelEdit={cancelEdit}
@@ -137,16 +132,9 @@ const CommentList = () => {
             </NoCommentsContainer>
           )}
 
-          <CommentForm
-            showImagePreview={showImagePreview}
-            replyId={replyId}
-            replyUser={replyUser}
-            setReplyId={setReplyId}
-          />
+          <CommentForm replyId={replyId} replyUser={replyUser} setReplyId={setReplyId} />
         </>
       )}
-
-      <ImagePreview imagePreview={imagePreview} hideImagePreview={hideImagePreview} />
     </CommentListWrapper>
   );
 };

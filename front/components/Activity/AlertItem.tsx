@@ -11,12 +11,12 @@ import Router from 'next/router';
 import Link from 'next/link';
 import dayjs from 'dayjs';
 
-import ImagePreview from 'components/Modal/ImagePreviewModal';
-import useImagePreview from 'utils/useImagePreview';
+import useOverlays from 'utils/useOverlays';
 import { RootState } from 'store/reducers';
 import { UserHistoryPost } from 'store/types/postType';
 import { followUserRequest, unFollowUserRequest } from 'store/actions/userAction';
-import { readActivityRequest, setActivityFocusedComment, showPostModal } from 'store/actions/postAction';
+import { readActivityRequest, setActivityFocusedComment } from 'store/actions/postAction';
+
 import { slideInList } from 'styles/Common/animation';
 import {
   AlertContentWrapper,
@@ -33,7 +33,7 @@ type AlertItemProps = {
 
 const AlertItem = ({ history }: AlertItemProps) => {
   const dispatch = useDispatch();
-  const { imagePreview, showImagePreview, hideImagePreview } = useImagePreview();
+  const { openOverlay } = useOverlays();
   const { me, followUserLoading, unFollowUserLoading } = useSelector((state: RootState) => state.user);
   const activityType = history.type === 'replyComment' ? 'comment' : history.type;
 
@@ -58,7 +58,7 @@ const AlertItem = ({ history }: AlertItemProps) => {
       );
     }
 
-    dispatch(showPostModal(history.Post));
+    openOverlay('post', history.Post);
   }, [history]);
 
   const onToggleFollow = useCallback(
@@ -70,6 +70,10 @@ const AlertItem = ({ history }: AlertItemProps) => {
     },
     [me.Followings, history]
   );
+
+  const openImagePreview = useCallback((image: string) => {
+    openOverlay('preview', image);
+  }, []);
 
   const onReadActivity = useCallback(() => {
     dispatch(readActivityRequest(history.id));
@@ -90,7 +94,7 @@ const AlertItem = ({ history }: AlertItemProps) => {
             src={history.Alerter?.ProfileImage ? `${history.Alerter?.ProfileImage.src}` : '/user.jpg'}
             alt="유저 프로필 이미지"
             onClick={() =>
-              showImagePreview(history.Alerter?.ProfileImage ? `${history.Alerter?.ProfileImage.src}` : '/user.jpg')
+              openImagePreview(history.Alerter?.ProfileImage ? `${history.Alerter?.ProfileImage.src}` : '/user.jpg')
             }
           />
 
@@ -188,8 +192,6 @@ const AlertItem = ({ history }: AlertItemProps) => {
           </AlertContentBtn>
         )}
       </AlertContentWrapper>
-
-      <ImagePreview imagePreview={imagePreview} hideImagePreview={hideImagePreview} />
     </AlertItemWrapper>
   );
 };

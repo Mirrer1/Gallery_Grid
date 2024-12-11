@@ -9,10 +9,10 @@ export const UploadImagePreview = styled.div`
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
     background-color: rgba(0, 0, 0, 0.6);
-    z-index: 499;
+    z-index: 509;
 
     & > span {
       position: absolute;
@@ -27,6 +27,16 @@ export const UploadImagePreview = styled.div`
       ${HoverStyle('&')};
     }
   }
+
+  ${media.tablet} {
+    & > div:first-child {
+      & > span {
+        top: 6px;
+        right: 6px;
+        font-size: 1.1rem;
+      }
+    }
+  }
 `;
 
 export const UploadImage = styled(motion.div)`
@@ -34,9 +44,9 @@ export const UploadImage = styled(motion.div)`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) !important;
-  z-index: 500;
-  width: 60%;
-  height: 80%;
+  z-index: 510;
+  width: 40%;
+  aspect-ratio: 1/1;
 
   & > img {
     border-radius: 5px;
@@ -45,12 +55,10 @@ export const UploadImage = styled(motion.div)`
   }
 
   ${media.tablet} {
-    width: 90%;
-    height: 70%;
+    width: 65%;
   }
 
   ${media.mobile} {
-    width: 100%;
-    height: 50%;
+    width: 85%;
   }
 `;

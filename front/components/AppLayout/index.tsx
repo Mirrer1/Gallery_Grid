@@ -17,9 +17,8 @@ import {
 import Search from './Search';
 import MobileHeader from './MobileHeader';
 import MobileFooter from './MobileFooter';
-import ImagePreview from 'components/Modal/ImagePreviewModal';
 
-import useImagePreview from 'utils/useImagePreview';
+import useOverlays from 'utils/useOverlays';
 import { RootState } from 'store/reducers';
 import { logoutRequest } from 'store/actions/userAction';
 import {
@@ -33,10 +32,13 @@ import {
 } from 'styles/AppLayout';
 
 const AppLayout = ({ children }: { children: ReactNode }) => {
-  const dispatch = useDispatch();
   const router = useRouter();
+  const dispatch = useDispatch();
+  const { openOverlay } = useOverlays();
   const { me, logoutDone } = useSelector((state: RootState) => state.user);
-  const { imagePreview, showImagePreview, hideImagePreview } = useImagePreview();
+  const { isPostModalVisible, isDeleteModalVisible, isCarouselVisible, isPreviewVisible } = useSelector(
+    (state: RootState) => state.post
+  );
   const [pathname, setPathname] = useState<string | null>(null);
   const [searchMode, setSearchMode] = useState<boolean>(false);
 
@@ -61,6 +63,10 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
     [router]
   );
 
+  const openImagePreview = useCallback((image: string) => {
+    openOverlay('preview', image);
+  }, []);
+
   useEffect(() => {
     if (logoutDone) {
       router.push('/');
@@ -72,6 +78,21 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
     if (typeof window !== 'undefined') setPathname(router.pathname);
     window.scrollTo(0, 0);
   }, []);
+
+  useEffect(() => {
+    if (
+      window.innerWidth <= 992 &&
+      (isPostModalVisible || isDeleteModalVisible || isCarouselVisible || isPreviewVisible)
+    ) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isPostModalVisible, isDeleteModalVisible, isCarouselVisible, isPreviewVisible]);
 
   return (
     <LayoutWrapper>
@@ -87,7 +108,7 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
               <img
                 src={me?.ProfileImage ? `${me.ProfileImage.src}` : '/user.jpg'}
                 alt="유저 프로필 이미지"
-                onClick={() => showImagePreview(me?.ProfileImage ? `${me.ProfileImage.src}` : '/user.jpg')}
+                onClick={() => openImagePreview(me?.ProfileImage ? `${me.ProfileImage.src}` : '/user.jpg')}
               />
 
               <h1>{me?.nickname}</h1>
@@ -190,8 +211,6 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
       )}
 
       <MobileFooter />
-
-      <ImagePreview imagePreview={imagePreview} hideImagePreview={hideImagePreview} />
     </LayoutWrapper>
   );
 };

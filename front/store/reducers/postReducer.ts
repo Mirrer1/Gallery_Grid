@@ -120,7 +120,9 @@ import {
   INITIALIZE_USER_POSTS,
   SET_ACTIVITY_FOCUSED_COMMENT,
   POST_REORDER_UPLOADED_IMAGE,
-  EDIT_POST_REORDER_UPLOADED_IMAGE
+  EDIT_POST_REORDER_UPLOADED_IMAGE,
+  SHOW_IMAGE_PREVIEW,
+  HIDE_IMAGE_PREVIEW
 } from 'store/types/postType';
 
 export const initialState: PostState = {
@@ -131,6 +133,8 @@ export const initialState: PostState = {
   myActivityPosts: [],
   galleryPosts: [],
   singlePost: null,
+  previewImagePath: null,
+  postCarousel: [],
   postImagePaths: [],
   editPostImagePaths: [],
   commentImagePath: [],
@@ -244,7 +248,8 @@ export const initialState: PostState = {
   isModalCommentListVisible: false,
   isCarouselVisible: false,
   isPostModalVisible: false,
-  isDeleteModalVisible: false
+  isDeleteModalVisible: false,
+  isPreviewVisible: false
 };
 
 const reducer = (state: PostState = initialState, action: PostAction): PostState => {
@@ -1463,11 +1468,21 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
         draft.isModalCommentListVisible = true;
         draft.modalCommentImagePath = [];
         break;
+      case SHOW_IMAGE_PREVIEW:
+        draft.isPreviewVisible = true;
+        draft.previewImagePath = action.data;
+        break;
+      case HIDE_IMAGE_PREVIEW:
+        draft.isPreviewVisible = false;
+        draft.previewImagePath = null;
+        break;
       case SHOW_POST_CAROUSEL:
         draft.isCarouselVisible = true;
+        draft.postCarousel = action.data;
         break;
       case HIDE_POST_CAROUSEL:
         draft.isCarouselVisible = false;
+        draft.postCarousel = [];
         break;
       case SHOW_POST_MODAL:
         draft.isPostModalVisible = true;

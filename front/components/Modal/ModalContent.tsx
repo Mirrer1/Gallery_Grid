@@ -14,12 +14,11 @@ import {
 import { toast } from 'react-toastify';
 import Link from 'next/link';
 
-import ImagePreview from './ImagePreviewModal';
 import ModalCommentList from './ModalCommentList';
 import formatDate from 'utils/useListTimes';
 import useClipboard from 'utils/useClipboard';
-import useImagePreview from 'utils/useImagePreview';
 
+import useOverlays from 'utils/useOverlays';
 import { RootState } from 'store/reducers';
 import { Comment, PostLike } from 'store/types/postType';
 import { followUserRequest, unFollowUserRequest } from 'store/actions/userAction';
@@ -44,8 +43,8 @@ import {
 const ModalContent = () => {
   const router = useRouter();
   const dispatch = useDispatch();
+  const { openOverlay } = useOverlays();
   const { copyToClipboard } = useClipboard();
-  const { imagePreview, showImagePreview, hideImagePreview } = useImagePreview();
   const { me, followUserLoading, unFollowUserLoading } = useSelector((state: RootState) => state.user);
   const { singlePost, modalCommentImagePath, isModalCommentListVisible } = useSelector(
     (state: RootState) => state.post
@@ -109,6 +108,10 @@ const ModalContent = () => {
     dispatch(executePostEdit());
   }, []);
 
+  const openImagePreview = useCallback((image: string) => {
+    openOverlay('preview', image);
+  }, []);
+
   return (
     <ModalContentWrapper>
       <ModalContentHeader
@@ -119,7 +122,7 @@ const ModalContent = () => {
             src={singlePost.User.ProfileImage ? `${singlePost.User.ProfileImage.src}` : '/user.jpg'}
             alt="유저 프로필 이미지"
             onClick={() =>
-              showImagePreview(singlePost.User.ProfileImage ? `${singlePost.User.ProfileImage.src}` : '/user.jpg')
+              openImagePreview(singlePost.User.ProfileImage ? `${singlePost.User.ProfileImage.src}` : '/user.jpg')
             }
           />
 
@@ -212,8 +215,6 @@ const ModalContent = () => {
           </p>
         </div>
       </ModalContentOptions>
-
-      <ImagePreview imagePreview={imagePreview} hideImagePreview={hideImagePreview} />
     </ModalContentWrapper>
   );
 };

@@ -9,8 +9,6 @@ import AppLayout from 'components/AppLayout';
 import UserInfo from 'components/User/UserInfo';
 import UserPosts from 'components/User/UserPosts';
 import UserFollowList from 'components/User/UserFollowList';
-import PostModal from 'components/Modal/PostModal';
-import DeleteModal from 'components/Modal/DeleteModal';
 
 import wrapper from 'store/configureStore';
 import useToastStatus from 'utils/useToast';
@@ -26,7 +24,6 @@ const user = () => {
   const { userInfo, loadUserInfoError, followUserDone, unFollowUserDone } = useSelector(
     (state: RootState) => state.user
   );
-  const { isPostModalVisible, isDeleteModalVisible } = useSelector((state: RootState) => state.post);
   const [selectedActivity, setSelectedActivity] = useState<'posts' | 'follower' | 'following'>('posts');
   const [followLoadingId, setFollowLoadingId] = useState<number | null>(null);
   useToastStatus();
@@ -78,9 +75,6 @@ const user = () => {
             />
           )}
         </UserWrapper>
-
-        {isPostModalVisible && <PostModal />}
-        {isDeleteModalVisible && <DeleteModal />}
       </AppLayout>
     </>
   );

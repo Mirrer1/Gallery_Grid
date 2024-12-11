@@ -15,12 +15,11 @@ import axios from 'axios';
 
 import PageHead from 'components/PageHead';
 import AppLayout from 'components/AppLayout';
-import BigPostPreview from 'components/Gallery/BigPostPreview';
 import PostPreview from 'components/Gallery/PostPreview';
-import PostModal from 'components/Modal/PostModal';
+import BigPostPreview from 'components/Gallery/BigPostPreview';
 
 import wrapper from 'store/configureStore';
-import DeleteModal from 'components/Modal/DeleteModal';
+import useOverlays from 'utils/useOverlays';
 import useToastStatus from 'utils/useToast';
 import { loadMyInfoRequest } from 'store/actions/userAction';
 import { loadMyInteractionsPostsRequest, showDeleteModal } from 'store/actions/postAction';
@@ -39,15 +38,12 @@ import {
 
 const Gallery = () => {
   const dispatch = useDispatch();
+  const { openOverlay } = useOverlays();
   const galleryContainerRef = useRef<HTMLDivElement>(null);
   const { me } = useSelector((state: RootState) => state.user);
-  const {
-    isPostModalVisible,
-    galleryPosts,
-    loadMyInteractionsPostsLoading,
-    isDeleteModalVisible,
-    loadMyInteractionsPostsDone
-  } = useSelector((state: RootState) => state.post);
+  const { galleryPosts, loadMyInteractionsPostsLoading, loadMyInteractionsPostsDone } = useSelector(
+    (state: RootState) => state.post
+  );
 
   const [isFirstRender, setIsFirstRender] = useState(true);
   const [selectMenu, setSelectMenu] = useState<'all' | 'like' | 'comment'>('all');
@@ -81,7 +77,7 @@ const Gallery = () => {
       return;
     }
 
-    dispatch(showDeleteModal({ type: 'Gallery 게시글', menu: selectMenu, id: selectedPostIds }));
+    openOverlay('delete', { type: 'Gallery 게시글', menu: selectMenu, id: selectedPostIds });
   }, [selectedPostIds]);
 
   const onSelectAll = useCallback(() => {
@@ -215,9 +211,6 @@ const Gallery = () => {
             )}
           </div>
         </GalleryWrapper>
-
-        {isPostModalVisible && <PostModal />}
-        {isDeleteModalVisible && <DeleteModal />}
       </AppLayout>
     </>
   );

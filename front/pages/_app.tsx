@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import wrapper from 'store/configureStore';
 import GlobalStyle from 'styles/global';
 import theme from 'styles/theme';
+import OverlayProvider from 'providers/overlay';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -19,7 +20,10 @@ function MyApp({ Component, pageProps }: AppProps) {
 
       <GlobalStyle />
       <ThemeProvider theme={theme}>
-        <Component {...pageProps} />
+        <OverlayProvider>
+          <Component {...pageProps} />
+        </OverlayProvider>
+
         <ToastContainer
           position="top-right"
           autoClose={2000}

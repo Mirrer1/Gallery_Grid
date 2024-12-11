@@ -1,15 +1,12 @@
 import React, { useCallback, useMemo } from 'react';
 import { ShareAltOutlined, CommentOutlined, HeartOutlined, LoadingOutlined } from '@ant-design/icons';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
-import ImagePreview from 'components/Modal/ImagePreviewModal';
-import DeleteModal from 'components/Modal/DeleteModal';
+import useOverlays from 'utils/useOverlays';
 import useClipboard from 'utils/useClipboard';
-import useImagePreview from 'utils/useImagePreview';
 
 import { SearchProps } from './Search';
 import { RootState } from 'store/reducers';
-import { showPostModal } from 'store/actions/postAction';
 import { Post, PostComment, PostLike } from 'store/types/postType';
 import { slideInList } from 'styles/Common/animation';
 import {
@@ -21,13 +18,10 @@ import {
 } from 'styles/AppLayout/postSearch';
 
 const PostSearch = ({ keyword }: SearchProps) => {
-  const dispatch = useDispatch();
+  const { openOverlay } = useOverlays();
   const { me } = useSelector((state: RootState) => state.user);
-  const { searchPosts, searchPostsLoading, searchPostsDone, isDeleteModalVisible } = useSelector(
-    (state: RootState) => state.post
-  );
+  const { searchPosts, searchPostsLoading, searchPostsDone } = useSelector((state: RootState) => state.post);
   const { copyToClipboard } = useClipboard();
-  const { imagePreview, showImagePreview, hideImagePreview } = useImagePreview();
 
   const liked = useMemo(
     () => searchPosts.map((post: Post) => post.Likers.some((liker: PostLike) => liker.id === me?.id)),
@@ -48,10 +42,14 @@ const PostSearch = ({ keyword }: SearchProps) => {
 
   const onClickPost = useCallback(
     (post: Post) => {
-      dispatch(showPostModal(post));
+      openOverlay('post', post);
     },
     [searchPosts]
   );
+
+  const openImagePreview = useCallback((image: string) => {
+    openOverlay('preview', image);
+  }, []);
 
   const handleShareButtonClick = (e: React.MouseEvent<HTMLElement>, postId: number) => {
     e.stopPropagation();
@@ -84,7 +82,10 @@ const PostSearch = ({ keyword }: SearchProps) => {
               <img
                 src={post.User.ProfileImage ? `${post.User.ProfileImage.src}` : '/user.jpg'}
                 alt="유저 프로필 이미지"
-                onClick={() => showImagePreview(post.User.ProfileImage ? `${post.User.ProfileImage.src}` : '/user.jpg')}
+                onClick={e => {
+                  e.stopPropagation();
+                  openImagePreview(post.User.ProfileImage ? `${post.User.ProfileImage.src}` : '/user.jpg');
+                }}
               />
 
               <p>{post.User.nickname}</p>
@@ -112,9 +113,6 @@ const PostSearch = ({ keyword }: SearchProps) => {
           </PostCard>
         ))}
       </PostSearchWrapper>
-
-      {isDeleteModalVisible && <DeleteModal />}
-      <ImagePreview imagePreview={imagePreview} hideImagePreview={hideImagePreview} />
     </>
   );
 };

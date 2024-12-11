@@ -8,11 +8,9 @@ import axios from 'axios';
 import PageHead from 'components/PageHead';
 import useToastStatus from 'utils/useToast';
 import wrapper from 'store/configureStore';
-import PostModal from 'components/Modal/PostModal';
 import { RootState } from 'store/reducers';
 import { loadPostRequest } from 'store/actions/postAction';
 import { loadMyInfoRequest } from 'store/actions/userAction';
-import { SharedPostWrapper } from 'styles/User';
 
 const user = () => {
   const router = useRouter();
@@ -31,18 +29,12 @@ const user = () => {
   if (loadPostError) return null;
 
   return (
-    <>
-      <PageHead
-        title={`Gallery Grid | ${singlePost?.User?.nickname || 'Unknown User'}'s Post`}
-        description={singlePost?.content || '게시글 내용을 확인할 수 없습니다.'}
-        imageUrl={singlePost?.Images[0]?.src}
-        url={`https://gallerygrd.com/post/${postId || ''}`}
-      />
-
-      <SharedPostWrapper>
-        <PostModal />
-      </SharedPostWrapper>
-    </>
+    <PageHead
+      title={`Gallery Grid | ${singlePost?.User?.nickname || 'Unknown User'}'s Post`}
+      description={singlePost?.content || '게시글 내용을 확인할 수 없습니다.'}
+      imageUrl={singlePost?.Images[0]?.src}
+      url={`https://gallerygrd.com/post/${postId || ''}`}
+    />
   );
 };
 

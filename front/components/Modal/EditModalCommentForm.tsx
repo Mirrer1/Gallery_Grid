@@ -4,6 +4,7 @@ import { DeleteOutlined, LoadingOutlined, PaperClipOutlined } from '@ant-design/
 import { toast } from 'react-toastify';
 
 import useInput from 'utils/useInput';
+import useOverlays from 'utils/useOverlays';
 import useFileUpload from 'utils/useFileUpload';
 import { RootState } from 'store/reducers';
 import { Comment, IReplyComment } from 'store/types/postType';
@@ -13,6 +14,7 @@ import {
   editModalCommentUploadImageRequest,
   executeModalCommentEdit
 } from 'store/actions/postAction';
+
 import { slideInTooltip, slideInUploadImage } from 'styles/Common/animation';
 import {
   EditModalCancelBtn,
@@ -28,11 +30,11 @@ type EditCommentFormProps = {
   comment: Comment | IReplyComment;
   replyId: number | null;
   cancelEdit: () => void;
-  showImagePreview: (src: string) => void;
 };
 
-const EditModalCommentForm = ({ reply, comment, replyId, cancelEdit, showImagePreview }: EditCommentFormProps) => {
+const EditModalCommentForm = ({ reply, comment, replyId, cancelEdit }: EditCommentFormProps) => {
   const dispatch = useDispatch();
+  const { openOverlay } = useOverlays();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [text, onChangeText, setText] = useInput<string>('');
   const { fileInputRef, onFileChange } = useFileUpload(editModalCommentUploadImageRequest, { showWarning: false });
@@ -72,6 +74,10 @@ const EditModalCommentForm = ({ reply, comment, replyId, cancelEdit, showImagePr
     [text, editModalCommentImagePath, replyId]
   );
 
+  const openImagePreview = useCallback((image: string) => {
+    openOverlay('preview', image);
+  }, []);
+
   useEffect(() => {
     if (text.length === 500) toast.warning('댓글은 500자 이하로 작성해주세요.');
   }, [text]);
@@ -107,7 +113,7 @@ const EditModalCommentForm = ({ reply, comment, replyId, cancelEdit, showImagePr
               <img
                 src={`${editModalCommentImagePath}`}
                 alt="입력한 댓글의 첨부 이미지"
-                onClick={() => showImagePreview(`${editModalCommentImagePath}`)}
+                onClick={() => openImagePreview(`${editModalCommentImagePath}`)}
               />
               <DeleteOutlined onClick={handleRemoveImage} />
             </EditModalCommentImage>

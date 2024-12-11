@@ -137,6 +137,9 @@ export const UNLIKE_POST_FAILURE = 'UNLIKE_POST_FAILURE';
 export const SHOW_COMMENT_LIST = 'SHOW_COMMENT_LIST' as const;
 export const HIDE_COMMENT_LIST = 'HIDE_COMMENT_LIST' as const;
 
+export const SHOW_IMAGE_PREVIEW = 'SHOW_IMAGE_PREVIEW' as const;
+export const HIDE_IMAGE_PREVIEW = 'HIDE_IMAGE_PREVIEW' as const;
+
 export const SHOW_POST_CAROUSEL = 'SHOW_POST_CAROUSEL' as const;
 export const HIDE_POST_CAROUSEL = 'HIDE_POST_CAROUSEL' as const;
 
@@ -258,6 +261,8 @@ export type PostState = {
   myActivityPosts: UserHistoryPost[];
   galleryPosts: UserHistoryPost[];
   singlePost: Post | null;
+  previewImagePath: string | null;
+  postCarousel: Image[];
   postImagePaths: string[];
   editPostImagePaths: string[];
   commentImagePath: string[];
@@ -372,6 +377,7 @@ export type PostState = {
   isCarouselVisible: boolean;
   isPostModalVisible: boolean;
   isDeleteModalVisible: boolean;
+  isPreviewVisible: boolean;
 };
 
 export interface initializeSearchPostsAction {
@@ -902,8 +908,18 @@ export interface hideModalCommentListAction {
   type: typeof HIDE_MODAL_COMMENT_LIST;
 }
 
+export interface showImagePreviewAction {
+  type: typeof SHOW_IMAGE_PREVIEW;
+  data: string;
+}
+
+export interface hideImagePreviewAction {
+  type: typeof HIDE_IMAGE_PREVIEW;
+}
+
 export interface ShowPostCarouselAction {
   type: typeof SHOW_POST_CAROUSEL;
+  data: Image[];
 }
 
 export interface HidePostCarouselAction {
@@ -1068,4 +1084,6 @@ export type PostAction =
   | loadPostFailureAction
   | initializeUserPosts
   | postReorderUploadedImageAction
-  | editPostReorderUploadedImageAction;
+  | editPostReorderUploadedImageAction
+  | showImagePreviewAction
+  | hideImagePreviewAction;

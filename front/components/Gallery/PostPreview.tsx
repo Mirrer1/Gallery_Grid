@@ -1,9 +1,9 @@
 import React, { useCallback, useMemo } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { ArrowsAltOutlined, CommentOutlined, HeartOutlined } from '@ant-design/icons';
 
+import useOverlays from 'utils/useOverlays';
 import { RootState } from 'store/reducers';
-import { showPostModal } from 'store/actions/postAction';
 import { Image, PostComment, PostLike, UserHistoryPost } from 'store/types/postType';
 import { slideInTooltip } from 'styles/Common/animation';
 import {
@@ -21,7 +21,7 @@ type PostPreviewProps = {
 };
 
 const PostPreview = ({ userHistory, selectMode, selectedPostIds, setSelectedPostIds }: PostPreviewProps) => {
-  const dispatch = useDispatch();
+  const { openOverlay } = useOverlays();
   const { me } = useSelector((state: RootState) => state.user);
 
   const liked = useMemo(
@@ -51,7 +51,7 @@ const PostPreview = ({ userHistory, selectMode, selectedPostIds, setSelectedPost
     if (selectMode) {
       onToggleSelect();
     } else {
-      dispatch(showPostModal(userHistory.Post));
+      openOverlay('post', userHistory.Post);
     }
   }, [selectMode, userHistory.Post, onToggleSelect]);
 

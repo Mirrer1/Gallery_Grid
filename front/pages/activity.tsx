@@ -6,7 +6,6 @@ import axios from 'axios';
 import PageHead from 'components/PageHead';
 import AppLayout from 'components/AppLayout';
 import AlertList from 'components/Activity/AlertList';
-import PostModal from 'components/Modal/PostModal';
 
 import wrapper from 'store/configureStore';
 import useToastStatus from 'utils/useToast';
@@ -19,7 +18,7 @@ import { ActivityHeader, ActivityWrapper, HeaderItem } from 'styles/Activity';
 
 const Activity = () => {
   const { me } = useSelector((state: RootState) => state.user);
-  const { myActivityCounts, isPostModalVisible } = useSelector((state: RootState) => state.post);
+  const { myActivityCounts } = useSelector((state: RootState) => state.post);
   useToastStatus();
 
   return (
@@ -70,8 +69,6 @@ const Activity = () => {
 
           <AlertList />
         </ActivityWrapper>
-
-        {isPostModalVisible && <PostModal />}
       </AppLayout>
     </>
   );

@@ -4,10 +4,8 @@ import { CaretDownOutlined, CloseSquareTwoTone, LoadingOutlined } from '@ant-des
 
 import ModalReplyComment from './ModalReplyComment';
 import ModalCommentListItem from './ModalCommentListItem';
-import ImagePreview from './ImagePreviewModal';
 import ModalCommentForm from './ModalCommentForm';
 
-import useImagePreview from 'utils/useImagePreview';
 import { RootState } from 'store/reducers';
 import { Comment, IReplyComment } from 'store/types/postType';
 import {
@@ -15,6 +13,7 @@ import {
   hideModalCommentList,
   loadModalCommentsRequest
 } from 'store/actions/postAction';
+
 import { slideInFromBottom } from 'styles/Common/animation';
 import {
   ModalCommentListHeader,
@@ -28,7 +27,6 @@ import {
 const ModalCommentList = () => {
   const dispatch = useDispatch();
   const commentRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
-  const { imagePreview, showImagePreview, hideImagePreview } = useImagePreview();
   const { me } = useSelector((state: RootState) => state.user);
   const {
     singlePost,
@@ -66,7 +64,6 @@ const ModalCommentList = () => {
     setEditingComment({ id: null, type: null });
     dispatch(editModalCommentRemoveUploadedImage());
   }, []);
-
   useEffect(() => {
     if (editModalCommentDone) cancelEdit();
   }, [editModalCommentDone]);
@@ -111,7 +108,6 @@ const ModalCommentList = () => {
                   comment={comment}
                   setReplyId={setReplyId}
                   setReplyUser={setReplyUser}
-                  showImagePreview={showImagePreview}
                   onEditClick={() => handleEditClick(comment.id, 'comment')}
                   isEditing={editingComment.id === comment.id && editingComment.type === 'comment'}
                   cancelEdit={cancelEdit}
@@ -125,7 +121,6 @@ const ModalCommentList = () => {
                     replyId={comment.id}
                     setReplyId={setReplyId}
                     setReplyUser={setReplyUser}
-                    showImagePreview={showImagePreview}
                     onEditClick={() => handleEditClick(reply.id, 'reply')}
                     isEditing={editingComment.id === reply.id && editingComment.type === 'reply'}
                     cancelEdit={cancelEdit}
@@ -143,16 +138,7 @@ const ModalCommentList = () => {
         </ModalNoCommentsContainer>
       )}
 
-      {me && (
-        <ModalCommentForm
-          showImagePreview={showImagePreview}
-          replyId={replyId}
-          replyUser={replyUser}
-          setReplyId={setReplyId}
-        />
-      )}
-
-      <ImagePreview imagePreview={imagePreview} hideImagePreview={hideImagePreview} />
+      {me && <ModalCommentForm replyId={replyId} replyUser={replyUser} setReplyId={setReplyId} />}
     </ModalCommentListContainer>
   );
 };

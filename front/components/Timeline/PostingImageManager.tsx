@@ -2,19 +2,27 @@ import React, { useState, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { DeleteOutlined } from '@ant-design/icons';
 
-import useImagePreview from 'utils/useImagePreview';
-import ImagePreview from 'components/Modal/ImagePreviewModal';
+import useOverlays from 'utils/useOverlays';
 import { RootState } from 'store/reducers';
 import { postRemoveUploadedImage, postReorderUploadedImage } from 'store/actions/postAction';
-import { PostingUploadImageItem, PostingUploadImageWrapper, UploadImages } from 'styles/Timeline/postingForm';
+import {
+  PostingUploadImageItem,
+  PostingUploadImageWrapper,
+  PostingUploadTooltip,
+  UploadImages
+} from 'styles/Timeline/postingForm';
 import { reorderPostingUploadImage, slideInPostingUploadImage } from 'styles/Common/animation';
 
 const PostingImageManager = () => {
   const dispatch = useDispatch();
+  const { openOverlay } = useOverlays();
   const { postImagePaths } = useSelector((state: RootState) => state.post);
-  const { imagePreview, showImagePreview, hideImagePreview } = useImagePreview();
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [touchPosition, setTouchPosition] = useState<{ x: number; y: number } | null>(null);
+
+  const openImagePreview = useCallback((image: string) => {
+    openOverlay('preview', image);
+  }, []);
 
   const handleDragStart = useCallback((index: number) => {
     setDraggedIndex(index);
@@ -90,30 +98,27 @@ const PostingImageManager = () => {
   );
 
   return (
-    <>
-      <UploadImages>
-        {postImagePaths.map((path: string, index: number) => (
-          <PostingUploadImageWrapper key={path} {...reorderPostingUploadImage}>
-            <PostingUploadImageItem
-              layout
-              draggable
-              onDragStart={() => handleDragStart(index)}
-              onDragOver={handleDragOver}
-              onDrop={() => handleDrop(index)}
-              onTouchStart={e => handleTouchStart(e, index)}
-              onTouchMove={handleTouchMove}
-              onTouchEnd={handleTouchEnd}
-              {...slideInPostingUploadImage(index, postImagePaths.length - 1 - (postImagePaths.length % 5) + 1)}
-            >
-              <img src={path} alt={`업로드한 ${index}번째 이미지`} onClick={() => showImagePreview(path)} />
-              <DeleteOutlined onClick={() => handleRemoveImage(path)} />
-            </PostingUploadImageItem>
-          </PostingUploadImageWrapper>
-        ))}
-      </UploadImages>
-
-      <ImagePreview imagePreview={imagePreview} hideImagePreview={hideImagePreview} />
-    </>
+    <UploadImages>
+      {postImagePaths.map((path: string, index: number) => (
+        <PostingUploadImageWrapper key={path} {...reorderPostingUploadImage}>
+          <PostingUploadImageItem
+            layout
+            draggable
+            onDragStart={() => handleDragStart(index)}
+            onDragOver={handleDragOver}
+            onDrop={() => handleDrop(index)}
+            onTouchStart={e => handleTouchStart(e, index)}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            {...slideInPostingUploadImage(index, postImagePaths.length - 1 - (postImagePaths.length % 5) + 1)}
+          >
+            <img src={path} alt={`업로드한 ${index}번째 이미지`} onClick={() => openImagePreview(path)} />
+            <DeleteOutlined onClick={() => handleRemoveImage(path)} />
+            <PostingUploadTooltip>이미지를 드래그하여 순서를 변경하세요.</PostingUploadTooltip>
+          </PostingUploadImageItem>
+        </PostingUploadImageWrapper>
+      ))}
+    </UploadImages>
   );
 };
 

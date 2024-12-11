@@ -3,11 +3,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import { LoadingOutlined, SettingOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 
+import useOverlays from 'utils/useOverlays';
 import { RootState } from 'store/reducers';
 import { InitializeUserFollowInfoAction, followUserRequest, unFollowUserRequest } from 'store/actions/userAction';
 import { formatFollowerCount } from 'utils/formatFollowerCount';
-import useImagePreview from 'utils/useImagePreview';
-import ImagePreview from 'components/Modal/ImagePreviewModal';
 
 import { slideInFromBottom } from 'styles/Common/animation';
 import {
@@ -35,8 +34,12 @@ const UserInfo = ({
   setFollowLoadingId
 }: InfoProps) => {
   const dispatch = useDispatch();
+  const { openOverlay } = useOverlays();
   const { me, userInfo } = useSelector((state: RootState) => state.user);
-  const { imagePreview, showImagePreview, hideImagePreview } = useImagePreview();
+
+  const openImagePreview = useCallback((image: string) => {
+    openOverlay('preview', image);
+  }, []);
 
   const handleActivity = useCallback(
     (info: 'posts' | 'follower' | 'following') => {
@@ -72,12 +75,12 @@ const UserInfo = ({
         <img
           src={userInfo?.ProfileImage ? `${userInfo.ProfileImage.src}` : '/user.jpg'}
           alt="유저 프로필 배경 이미지"
-          onClick={() => showImagePreview(userInfo?.ProfileImage ? `${userInfo.ProfileImage.src}` : '/user.jpg')}
+          onClick={() => openImagePreview(userInfo?.ProfileImage ? `${userInfo.ProfileImage.src}` : '/user.jpg')}
         />
         <img
           src={userInfo?.ProfileImage ? `${userInfo.ProfileImage.src}` : '/user.jpg'}
           alt="유저 프로필 이미지"
-          onClick={() => showImagePreview(userInfo?.ProfileImage ? `${userInfo.ProfileImage.src}` : '/user.jpg')}
+          onClick={() => openImagePreview(userInfo?.ProfileImage ? `${userInfo.ProfileImage.src}` : '/user.jpg')}
         />
       </UserInfoImage>
 
@@ -121,8 +124,6 @@ const UserInfo = ({
           <p>{formatFollowerCount(userInfo?.followingsCount)}</p>
         </UserActivityItem>
       </UserActivityWrapper>
-
-      <ImagePreview imagePreview={imagePreview} hideImagePreview={hideImagePreview} />
     </UserInfoWrapper>
   );
 };

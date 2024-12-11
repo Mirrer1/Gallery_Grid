@@ -3,16 +3,13 @@ import { LoadingOutlined, UserAddOutlined, UserDeleteOutlined } from '@ant-desig
 import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 
-import ImagePreview from 'components/Modal/ImagePreviewModal';
-import PostImageCarousel from 'components/Timeline/PostImageCarousel';
 import formatDate from 'utils/useListTimes';
-import useImagePreview from 'utils/useImagePreview';
+import useOverlays from 'utils/useOverlays';
 
 import { RootState } from 'store/reducers';
 import { SearchProps } from './Search';
 import { SearchUsers } from 'store/types/userType';
 import { Image } from 'store/types/postType';
-import { showPostCarousel } from 'store/actions/postAction';
 import { followUserRequest, unFollowUserRequest } from 'store/actions/userAction';
 
 import { slideInList } from 'styles/Common/animation';
@@ -29,13 +26,11 @@ import {
 const UserSearch = ({ keyword, setSearchMode }: SearchProps) => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const { isCarouselVisible } = useSelector((state: RootState) => state.post);
+  const { openOverlay } = useOverlays();
   const { me, searchUsers, followUserDone, unFollowUserDone, searchUsersLoading, searchUsersDone } = useSelector(
     (state: RootState) => state.user
   );
-  const [modalImages, setModalImages] = useState<Image[]>([]);
   const [followingUserId, setFollowingUserId] = useState<number | null>(null);
-  const { imagePreview, showImagePreview, hideImagePreview } = useImagePreview();
 
   const onClickUser = useCallback(
     async (userId: number) => {
@@ -60,8 +55,11 @@ const UserSearch = ({ keyword, setSearchMode }: SearchProps) => {
   );
 
   const showCarousel = useCallback((images: Image[]) => {
-    setModalImages(images);
-    dispatch(showPostCarousel());
+    openOverlay('carousel', images);
+  }, []);
+
+  const openImagePreview = useCallback((image: string) => {
+    openOverlay('preview', image);
   }, []);
 
   useEffect(() => {
@@ -89,7 +87,7 @@ const UserSearch = ({ keyword, setSearchMode }: SearchProps) => {
               <img
                 src={user?.ProfileImage ? `${user.ProfileImage.src}` : '/user.jpg'}
                 alt="유저 프로필 이미지"
-                onClick={() => showImagePreview(user?.ProfileImage ? `${user.ProfileImage.src}` : '/user.jpg')}
+                onClick={() => openImagePreview(user?.ProfileImage ? `${user.ProfileImage.src}` : '/user.jpg')}
               />
 
               <p onClick={() => onClickUser(user.id)}>{user.nickname}</p>
@@ -142,9 +140,6 @@ const UserSearch = ({ keyword, setSearchMode }: SearchProps) => {
           </UserSearchContent>
         </UserSearchContainer>
       ))}
-
-      <ImagePreview imagePreview={imagePreview} hideImagePreview={hideImagePreview} />
-      {isCarouselVisible && <PostImageCarousel images={modalImages} />}
     </>
   );
 };

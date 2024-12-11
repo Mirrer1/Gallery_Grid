@@ -23,17 +23,18 @@ import {
   EditCommentImage,
   EditCommentWrapper
 } from 'styles/Timeline/editCommentForm';
+import useOverlays from 'utils/useOverlays';
 
 type EditCommentFormProps = {
   reply: boolean;
   comment: Comment | IReplyComment;
   replyId: number | null;
   cancelEdit: () => void;
-  showImagePreview: (src: string) => void;
 };
 
-const EditCommentForm = ({ reply, comment, replyId, cancelEdit, showImagePreview }: EditCommentFormProps) => {
+const EditCommentForm = ({ reply, comment, replyId, cancelEdit }: EditCommentFormProps) => {
   const dispatch = useDispatch();
+  const { openOverlay } = useOverlays();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [text, onChangeText, setText] = useInput<string>('');
   const { fileInputRef, onFileChange } = useFileUpload(editCommentUploadImageRequest, { showWarning: false });
@@ -73,6 +74,10 @@ const EditCommentForm = ({ reply, comment, replyId, cancelEdit, showImagePreview
     [text, editCommentImagePath, commentVisiblePostId, replyId]
   );
 
+  const openImagePreview = useCallback((image: string) => {
+    openOverlay('preview', image);
+  }, []);
+
   useEffect(() => {
     if (text.length === 500) toast.warning('댓글은 500자 이하로 작성해주세요.');
   }, [text]);
@@ -108,7 +113,7 @@ const EditCommentForm = ({ reply, comment, replyId, cancelEdit, showImagePreview
               <img
                 src={`${editCommentImagePath}`}
                 alt="입력한 댓글의 첨부 이미지"
-                onClick={() => showImagePreview(`${editCommentImagePath}`)}
+                onClick={() => openImagePreview(`${editCommentImagePath}`)}
               />
               <DeleteOutlined onClick={handleRemoveImage} />
             </EditCommentImage>

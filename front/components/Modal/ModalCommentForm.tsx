@@ -12,6 +12,7 @@ import { toast } from 'react-toastify';
 import EmojiPicker from 'emoji-picker-react';
 
 import useInput from 'utils/useInput';
+import useOverlays from 'utils/useOverlays';
 import useFileUpload from 'utils/useFileUpload';
 import useEmojiPicker from 'utils/useEmojiPicker';
 import { RootState } from 'store/reducers';
@@ -35,11 +36,11 @@ type ModalCommentFormProps = {
   replyId: number | null;
   replyUser: string | null;
   setReplyId: React.Dispatch<React.SetStateAction<number | null>>;
-  showImagePreview: (src: string) => void;
 };
 
-const ModalCommentForm = ({ replyId, replyUser, setReplyId, showImagePreview }: ModalCommentFormProps) => {
+const ModalCommentForm = ({ replyId, replyUser, setReplyId }: ModalCommentFormProps) => {
   const dispatch = useDispatch();
+  const { openOverlay } = useOverlays();
   const { fileInputRef, onFileChange } = useFileUpload(modalCommentUploadImageRequest, { showWarning: false });
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [comment, onChangeComment, setComment] = useInput('');
@@ -52,10 +53,13 @@ const ModalCommentForm = ({ replyId, replyUser, setReplyId, showImagePreview }: 
     addModalCommentDone
   } = useSelector((state: RootState) => state.post);
 
+  const openImagePreview = useCallback((image: string) => {
+    openOverlay('preview', image);
+  }, []);
+
   const onClickImageUpload = useCallback(() => {
     if (fileInputRef.current) fileInputRef.current.click();
   }, []);
-
   const handleRemoveImage = useCallback(() => {
     dispatch(modalCommentRemoveUploadedImage());
   }, []);
@@ -145,7 +149,7 @@ const ModalCommentForm = ({ replyId, replyUser, setReplyId, showImagePreview }: 
               <img
                 src={`${modalCommentImagePath}`}
                 alt="입력한 댓글의 첨부 이미지"
-                onClick={() => showImagePreview(`${modalCommentImagePath}`)}
+                onClick={() => openImagePreview(`${modalCommentImagePath}`)}
               />
               <DeleteOutlined onClick={handleRemoveImage} />
             </ModalCommentFormImage>

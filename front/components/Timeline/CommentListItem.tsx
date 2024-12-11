@@ -1,22 +1,20 @@
 import React, { useCallback } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { RootState } from 'store/reducers';
 import { Comment } from 'store/types/postType';
 import { toast } from 'react-toastify';
 import Link from 'next/link';
 
-import DeleteModal from 'components/Modal/DeleteModal';
 import EditCommentForm from './EditCommentForm';
 import formatDate from 'utils/useListTimes';
-import { showDeleteModal } from 'store/actions/postAction';
 import { slideInList } from 'styles/Common/animation';
 import { CommentContainer, CommentListItemImage } from 'styles/Timeline/commentList';
+import useOverlays from 'utils/useOverlays';
 
 type CommentListItemProps = {
   comment: Comment;
   setReplyId: (id: number | null) => void;
   setReplyUser: (user: string | null) => void;
-  showImagePreview: (src: string) => void;
   onEditClick: () => void;
   isEditing: boolean;
   cancelEdit: () => void;
@@ -26,21 +24,23 @@ const CommentListItem = ({
   comment,
   setReplyId,
   setReplyUser,
-  showImagePreview,
   onEditClick,
   isEditing,
   cancelEdit
 }: CommentListItemProps) => {
-  const dispatch = useDispatch();
+  const { openOverlay } = useOverlays();
   const { me } = useSelector((state: RootState) => state.user);
-  const { isDeleteModalVisible } = useSelector((state: RootState) => state.post);
 
   const openDeleteModal = useCallback(
     (commentId: number) => {
-      dispatch(showDeleteModal({ type: '댓글', id: commentId, replyId: null, hasChild: comment.Replies.length > 0 }));
+      openOverlay('delete', { type: '댓글', id: commentId, replyId: null, hasChild: comment.Replies.length > 0 });
     },
     [comment]
   );
+
+  const openImagePreview = useCallback((image: string) => {
+    openOverlay('preview', image);
+  }, []);
 
   const onClickReply = useCallback((commentId: number, user: string) => {
     setReplyId(null);
@@ -60,7 +60,7 @@ const CommentListItem = ({
             src={comment.User.ProfileImage ? `${comment.User.ProfileImage.src}` : '/user.jpg'}
             alt={`${comment.User.nickname}의 프로필 이미지`}
             onClick={() =>
-              showImagePreview(comment.User.ProfileImage ? `${comment.User.ProfileImage.src}` : '/user.jpg')
+              openImagePreview(comment.User.ProfileImage ? `${comment.User.ProfileImage.src}` : '/user.jpg')
             }
           />
 
@@ -93,19 +93,13 @@ const CommentListItem = ({
       </div>
 
       {comment.CommentImage && (
-        <CommentListItemImage onClick={() => showImagePreview(`${comment.CommentImage?.src}`)}>
+        <CommentListItemImage onClick={() => openImagePreview(`${comment.CommentImage?.src}`)}>
           <img src={`${comment.CommentImage.src}`} alt={`${comment.User.nickname}의 댓글 이미지`} />
         </CommentListItemImage>
       )}
 
       {isEditing ? (
-        <EditCommentForm
-          reply={false}
-          comment={comment}
-          replyId={null}
-          cancelEdit={cancelEdit}
-          showImagePreview={showImagePreview}
-        />
+        <EditCommentForm reply={false} comment={comment} replyId={null} cancelEdit={cancelEdit} />
       ) : (
         <>
           <p>{comment.content.replace(/\\n/g, '\n').replace(/␣/g, ' ')}</p>
@@ -115,8 +109,6 @@ const CommentListItem = ({
           </button>
         </>
       )}
-
-      {isDeleteModalVisible && <DeleteModal />}
     </CommentContainer>
   );
 };

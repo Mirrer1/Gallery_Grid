@@ -1,28 +1,28 @@
 import React, { useCallback, useMemo, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
 import { ArrowsAltOutlined, CommentOutlined, HeartOutlined, LoadingOutlined } from '@ant-design/icons';
+import { useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
 import { motion } from 'framer-motion';
 
 import useScroll from 'utils/useScroll';
+import useOverlays from 'utils/useOverlays';
 import { RootState } from 'store/reducers';
-import { showPostModal } from 'store/actions/postAction';
 import { Image, Post, PostComment, PostLike } from 'store/types/postType';
 import { slideInFromBottom, slideInList } from 'styles/Common/animation';
 import { UserPostContent, UserPostImage, UserPostOption, UserPostsWrapper } from 'styles/User/userPosts';
 import { NoSearchTextContainer, UserSearchLoading } from 'styles/User/userFollowList';
 
 const UserPosts = () => {
-  const dispatch = useDispatch();
   const router = useRouter();
   const { id: userId } = router.query;
+  const { openOverlay } = useOverlays();
   const userContainerRef = useRef<HTMLDivElement>(null);
   const { me } = useSelector((state: RootState) => state.user);
   const { userPosts, loadUserPostsLoading, loadUserPostsDone } = useSelector((state: RootState) => state.post);
   useScroll({ type: 'user-posts', ref: userContainerRef, userId: Number(userId) });
 
   const onClickPost = useCallback((post: Post) => {
-    dispatch(showPostModal(post));
+    openOverlay('post', post);
   }, []);
 
   const liked = useMemo(
