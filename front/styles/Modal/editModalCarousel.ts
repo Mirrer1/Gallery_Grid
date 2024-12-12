@@ -20,7 +20,7 @@ export const EditModalCarouselWrapper = styled.div`
 
   ${media.mobile} {
     width: 100%;
-    height: 65%;
+    height: 30%;
     border-radius: 15px 15px 0 0;
   }
 `;
@@ -34,6 +34,10 @@ export const EditModalSelectedImage = styled(motion.div)`
   & > img {
     width: 100%;
     height: 100%;
+  }
+
+  ${media.mobile} {
+    display: none;
   }
 `;
 
@@ -86,7 +90,7 @@ export const EditModalSwiperImages = styled.div`
   }
 
   ${media.mobile} {
-    height: 30%;
+    flex: 1;
 
     .swiper-button-prev,
     .swiper-button-next {
@@ -168,14 +172,14 @@ export const EditModalUploadBtn = styled.div`
   }
 
   ${media.mobile} {
-    height: 7%;
+    height: 14%;
 
     & > div {
       padding: 0.5em;
-      font-size: 0.65rem;
+      font-size: 0.7rem;
 
       & > span {
-        font-size: 0.8rem;
+        font-size: 0.9rem;
         margin-right: 0.4em;
       }
     }

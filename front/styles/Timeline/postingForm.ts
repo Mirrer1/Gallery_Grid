@@ -162,6 +162,10 @@ export const PostingUploadTooltip = styled.div`
     border-style: solid;
     border-color: #505052 transparent transparent transparent;
   }
+
+  ${media.tablet} {
+    display: none;
+  }
 `;
 
 export const PostingUploadImageItem = styled(motion.div)`
