@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { DeleteOutlined } from '@ant-design/icons';
 
 import useOverlays from 'utils/useOverlays';
+import { imgURL } from 'config';
 import { RootState } from 'store/reducers';
 import { postRemoveUploadedImage, postReorderUploadedImage } from 'store/actions/postAction';
 import {
@@ -112,7 +113,7 @@ const PostingImageManager = () => {
             onTouchEnd={handleTouchEnd}
             {...slideInPostingUploadImage(index, postImagePaths.length - 1 - (postImagePaths.length % 5) + 1)}
           >
-            <img src={path} alt={`업로드한 ${index}번째 이미지`} onClick={() => openImagePreview(path)} />
+            <img src={imgURL(path)} alt={`업로드한 ${index}번째 이미지`} onClick={() => openImagePreview(path)} />
             <DeleteOutlined onClick={() => handleRemoveImage(path)} />
             <PostingUploadTooltip>이미지를 드래그하여 순서를 변경하세요.</PostingUploadTooltip>
           </PostingUploadImageItem>

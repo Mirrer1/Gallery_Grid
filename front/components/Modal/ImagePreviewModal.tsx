@@ -2,6 +2,7 @@ import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CloseOutlined } from '@ant-design/icons';
 
+import { imgURL } from 'config';
 import { RootState } from 'store/reducers';
 import { hideImagePreview } from 'store/actions/postAction';
 import { slideInModal } from 'styles/Common/animation';
@@ -22,7 +23,7 @@ const ImagePreview = () => {
       </div>
 
       <UploadImage {...slideInModal}>
-        <img src={previewImagePath} alt="프리뷰 이미지" />
+        <img src={imgURL(previewImagePath)} alt="프리뷰 이미지" />
       </UploadImage>
     </UploadImagePreview>
   );

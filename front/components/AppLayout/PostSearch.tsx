@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import useOverlays from 'utils/useOverlays';
 import useClipboard from 'utils/useClipboard';
 
+import { imgURL } from 'config';
 import { SearchProps } from './Search';
 import { RootState } from 'store/reducers';
 import { Post, PostComment, PostLike } from 'store/types/postType';
@@ -74,13 +75,13 @@ const PostSearch = ({ keyword }: SearchProps) => {
         {searchPosts.map((post: Post, i: number) => (
           <PostCard key={post.id} onClick={() => onClickPost(post)} {...slideInList}>
             <PostImageWrapper>
-              <img src={`${post.Images[0].src}`} alt="게시글의 첫번째 이미지" />
+              <img src={imgURL(post.Images[0].src)} alt="게시글의 첫번째 이미지" />
               <ShareAltOutlined onClick={e => handleShareButtonClick(e, post.id)} />
             </PostImageWrapper>
 
             <PostContentWrapper $liked={liked[i]} $hasCommented={hasCommented[i]}>
               <img
-                src={post.User.ProfileImage ? `${post.User.ProfileImage.src}` : '/user.jpg'}
+                src={post.User.ProfileImage ? imgURL(post.User.ProfileImage.src) : '/user.jpg'}
                 alt="유저 프로필 이미지"
                 onClick={e => {
                   e.stopPropagation();

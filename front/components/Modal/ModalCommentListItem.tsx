@@ -6,6 +6,7 @@ import Link from 'next/link';
 import EditModalCommentForm from './EditModalCommentForm';
 import formatDate from 'utils/useListTimes';
 import useOverlays from 'utils/useOverlays';
+import { imgURL } from 'config';
 import { RootState } from 'store/reducers';
 import { Comment } from 'store/types/postType';
 
@@ -63,7 +64,7 @@ const ModalCommentListItem = ({
       <div>
         <div>
           <img
-            src={comment.User.ProfileImage ? `${comment.User.ProfileImage.src}` : '/user.jpg'}
+            src={comment.User.ProfileImage ? imgURL(comment.User.ProfileImage.src) : '/user.jpg'}
             alt={`${comment.User.nickname}의 프로필 이미지`}
             onClick={() =>
               openImagePreview(comment.User.ProfileImage ? `${comment.User.ProfileImage.src}` : '/user.jpg')
@@ -101,7 +102,7 @@ const ModalCommentListItem = ({
 
       {comment.CommentImage && (
         <ModalCommentListItemImage onClick={() => openImagePreview(`${comment.CommentImage?.src}`)}>
-          <img src={`${comment.CommentImage.src}`} alt={`${comment.User.nickname}의 댓글 이미지`} />
+          <img src={imgURL(comment.CommentImage.src)} alt={`${comment.User.nickname}의 댓글 이미지`} />
         </ModalCommentListItemImage>
       )}
 

@@ -1,10 +1,5 @@
 import express from 'express';
 import multer from 'multer';
-import path from 'path';
-import fs from 'fs';
-import AWS from 'aws-sdk';
-import multerS3 from 'multer-s3';
-import dotenv from 'dotenv';
 import { Op } from 'sequelize';
 
 import Post from '../models/post';
@@ -13,35 +8,15 @@ import Image from '../models/image';
 import Comment from '../models/comment';
 import ReplyComment from '../models/replyComment';
 import UserHistory from '../models/userHistory';
+
+import { S3File } from '../types/file';
 import { isLoggedIn } from './middleware';
+import { configureStorage } from '../utils/configureStorage';
 
 const router = express.Router();
-dotenv.config();
-
-try {
-  fs.accessSync('uploads');
-} catch (err) {
-  console.log('uploads 폴더가 없으므로 생성합니다.');
-  fs.mkdirSync('uploads');
-}
-
-AWS.config.update({
-  accessKeyId: process.env.S3_ACCESS_KEY_ID,
-  secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
-  region: 'ap-northeast-2'
-});
 
 const upload = multer({
-  storage: multerS3({
-    s3: new AWS.S3() as any,
-    bucket: 'gallery-grid',
-    key(req, file, cb) {
-      const uniqueName = `${Date.now()}_${Math.random().toString(36).substring(2, 10)}${path.extname(
-        file.originalname
-      )}`;
-      cb(null, `original/${uniqueName}`);
-    }
-  }),
+  storage: configureStorage(),
   limits: { fileSize: 20 * 1024 * 1024 }
 });
 
@@ -189,8 +164,9 @@ router.patch('/:postId', isLoggedIn, upload.none(), async (req, res, next) => {
 
 router.post('/images', isLoggedIn, upload.array('image'), async (req, res, next) => {
   try {
-    const files = req.files as Express.Multer.File[];
-    res.status(200).json(files.map(file => (file as any).location));
+    const files = req.files as S3File[];
+    const fileURLs = files.map(file => (process.env.NODE_ENV === 'production' ? file.location : file.filename));
+    res.status(200).json(fileURLs);
   } catch (err) {
     console.error(err);
     next(err);

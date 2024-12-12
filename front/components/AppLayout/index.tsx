@@ -19,6 +19,7 @@ import MobileHeader from './MobileHeader';
 import MobileFooter from './MobileFooter';
 
 import useOverlays from 'utils/useOverlays';
+import { imgURL } from 'config';
 import { RootState } from 'store/reducers';
 import { logoutRequest } from 'store/actions/userAction';
 import {
@@ -106,7 +107,7 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
 
             <NavbarProfile>
               <img
-                src={me?.ProfileImage ? `${me.ProfileImage.src}` : '/user.jpg'}
+                src={me?.ProfileImage ? imgURL(me.ProfileImage.src) : '/user.jpg'}
                 alt="유저 프로필 이미지"
                 onClick={() => openImagePreview(me?.ProfileImage ? `${me.ProfileImage.src}` : '/user.jpg')}
               />

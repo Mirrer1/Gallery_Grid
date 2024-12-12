@@ -2,6 +2,7 @@ import React, { useCallback } from 'react';
 import { SearchOutlined, UserAddOutlined } from '@ant-design/icons';
 
 import useInput from 'utils/useInput';
+import { imgURL } from 'config';
 import { slideInFromBottom } from 'styles/Common/animation';
 import { ChatListHeader, ChatListItem, ChatListItemWrapper, ChatListWrapper } from 'styles/Message/chatList';
 
@@ -139,7 +140,7 @@ const Message = ({ visibleChat, setVisibleChat }: ChatProps) => {
         {list.map(chat => (
           <ChatListItem key={chat.id} onClick={onVisibleChat} $visible={visibleChat}>
             <div>
-              <img src={chat.profile} alt={`${chat.nickname}의 프로필 이미지`} />
+              <img src={imgURL(chat.profile)} alt={`${chat.nickname}의 프로필 이미지`} />
 
               <div>
                 <h1>{chat.nickname}</h1>

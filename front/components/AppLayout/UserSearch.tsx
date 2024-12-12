@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import formatDate from 'utils/useListTimes';
 import useOverlays from 'utils/useOverlays';
 
+import { imgURL } from 'config';
 import { RootState } from 'store/reducers';
 import { SearchProps } from './Search';
 import { SearchUsers } from 'store/types/userType';
@@ -85,7 +86,7 @@ const UserSearch = ({ keyword, setSearchMode }: SearchProps) => {
           <UserSearchContent $isLast={i === searchUsers.length - 1}>
             <UserProfileWrapper>
               <img
-                src={user?.ProfileImage ? `${user.ProfileImage.src}` : '/user.jpg'}
+                src={user?.ProfileImage ? imgURL(user.ProfileImage.src) : '/user.jpg'}
                 alt="유저 프로필 이미지"
                 onClick={() => openImagePreview(user?.ProfileImage ? `${user.ProfileImage.src}` : '/user.jpg')}
               />
@@ -127,7 +128,7 @@ const UserSearch = ({ keyword, setSearchMode }: SearchProps) => {
               {user.Posts.length > 0 && (
                 <div>
                   <img
-                    src={`${user.Posts[0].Images[0].src}`}
+                    src={imgURL(user.Posts[0].Images[0].src)}
                     alt="게시글의 첫번째 이미지"
                     onClick={() => showCarousel(user.Posts[0].Images)}
                   />

@@ -4,6 +4,7 @@ import { LoadingOutlined, SettingOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 
 import useOverlays from 'utils/useOverlays';
+import { imgURL } from 'config';
 import { RootState } from 'store/reducers';
 import { InitializeUserFollowInfoAction, followUserRequest, unFollowUserRequest } from 'store/actions/userAction';
 import { formatFollowerCount } from 'utils/formatFollowerCount';
@@ -73,12 +74,12 @@ const UserInfo = ({
     <UserInfoWrapper {...slideInFromBottom()}>
       <UserInfoImage>
         <img
-          src={userInfo?.ProfileImage ? `${userInfo.ProfileImage.src}` : '/user.jpg'}
+          src={userInfo?.ProfileImage ? imgURL(userInfo.ProfileImage.src) : '/user.jpg'}
           alt="유저 프로필 배경 이미지"
           onClick={() => openImagePreview(userInfo?.ProfileImage ? `${userInfo.ProfileImage.src}` : '/user.jpg')}
         />
         <img
-          src={userInfo?.ProfileImage ? `${userInfo.ProfileImage.src}` : '/user.jpg'}
+          src={userInfo?.ProfileImage ? imgURL(userInfo.ProfileImage.src) : '/user.jpg'}
           alt="유저 프로필 이미지"
           onClick={() => openImagePreview(userInfo?.ProfileImage ? `${userInfo.ProfileImage.src}` : '/user.jpg')}
         />

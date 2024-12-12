@@ -12,6 +12,7 @@ import Link from 'next/link';
 import dayjs from 'dayjs';
 
 import useOverlays from 'utils/useOverlays';
+import { imgURL } from 'config';
 import { RootState } from 'store/reducers';
 import { UserHistoryPost } from 'store/types/postType';
 import { followUserRequest, unFollowUserRequest } from 'store/actions/userAction';
@@ -91,7 +92,7 @@ const AlertItem = ({ history }: AlertItemProps) => {
       <AlertHeader $type={activityType}>
         <div>
           <img
-            src={history.Alerter?.ProfileImage ? `${history.Alerter?.ProfileImage.src}` : '/user.jpg'}
+            src={history.Alerter?.ProfileImage ? imgURL(history.Alerter?.ProfileImage.src) : '/user.jpg'}
             alt="유저 프로필 이미지"
             onClick={() =>
               openImagePreview(history.Alerter?.ProfileImage ? `${history.Alerter?.ProfileImage.src}` : '/user.jpg')
@@ -142,7 +143,7 @@ const AlertItem = ({ history }: AlertItemProps) => {
       <AlertContentWrapper onClick={onClickPost}>
         {activityType === 'like' || activityType === 'comment' ? (
           <AlertContent onClick={onClickPost} $type={activityType}>
-            <img src={`${history.Post.Images[0].src}`} alt="게시글의 첫번째 이미지" />
+            <img src={imgURL(history.Post.Images[0].src)} alt="게시글의 첫번째 이미지" />
 
             <div>
               <p>{history.Post.content.replace(/\\n/g, '\n').replace(/␣/g, ' ')}</p>

@@ -10,6 +10,7 @@ import {
 import Link from 'next/link';
 
 import useOverlays from 'utils/useOverlays';
+import { imgURL } from 'config';
 import { RootState } from 'store/reducers';
 import { FeaturedUser } from 'store/types/userType';
 import { followUserRequest, loadSuggestUsersRequest, unFollowUserRequest } from 'store/actions/userAction';
@@ -84,7 +85,7 @@ const SuggestedList = ({ suggestedListVisible, setSuggestedListVisible }: Sugges
             <SuggestedInfo key={user.id} {...suggestedItemAnimation}>
               <div>
                 <img
-                  src={user?.ProfileImage ? `${user.ProfileImage.src}` : '/user.jpg'}
+                  src={user?.ProfileImage ? imgURL(user.ProfileImage.src) : '/user.jpg'}
                   alt={`${user.nickname}의 프로필 이미지`}
                   onClick={() => openImagePreview(user?.ProfileImage ? `${user.ProfileImage.src}` : '/user.jpg')}
                 />

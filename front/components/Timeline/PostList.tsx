@@ -20,6 +20,7 @@ import formatDate from 'utils/useListTimes';
 import useOverlays from 'utils/useOverlays';
 import useClipboard from 'utils/useClipboard';
 
+import { imgURL } from 'config';
 import { RootState } from 'store/reducers';
 import { Image, Post, PostLike } from 'store/types/postType';
 import {
@@ -214,7 +215,7 @@ const PostList = () => {
             <PostHeader>
               <div>
                 <img
-                  src={post.User.ProfileImage ? `${post.User.ProfileImage.src}` : '/user.jpg'}
+                  src={post.User.ProfileImage ? imgURL(post.User.ProfileImage.src) : '/user.jpg'}
                   alt="유저 프로필 이미지"
                   onClick={() =>
                     openImagePreview(post.User.ProfileImage ? `${post.User.ProfileImage.src}` : '/user.jpg')
@@ -279,7 +280,7 @@ const PostList = () => {
             <PostContents>
               <div>
                 <img
-                  src={`${post.Images[0].src}`}
+                  src={imgURL(post.Images[0].src)}
                   alt="게시글의 첫번째 이미지"
                   onClick={() => showCarousel(post.Images)}
                 />

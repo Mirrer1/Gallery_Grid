@@ -12,6 +12,7 @@ import useOverlays from 'utils/useOverlays';
 import useEmojiPicker from 'utils/useEmojiPicker';
 import { useLocation } from 'utils/useLocation';
 
+import { imgURL } from 'config';
 import { RootState } from 'store/reducers';
 import { cancelPostEdit, editPostRequest, hidePostModal } from 'store/actions/postAction';
 import {
@@ -84,7 +85,7 @@ const EditModalContent = () => {
       <EditModalContentHeader>
         <div>
           <img
-            src={singlePost.User.ProfileImage ? `${singlePost.User.ProfileImage.src}` : '/user.jpg'}
+            src={singlePost.User.ProfileImage ? imgURL(singlePost.User.ProfileImage.src) : '/user.jpg'}
             alt="유저 프로필 이미지"
             onClick={() =>
               openImagePreview(singlePost.User.ProfileImage ? `${singlePost.User.ProfileImage.src}` : '/user.jpg')

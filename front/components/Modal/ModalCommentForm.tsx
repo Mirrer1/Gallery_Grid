@@ -15,6 +15,7 @@ import useInput from 'utils/useInput';
 import useOverlays from 'utils/useOverlays';
 import useFileUpload from 'utils/useFileUpload';
 import useEmojiPicker from 'utils/useEmojiPicker';
+import { imgURL } from 'config';
 import { RootState } from 'store/reducers';
 import {
   addModalCommentRequest,
@@ -147,7 +148,7 @@ const ModalCommentForm = ({ replyId, replyUser, setReplyId }: ModalCommentFormPr
           {modalCommentImagePath.length !== 0 && (
             <ModalCommentFormImage key={modalCommentImagePath} {...slideInUploadImage}>
               <img
-                src={`${modalCommentImagePath}`}
+                src={imgURL(modalCommentImagePath)}
                 alt="입력한 댓글의 첨부 이미지"
                 onClick={() => openImagePreview(`${modalCommentImagePath}`)}
               />

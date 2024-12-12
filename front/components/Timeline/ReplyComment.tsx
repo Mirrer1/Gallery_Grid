@@ -6,6 +6,7 @@ import Link from 'next/link';
 import EditCommentForm from './EditCommentForm';
 import formatDate from 'utils/useListTimes';
 import useOverlays from 'utils/useOverlays';
+import { imgURL } from 'config';
 import { RootState } from 'store/reducers';
 import { IReplyComment } from 'store/types/postType';
 import { slideInList } from 'styles/Common/animation';
@@ -59,7 +60,7 @@ const ReplyComment = ({
       <div>
         <div>
           <img
-            src={comment.User.ProfileImage ? `${comment.User.ProfileImage.src}` : '/user.jpg'}
+            src={comment.User.ProfileImage ? imgURL(comment.User.ProfileImage.src) : '/user.jpg'}
             alt={`${comment.User.nickname}의 프로필 이미지`}
             onClick={() =>
               openImagePreview(comment.User.ProfileImage ? `${comment.User.ProfileImage.src}` : '/user.jpg')
@@ -96,7 +97,7 @@ const ReplyComment = ({
 
       {comment.ReplyImage && (
         <CommentListItemImage onClick={() => openImagePreview(`${comment.ReplyImage?.src}`)}>
-          <img src={`${comment.ReplyImage.src}`} alt={`${comment.User.nickname}의 댓글 이미지`} />
+          <img src={imgURL(comment.ReplyImage.src)} alt={`${comment.User.nickname}의 댓글 이미지`} />
         </CommentListItemImage>
       )}
 

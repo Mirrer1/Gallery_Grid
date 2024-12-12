@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 
 import useInput from 'utils/useInput';
 import useFileUpload from 'utils/useFileUpload';
+import { imgURL } from 'config';
 import { RootState } from 'store/reducers';
 import { Comment, IReplyComment } from 'store/types/postType';
 import {
@@ -111,7 +112,7 @@ const EditCommentForm = ({ reply, comment, replyId, cancelEdit }: EditCommentFor
           <EditCommentImageWrapper>
             <EditCommentImage key={editCommentImagePath} {...slideInUploadImage}>
               <img
-                src={`${editCommentImagePath}`}
+                src={imgURL(editCommentImagePath)}
                 alt="입력한 댓글의 첨부 이미지"
                 onClick={() => openImagePreview(`${editCommentImagePath}`)}
               />

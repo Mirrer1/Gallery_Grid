@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 
 import useScroll from 'utils/useScroll';
 import useOverlays from 'utils/useOverlays';
+import { imgURL } from 'config';
 import { RootState } from 'store/reducers';
 import { Image, Post, PostComment, PostLike } from 'store/types/postType';
 import { slideInFromBottom, slideInList } from 'styles/Common/animation';
@@ -62,7 +63,7 @@ const UserPosts = () => {
         userPosts.map((post: Post, i: number) => (
           <motion.article key={post.id} onClick={() => onClickPost(post)} {...slideInList}>
             <UserPostImage>
-              <img src={`${post.Images[0].src}`} alt="게시글의 첫번째 이미지" />
+              <img src={imgURL(post.Images[0].src)} alt="게시글의 첫번째 이미지" />
 
               <ArrowsAltOutlined />
 

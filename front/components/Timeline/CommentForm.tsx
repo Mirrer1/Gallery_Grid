@@ -15,6 +15,7 @@ import useInput from 'utils/useInput';
 import useOverlays from 'utils/useOverlays';
 import useFileUpload from 'utils/useFileUpload';
 import useEmojiPicker from 'utils/useEmojiPicker';
+import { imgURL } from 'config';
 import { RootState } from 'store/reducers';
 import { addCommentRequest, commentRemoveUploadedImage, commentUploadImageRequest } from 'store/actions/postAction';
 
@@ -145,7 +146,7 @@ const CommentForm = ({ replyId, replyUser, setReplyId }: CommentFormProps) => {
           {commentImagePath.length !== 0 && (
             <CommentFormImage key={commentImagePath} {...slideInUploadImage}>
               <img
-                src={`${commentImagePath}`}
+                src={imgURL(commentImagePath)}
                 alt="입력한 댓글의 첨부 이미지"
                 onClick={() => openImagePreview(`${commentImagePath}`)}
               />

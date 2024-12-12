@@ -17,8 +17,9 @@ import Link from 'next/link';
 import ModalCommentList from './ModalCommentList';
 import formatDate from 'utils/useListTimes';
 import useClipboard from 'utils/useClipboard';
-
 import useOverlays from 'utils/useOverlays';
+
+import { imgURL } from 'config';
 import { RootState } from 'store/reducers';
 import { Comment, PostLike } from 'store/types/postType';
 import { followUserRequest, unFollowUserRequest } from 'store/actions/userAction';
@@ -119,7 +120,7 @@ const ModalContent = () => {
       >
         <div>
           <img
-            src={singlePost.User.ProfileImage ? `${singlePost.User.ProfileImage.src}` : '/user.jpg'}
+            src={singlePost.User.ProfileImage ? imgURL(singlePost.User.ProfileImage.src) : '/user.jpg'}
             alt="유저 프로필 이미지"
             onClick={() =>
               openImagePreview(singlePost.User.ProfileImage ? `${singlePost.User.ProfileImage.src}` : '/user.jpg')

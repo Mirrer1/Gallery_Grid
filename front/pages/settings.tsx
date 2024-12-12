@@ -10,6 +10,7 @@ import SettingForm from 'components/Settings/SettingForm';
 import wrapper from 'store/configureStore';
 import useFileUpload from 'utils/useFileUpload';
 import useToastStatus from 'utils/useToast';
+import { imgURL } from 'config';
 import { RootState } from 'store/reducers';
 import {
   executeUserEdit,
@@ -43,7 +44,7 @@ const Settings = () => {
         <SettingWrapper>
           <SettingProfile {...slideInFromBottom()} $loading={userUploadImageLoading}>
             <label htmlFor="setting-image">
-              <img src={userImagePath.length > 0 ? `${userImagePath}` : '/user.jpg'} alt="유저 프로필 이미지" />
+              <img src={userImagePath.length > 0 ? imgURL(userImagePath) : '/user.jpg'} alt="유저 프로필 이미지" />
             </label>
 
             <div>

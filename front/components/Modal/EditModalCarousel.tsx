@@ -11,6 +11,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, Navigation } from 'swiper';
 
 import useFileUpload from 'utils/useFileUpload';
+import { imgURL } from 'config';
 import { RootState } from 'store/reducers';
 import {
   editPostRemoveUploadedImage,
@@ -119,7 +120,10 @@ const EditModalCarousel = () => {
   return (
     <EditModalCarouselWrapper>
       <EditModalSelectedImage key={selectedImage} {...slideInSeletedImage}>
-        <img src={editPostImagePaths.length > 0 ? `${selectedImage}` : '/no-image.png'} alt="클릭한 게시글 이미지" />
+        <img
+          src={editPostImagePaths.length > 0 && selectedImage ? imgURL(selectedImage) : '/no-image.png'}
+          alt="클릭한 게시글 이미지"
+        />
       </EditModalSelectedImage>
 
       <EditModalSwiperImages>
@@ -137,7 +141,7 @@ const EditModalCarousel = () => {
           {editPostImagePaths.map((image: string, i: number) => (
             <SwiperSlide key={image}>
               <EditModalSwiperImageItem
-                src={`${image}`}
+                src={imgURL(image)}
                 alt={`게시글의 ${i}번째 이미지`}
                 onClick={() => handleImageClick(image, i)}
                 selected={selectedImage === image}

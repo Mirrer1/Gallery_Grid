@@ -7,6 +7,7 @@ import 'swiper/css/effect-coverflow';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 
+import { imgURL } from 'config';
 import { Image } from 'store/types/postType';
 import { RootState } from 'store/reducers';
 import { hidePostCarousel } from 'store/actions/postAction';
@@ -65,7 +66,7 @@ const PostImageCarousel = () => {
         >
           {postCarousel.map((image: Image, i: number) => (
             <SwiperSlide key={i}>
-              <img src={`${image.src}`} alt={`게시글의 ${i}번째 이미지`} />
+              <img src={imgURL(image.src)} alt={`게시글의 ${i}번째 이미지`} />
             </SwiperSlide>
           ))}
         </Swiper>
