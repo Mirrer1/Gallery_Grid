@@ -3,9 +3,9 @@ import { useSelector } from 'react-redux';
 import { END } from 'redux-saga';
 import axios from 'axios';
 
-import PageHead from 'components/PageHead';
 import AppLayout from 'components/AppLayout';
 import AlertList from 'components/Activity/AlertList';
+import { PageHead, SeoProps } from 'components/PageHead';
 
 import wrapper from 'store/configureStore';
 import useToastStatus from 'utils/useToast';
@@ -16,19 +16,13 @@ import { loadMyActivityCountsRequest, loadMyActivityPostsRequest } from 'store/a
 import { slideInFromBottom } from 'styles/Common/animation';
 import { ActivityHeader, ActivityWrapper, HeaderItem } from 'styles/Activity';
 
-const Activity = () => {
-  const { me } = useSelector((state: RootState) => state.user);
+const Activity = ({ seo }: { seo: SeoProps }) => {
   const { myActivityCounts } = useSelector((state: RootState) => state.post);
   useToastStatus();
 
   return (
     <>
-      <PageHead
-        title={`Gallery Grid | ${me?.nickname || '사용자'}'s Activity`}
-        description={`${me?.nickname || '사용자'}님의 활동 페이지: 좋아요, 댓글, 팔로잉 등과 관련된 알림을 확인하세요.`}
-        imageUrl={me?.ProfileImage?.src}
-        url="https://gallerygrd.com/activity"
-      />
+      <PageHead title={seo.title} description={seo.description} imageUrl={seo.imageUrl} url={seo.url} />
 
       <AppLayout>
         <ActivityWrapper>
@@ -76,28 +70,30 @@ const Activity = () => {
 
 export const getServerSideProps = wrapper.getServerSideProps(async context => {
   const cookie = context.req ? context.req.headers.cookie : '';
-  axios.defaults.headers.Cookie = '';
-
-  if (context.req && cookie) axios.defaults.headers.Cookie = cookie;
+  axios.defaults.headers.Cookie = cookie || '';
 
   context.store.dispatch(loadMyInfoRequest());
   context.store.dispatch(loadMyActivityCountsRequest());
   context.store.dispatch(loadMyActivityPostsRequest());
-
   context.store.dispatch(END);
+
   await context.store.sagaTask?.toPromise();
 
   const state = context.store.getState();
   const { me } = state.user;
 
-  if (!me) {
-    return {
-      redirect: {
-        destination: '/',
-        permanent: false
-      }
-    };
-  }
+  const seo = {
+    title: `Gallery Grid | ${me?.nickname || '사용자'}'s Activity`,
+    description: `${me?.nickname || '사용자'}님의 활동 페이지: 좋아요, 댓글, 팔로잉 등과 관련된 알림을 확인하세요.`,
+    imageUrl: me?.ProfileImage?.src || 'https://gallerygrd.com/favicon.ico',
+    url: 'https://gallerygrd.com/activity'
+  };
+
+  return {
+    props: {
+      seo
+    }
+  };
 });
 
 export default Activity;

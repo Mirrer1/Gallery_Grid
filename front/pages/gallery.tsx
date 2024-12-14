@@ -13,10 +13,10 @@ import { toast } from 'react-toastify';
 import { END } from 'redux-saga';
 import axios from 'axios';
 
-import PageHead from 'components/PageHead';
 import AppLayout from 'components/AppLayout';
 import PostPreview from 'components/Gallery/PostPreview';
 import BigPostPreview from 'components/Gallery/BigPostPreview';
+import { PageHead, SeoProps } from 'components/PageHead';
 
 import wrapper from 'store/configureStore';
 import useOverlays from 'utils/useOverlays';
@@ -36,11 +36,10 @@ import {
   GalleryLoadingContainer
 } from 'styles/Gallery';
 
-const Gallery = () => {
+const Gallery = ({ seo }: { seo: SeoProps }) => {
   const dispatch = useDispatch();
   const { openOverlay } = useOverlays();
   const galleryContainerRef = useRef<HTMLDivElement>(null);
-  const { me } = useSelector((state: RootState) => state.user);
   const { galleryPosts, loadMyInteractionsPostsLoading, loadMyInteractionsPostsDone } = useSelector(
     (state: RootState) => state.post
   );
@@ -99,12 +98,7 @@ const Gallery = () => {
 
   return (
     <>
-      <PageHead
-        title={`Gallery Grid | ${me?.nickname || '사용자'}'s Gallery`}
-        description={`${me?.nickname || '사용자'}가 좋아요하거나 댓글을 단 게시글을 Gallery Grid에서 확인하세요.`}
-        imageUrl={galleryPosts?.[0]?.Post?.Images?.[0]?.src}
-        url="https://gallerygrd.com/gallery"
-      />
+      <PageHead title={seo.title} description={seo.description} imageUrl={seo.imageUrl} url={seo.url} />
 
       <AppLayout>
         <GalleryWrapper {...slideInFromBottom()}>
@@ -218,27 +212,30 @@ const Gallery = () => {
 
 export const getServerSideProps = wrapper.getServerSideProps(async context => {
   const cookie = context.req ? context.req.headers.cookie : '';
-  axios.defaults.headers.Cookie = '';
-
-  if (context.req && cookie) axios.defaults.headers.Cookie = cookie;
+  axios.defaults.headers.Cookie = cookie || '';
 
   context.store.dispatch(loadMyInfoRequest());
   context.store.dispatch(loadMyInteractionsPostsRequest('all', 'best'));
-
   context.store.dispatch(END);
+
   await context.store.sagaTask?.toPromise();
 
   const state = context.store.getState();
   const { me } = state.user;
+  const { galleryPosts } = state.post;
 
-  if (!me) {
-    return {
-      redirect: {
-        destination: '/',
-        permanent: false
-      }
-    };
-  }
+  const seo = {
+    title: `Gallery Grid | ${me?.nickname || '사용자'}'s Gallery`,
+    description: `${me?.nickname || '사용자'}가 좋아요하거나 댓글을 단 게시글을 Gallery Grid에서 확인하세요.`,
+    imageUrl: galleryPosts?.[0]?.Post?.Images?.[0]?.src || 'https://gallerygrd.com/favicon.ico',
+    url: 'https://gallerygrd.com/gallery'
+  };
+
+  return {
+    props: {
+      seo
+    }
+  };
 });
 
 export default Gallery;

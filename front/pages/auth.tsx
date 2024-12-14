@@ -5,13 +5,13 @@ import { LoadingOutlined } from '@ant-design/icons';
 import Router from 'next/router';
 import axios from 'axios';
 
-import PageHead from 'components/PageHead';
 import wrapper from 'store/configureStore';
+import { PageHead, SeoProps } from 'components/PageHead';
 import { RootState } from 'store/reducers';
 import { loadMyInfoRequest } from 'store/actions/userAction';
 import { AuthLoader, AuthLoaderWrapper } from 'styles/Auth';
 
-const Auth = () => {
+const Auth = ({ seo }: { seo: SeoProps }) => {
   const dispatch = useDispatch();
   const { me } = useSelector((state: RootState) => state.user);
   const [dots, setDots] = useState('');
@@ -34,12 +34,7 @@ const Auth = () => {
 
   return (
     <>
-      <PageHead
-        title="Gallery Grid | Google Sign In"
-        description="Google 계정에 연결하는 중입니다. 잠시만 기다려 주세요."
-        imageUrl="https://gallerygrd.com/favicon.ico"
-        url="https://gallerygrd.com/auth"
-      />
+      <PageHead title={seo.title} description={seo.description} imageUrl={seo.imageUrl} url={seo.url} />
 
       <AuthLoaderWrapper>
         <AuthLoader>
@@ -62,28 +57,25 @@ const Auth = () => {
 
 export const getServerSideProps = wrapper.getServerSideProps(async context => {
   const cookie = context.req ? context.req.headers.cookie : '';
-  axios.defaults.headers.Cookie = '';
-
-  if (context.req && cookie) {
-    axios.defaults.headers.Cookie = cookie;
-  }
+  axios.defaults.headers.Cookie = cookie || '';
 
   context.store.dispatch(loadMyInfoRequest());
-
   context.store.dispatch(END);
+
   await context.store.sagaTask?.toPromise();
 
-  const state = context.store.getState();
-  const { me } = state.user;
+  const seo = {
+    title: 'Gallery Grid | Google Sign In',
+    description: 'Google 계정에 연결하는 중입니다. 잠시만 기다려 주세요.',
+    imageUrl: 'https://gallerygrd.com/favicon.ico',
+    url: 'https://gallerygrd.com/auth'
+  };
 
-  if (me) {
-    return {
-      redirect: {
-        destination: '/timeline',
-        permanent: false
-      }
-    };
-  }
+  return {
+    props: {
+      seo
+    }
+  };
 });
 
 export default Auth;

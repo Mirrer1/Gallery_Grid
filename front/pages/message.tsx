@@ -32,27 +32,16 @@ const Message = () => {
 
 export const getServerSideProps = wrapper.getServerSideProps(async context => {
   const cookie = context.req ? context.req.headers.cookie : '';
-  axios.defaults.headers.Cookie = '';
-
-  if (context.req && cookie) axios.defaults.headers.Cookie = cookie;
+  axios.defaults.headers.Cookie = cookie || '';
 
   context.store.dispatch(loadMyInfoRequest());
-  // context.store.dispatch(loadPostsRequest());
-
   context.store.dispatch(END);
+
   await context.store.sagaTask?.toPromise();
 
-  const state = context.store.getState();
-  const { me } = state.user;
-
-  if (!me) {
-    return {
-      redirect: {
-        destination: '/',
-        permanent: false
-      }
-    };
-  }
+  return {
+    props: {}
+  };
 });
 
 export default Message;

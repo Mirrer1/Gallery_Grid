@@ -187,6 +187,7 @@ router.post('/logout', isLoggedIn, (req, res, next) => {
     }
 
     req.session!.destroy(() => {
+      res.clearCookie('connect.sid', { path: '/' });
       res.send('정상적으로 로그아웃 되었습니다.');
     });
   });
