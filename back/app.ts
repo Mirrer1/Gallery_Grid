@@ -61,7 +61,8 @@ app.use(
     cookie: {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production' ? true : false,
-      domain: process.env.NODE_ENV === 'production' ? '.gallerygrd.com' : undefined
+      domain: process.env.NODE_ENV === 'production' ? '.gallerygrd.com' : undefined,
+      maxAge: 1000 * 60 * 60 * 24
     }
   })
 );
