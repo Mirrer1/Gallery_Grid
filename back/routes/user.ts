@@ -206,8 +206,14 @@ router.post('/logout', isLoggedIn, (req, res, next) => {
     }
 
     req.session!.destroy(() => {
-      res.clearCookie('connect.sid', { path: '/' });
-      res.send('정상적으로 로그아웃 되었습니다.');
+      res.clearCookie('connect.sid', {
+        path: '/',
+        httpOnly: true,
+        sameSite: 'strict',
+        secure: process.env.NODE_ENV === 'production' ? true : false,
+        domain: process.env.NODE_ENV === 'production' ? '.gallerygrd.com' : undefined
+      });
+      res.status(200).send('정상적으로 로그아웃 되었습니다.');
     });
   });
 });
