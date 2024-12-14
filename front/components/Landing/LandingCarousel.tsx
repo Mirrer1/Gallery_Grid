@@ -10,16 +10,23 @@ import { CarouselBtn, CarouselImage, CarouselWrapper } from 'styles/Landing/caro
 
 const LandingCarousel = () => {
   const { timelinePosts } = useSelector((state: RootState) => state.post);
-  const bestProducts = timelinePosts.slice(0, 5);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const defaultPostImages = [
+    '/popularPosts/post1.jpg',
+    '/popularPosts/post2.jpg',
+    '/popularPosts/post3.jpg',
+    '/popularPosts/post4.jpg',
+    '/popularPosts/post5.jpg'
+  ];
+  const displayedPosts = timelinePosts?.length >= 5 ? timelinePosts : defaultPostImages;
 
   const handleNext = useCallback(() => {
-    setCurrentIndex(prevIndex => (prevIndex + 1) % bestProducts.length);
-  }, []);
+    setCurrentIndex(prevIndex => (prevIndex + 1) % displayedPosts.length);
+  }, [displayedPosts]);
 
   const handlePrev = useCallback(() => {
-    setCurrentIndex(prevIndex => (prevIndex - 1 + bestProducts.length) % bestProducts.length);
-  }, []);
+    setCurrentIndex(prevIndex => (prevIndex - 1 + displayedPosts.length) % displayedPosts.length);
+  }, [displayedPosts]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -33,14 +40,30 @@ const LandingCarousel = () => {
     <CarouselWrapper>
       <CarouselImage as={motion.div} key={currentIndex} {...slideInFromBottom(0.3)}>
         <img
-          src={imgURL(bestProducts[currentIndex]?.Images[0].src)}
-          alt={`${bestProducts[currentIndex]?.User.nickname}의 작품 배경 이미지`}
+          src={
+            timelinePosts?.length >= 5
+              ? imgURL(displayedPosts[currentIndex]?.Images[0].src)
+              : displayedPosts[currentIndex]
+          }
+          alt={
+            timelinePosts?.length >= 5
+              ? `${displayedPosts[currentIndex]?.User.nickname}의 작품 배경 이미지`
+              : `기본 이미지 ${currentIndex + 1}`
+          }
         />
         <img
-          src={imgURL(bestProducts[currentIndex]?.Images[0].src)}
-          alt={`${bestProducts[currentIndex]?.User.nickname}의 작품 이미지`}
+          src={
+            timelinePosts?.length >= 5
+              ? imgURL(displayedPosts[currentIndex]?.Images[0].src)
+              : displayedPosts[currentIndex]
+          }
+          alt={
+            timelinePosts?.length >= 5
+              ? `${displayedPosts[currentIndex]?.User.nickname}의 작품 배경 이미지`
+              : `기본 이미지 ${currentIndex + 1}`
+          }
         />
-        <p>@Made by {bestProducts[currentIndex]?.User.nickname}</p>
+        {timelinePosts?.length >= 5 && <p>@Made by {displayedPosts[currentIndex]?.User.nickname}</p>}
       </CarouselImage>
 
       <CarouselBtn>

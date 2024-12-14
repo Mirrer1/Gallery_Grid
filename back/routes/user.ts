@@ -683,6 +683,7 @@ router.get('/search', isLoggedIn, async (req, res, next) => {
       ],
       where: {
         [Op.or]: [{ nickname: { [Op.like]: `%${keyword}%` } }, { desc: { [Op.like]: `%${keyword}%` } }],
+        ...(lastId > 0 && { id: { [Op.gt]: lastId } }),
         ...(followerCount > 0 && {
           [Op.and]: Sequelize.literal(
             `(SELECT COUNT(*) FROM Follow WHERE Follow.FollowingId = User.id) < ${followerCount} 

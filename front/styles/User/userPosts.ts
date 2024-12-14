@@ -22,6 +22,7 @@ export const UserPostsWrapper = styled(PostPreviewWrapper)<{ $isGridDisabled?: b
   ${media.tablet} {
     width: 100%;
     padding: 0;
+    overflow-y: visible;
   }
 `;
 

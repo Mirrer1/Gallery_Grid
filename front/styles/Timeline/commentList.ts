@@ -229,6 +229,12 @@ export const CommentFormImage = styled(motion.div)`
   }
 
   ${media.tablet} {
+    height: 140px;
+
+    & > img {
+      width: 140px;
+    }
+
     & > span {
       top: 10%;
       right: 8%;

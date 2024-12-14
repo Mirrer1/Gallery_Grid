@@ -40,7 +40,6 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
   const { isPostModalVisible, isDeleteModalVisible, isCarouselVisible, isPreviewVisible } = useSelector(
     (state: RootState) => state.post
   );
-  const [pathname, setPathname] = useState<string | null>(null);
   const [searchMode, setSearchMode] = useState<boolean>(false);
 
   // const onClickMessage = useCallback(() => {
@@ -74,11 +73,6 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
       toast.success('정상적으로 로그아웃 되었습니다.');
     }
   }, [logoutDone]);
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') setPathname(router.pathname);
-    window.scrollTo(0, 0);
-  }, []);
 
   useEffect(() => {
     if (
@@ -125,7 +119,7 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
             <NavbarItems>
               <NavbarItem
                 onClick={() => handleNavigation('/timeline')}
-                $selected={pathname === '/timeline'}
+                $selected={router.pathname === '/timeline'}
                 $message={false}
               >
                 <div />
@@ -135,7 +129,7 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
 
               <NavbarItem
                 onClick={() => handleNavigation('/activity')}
-                $selected={pathname === '/activity'}
+                $selected={router.pathname === '/activity'}
                 $message={false}
               >
                 <div />
@@ -159,7 +153,7 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
 
               <NavbarItem
                 onClick={() => handleNavigation('/gallery')}
-                $selected={pathname === '/gallery'}
+                $selected={router.pathname === '/gallery'}
                 $message={false}
               >
                 <div />
@@ -168,8 +162,8 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
               </NavbarItem>
 
               <NavbarItem
-                onClick={() => handleNavigation(`/user/${me.id}`)}
-                $selected={pathname === `/user/${me.id}`}
+                onClick={() => handleNavigation(`/user/${me?.id}`)}
+                $selected={router.asPath === `/user/${me?.id}`}
                 $message={false}
               >
                 <div />
@@ -182,7 +176,7 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
           <NavbarItems>
             <NavbarItem
               onClick={() => handleNavigation('/settings')}
-              $selected={pathname === '/settings'}
+              $selected={router.pathname === '/settings'}
               $message={false}
             >
               <div />

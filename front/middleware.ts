@@ -19,11 +19,17 @@ export async function middleware(request: NextRequest) {
   const userAgent = request.headers.get('user-agent') || undefined;
 
   const isPublicPage = publicPages.some(route => pathname.match(new RegExp(`^${route}$`)));
-  if (isPublicPage || isBot(userAgent)) {
+
+  if (isBot(userAgent)) {
     return NextResponse.next();
   }
 
-  if (!token) {
+  if (pathname === '/' && token) {
+    const redirectUrl = new URL('/timeline', request.url);
+    return NextResponse.redirect(redirectUrl);
+  }
+
+  if (!token && !isPublicPage) {
     const redirectUrl = new URL('/', request.url);
     return NextResponse.redirect(redirectUrl);
   }
@@ -32,5 +38,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/activity', '/auth', '/gallery', '/message', '/settings', '/timeline', '/user/:path*']
+  matcher: ['/', '/activity', '/auth', '/gallery', '/message', '/settings', '/timeline', '/user/:path*']
 };

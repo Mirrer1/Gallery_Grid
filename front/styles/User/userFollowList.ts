@@ -13,6 +13,7 @@ export const UserFollowListWrapper = styled.section`
   ${media.tablet} {
     width: 100%;
     padding: 0;
+    overflow-y: visible;
   }
 `;
 

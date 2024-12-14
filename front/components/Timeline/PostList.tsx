@@ -199,7 +199,9 @@ const PostList = () => {
         </CategoryItem>
       </PostCategory>
 
-      {loadNewPostsLoading || loadBestPostsLoading || loadFollowingPostsLoading ? (
+      {isCategoryChanged &&
+      timelinePosts.length === 0 &&
+      (loadNewPostsLoading || loadBestPostsLoading || loadFollowingPostsLoading) ? (
         <TimelineLoadingContainer>
           <LoadingOutlined />
         </TimelineLoadingContainer>
