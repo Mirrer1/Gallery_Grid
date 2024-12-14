@@ -3,11 +3,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import { LoadingOutlined, SettingOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 
+import useOverlays from 'utils/useOverlays';
+import { imgURL } from 'config';
 import { RootState } from 'store/reducers';
-import { followUserRequest, setUserFollowType, unFollowUserRequest } from 'store/actions/userAction';
+import { InitializeUserFollowInfoAction, followUserRequest, unFollowUserRequest } from 'store/actions/userAction';
 import { formatFollowerCount } from 'utils/formatFollowerCount';
-import useImagePreview from 'utils/useImagePreview';
-import ImagePreview from 'components/Modal/ImagePreviewModal';
 
 import { slideInFromBottom } from 'styles/Common/animation';
 import {
@@ -17,24 +17,42 @@ import {
   UserInfoText,
   UserInfoWrapper
 } from 'styles/User/userInfo';
+import { initializeUserPosts, loadUserPostsRequest } from 'store/actions/postAction';
 
 type InfoProps = {
+  userId: number;
   selectedActivity: 'posts' | 'follower' | 'following';
   setSelectedActivity: (value: 'posts' | 'follower' | 'following') => void;
   followLoadingId: number | null;
   setFollowLoadingId: React.Dispatch<React.SetStateAction<number | null>>;
 };
 
-const UserInfo = ({ selectedActivity, setSelectedActivity, followLoadingId, setFollowLoadingId }: InfoProps) => {
+const UserInfo = ({
+  userId,
+  selectedActivity,
+  setSelectedActivity,
+  followLoadingId,
+  setFollowLoadingId
+}: InfoProps) => {
   const dispatch = useDispatch();
+  const { openOverlay } = useOverlays();
   const { me, userInfo } = useSelector((state: RootState) => state.user);
-  const { imagePreview, showImagePreview, hideImagePreview } = useImagePreview();
+
+  const openImagePreview = useCallback((image: string) => {
+    openOverlay('preview', image);
+  }, []);
 
   const handleActivity = useCallback(
     (info: 'posts' | 'follower' | 'following') => {
       if (selectedActivity === info) return;
 
-      if (info === 'follower' || info === 'following') dispatch(setUserFollowType());
+      if (info === 'posts') {
+        dispatch(initializeUserPosts());
+        dispatch(loadUserPostsRequest(userId));
+      }
+
+      if (info === 'follower' || info === 'following') dispatch(InitializeUserFollowInfoAction());
+
       setSelectedActivity(info);
     },
     [selectedActivity]
@@ -56,14 +74,14 @@ const UserInfo = ({ selectedActivity, setSelectedActivity, followLoadingId, setF
     <UserInfoWrapper {...slideInFromBottom()}>
       <UserInfoImage>
         <img
-          src={userInfo?.ProfileImage ? `${userInfo.ProfileImage.src}` : '/user.jpg'}
+          src={userInfo?.ProfileImage ? imgURL(userInfo.ProfileImage.src) : '/user.jpg'}
           alt="유저 프로필 배경 이미지"
-          onClick={() => showImagePreview(userInfo?.ProfileImage ? `${userInfo.ProfileImage.src}` : '/user.jpg')}
+          onClick={() => openImagePreview(userInfo?.ProfileImage ? `${userInfo.ProfileImage.src}` : '/user.jpg')}
         />
         <img
-          src={userInfo?.ProfileImage ? `${userInfo.ProfileImage.src}` : '/user.jpg'}
+          src={userInfo?.ProfileImage ? imgURL(userInfo.ProfileImage.src) : '/user.jpg'}
           alt="유저 프로필 이미지"
-          onClick={() => showImagePreview(userInfo?.ProfileImage ? `${userInfo.ProfileImage.src}` : '/user.jpg')}
+          onClick={() => openImagePreview(userInfo?.ProfileImage ? `${userInfo.ProfileImage.src}` : '/user.jpg')}
         />
       </UserInfoImage>
 
@@ -107,8 +125,6 @@ const UserInfo = ({ selectedActivity, setSelectedActivity, followLoadingId, setF
           <p>{formatFollowerCount(userInfo?.followingsCount)}</p>
         </UserActivityItem>
       </UserActivityWrapper>
-
-      <ImagePreview imagePreview={imagePreview} hideImagePreview={hideImagePreview} />
     </UserInfoWrapper>
   );
 };

@@ -11,12 +11,13 @@ import Router from 'next/router';
 import Link from 'next/link';
 import dayjs from 'dayjs';
 
-import ImagePreview from 'components/Modal/ImagePreviewModal';
-import useImagePreview from 'utils/useImagePreview';
+import useOverlays from 'utils/useOverlays';
+import { imgURL } from 'config';
 import { RootState } from 'store/reducers';
 import { UserHistoryPost } from 'store/types/postType';
 import { followUserRequest, unFollowUserRequest } from 'store/actions/userAction';
-import { readActivityRequest, setActivityFocusedCommentId, showPostModal } from 'store/actions/postAction';
+import { readActivityRequest, setActivityFocusedComment } from 'store/actions/postAction';
+
 import { slideInList } from 'styles/Common/animation';
 import {
   AlertContentWrapper,
@@ -33,20 +34,32 @@ type AlertItemProps = {
 
 const AlertItem = ({ history }: AlertItemProps) => {
   const dispatch = useDispatch();
-  const { imagePreview, showImagePreview, hideImagePreview } = useImagePreview();
+  const { openOverlay } = useOverlays();
   const { me, followUserLoading, unFollowUserLoading } = useSelector((state: RootState) => state.user);
   const activityType = history.type === 'replyComment' ? 'comment' : history.type;
 
   const onClickPost = useCallback(() => {
+    console.log(history);
+
     if (history.type === 'follow') return;
 
     if (history.type === 'comment' && history.Comment?.id) {
-      dispatch(setActivityFocusedCommentId(history.Comment.id));
+      dispatch(
+        setActivityFocusedComment({
+          activityType: 'comment',
+          id: history.Comment.id
+        })
+      );
     } else if (history.type === 'replyComment' && history.ReplyComment?.id) {
-      dispatch(setActivityFocusedCommentId(history.ReplyComment.id));
+      dispatch(
+        setActivityFocusedComment({
+          activityType: 'replyComment',
+          id: history.ReplyComment.id
+        })
+      );
     }
 
-    dispatch(showPostModal(history.Post));
+    openOverlay('post', history.Post);
   }, [history]);
 
   const onToggleFollow = useCallback(
@@ -58,6 +71,10 @@ const AlertItem = ({ history }: AlertItemProps) => {
     },
     [me.Followings, history]
   );
+
+  const openImagePreview = useCallback((image: string) => {
+    openOverlay('preview', image);
+  }, []);
 
   const onReadActivity = useCallback(() => {
     dispatch(readActivityRequest(history.id));
@@ -75,10 +92,10 @@ const AlertItem = ({ history }: AlertItemProps) => {
       <AlertHeader $type={activityType}>
         <div>
           <img
-            src={history.Alerter?.ProfileImage ? `${history.Alerter?.ProfileImage.src}` : '/user.jpg'}
+            src={history.Alerter?.ProfileImage ? imgURL(history.Alerter?.ProfileImage.src) : '/user.jpg'}
             alt="유저 프로필 이미지"
             onClick={() =>
-              showImagePreview(history.Alerter?.ProfileImage ? `${history.Alerter?.ProfileImage.src}` : '/user.jpg')
+              openImagePreview(history.Alerter?.ProfileImage ? `${history.Alerter?.ProfileImage.src}` : '/user.jpg')
             }
           />
 
@@ -126,10 +143,10 @@ const AlertItem = ({ history }: AlertItemProps) => {
       <AlertContentWrapper onClick={onClickPost}>
         {activityType === 'like' || activityType === 'comment' ? (
           <AlertContent onClick={onClickPost} $type={activityType}>
-            <img src={`${history.Post.Images[0].src}`} alt="게시글의 첫번째 이미지" />
+            <img src={imgURL(history.Post.Images[0].src)} alt="게시글의 첫번째 이미지" />
 
             <div>
-              <p>{history.Post.content}</p>
+              <p>{history.Post.content.replace(/\\n/g, '\n').replace(/␣/g, ' ')}</p>
 
               <div>
                 <div>
@@ -176,8 +193,6 @@ const AlertItem = ({ history }: AlertItemProps) => {
           </AlertContentBtn>
         )}
       </AlertContentWrapper>
-
-      <ImagePreview imagePreview={imagePreview} hideImagePreview={hideImagePreview} />
     </AlertItemWrapper>
   );
 };

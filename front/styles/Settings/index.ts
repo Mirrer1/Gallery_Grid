@@ -136,8 +136,8 @@ export const SettingProfile = styled(motion.div)<{ $loading: boolean }>`
     margin-bottom: 0.5em;
 
     & > label > img {
-      width: 70px;
-      height: 70px;
+      width: 80px;
+      aspect-ratio: 1/1;
       border-radius: 50%;
       margin-right: 1em;
     }
@@ -171,11 +171,11 @@ export const MobileImageBtn = styled.label`
 
   ${media.mobile} {
     ${({ theme }) => theme.flexSet()};
+    height: 25px;
     font-size: 0.6rem;
     background-color: ${({ theme }) => theme.colors.primary};
     color: white;
     font-weight: 500;
-    padding: 0.7em 1.2em;
     border-radius: 5px;
     margin-top: 1em;
   }

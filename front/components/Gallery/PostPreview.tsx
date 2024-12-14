@@ -1,9 +1,10 @@
 import React, { useCallback, useMemo } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { ArrowsAltOutlined, CommentOutlined, HeartOutlined } from '@ant-design/icons';
 
+import useOverlays from 'utils/useOverlays';
+import { imgURL } from 'config';
 import { RootState } from 'store/reducers';
-import { showPostModal } from 'store/actions/postAction';
 import { Image, PostComment, PostLike, UserHistoryPost } from 'store/types/postType';
 import { slideInTooltip } from 'styles/Common/animation';
 import {
@@ -21,7 +22,7 @@ type PostPreviewProps = {
 };
 
 const PostPreview = ({ userHistory, selectMode, selectedPostIds, setSelectedPostIds }: PostPreviewProps) => {
-  const dispatch = useDispatch();
+  const { openOverlay } = useOverlays();
   const { me } = useSelector((state: RootState) => state.user);
 
   const liked = useMemo(
@@ -51,7 +52,7 @@ const PostPreview = ({ userHistory, selectMode, selectedPostIds, setSelectedPost
     if (selectMode) {
       onToggleSelect();
     } else {
-      dispatch(showPostModal(userHistory.Post));
+      openOverlay('post', userHistory.Post);
     }
   }, [selectMode, userHistory.Post, onToggleSelect]);
 
@@ -64,7 +65,7 @@ const PostPreview = ({ userHistory, selectMode, selectedPostIds, setSelectedPost
       )}
 
       <PostPreviewImage onClick={onClickPost}>
-        <img src={`${userHistory.Post.Images[0].src}`} alt="게시글의 첫번째 이미지" />
+        <img src={imgURL(userHistory.Post.Images[0].src)} alt="게시글의 첫번째 이미지" />
 
         <ArrowsAltOutlined />
 
@@ -77,7 +78,7 @@ const PostPreview = ({ userHistory, selectMode, selectedPostIds, setSelectedPost
 
       <PostPreviewContent $selectMode={selectMode}>
         <div>
-          <h1>{userHistory.Post.content}</h1>
+          <h1>{userHistory.Post.content.replace(/\\n/g, '\n').replace(/␣/g, ' ')}</h1>
           <p>{userHistory.Post.User.nickname}</p>
 
           <PostPreviewOption $liked={liked} $hasCommented={hasCommented}>

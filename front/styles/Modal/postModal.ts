@@ -5,14 +5,14 @@ import { motion } from 'framer-motion';
 import media from 'styles/media';
 import { HoverStyle } from 'styles/Common/hover';
 
-export const PostModalWrapper = styled.section`
+export const PostModalWrapper = styled.section<{ $isPreviewVisible: boolean }>`
   position: fixed;
   top: 0;
   left: 0;
   ${({ theme }) => theme.flexSet()};
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
+  width: 100vw;
+  height: 100vh;
+  background-color: ${props => (props.$isPreviewVisible ? 'transparent' : 'rgba(0, 0, 0, 0.6)')};
   z-index: 499;
 
   ${media.mobile} {
@@ -29,7 +29,8 @@ export const ModalOutsideArea = styled.div`
   z-index: 499;
 `;
 
-export const PostModalBtn = styled(CloseOutlined)`
+export const PostModalBtn = styled(CloseOutlined)<{ $isPreviewVisible: boolean }>`
+  display: ${props => (props.$isPreviewVisible ? 'none' : 'block')};
   position: absolute;
   top: 12px;
   right: 12px;
@@ -39,9 +40,9 @@ export const PostModalBtn = styled(CloseOutlined)`
   cursor: pointer;
   ${HoverStyle('&')}
 
-  ${media.mobile} {
-    top: 10px;
-    right: 10px;
+  ${media.tablet} {
+    top: 6px;
+    right: 6px;
     font-size: 1.1rem;
   }
 `;
@@ -56,19 +57,25 @@ export const PostModalContentsWrapper = styled(motion.div)`
   right: 0;
   bottom: 0;
   margin: auto;
-  width: 65%;
+  width: 76%;
   height: 90%;
   z-index: 500;
 
   ${media.tablet} {
     width: 100%;
-    height: 95%;
-    top: 5%;
+    height: 100%;
+    padding-top: 4%;
+    pointer-events: none;
+
+    > * {
+      pointer-events: auto;
+    }
   }
 
   ${media.mobile} {
     flex-direction: column;
     justify-content: start;
     overflow-y: auto;
+    padding-top: 10%;
   }
 `;

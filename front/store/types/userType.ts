@@ -8,7 +8,6 @@ export const LOAD_SUGGEST_USERS_REQUEST = 'LOAD_SUGGEST_USERS_REQUEST' as const;
 export const LOAD_SUGGEST_USERS_SUCCESS = 'LOAD_SUGGEST_USERS_SUCCESS' as const;
 export const LOAD_SUGGEST_USERS_FAILURE = 'LOAD_SUGGEST_USERS_FAILURE' as const;
 
-export const SET_USER_FOLLOW_TYPE = 'SET_USER_FOLLOW_TYPE' as const;
 export const LOAD_USER_INFO_REQUEST = 'LOAD_USER_INFO_REQUEST' as const;
 export const LOAD_USER_INFO_SUCCESS = 'LOAD_USER_INFO_SUCCESS' as const;
 export const LOAD_USER_INFO_FAILURE = 'LOAD_USER_INFO_FAILURE' as const;
@@ -207,10 +206,6 @@ export interface loadSuggestUsersSuccessAction {
 export interface loadSuggestUsersFailureAction {
   type: typeof LOAD_SUGGEST_USERS_FAILURE;
   error: string;
-}
-
-export interface setUserFollowTypeAction {
-  type: typeof SET_USER_FOLLOW_TYPE;
 }
 
 export interface loadUserInfoRequestAction {
@@ -488,7 +483,6 @@ export type UserAction =
   | loadUserFollowInfoRequestAction
   | loadUserFollowInfoSuccessAction
   | loadUserFollowInfoFailureAction
-  | setUserFollowTypeAction
   | searchUsersRequestAction
   | searchUsersSuccessAction
   | searchUsersFailureAction

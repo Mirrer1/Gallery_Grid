@@ -98,13 +98,13 @@ export const PostHeader = styled.div`
     & > div > a {
       font-size: 0.9rem;
       font-weight: 500;
-      margin-bottom: 0.4em;
       cursor: pointer;
     }
 
     & > div > p {
       font-size: 0.65rem;
       opacity: 40%;
+      margin-top: 0.3em;
     }
   }
 
@@ -210,6 +210,7 @@ export const PostContents = styled.div`
     color: ${({ theme }) => theme.colors.font};
     font-size: 0.8rem;
     line-height: 1.5;
+    white-space: pre-wrap;
     margin-bottom: 1em;
     padding: 0 0.3em;
   }
@@ -271,5 +272,20 @@ export const NoFollowingPostsContainer = styled.div`
 
   ${media.tablet} {
     height: 500px;
+  }
+`;
+
+export const TimelineLoadingContainer = styled.div`
+  ${({ theme }) => theme.flexColumnSet()};
+  height: 85%;
+
+  & > span {
+    color: ${({ theme }) => theme.colors.primary};
+    font-size: 3rem;
+    margin-bottom: 0.25em;
+  }
+
+  ${media.tablet} {
+    height: 32vh;
   }
 `;

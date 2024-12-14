@@ -4,9 +4,8 @@ import media from 'styles/media';
 import { HoverStyle } from 'styles/Common/hover';
 
 export const ModalContentWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 45%;
+  flex: 1;
+  ${({ theme }) => theme.flexColumnSet('normal', 'normal')};
   height: 100%;
   background-color: white;
   border-radius: 0 5px 5px 0;
@@ -45,13 +44,13 @@ export const ModalContentHeader = styled.div<{ $isFollowing: boolean }>`
     & > div > a {
       font-size: 0.9rem;
       font-weight: 500;
-      margin-bottom: 0.3em;
       cursor: pointer;
     }
 
     & > div > p {
       font-size: 0.7rem;
       opacity: 40%;
+      margin-top: 0.3em;
     }
   }
 
@@ -110,6 +109,7 @@ export const ModalContentText = styled.div<{ $isModalCommentListVisible: boolean
   color: ${({ theme }) => theme.colors.font};
   font-size: 0.85rem;
   line-height: 1.5;
+  white-space: pre-wrap;
   padding: 0.7em 1.2em;
   border-bottom: 1px solid ${({ theme }) => theme.colors.darkBg};
   overflow-y: auto;

@@ -131,15 +131,17 @@ export const GalleryActionBtn = styled.div<{ $selectMode: boolean }>`
     & > div > button {
       font-size: 0.6rem;
 
+      &:hover {
+        opacity: 100% !important;
+      }
+
+      &:active {
+        opacity: 100% !important;
+      }
+
       & > span {
         margin-right: 0.3em;
       }
-    }
-  }
-
-  ${media.mobile} {
-    & > div > button {
-      font-size: 0.55rem;
     }
   }
 `;

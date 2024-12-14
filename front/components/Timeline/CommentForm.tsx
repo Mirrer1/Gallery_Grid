@@ -12,8 +12,10 @@ import { toast } from 'react-toastify';
 import EmojiPicker from 'emoji-picker-react';
 
 import useInput from 'utils/useInput';
+import useOverlays from 'utils/useOverlays';
 import useFileUpload from 'utils/useFileUpload';
 import useEmojiPicker from 'utils/useEmojiPicker';
+import { imgURL } from 'config';
 import { RootState } from 'store/reducers';
 import { addCommentRequest, commentRemoveUploadedImage, commentUploadImageRequest } from 'store/actions/postAction';
 
@@ -28,14 +30,14 @@ import {
 } from 'styles/Timeline/commentList';
 
 type CommentFormProps = {
-  showImagePreview: (src: string) => void;
   replyId: number | null;
   replyUser: string | null;
   setReplyId: React.Dispatch<React.SetStateAction<number | null>>;
 };
 
-const CommentForm = ({ showImagePreview, replyId, replyUser, setReplyId }: CommentFormProps) => {
+const CommentForm = ({ replyId, replyUser, setReplyId }: CommentFormProps) => {
   const dispatch = useDispatch();
+  const { openOverlay } = useOverlays();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [comment, onChangeComment, setComment] = useInput('');
   const { showEmoji, showEmojiPicker, closeEmojiPicker, onEmojiClick } = useEmojiPicker(setComment);
@@ -94,6 +96,10 @@ const CommentForm = ({ showImagePreview, replyId, replyUser, setReplyId }: Comme
     [comment, commentImagePath, commentVisiblePostId, replyId, replyUser]
   );
 
+  const openImagePreview = useCallback((image: string) => {
+    openOverlay('preview', image);
+  }, []);
+
   const autoResize = useCallback(() => {
     const textarea = textareaRef.current;
 
@@ -121,7 +127,7 @@ const CommentForm = ({ showImagePreview, replyId, replyUser, setReplyId }: Comme
   }, [comment]);
 
   useEffect(() => {
-    if (textareaRef.current) {
+    if (window.innerWidth > 992 && textareaRef.current) {
       textareaRef.current.focus();
     }
   }, []);
@@ -140,9 +146,9 @@ const CommentForm = ({ showImagePreview, replyId, replyUser, setReplyId }: Comme
           {commentImagePath.length !== 0 && (
             <CommentFormImage key={commentImagePath} {...slideInUploadImage}>
               <img
-                src={`${commentImagePath}`}
+                src={imgURL(commentImagePath)}
                 alt="입력한 댓글의 첨부 이미지"
-                onClick={() => showImagePreview(`${commentImagePath}`)}
+                onClick={() => openImagePreview(`${commentImagePath}`)}
               />
               <DeleteOutlined onClick={handleRemoveImage} />
             </CommentFormImage>
@@ -169,7 +175,7 @@ const CommentForm = ({ showImagePreview, replyId, replyUser, setReplyId }: Comme
           <textarea
             placeholder="Type a Comment..."
             ref={textareaRef}
-            value={comment}
+            value={comment.replace(/\\n/g, '\n').replace(/␣/g, ' ')}
             onChange={onChangeComment}
             onKeyDown={handleKeyDown}
             onInput={autoResize}

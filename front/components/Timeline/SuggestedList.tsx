@@ -9,8 +9,8 @@ import {
 } from '@ant-design/icons';
 import Link from 'next/link';
 
-import ImagePreview from 'components/Modal/ImagePreviewModal';
-import useImagePreview from 'utils/useImagePreview';
+import useOverlays from 'utils/useOverlays';
+import { imgURL } from 'config';
 import { RootState } from 'store/reducers';
 import { FeaturedUser } from 'store/types/userType';
 import { followUserRequest, loadSuggestUsersRequest, unFollowUserRequest } from 'store/actions/userAction';
@@ -31,13 +31,12 @@ type SuggestedProps = {
 
 const SuggestedList = ({ suggestedListVisible, setSuggestedListVisible }: SuggestedProps) => {
   const dispatch = useDispatch();
-  const { imagePreview, showImagePreview, hideImagePreview } = useImagePreview();
+  const { openOverlay } = useOverlays();
   const [followActionLoadingUserId, setFollowActionLoadingUserId] = useState<number | null>(null);
   const { isCommentListVisible } = useSelector((state: RootState) => state.post);
   const { me, suggestUsers, loadSuggestUsersLoading, followUserDone, unFollowUserDone } = useSelector(
     (state: RootState) => state.user
   );
-
   const hideSuggestedList = useCallback(() => {
     setSuggestedListVisible(false);
   }, [suggestedListVisible]);
@@ -58,6 +57,10 @@ const SuggestedList = ({ suggestedListVisible, setSuggestedListVisible }: Sugges
     const excludeIds = suggestUsers.map((user: FeaturedUser) => user.id);
     dispatch(loadSuggestUsersRequest(excludeIds));
   }, [suggestUsers]);
+
+  const openImagePreview = useCallback((image: string) => {
+    openOverlay('preview', image);
+  }, []);
 
   useEffect(() => {
     if (followUserDone || unFollowUserDone) setFollowActionLoadingUserId(null);
@@ -82,33 +85,33 @@ const SuggestedList = ({ suggestedListVisible, setSuggestedListVisible }: Sugges
             <SuggestedInfo key={user.id} {...suggestedItemAnimation}>
               <div>
                 <img
-                  src={user?.ProfileImage ? `${user.ProfileImage.src}` : '/user.jpg'}
+                  src={user?.ProfileImage ? imgURL(user.ProfileImage.src) : '/user.jpg'}
                   alt={`${user.nickname}의 프로필 이미지`}
-                  onClick={() => showImagePreview(user?.ProfileImage ? `${user.ProfileImage.src}` : '/user.jpg')}
+                  onClick={() => openImagePreview(user?.ProfileImage ? `${user.ProfileImage.src}` : '/user.jpg')}
                 />
               </div>
 
               <div>
                 <div>
                   <Link href={`/user/${user.id}`}>{user.nickname}</Link>
-
-                  {followActionLoadingUserId === user.id ? (
-                    <LoadingOutlined />
-                  ) : me.Followings.some((following: { id: number }) => following.id === user.id) ? (
-                    <UserDeleteOutlined onClick={() => onToggleFollow(user.id)} />
-                  ) : (
-                    <UserAddOutlined onClick={() => onToggleFollow(user.id)} />
-                  )}
                 </div>
 
                 <p>{user.desc?.trim() ? user.desc : '소개글이 없습니다.'}</p>
+              </div>
+
+              <div>
+                {followActionLoadingUserId === user.id ? (
+                  <LoadingOutlined />
+                ) : me.Followings.some((following: { id: number }) => following.id === user.id) ? (
+                  <UserDeleteOutlined onClick={() => onToggleFollow(user.id)} />
+                ) : (
+                  <UserAddOutlined onClick={() => onToggleFollow(user.id)} />
+                )}
               </div>
             </SuggestedInfo>
           ))}
         </SuggestedInfoWrapper>
       </SuggestedWrapper>
-
-      <ImagePreview imagePreview={imagePreview} hideImagePreview={hideImagePreview} />
     </>
   );
 };

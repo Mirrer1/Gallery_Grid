@@ -1,14 +1,12 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { ArrowLeftOutlined, CloseOutlined, SearchOutlined } from '@ant-design/icons';
+import { useDispatch } from 'react-redux';
 
 import RecentSearch from './RecentSearch';
 import UserSearch from './UserSearch';
 import PostSearch from './PostSearch';
-import PostModal from 'components/Modal/PostModal';
 import useInput from 'utils/useInput';
 import useScroll from 'utils/useScroll';
-import { RootState } from 'store/reducers';
 import { initializeSearchUsers, searchUsersRequest } from 'store/actions/userAction';
 import { initializeSearchPosts, searchPostsRequest } from 'store/actions/postAction';
 
@@ -35,8 +33,6 @@ const Search = ({ setSearchMode }: SearchProps) => {
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const [keyword, onChangeKeyword, setKeyword] = useInput('');
-
-  const { isPostModalVisible } = useSelector((state: RootState) => state.post);
   const [selectedTab, setSelectedTab] = useState<'users' | 'posts'>('users');
   useScroll({ type: `search-${selectedTab}`, ref: searchContainerRef, keyword });
 
@@ -104,8 +100,11 @@ const Search = ({ setSearchMode }: SearchProps) => {
   );
 
   useEffect(() => {
-    inputRef.current?.focus();
+    if (window.innerWidth > 992) {
+      inputRef.current?.focus();
+    }
   }, []);
+
   return (
     <SearchContainer {...slideInFromBottom()}>
       <SearchBackButton onClick={cancelSearchMode}>
@@ -159,7 +158,7 @@ const Search = ({ setSearchMode }: SearchProps) => {
 
             {keyword.trim() ? (
               selectedTab === 'users' ? (
-                <UserSearch keyword={keyword} />
+                <UserSearch keyword={keyword} setSearchMode={setSearchMode} />
               ) : (
                 <PostSearch keyword={keyword} />
               )
@@ -169,8 +168,6 @@ const Search = ({ setSearchMode }: SearchProps) => {
           </SearchResultsWrapper>
         </ContentsWrapper>
       </SearchMain>
-
-      {isPostModalVisible && <PostModal />}
     </SearchContainer>
   );
 };

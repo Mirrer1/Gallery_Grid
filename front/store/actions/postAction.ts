@@ -44,7 +44,6 @@ import {
   LOAD_MY_INTERACTIONS_POSTS_REQUEST,
   DELETE_MY_INTERACTIONS_POSTS_REQUEST,
   LOAD_MY_ACTIVITY_POSTS_REQUEST,
-  SET_ACTIVITY_FOCUSED_COMMENT_ID,
   LOAD_MY_ACTIVITY_COUNTS_REQUEST,
   READ_ACTIVITY_REQUEST,
   INITIALIZE_POST_LIST,
@@ -54,7 +53,15 @@ import {
   LOAD_USER_POSTS_REQUEST,
   INITIALIZE_SEARCH_POSTS,
   SEARCH_POSTS_REQUEST,
-  LOAD_POST_REQUEST
+  LOAD_POST_REQUEST,
+  INITIALIZE_USER_POSTS,
+  FocusedComment,
+  SET_ACTIVITY_FOCUSED_COMMENT,
+  POST_REORDER_UPLOADED_IMAGE,
+  EDIT_POST_REORDER_UPLOADED_IMAGE,
+  Image,
+  SHOW_IMAGE_PREVIEW,
+  HIDE_IMAGE_PREVIEW
 } from 'store/types/postType';
 
 export const initializeSearchPosts = () => ({
@@ -99,6 +106,10 @@ export const loadFollowingPostsRequest = (lastCreatedAt?: string, limit: number 
   type: LOAD_FOLLOWING_POSTS_REQUEST,
   lastCreatedAt,
   limit
+});
+
+export const initializeUserPosts = () => ({
+  type: INITIALIZE_USER_POSTS
 });
 
 export const loadUserPostsRequest = (userId: number, lastId?: number) => ({
@@ -160,6 +171,16 @@ export const postUploadImagesRequest = (data: FormData) => ({
 
 export const postRemoveUploadedImage = (data: string) => ({
   type: POST_REMOVE_UPLOADED_IMAGE,
+  data
+});
+
+export const postReorderUploadedImage = (data: string[]) => ({
+  type: POST_REORDER_UPLOADED_IMAGE,
+  data
+});
+
+export const editPostReorderUploadedImage = (data: string[]) => ({
+  type: EDIT_POST_REORDER_UPLOADED_IMAGE,
   data
 });
 
@@ -276,8 +297,18 @@ export const hideModalCommentList = () => ({
   type: HIDE_MODAL_COMMENT_LIST
 });
 
-export const showPostCarousel = () => ({
-  type: SHOW_POST_CAROUSEL
+export const showImagePreview = (data: string) => ({
+  type: SHOW_IMAGE_PREVIEW,
+  data
+});
+
+export const hideImagePreview = () => ({
+  type: HIDE_IMAGE_PREVIEW
+});
+
+export const showPostCarousel = (data: Image[]) => ({
+  type: SHOW_POST_CAROUSEL,
+  data
 });
 
 export const hidePostCarousel = () => ({
@@ -320,7 +351,7 @@ export const executeModalCommentEdit = (data: string) => ({
   data
 });
 
-export const setActivityFocusedCommentId = (data: number) => ({
-  type: SET_ACTIVITY_FOCUSED_COMMENT_ID,
+export const setActivityFocusedComment = (data: FocusedComment) => ({
+  type: SET_ACTIVITY_FOCUSED_COMMENT,
   data
 });

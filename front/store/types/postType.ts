@@ -23,6 +23,7 @@ export const LOAD_FOLLOWING_POSTS_REQUEST = 'LOAD_FOLLOWING_POSTS_REQUEST' as co
 export const LOAD_FOLLOWING_POSTS_SUCCESS = 'LOAD_FOLLOWING_POSTS_SUCCESS' as const;
 export const LOAD_FOLLOWING_POSTS_FAILURE = 'LOAD_FOLLOWING_POSTS_FAILURE' as const;
 
+export const INITIALIZE_USER_POSTS = 'INITIALIZE_USER_POSTS' as const;
 export const LOAD_USER_POSTS_REQUEST = 'LOAD_USER_POSTS_REQUEST' as const;
 export const LOAD_USER_POSTS_SUCCESS = 'LOAD_USER_POSTS_SUCCESS' as const;
 export const LOAD_USER_POSTS_FAILURE = 'LOAD_USER_POSTS_FAILURE' as const;
@@ -63,11 +64,13 @@ export const POST_UPLOAD_IMAGES_REQUEST = 'POST_UPLOAD_IMAGES_REQUEST' as const;
 export const POST_UPLOAD_IMAGES_SUCCESS = 'POST_UPLOAD_IMAGES_SUCCESS' as const;
 export const POST_UPLOAD_IMAGES_FAILURE = 'POST_UPLOAD_IMAGES_FAILURE' as const;
 export const POST_REMOVE_UPLOADED_IMAGE = 'POST_REMOVE_UPLOADED_IMAGE' as const;
+export const POST_REORDER_UPLOADED_IMAGE = 'POST_REORDER_UPLOADED_IMAGE' as const;
 
 export const EDIT_POST_UPLOAD_IMAGES_REQUEST = 'EDIT_POST_UPLOAD_IMAGES_REQUEST' as const;
 export const EDIT_POST_UPLOAD_IMAGES_SUCCESS = 'EDIT_POST_UPLOAD_IMAGES_SUCCESS' as const;
 export const EDIT_POST_UPLOAD_IMAGES_FAILURE = 'EDIT_POST_UPLOAD_IMAGES_FAILURE' as const;
 export const EDIT_POST_REMOVE_UPLOADED_IMAGE = 'EDIT_POST_REMOVE_UPLOADED_IMAGE' as const;
+export const EDIT_POST_REORDER_UPLOADED_IMAGE = 'EDIT_POST_REORDER_UPLOADED_IMAGE' as const;
 
 export const LOAD_COMMENTS_REQUEST = 'LOAD_COMMENTS_REQUEST' as const;
 export const LOAD_COMMENTS_SUCCESS = 'LOAD_COMMENTS_SUCCESS' as const;
@@ -134,6 +137,9 @@ export const UNLIKE_POST_FAILURE = 'UNLIKE_POST_FAILURE';
 export const SHOW_COMMENT_LIST = 'SHOW_COMMENT_LIST' as const;
 export const HIDE_COMMENT_LIST = 'HIDE_COMMENT_LIST' as const;
 
+export const SHOW_IMAGE_PREVIEW = 'SHOW_IMAGE_PREVIEW' as const;
+export const HIDE_IMAGE_PREVIEW = 'HIDE_IMAGE_PREVIEW' as const;
+
 export const SHOW_POST_CAROUSEL = 'SHOW_POST_CAROUSEL' as const;
 export const HIDE_POST_CAROUSEL = 'HIDE_POST_CAROUSEL' as const;
 
@@ -142,13 +148,18 @@ export const HIDE_POST_MODAL = 'HIDE_POST_MODAL' as const;
 
 export const SHOW_MODAL_COMMENT_LIST = 'SHOW_MODAL_COMMENT_LIST' as const;
 export const HIDE_MODAL_COMMENT_LIST = 'HIDE_MODAL_COMMENT_LIST' as const;
-export const SET_ACTIVITY_FOCUSED_COMMENT_ID = 'SET_ACTIVITY_FOCUSED_COMMENT_ID' as const;
+export const SET_ACTIVITY_FOCUSED_COMMENT = 'SET_ACTIVITY_FOCUSED_COMMENT' as const;
 
 export const EXECUTE_POST_EDIT = 'EXECUTE_POST_EDIT' as const;
 export const CANCEL_POST_EDIT = 'CANCEL_POST_EDIT' as const;
 
 export const SHOW_DELETE_MODAL = 'SHOW_DELETE_MODAL' as const;
 export const HIDE_DELETE_MODAL = 'HIDE_DELETE_MODAL' as const;
+
+export interface FocusedComment {
+  activityType: 'comment' | 'replyComment';
+  id: number;
+}
 
 export interface DeleteInfo {
   type?: '댓글' | '게시글' | 'Gallery 게시글';
@@ -250,6 +261,8 @@ export type PostState = {
   myActivityPosts: UserHistoryPost[];
   galleryPosts: UserHistoryPost[];
   singlePost: Post | null;
+  previewImagePath: string | null;
+  postCarousel: Image[];
   postImagePaths: string[];
   editPostImagePaths: string[];
   commentImagePath: string[];
@@ -262,7 +275,7 @@ export type PostState = {
   modalComments: Comment[] | null;
   lastChangedCommentId: number | null;
   lastChangedModalCommentId: number | null;
-  activityFocusedCommentId: number | null;
+  focusedComment: FocusedComment | null;
   commentVisiblePostId: number | null;
   hasMoreTimelinePosts: boolean;
   hasMoreUserPosts: boolean;
@@ -364,6 +377,7 @@ export type PostState = {
   isCarouselVisible: boolean;
   isPostModalVisible: boolean;
   isDeleteModalVisible: boolean;
+  isPreviewVisible: boolean;
 };
 
 export interface initializeSearchPostsAction {
@@ -453,6 +467,10 @@ export interface loadPostSuccessAction {
 export interface loadPostFailureAction {
   type: typeof LOAD_POST_FAILURE;
   error: string;
+}
+
+export interface initializeUserPosts {
+  type: typeof INITIALIZE_USER_POSTS;
 }
 
 export interface loadUserPostsRequestAction {
@@ -617,6 +635,11 @@ export interface postRemoveUploadedImageAction {
   data: string;
 }
 
+export interface postReorderUploadedImageAction {
+  type: typeof POST_REORDER_UPLOADED_IMAGE;
+  data: string[];
+}
+
 export interface editPostUploadImagesRequestAction {
   type: typeof EDIT_POST_UPLOAD_IMAGES_REQUEST;
   data: FormData;
@@ -635,6 +658,11 @@ export interface editPostUploadImagesFailureAction {
 export interface editPostRemoveUploadedImageAction {
   type: typeof EDIT_POST_REMOVE_UPLOADED_IMAGE;
   data: string;
+}
+
+export interface editPostReorderUploadedImageAction {
+  type: typeof EDIT_POST_REORDER_UPLOADED_IMAGE;
+  data: string[];
 }
 
 export interface loadCommentsRequestAction {
@@ -880,8 +908,18 @@ export interface hideModalCommentListAction {
   type: typeof HIDE_MODAL_COMMENT_LIST;
 }
 
+export interface showImagePreviewAction {
+  type: typeof SHOW_IMAGE_PREVIEW;
+  data: string;
+}
+
+export interface hideImagePreviewAction {
+  type: typeof HIDE_IMAGE_PREVIEW;
+}
+
 export interface ShowPostCarouselAction {
   type: typeof SHOW_POST_CAROUSEL;
+  data: Image[];
 }
 
 export interface HidePostCarouselAction {
@@ -924,9 +962,9 @@ export interface executeModalCommentEditAction {
   data: string;
 }
 
-export interface setActivityFocusedCommentIdAction {
-  type: typeof SET_ACTIVITY_FOCUSED_COMMENT_ID;
-  data: number;
+export interface SetActivityFocusedCommentAction {
+  type: typeof SET_ACTIVITY_FOCUSED_COMMENT;
+  data: FocusedComment;
 }
 
 export type PostAction =
@@ -1033,7 +1071,7 @@ export type PostAction =
   | editModalCommentRequestAction
   | editModalCommentSuccessAction
   | editModalCommentFailureAction
-  | setActivityFocusedCommentIdAction
+  | SetActivityFocusedCommentAction
   | loadUserPostsRequestAction
   | loadUserPostsSuccessAction
   | loadUserPostsFailureAction
@@ -1043,4 +1081,9 @@ export type PostAction =
   | searchPostsFailureAction
   | loadPostRequestAction
   | loadPostSuccessAction
-  | loadPostFailureAction;
+  | loadPostFailureAction
+  | initializeUserPosts
+  | postReorderUploadedImageAction
+  | editPostReorderUploadedImageAction
+  | showImagePreviewAction
+  | hideImagePreviewAction;

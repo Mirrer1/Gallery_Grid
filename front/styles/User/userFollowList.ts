@@ -5,14 +5,14 @@ import { HoverStyle } from 'styles/Common/hover';
 import media from 'styles/media';
 
 export const UserFollowListWrapper = styled.section`
-  width: 60%;
+  flex: 1;
   height: 100%;
   overflow-y: scroll;
-  padding: 0.7em 1.5em 0.7em 0em;
+  padding: 0 1em 0.7em 0;
 
   ${media.tablet} {
     width: 100%;
-    padding: 0.7em 0 0.2em 0;
+    padding: 0;
   }
 `;
 
@@ -62,9 +62,9 @@ export const UserSearchWrapper = styled.div`
   }
 `;
 
-export const UserFollowListItemWrapper = styled(motion.div)``;
+export const UserFollowListItemWrapper = styled.div``;
 
-export const UserFollowListItem = styled.div<{ $isFollowing: boolean }>`
+export const UserFollowListItem = styled(motion.div)<{ $isFollowing: boolean }>`
   ${({ theme }) => theme.flexSet('space-between')};
   border-bottom: 1px solid ${({ theme }) => theme.colors.darkBg};
   margin-bottom: 0.8em;
@@ -77,7 +77,8 @@ export const UserFollowListItem = styled.div<{ $isFollowing: boolean }>`
 
   & > div:first-child {
     ${({ theme }) => theme.flexSet('start')};
-    flex-grow: 1;
+    flex: 1;
+    margin-right: 1.5em;
 
     & > img {
       width: 50px;
@@ -88,7 +89,7 @@ export const UserFollowListItem = styled.div<{ $isFollowing: boolean }>`
     }
 
     & > div {
-      flex-grow: 1;
+      flex: 1;
 
       & > a {
         font-size: 0.9rem;
@@ -97,19 +98,17 @@ export const UserFollowListItem = styled.div<{ $isFollowing: boolean }>`
       }
 
       & > p {
-        display: -webkit-box;
-        -webkit-line-clamp: 1;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: normal;
         font-size: 0.8rem;
         opacity: 60%;
         margin: 0.3em 0 0.8em 0;
+        white-space: normal;
+        overflow-wrap: break-word;
+        word-break: break-word;
       }
 
       & > div {
         ${({ theme }) => theme.flexSet('start')};
+        flex-wrap: wrap;
         font-size: 0.8rem;
         font-weight: 500;
         margin-bottom: 1em;
@@ -143,31 +142,12 @@ export const UserFollowListItem = styled.div<{ $isFollowing: boolean }>`
     }
   }
 
-  ${media.tablet} {
-    & > div:first-child {
-      & > div {
-        & > p {
-          font-size: 0.7rem;
-        }
-
-        & > div {
-          font-size: 0.7rem;
-        }
-      }
-    }
-  }
-
   ${media.mobile} {
     ${({ theme }) => theme.flexColumnSet()};
 
     & > div:first-child {
       width: 100%;
-
-      & > div {
-        & > p {
-          -webkit-line-clamp: 2;
-        }
-      }
+      margin-right: 0;
     }
 
     & > div:last-child {
@@ -193,6 +173,8 @@ export const UserSearchLoading = styled.div<{ $isGridDisabled?: boolean }>`
 
   ${media.tablet} {
     height: 100vh;
+    align-items: start;
+    padding-top: 20%;
   }
 `;
 

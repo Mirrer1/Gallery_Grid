@@ -1,13 +1,13 @@
 import Head from 'next/head';
 
-type PageHeadProps = {
+export type SeoProps = {
   title: string;
   description: string;
   imageUrl?: string;
   url: string;
 };
 
-const PageHead = ({ title, description, imageUrl, url }: PageHeadProps) => {
+export const PageHead = ({ title, description, imageUrl, url }: SeoProps) => {
   const defaultImageUrl = 'https://gallerygrd.com/favicon.ico';
 
   return (
@@ -26,5 +26,3 @@ const PageHead = ({ title, description, imageUrl, url }: PageHeadProps) => {
     </Head>
   );
 };
-
-export default PageHead;

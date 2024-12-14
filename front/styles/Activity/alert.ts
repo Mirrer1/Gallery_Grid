@@ -241,7 +241,7 @@ export const AlertHeader = styled.div<{ $type: string }>`
           font-size: 0.7rem;
 
           & > p:last-child {
-            max-width: 26%;
+            display: none;
           }
         }
       }
@@ -292,6 +292,7 @@ export const AlertContent = styled.div<{ $type: 'follow' | 'like' | 'comment' }>
       opacity: 60%;
       line-height: 1.5;
       margin-bottom: 0.5em;
+      white-space: pre-wrap;
     }
 
     & > div {

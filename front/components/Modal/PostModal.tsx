@@ -14,20 +14,19 @@ import { ModalOutsideArea, PostModalContentsWrapper, PostModalBtn, PostModalWrap
 const PostModal = () => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const { postEditMode } = useSelector((state: RootState) => state.post);
+  const { postEditMode, isPreviewVisible } = useSelector((state: RootState) => state.post);
 
   const hideModal = useCallback(() => {
-    if (router.pathname === '/post/[id]') {
-      return;
-    }
+    console.log('클릭!');
 
+    if (router.pathname === '/post/[id]') return;
     dispatch(hidePostModal());
   }, []);
 
   return (
-    <PostModalWrapper>
+    <PostModalWrapper $isPreviewVisible={isPreviewVisible}>
       <ModalOutsideArea onClick={hideModal}>
-        {router.pathname !== '/post/[id]' && <PostModalBtn onClick={hideModal} />}
+        {router.pathname !== '/post/[id]' && <PostModalBtn onClick={hideModal} $isPreviewVisible={isPreviewVisible} />}
       </ModalOutsideArea>
 
       <PostModalContentsWrapper {...slideInModal}>

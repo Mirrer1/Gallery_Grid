@@ -14,16 +14,12 @@ export const ModalCommentListContainer = styled(motion.div)`
 
   ${media.tablet} {
     position: fixed;
-    top: auto;
-    bottom: 0;
+    top: 0;
     left: 0;
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
     background-color: white;
     z-index: 200;
-    transition: bottom 0.15s ease;
   }
 `;
 
@@ -36,33 +32,9 @@ export const ModalCommentListHeader = styled.div`
     ${HoverStyle('&')};
   }
 
-  & > div {
-    display: none;
-  }
-
   ${media.tablet} {
     border-bottom: 1px solid ${({ theme }) => theme.colors.darkBg};
-    justify-content: center;
     padding: 1em;
-
-    & > span {
-      display: none;
-    }
-
-    & > div {
-      display: block;
-      width: 15%;
-      height: 8px;
-      background-color: ${({ theme }) => theme.colors.darkBg};
-      border-radius: 10px;
-    }
-  }
-
-  ${media.mobile} {
-    & > div {
-      width: 30%;
-      height: 6px;
-    }
   }
 `;
 
@@ -149,12 +121,14 @@ export const ModalCommentContainer = styled(motion.div)<{ $reply: boolean; $isFo
           }
 
           & > p {
+            ${({ theme }) => theme.flexSet()};
+            width: 38px;
+            height: 18px;
             font-size: 0.6rem;
             font-weight: 500;
             color: ${({ theme }) => theme.colors.primary};
             background-color: #d6e4f8;
             border-radius: 10px;
-            padding: 0 0.6em;
             line-height: 2;
           }
         }
@@ -183,6 +157,7 @@ export const ModalCommentContainer = styled(motion.div)<{ $reply: boolean; $isFo
   & > p {
     font-size: 0.75rem;
     line-height: 1.5;
+    white-space: pre-wrap;
     margin-left: 0.5em;
   }
 

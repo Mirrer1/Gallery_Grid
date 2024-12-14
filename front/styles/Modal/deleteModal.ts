@@ -6,8 +6,8 @@ import { HoverStyle } from 'styles/Common/hover';
 import { ModalShadowStyle } from 'styles/Common/shadow';
 
 export const DeleteModalWrapper = styled.section`
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   position: fixed;
   top: 50%;
   left: 50%;

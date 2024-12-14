@@ -75,46 +75,58 @@ router.post('/login', isNotLoggedIn, async (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {
     if (err) {
       console.error(err);
-      next(err);
+      return next(err);
     }
 
     if (info) {
       return res.status(401).send({ message: info.message });
     }
 
-    return req.logIn(user, async loginErr => {
-      if (loginErr) {
-        console.error(loginErr);
-        next(loginErr);
+    req.session.regenerate(async regenErr => {
+      if (regenErr) {
+        console.error('세션 재생성 중 에러 발생:', regenErr);
+        return next(regenErr);
       }
 
-      const fullUser = await User.findOne({
-        where: { id: user.id },
-        include: [
-          {
-            model: User,
-            as: 'Followings',
-            attributes: ['id']
-          },
-          {
-            model: User,
-            as: 'Followers',
-            attributes: ['id']
-          },
-          {
-            model: Image,
-            as: 'ProfileImage',
-            where: { type: 'user' },
-            attributes: ['id', 'src'],
-            required: false
-          }
-        ],
-        attributes: {
-          exclude: ['password', 'snsId', 'provider']
+      req.logIn(user, async loginErr => {
+        if (loginErr) {
+          console.error('로그인 중 에러 발생:', loginErr);
+          return next(loginErr);
+        }
+
+        try {
+          const fullUser = await User.findOne({
+            where: { id: user.id },
+            include: [
+              {
+                model: User,
+                as: 'Followings',
+                attributes: ['id']
+              },
+              {
+                model: User,
+                as: 'Followers',
+                attributes: ['id']
+              },
+              {
+                model: Image,
+                as: 'ProfileImage',
+                where: { type: 'user' },
+                attributes: ['id', 'src'],
+                required: false
+              }
+            ],
+            attributes: {
+              exclude: ['password', 'snsId', 'provider']
+            }
+          });
+
+          return res.status(200).json(fullUser);
+        } catch (err) {
+          console.error(err);
+          next(err);
         }
       });
-
-      return res.status(200).json(fullUser);
     });
   })(req, res, next);
 });
@@ -167,11 +179,18 @@ router.get(
   passport.authenticate('google', { failureRedirect: REDIRECT_CONFIG.failureRedirect }),
   (req, res) => {
     if (req.user) {
-      req.login(req.user, (err: any) => {
-        if (err) {
+      req.session.regenerate(regenErr => {
+        if (regenErr) {
+          console.error('세션 재생성 중 에러 발생:', regenErr);
           return res.redirect(REDIRECT_CONFIG.failureRedirect);
         }
-        res.redirect(REDIRECT_CONFIG.successRedirect);
+
+        req.login(req.user as User, (err: any) => {
+          if (err) {
+            return res.redirect(REDIRECT_CONFIG.failureRedirect);
+          }
+          res.redirect(REDIRECT_CONFIG.successRedirect);
+        });
       });
     } else {
       res.redirect(REDIRECT_CONFIG.failureRedirect);
@@ -187,6 +206,7 @@ router.post('/logout', isLoggedIn, (req, res, next) => {
     }
 
     req.session!.destroy(() => {
+      res.clearCookie('connect.sid', { path: '/' });
       res.send('정상적으로 로그아웃 되었습니다.');
     });
   });

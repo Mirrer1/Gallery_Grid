@@ -22,7 +22,7 @@ export const UserProfileWrapper = styled.div`
     cursor: pointer;
   }
 
-  & > a {
+  & > p {
     font-weight: 700;
     cursor: pointer;
   }
@@ -162,11 +162,8 @@ export const NoSearchUserContainer = styled.div`
   }
 
   ${media.tablet} {
-    height: 100%;
-    min-height: 500px;
-  }
-
-  ${media.mobile} {
-    min-height: 450px;
+    height: 100vh;
+    align-items: start;
+    padding-top: 20%;
   }
 `;

@@ -39,32 +39,8 @@ export const CommentListHeader = styled.div`
     ${HoverStyle('&')};
   }
 
-  & > div {
-    display: none;
-  }
-
   ${media.tablet} {
-    justify-content: center;
     padding: 1em;
-
-    & > span {
-      display: none;
-    }
-
-    & > div {
-      display: block;
-      width: 15%;
-      height: 8px;
-      background-color: ${({ theme }) => theme.colors.darkBg};
-      border-radius: 10px;
-    }
-  }
-
-  ${media.mobile} {
-    & > div {
-      width: 30%;
-      height: 6px;
-    }
   }
 `;
 
@@ -153,12 +129,14 @@ export const CommentContainer = styled(motion.div)<{ $reply: boolean }>`
           }
 
           & > p {
+            ${({ theme }) => theme.flexSet()};
+            width: 38px;
+            height: 18px;
             font-size: 0.6rem;
             font-weight: 500;
             color: ${({ theme }) => theme.colors.primary};
             background-color: #d6e4f8;
             border-radius: 10px;
-            padding: 0 0.6em;
             line-height: 2;
             text-align: center;
           }
@@ -189,6 +167,7 @@ export const CommentContainer = styled(motion.div)<{ $reply: boolean }>`
     font-size: 0.75rem;
     line-height: 1.5;
     margin-left: 0.5em;
+    white-space: pre-wrap;
   }
 
   & > button {
@@ -281,14 +260,14 @@ export const CommentFormReply = styled(motion.div)`
 export const CommentFormInput = styled.form<{ $active: boolean }>`
   position: relative;
   height: 100%;
-  ${({ theme }) => theme.flexSet('space-between')}
+  ${({ theme }) => theme.flexSet('normal')}
   background-color: white;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   padding: 0.5em;
 
   & > div:first-child {
-    flex-grow: 1;
-    ${({ theme }) => theme.flexSet('start')}
+    flex: 1;
+    ${({ theme }) => theme.flexSet('normal')}
 
     & > span {
       font-size: 1rem;
@@ -305,7 +284,7 @@ export const CommentFormInput = styled.form<{ $active: boolean }>`
     }
 
     & > textarea {
-      flex-grow: 1;
+      flex: 1;
       min-height: 34px;
       max-height: 700px;
       font-size: 0.8rem;
@@ -328,15 +307,18 @@ export const CommentFormInput = styled.form<{ $active: boolean }>`
   }
 
   & > button {
-    ${({ theme }) => theme.flexSet('end')}
+    width: 28px;
+    height: 28px;
 
     & > span {
+      ${({ theme }) => theme.flexSet()};
+      width: 100%;
+      height: 100%;
       font-size: 0.85rem;
       color: white;
       opacity: ${props => (props.$active ? '40%' : '100%')};
       background-color: ${({ theme }) => theme.colors.primary};
       border-radius: 50%;
-      padding: 0.5em;
       ${HoverStyle('&')};
 
       & > svg {

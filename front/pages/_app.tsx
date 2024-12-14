@@ -7,18 +7,23 @@ import 'react-toastify/dist/ReactToastify.css';
 import wrapper from 'store/configureStore';
 import GlobalStyle from 'styles/global';
 import theme from 'styles/theme';
+import OverlayProvider from 'providers/overlay';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <meta charSet="utf-8" />
         <title>Gallery Grid</title>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" />
       </Head>
 
       <GlobalStyle />
       <ThemeProvider theme={theme}>
-        <Component {...pageProps} />
+        <OverlayProvider>
+          <Component {...pageProps} />
+        </OverlayProvider>
+
         <ToastContainer
           position="top-right"
           autoClose={2000}

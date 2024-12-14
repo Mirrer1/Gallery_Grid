@@ -1,7 +1,7 @@
 import React, { ReactNode, useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import Router from 'next/router';
+import { useRouter } from 'next/router';
 import Link from 'next/link';
 import {
   AreaChartOutlined,
@@ -17,9 +17,9 @@ import {
 import Search from './Search';
 import MobileHeader from './MobileHeader';
 import MobileFooter from './MobileFooter';
-import ImagePreview from 'components/Modal/ImagePreviewModal';
 
-import useImagePreview from 'utils/useImagePreview';
+import useOverlays from 'utils/useOverlays';
+import { imgURL } from 'config';
 import { RootState } from 'store/reducers';
 import { logoutRequest } from 'store/actions/userAction';
 import {
@@ -33,9 +33,13 @@ import {
 } from 'styles/AppLayout';
 
 const AppLayout = ({ children }: { children: ReactNode }) => {
+  const router = useRouter();
   const dispatch = useDispatch();
+  const { openOverlay } = useOverlays();
   const { me, logoutDone } = useSelector((state: RootState) => state.user);
-  const { imagePreview, showImagePreview, hideImagePreview } = useImagePreview();
+  const { isPostModalVisible, isDeleteModalVisible, isCarouselVisible, isPreviewVisible } = useSelector(
+    (state: RootState) => state.post
+  );
   const [pathname, setPathname] = useState<string | null>(null);
   const [searchMode, setSearchMode] = useState<boolean>(false);
 
@@ -51,17 +55,45 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
     setSearchMode(true);
   }, []);
 
+  const handleNavigation = useCallback(
+    (href: string) => {
+      if (router.pathname !== href) {
+        router.push(href);
+      }
+    },
+    [router]
+  );
+
+  const openImagePreview = useCallback((image: string) => {
+    openOverlay('preview', image);
+  }, []);
+
   useEffect(() => {
     if (logoutDone) {
-      Router.replace('/');
+      router.push('/');
       toast.success('정상적으로 로그아웃 되었습니다.');
     }
   }, [logoutDone]);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') setPathname(Router.pathname);
+    if (typeof window !== 'undefined') setPathname(router.pathname);
     window.scrollTo(0, 0);
   }, []);
+
+  useEffect(() => {
+    if (
+      window.innerWidth <= 992 &&
+      (isPostModalVisible || isDeleteModalVisible || isCarouselVisible || isPreviewVisible)
+    ) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isPostModalVisible, isDeleteModalVisible, isCarouselVisible, isPreviewVisible]);
 
   return (
     <LayoutWrapper>
@@ -75,9 +107,9 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
 
             <NavbarProfile>
               <img
-                src={me?.ProfileImage ? `${me.ProfileImage.src}` : '/user.jpg'}
+                src={me?.ProfileImage ? imgURL(me.ProfileImage.src) : '/user.jpg'}
                 alt="유저 프로필 이미지"
-                onClick={() => showImagePreview(me?.ProfileImage ? `${me.ProfileImage.src}` : '/user.jpg')}
+                onClick={() => openImagePreview(me?.ProfileImage ? `${me.ProfileImage.src}` : '/user.jpg')}
               />
 
               <h1>{me?.nickname}</h1>
@@ -91,13 +123,21 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
             </NavbarProfile>
 
             <NavbarItems>
-              <NavbarItem href="/timeline" $selected={pathname === '/timeline'} $message={false}>
+              <NavbarItem
+                onClick={() => handleNavigation('/timeline')}
+                $selected={pathname === '/timeline'}
+                $message={false}
+              >
                 <div />
                 <FieldTimeOutlined />
                 <p>Timeline</p>
               </NavbarItem>
 
-              <NavbarItem href="/activity" $selected={pathname === '/activity'} $message={false}>
+              <NavbarItem
+                onClick={() => handleNavigation('/activity')}
+                $selected={pathname === '/activity'}
+                $message={false}
+              >
                 <div />
                 <NotificationOutlined />
                 <p>Activity</p>
@@ -117,13 +157,21 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
                 </div>
               </NavbarMessage> */}
 
-              <NavbarItem href="/gallery" $selected={pathname === '/gallery'} $message={false}>
+              <NavbarItem
+                onClick={() => handleNavigation('/gallery')}
+                $selected={pathname === '/gallery'}
+                $message={false}
+              >
                 <div />
                 <PictureOutlined />
                 <p>Gallery</p>
               </NavbarItem>
 
-              <NavbarItem href={`/user/${me.id}`} $selected={pathname === '/user'} $message={false}>
+              <NavbarItem
+                onClick={() => handleNavigation(`/user/${me.id}`)}
+                $selected={pathname === `/user/${me.id}`}
+                $message={false}
+              >
                 <div />
                 <AreaChartOutlined />
                 <p>Profile</p>
@@ -132,7 +180,11 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
           </div>
 
           <NavbarItems>
-            <NavbarItem href="/settings" $selected={pathname === '/settings'} $message={false}>
+            <NavbarItem
+              onClick={() => handleNavigation('/settings')}
+              $selected={pathname === '/settings'}
+              $message={false}
+            >
               <div />
               <SettingOutlined />
               <p>Settings</p>
@@ -160,8 +212,6 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
       )}
 
       <MobileFooter />
-
-      <ImagePreview imagePreview={imagePreview} hideImagePreview={hideImagePreview} />
     </LayoutWrapper>
   );
 };

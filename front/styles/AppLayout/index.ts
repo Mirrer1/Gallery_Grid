@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import Link from 'next/link';
 
 import media from 'styles/media';
 import { ReverseHoverStyle } from 'styles/Common/hover';
@@ -138,7 +137,7 @@ export const NavbarItems = styled.div`
   width: 100%;
 `;
 
-export const NavbarItem = styled(Link)<{ $selected: boolean; $message: boolean }>`
+export const NavbarItem = styled.div<{ $selected: boolean; $message: boolean }>`
   ${ReverseHoverStyle('&')}
   ${({ theme }) => theme.flexSet('start')};
   opacity: ${props => (props.$selected ? '100%' : '40%')};
@@ -146,6 +145,7 @@ export const NavbarItem = styled(Link)<{ $selected: boolean; $message: boolean }
   font-weight: ${props => (props.$selected ? '700' : '500')};
   font-size: 0.9rem;
   margin-bottom: ${props => (props.$message ? '0' : '1em')};
+  cursor: pointer;
 
   & > div {
     visibility: ${props => (props.$selected ? 'visible' : 'hidden')};

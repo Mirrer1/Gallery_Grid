@@ -1,10 +1,5 @@
 import express from 'express';
 import multer from 'multer';
-import path from 'path';
-import fs from 'fs';
-import AWS from 'aws-sdk';
-import multerS3 from 'multer-s3';
-import dotenv from 'dotenv';
 import { Op } from 'sequelize';
 
 import Post from '../models/post';
@@ -13,32 +8,15 @@ import Image from '../models/image';
 import Comment from '../models/comment';
 import ReplyComment from '../models/replyComment';
 import UserHistory from '../models/userHistory';
+
+import { S3File } from '../types/file';
 import { isLoggedIn } from './middleware';
+import { configureStorage } from '../utils/configureStorage';
 
 const router = express.Router();
-dotenv.config();
-
-try {
-  fs.accessSync('uploads');
-} catch (err) {
-  console.log('uploads 폴더가 없으므로 생성합니다.');
-  fs.mkdirSync('uploads');
-}
-
-AWS.config.update({
-  accessKeyId: process.env.S3_ACCESS_KEY_ID,
-  secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
-  region: 'ap-northeast-2'
-});
 
 const upload = multer({
-  storage: multerS3({
-    s3: new AWS.S3() as any,
-    bucket: 'gallery-grid',
-    key(req, file, cb) {
-      cb(null, `original/${Date.now()}_${path.basename(file.originalname)}`);
-    }
-  }),
+  storage: configureStorage(),
   limits: { fileSize: 20 * 1024 * 1024 }
 });
 
@@ -127,28 +105,13 @@ router.patch('/:postId', isLoggedIn, upload.none(), async (req, res, next) => {
       }
     );
 
-    const currentImages = await Image.findAll({ where: { PostId: postId } });
-    const currentImageSrcs = currentImages.map(img => img.src);
-    const incomingImageSrcs = images ? (Array.isArray(images) ? images : [images]) : [];
+    await Image.destroy({ where: { PostId: postId } });
 
-    const imagesToAdd = incomingImageSrcs.filter(src => !currentImageSrcs.includes(src));
-    const imagesToRemove = currentImageSrcs.filter(src => !incomingImageSrcs.includes(src));
+    if (images) {
+      const incomingImageSrcs = Array.isArray(images) ? images : [images];
 
-    if (imagesToRemove.length > 0) {
       await Promise.all(
-        imagesToRemove.map(async (src: string) => {
-          const image = await Image.findOne({ where: { src, PostId: postId } });
-
-          if (image) {
-            await image.update({ PostId: null });
-          }
-        })
-      );
-    }
-
-    if (imagesToAdd.length > 0) {
-      await Promise.all(
-        imagesToAdd.map((src: string) => Image.create({ type: 'post', src, PostId: parseInt(postId, 10) }))
+        incomingImageSrcs.map((src: string) => Image.create({ type: 'post', src, PostId: parseInt(postId, 10) }))
       );
     }
 
@@ -201,8 +164,9 @@ router.patch('/:postId', isLoggedIn, upload.none(), async (req, res, next) => {
 
 router.post('/images', isLoggedIn, upload.array('image'), async (req, res, next) => {
   try {
-    const files = req.files as Express.Multer.File[];
-    res.status(200).json(files.map(file => (file as any).location));
+    const files = req.files as S3File[];
+    const fileURLs = files.map(file => (process.env.NODE_ENV === 'production' ? file.location : file.filename));
+    res.status(200).json(fileURLs);
   } catch (err) {
     console.error(err);
     next(err);
@@ -211,8 +175,12 @@ router.post('/images', isLoggedIn, upload.array('image'), async (req, res, next)
 
 router.delete('/:postId', isLoggedIn, async (req, res, next) => {
   try {
-    const postId = req.params.postId;
+    const postId = parseInt(req.params.postId, 10);
     const userId = req.user!.id;
+
+    if (postId === 1) {
+      return res.status(403).json({ message: '해당 게시글의 삭제는 관리자 권한이 필요합니다.' });
+    }
 
     const post = await Post.findOne({
       where: { id: postId, UserId: userId }

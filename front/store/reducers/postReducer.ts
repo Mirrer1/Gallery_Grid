@@ -106,7 +106,6 @@ import {
   DELETE_MY_INTERACTIONS_POSTS_REQUEST,
   DELETE_MY_INTERACTIONS_POSTS_SUCCESS,
   DELETE_MY_INTERACTIONS_POSTS_FAILURE,
-  SET_ACTIVITY_FOCUSED_COMMENT_ID,
   LOAD_MY_ACTIVITY_COUNTS_REQUEST,
   LOAD_MY_ACTIVITY_COUNTS_SUCCESS,
   LOAD_MY_ACTIVITY_COUNTS_FAILURE,
@@ -117,7 +116,13 @@ import {
   DELETE_FOLLOWING_USER_POSTS,
   SEARCH_POSTS_REQUEST,
   SEARCH_POSTS_SUCCESS,
-  SEARCH_POSTS_FAILURE
+  SEARCH_POSTS_FAILURE,
+  INITIALIZE_USER_POSTS,
+  SET_ACTIVITY_FOCUSED_COMMENT,
+  POST_REORDER_UPLOADED_IMAGE,
+  EDIT_POST_REORDER_UPLOADED_IMAGE,
+  SHOW_IMAGE_PREVIEW,
+  HIDE_IMAGE_PREVIEW
 } from 'store/types/postType';
 
 export const initialState: PostState = {
@@ -128,6 +133,8 @@ export const initialState: PostState = {
   myActivityPosts: [],
   galleryPosts: [],
   singlePost: null,
+  previewImagePath: null,
+  postCarousel: [],
   postImagePaths: [],
   editPostImagePaths: [],
   commentImagePath: [],
@@ -140,7 +147,7 @@ export const initialState: PostState = {
   modalComments: [],
   lastChangedCommentId: null,
   lastChangedModalCommentId: null,
-  activityFocusedCommentId: null,
+  focusedComment: null,
   commentVisiblePostId: null,
   hasMoreTimelinePosts: true,
   hasMoreUserPosts: true,
@@ -241,7 +248,8 @@ export const initialState: PostState = {
   isModalCommentListVisible: false,
   isCarouselVisible: false,
   isPostModalVisible: false,
-  isDeleteModalVisible: false
+  isDeleteModalVisible: false,
+  isPreviewVisible: false
 };
 
 const reducer = (state: PostState = initialState, action: PostAction): PostState => {
@@ -330,6 +338,10 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
       case LOAD_POST_FAILURE:
         draft.loadPostLoading = false;
         draft.loadPostError = action.error;
+        break;
+      case INITIALIZE_USER_POSTS:
+        draft.userPosts = [];
+        draft.hasMoreUserPosts = true;
         break;
       case LOAD_USER_POSTS_REQUEST:
         draft.loadUserPostsLoading = true;
@@ -559,6 +571,9 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
       case POST_REMOVE_UPLOADED_IMAGE:
         draft.postImagePaths = draft.postImagePaths.filter(path => path !== action.data);
         break;
+      case POST_REORDER_UPLOADED_IMAGE:
+        draft.postImagePaths = action.data;
+        break;
       case EDIT_POST_UPLOAD_IMAGES_REQUEST:
         draft.editPostUploadImagesLoading = true;
         draft.editPostUploadImagesDone = false;
@@ -576,6 +591,9 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
         break;
       case EDIT_POST_REMOVE_UPLOADED_IMAGE:
         draft.editPostImagePaths = draft.editPostImagePaths.filter(path => path !== action.data);
+        break;
+      case EDIT_POST_REORDER_UPLOADED_IMAGE:
+        draft.editPostImagePaths = action.data;
         break;
       case LOAD_COMMENTS_REQUEST:
         draft.loadCommentsLoading = true;
@@ -1443,18 +1461,28 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
       case HIDE_MODAL_COMMENT_LIST:
         draft.isModalCommentListVisible = false;
         draft.modalCommentImagePath = [];
-        draft.activityFocusedCommentId = null;
+        draft.focusedComment = null;
         break;
-      case SET_ACTIVITY_FOCUSED_COMMENT_ID:
-        draft.activityFocusedCommentId = action.data;
+      case SET_ACTIVITY_FOCUSED_COMMENT:
+        draft.focusedComment = action.data;
         draft.isModalCommentListVisible = true;
         draft.modalCommentImagePath = [];
         break;
+      case SHOW_IMAGE_PREVIEW:
+        draft.isPreviewVisible = true;
+        draft.previewImagePath = action.data;
+        break;
+      case HIDE_IMAGE_PREVIEW:
+        draft.isPreviewVisible = false;
+        draft.previewImagePath = null;
+        break;
       case SHOW_POST_CAROUSEL:
         draft.isCarouselVisible = true;
+        draft.postCarousel = action.data;
         break;
       case HIDE_POST_CAROUSEL:
         draft.isCarouselVisible = false;
+        draft.postCarousel = [];
         break;
       case SHOW_POST_MODAL:
         draft.isPostModalVisible = true;
@@ -1467,7 +1495,7 @@ const reducer = (state: PostState = initialState, action: PostAction): PostState
         draft.isPostModalVisible = false;
         draft.isModalCommentListVisible = false;
         draft.lastChangedModalCommentId = null;
-        draft.activityFocusedCommentId = null;
+        draft.focusedComment = null;
         break;
       case EXECUTE_POST_EDIT:
         draft.postEditMode = true;

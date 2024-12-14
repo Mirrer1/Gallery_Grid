@@ -8,6 +8,10 @@ const bundleAnalyzer = withBundleAnalyzer({
 const nextConfig = {
   reactStrictMode: true,
   compress: true,
+  swcMinify: true,
+  experimental: {
+    outputFileTracing: true
+  },
   webpack(config, { webpack }) {
     const prod = process.env.NODE_ENV === 'production';
     const plugins = [...config.plugins];

@@ -53,7 +53,6 @@ import {
   DECREMENT_BEST_USERS_LIKE,
   INCREMENT_BEST_USERS_COMMENT,
   DECREMENT_BEST_USERS_COMMENT,
-  SET_USER_FOLLOW_TYPE,
   INITIALIZE_SEARCH_USERS,
   INITIALIZE_USER_FOLLOW_INFO
 } from 'store/types/userType';
@@ -143,10 +142,6 @@ const reducer = (state: UserState = initialState, action: UserAction): UserState
       case LOAD_SUGGEST_USERS_FAILURE:
         draft.loadSuggestUsersLoading = false;
         draft.loadSuggestUsersError = action.error;
-        break;
-      case SET_USER_FOLLOW_TYPE:
-        draft.userFollowInfo = [];
-        draft.hasMoreUserFollowInfo = true;
         break;
       case LOAD_USER_INFO_REQUEST:
         draft.loadUserInfoLoading = true;

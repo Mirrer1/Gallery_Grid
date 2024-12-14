@@ -1,19 +1,31 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { DeleteOutlined, LoadingOutlined, UploadOutlined } from '@ant-design/icons';
+import {
+  CaretLeftOutlined,
+  CaretRightOutlined,
+  DeleteOutlined,
+  LoadingOutlined,
+  UploadOutlined
+} from '@ant-design/icons';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, Navigation } from 'swiper';
 
 import useFileUpload from 'utils/useFileUpload';
+import { imgURL } from 'config';
 import { RootState } from 'store/reducers';
-import { editPostRemoveUploadedImage, editPostUploadImagesRequest } from 'store/actions/postAction';
+import {
+  editPostRemoveUploadedImage,
+  editPostReorderUploadedImage,
+  editPostUploadImagesRequest
+} from 'store/actions/postAction';
 import { slideInSeletedImage } from 'styles/Common/animation';
 import {
   EditModalCarouselWrapper,
   EditModalSwiperImages,
   EditModalSelectedImage,
   EditModalUploadBtn,
-  EditModalSwiperImageItem
+  EditModalSwiperImageItem,
+  EditModalOptionBtn
 } from 'styles/Modal/editModalCarousel';
 
 import 'swiper/css';
@@ -29,9 +41,25 @@ const EditModalCarousel = () => {
     (state: RootState) => state.post
   );
 
-  const handleImageClick = useCallback((image: string) => {
-    setSelectedImage(image);
-  }, []);
+  const handleImageClick = useCallback(
+    (image: string, index: number) => {
+      setSelectedImage(image);
+
+      if (swiperRef.current) {
+        const totalSlides = editPostImagePaths.length;
+        let targetSlide = index;
+
+        if (index === totalSlides - 1 && totalSlides > 3) {
+          targetSlide = totalSlides - 3;
+        } else if (index > 0) {
+          targetSlide = index - 1;
+        }
+
+        swiperRef.current.swiper.slideTo(targetSlide);
+      }
+    },
+    [editPostImagePaths]
+  );
 
   const handleRemoveImage = useCallback(
     (image: string) => {
@@ -47,6 +75,24 @@ const EditModalCarousel = () => {
       }
     },
     [dispatch, editPostImagePaths, selectedImage]
+  );
+
+  const handleSwapImage = useCallback(
+    (currentIndex: number, direction: 'left' | 'right') => {
+      const offset = direction === 'left' ? -1 : 1;
+      const newIndex = (currentIndex + offset + editPostImagePaths.length) % editPostImagePaths.length;
+      const newImagePaths = [...editPostImagePaths];
+
+      [newImagePaths[currentIndex], newImagePaths[newIndex]] = [newImagePaths[newIndex], newImagePaths[currentIndex]];
+
+      dispatch(editPostReorderUploadedImage(newImagePaths));
+      setSelectedImage(newImagePaths[newIndex]);
+
+      const slidesPerView = 3;
+      const centerIndex = Math.max(0, newIndex - Math.floor(slidesPerView / 2));
+      swiperRef.current?.swiper.slideTo(centerIndex);
+    },
+    [editPostImagePaths, dispatch]
   );
 
   const onClickImageUpload = useCallback(() => {
@@ -74,7 +120,10 @@ const EditModalCarousel = () => {
   return (
     <EditModalCarouselWrapper>
       <EditModalSelectedImage key={selectedImage} {...slideInSeletedImage}>
-        <img src={editPostImagePaths.length > 0 ? `${selectedImage}` : '/no-image.png'} alt="클릭한 게시글 이미지" />
+        <img
+          src={editPostImagePaths.length > 0 && selectedImage ? imgURL(selectedImage) : '/no-image.png'}
+          alt="클릭한 게시글 이미지"
+        />
       </EditModalSelectedImage>
 
       <EditModalSwiperImages>
@@ -92,12 +141,18 @@ const EditModalCarousel = () => {
           {editPostImagePaths.map((image: string, i: number) => (
             <SwiperSlide key={image}>
               <EditModalSwiperImageItem
-                src={`${image}`}
+                src={imgURL(image)}
                 alt={`게시글의 ${i}번째 이미지`}
-                onClick={() => handleImageClick(image)}
+                onClick={() => handleImageClick(image, i)}
                 selected={selectedImage === image}
               />
-              <DeleteOutlined onClick={() => handleRemoveImage(image)} />
+
+              <EditModalOptionBtn>
+                {editPostImagePaths.length > 1 && <CaretLeftOutlined onClick={() => handleSwapImage(i, 'left')} />}
+                {editPostImagePaths.length > 1 && <CaretRightOutlined onClick={() => handleSwapImage(i, 'right')} />}
+
+                <DeleteOutlined onClick={() => handleRemoveImage(image)} />
+              </EditModalOptionBtn>
             </SwiperSlide>
           ))}
         </Swiper>

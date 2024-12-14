@@ -34,7 +34,6 @@ const RecentSearch = ({ setKeyword }: RecentSearchProps) => {
       ].slice(0, 10);
 
       localStorage.setItem('recentSearches', JSON.stringify(updatedSearches));
-
       dispatch(initializeSearchUsers());
       dispatch(searchUsersRequest(keyword));
 

@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { motion } from 'framer-motion';
 
 import media from 'styles/media';
 import { HoverStyle, ReverseHoverStyle } from 'styles/Common/hover';
@@ -7,32 +8,28 @@ export const PostingWrapper = styled.form<{ $uploading: boolean }>`
   background-color: ${({ theme }) => theme.colors.darkBg};
   height: ${props => (props.$uploading ? '40%' : '31%')};
   border-radius: 5px 5px 0 0;
+  ${({ theme }) => theme.flexColumnSet('normal', 'normal')};
+  gap: 12px;
 
   & > textarea {
+    flex: 1;
     width: 100%;
-    height: ${props => (props.$uploading ? '42%' : '70%')};
     font-size: 0.8rem;
     line-height: 1.5;
     background-color: ${({ theme }) => theme.colors.darkBg};
-    padding: 1.5em;
+    padding: 1.2em 1.2em 0 1.2em;
     border-radius: 5px 5px 0 0;
     border: none;
     outline: none;
     resize: none;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    &::-webkit-scrollbar {
-      display: none;
-    }
   }
 
   & > div {
     position: relative;
     ${({ theme }) => theme.flexSet('space-between')};
     width: 100%;
-    height: ${props => (props.$uploading ? '15%' : '28%')};
     background-color: ${({ theme }) => theme.colors.darkBg};
-    padding: 0 1.2em;
+    padding: 0 1.2em 0.8em 1.2em;
 
     & > div:first-child {
       ${({ theme }) => theme.flexSet()};
@@ -80,20 +77,8 @@ export const PostingWrapper = styled.form<{ $uploading: boolean }>`
     }
   }
 
-  ${media.tablet} {
-    height: ${props => (props.$uploading ? '315px' : '230px')};
-  }
-
   ${media.mobile} {
-    height: ${props => (props.$uploading ? '275px' : '210px')};
-
-    & > textarea {
-      padding: 1em;
-    }
-
     & > div {
-      padding: 0 1em;
-
       & > div:first-child {
         & > span {
           font-size: 0.9rem;
@@ -122,63 +107,99 @@ export const PostingWrapper = styled.form<{ $uploading: boolean }>`
 
 export const UploadImages = styled.section`
   ${({ theme }) => theme.flexSet('start')};
-  height: 42%;
+  gap: 8px;
   padding: 0 1em;
-
-  & > div {
-    width: 100px;
-    height: 100px;
-    margin-right: 0.5em;
-    cursor: pointer;
-    position: relative;
-
-    & > img {
-      width: 100%;
-      height: 100%;
-      border-radius: 5px;
-    }
-
-    & > span {
-      position: absolute;
-      top: 2%;
-      right: 2%;
-      font-size: 0.9rem;
-      opacity: 40%;
-      cursor: pointer;
-      ${ReverseHoverStyle('&')}
-    }
-  }
-
-  & > div:last-child {
-    margin-right: 0;
-  }
 
   ${media.tablet} {
     & > div {
-      width: 85px;
-      height: 85px;
-
       & > span {
-        top: 1%;
-        right: 1%;
-        opacity: 70%;
+        font-size: 0.8rem;
+        opacity: 60%;
       }
     }
   }
 
   ${media.mobile} {
-    padding: 0 0.5em;
+    padding: 0 0.8em;
+  }
+`;
 
-    & > div {
-      width: 65px;
-      height: 65px;
-      margin-right: 0.4em;
+export const PostingUploadImageWrapper = styled(motion.div)`
+  ${({ theme }) => theme.flexSet('start')};
+  gap: 8px;
+  width: 15%;
+  aspect-ratio: 1 / 1;
 
-      & > span {
-        font-size: 0.8rem;
-        top: -5%;
-        right: -5%;
-      }
+  ${media.mobile} {
+    width: 18%;
+  }
+`;
+
+export const PostingUploadTooltip = styled.div`
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #505052;
+  color: #e7e7e9;
+  padding: 8px 12px;
+  border-radius: 5px;
+  font-size: 11px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.2s ease-in-out,
+    visibility 0.2s ease-in-out;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 6px;
+    border-style: solid;
+    border-color: #505052 transparent transparent transparent;
+  }
+
+  ${media.tablet} {
+    display: none;
+  }
+`;
+
+export const PostingUploadImageItem = styled(motion.div)`
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+  position: relative;
+
+  & > img {
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+  }
+
+  & > span {
+    position: absolute;
+    top: 2%;
+    right: 2%;
+    font-size: 0.9rem;
+    opacity: 40%;
+    cursor: pointer;
+    ${ReverseHoverStyle('&')}
+  }
+
+  &:hover ${PostingUploadTooltip} {
+    opacity: 100%;
+    visibility: visible;
+  }
+
+  ${media.tablet} {
+    & > span {
+      font-size: 0.8rem;
+      opacity: 60%;
     }
   }
 `;

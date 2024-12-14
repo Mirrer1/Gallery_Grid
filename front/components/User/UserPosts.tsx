@@ -1,27 +1,29 @@
 import React, { useCallback, useMemo, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
 import { ArrowsAltOutlined, CommentOutlined, HeartOutlined, LoadingOutlined } from '@ant-design/icons';
+import { useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
+import { motion } from 'framer-motion';
 
 import useScroll from 'utils/useScroll';
+import useOverlays from 'utils/useOverlays';
+import { imgURL } from 'config';
 import { RootState } from 'store/reducers';
-import { showPostModal } from 'store/actions/postAction';
 import { Image, Post, PostComment, PostLike } from 'store/types/postType';
-import { slideInFromBottom } from 'styles/Common/animation';
+import { slideInFromBottom, slideInList } from 'styles/Common/animation';
 import { UserPostContent, UserPostImage, UserPostOption, UserPostsWrapper } from 'styles/User/userPosts';
 import { NoSearchTextContainer, UserSearchLoading } from 'styles/User/userFollowList';
 
 const UserPosts = () => {
-  const dispatch = useDispatch();
   const router = useRouter();
   const { id: userId } = router.query;
+  const { openOverlay } = useOverlays();
   const userContainerRef = useRef<HTMLDivElement>(null);
   const { me } = useSelector((state: RootState) => state.user);
-  const { userPosts, loadUserPostsLoading } = useSelector((state: RootState) => state.post);
+  const { userPosts, loadUserPostsLoading, loadUserPostsDone } = useSelector((state: RootState) => state.post);
   useScroll({ type: 'user-posts', ref: userContainerRef, userId: Number(userId) });
 
   const onClickPost = useCallback((post: Post) => {
-    dispatch(showPostModal(post));
+    openOverlay('post', post);
   }, []);
 
   const liked = useMemo(
@@ -43,15 +45,15 @@ const UserPosts = () => {
 
   return (
     <UserPostsWrapper
-      {...slideInFromBottom(0.3)}
       ref={userContainerRef}
       $isGridDisabled={(loadUserPostsLoading && userPosts.length < 14) || userPosts.length === 0}
+      {...(!loadUserPostsLoading && slideInFromBottom(0.3))}
     >
       {loadUserPostsLoading && userPosts.length < 14 ? (
         <UserSearchLoading $isGridDisabled={(loadUserPostsLoading && userPosts.length < 14) || userPosts.length === 0}>
           <LoadingOutlined />
         </UserSearchLoading>
-      ) : userPosts.length === 0 ? (
+      ) : loadUserPostsDone && userPosts.length === 0 ? (
         <NoSearchTextContainer
           $isGridDisabled={(loadUserPostsLoading && userPosts.length < 14) || userPosts.length === 0}
         >
@@ -59,9 +61,9 @@ const UserPosts = () => {
         </NoSearchTextContainer>
       ) : (
         userPosts.map((post: Post, i: number) => (
-          <article key={post.id} onClick={() => onClickPost(post)}>
+          <motion.article key={post.id} onClick={() => onClickPost(post)} {...slideInList}>
             <UserPostImage>
-              <img src={`${post.Images[0].src}`} alt="게시글의 첫번째 이미지" />
+              <img src={imgURL(post.Images[0].src)} alt="게시글의 첫번째 이미지" />
 
               <ArrowsAltOutlined />
 
@@ -74,7 +76,7 @@ const UserPosts = () => {
 
             <UserPostContent $selectMode={false}>
               <div>
-                <h1>{post.content}</h1>
+                <h1>{post.content.replace(/\\n/g, '\n').replace(/␣/g, ' ')}</h1>
                 <p>{post.User.nickname}</p>
 
                 <UserPostOption $liked={liked[i]} $hasCommented={hasCommented[i]}>
@@ -100,7 +102,7 @@ const UserPosts = () => {
                 </UserPostOption>
               </div>
             </UserPostContent>
-          </article>
+          </motion.article>
         ))
       )}
     </UserPostsWrapper>

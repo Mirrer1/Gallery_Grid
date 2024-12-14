@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { LoadingOutlined } from '@ant-design/icons';
 import { toast } from 'react-toastify';
@@ -18,6 +18,8 @@ import {
 
 const SettingForm = () => {
   const dispatch = useDispatch();
+  const descWarnedRef = useRef(false);
+  const nicknameWarnedRef = useRef(false);
   const { me, userImagePath, editMyInfoDone, editMyInfoLoading } = useSelector((state: RootState) => state.user);
   const [nickname, onChangeNickname, setNickname] = useInput('');
   const [desc, onChangeDesc, setDesc] = useInput('');
@@ -70,11 +72,29 @@ const SettingForm = () => {
   }, [nickname, desc, isRecommended, userImagePath, me]);
 
   useEffect(() => {
-    if (nickname.length === 16) toast.warning('닉네임은 2~16자로 작성해주세요.');
+    if (nickname.length > 16) {
+      setNickname(nickname.slice(0, 16));
+      if (!nicknameWarnedRef.current) {
+        nicknameWarnedRef.current = true;
+        toast.warning('닉네임은 2~16자로 작성해주세요.');
+        setTimeout(() => {
+          nicknameWarnedRef.current = false;
+        }, 3000);
+      }
+    }
   }, [nickname]);
 
   useEffect(() => {
-    if (desc.length === 200) toast.warning('소개글은 200자 이하로 작성해주세요.');
+    if (desc.length > 200) {
+      setDesc(desc.slice(0, 200));
+      if (!descWarnedRef.current) {
+        descWarnedRef.current = true;
+        toast.warning('소개글은 200자 이하로 작성해주세요.');
+        setTimeout(() => {
+          descWarnedRef.current = false;
+        }, 3000);
+      }
+    }
   }, [desc]);
 
   useEffect(() => {
@@ -104,7 +124,7 @@ const SettingForm = () => {
         <label htmlFor="introText">소개</label>
         <textarea
           id="introText"
-          rows={3}
+          rows={5}
           maxLength={200}
           placeholder="더 많은 사람들이 당신을 알 수 있도록, 소개글을 작성해보세요."
           value={desc}

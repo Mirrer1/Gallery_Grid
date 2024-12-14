@@ -73,8 +73,8 @@ export const MobileSuggestedBtn = styled.div`
   }
 
   ${media.mobile} {
-    bottom: 8%;
-    right: 3%;
+    bottom: 9%;
+    right: 4%;
     transform: scale(1.1);
   }
 `;

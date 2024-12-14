@@ -18,7 +18,6 @@ import { sequelize } from './models';
 
 dotenv.config();
 const app = express();
-const PORT = process.env.NODE_ENV === 'production' ? 80 : 3065;
 passportConfig();
 
 sequelize
@@ -31,12 +30,13 @@ sequelize
   });
 
 if (process.env.NODE_ENV === 'production') {
+  app.set('trust proxy', 1);
   app.use(morgan('combined'));
   app.use(hpp());
   app.use(helmet());
   app.use(
     cors({
-      origin: 'http://gallerygrd.com',
+      origin: 'https://gallerygrd.com',
       credentials: true
     })
   );
@@ -56,11 +56,13 @@ app.use(
   session({
     resave: false,
     saveUninitialized: false,
+    proxy: process.env.NODE_ENV === 'production' && true,
     secret: process.env.COOKIE_SECRET!,
     cookie: {
       httpOnly: true,
-      secure: false,
-      domain: process.env.NODE_ENV === 'production' ? '.gallerygrd.com' : undefined
+      secure: process.env.NODE_ENV === 'production' ? true : false,
+      domain: process.env.NODE_ENV === 'production' ? '.gallerygrd.com' : undefined,
+      maxAge: 1000 * 60 * 60 * 24
     }
   })
 );
@@ -84,6 +86,6 @@ app.use((err: any, req: Request, res: Response, next: NextFunction): void => {
   res.status(500).send('Server error occurred! Please check the server console.');
 });
 
-app.listen(PORT, () => {
+app.listen(3065, () => {
   console.log('Running the express server.');
 });

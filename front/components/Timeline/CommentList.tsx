@@ -4,11 +4,8 @@ import { CaretDownOutlined, CloseSquareTwoTone, LoadingOutlined } from '@ant-des
 
 import CommentForm from './CommentForm';
 import CommentListItem from './CommentListItem';
-import EditCommentForm from './EditCommentForm';
 import ReplyComment from './ReplyComment';
-import ImagePreview from 'components/Modal/ImagePreviewModal';
 
-import useImagePreview from 'utils/useImagePreview';
 import { RootState } from 'store/reducers';
 import { Comment, IReplyComment } from 'store/types/postType';
 import { editCommentRemoveUploadedImage, hideCommentList, loadCommentsRequest } from 'store/actions/postAction';
@@ -25,7 +22,6 @@ import {
 const CommentList = () => {
   const dispatch = useDispatch();
   const commentRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
-  const { imagePreview, showImagePreview, hideImagePreview } = useImagePreview();
   const {
     isCommentListVisible,
     commentVisiblePostId,
@@ -42,9 +38,6 @@ const CommentList = () => {
     id: null,
     type: null
   });
-
-  const [translateY, setTranslateY] = useState(0);
-  const [touchStartY, setTouchStartY] = useState<number | null>(null);
 
   const onHideComment = useCallback(() => {
     dispatch(hideCommentList());
@@ -64,33 +57,6 @@ const CommentList = () => {
     setEditingComment({ id: null, type: null });
     dispatch(editCommentRemoveUploadedImage());
   }, []);
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    if (window.innerWidth <= 992) {
-      setTouchStartY(e.touches[0].clientY);
-    }
-  };
-
-  const handleTouchMove = (e: React.TouchEvent) => {
-    if (window.innerWidth <= 992 && touchStartY !== null) {
-      const deltaY = e.touches[0].clientY - touchStartY;
-      if (deltaY > 0) {
-        setTranslateY(deltaY);
-      }
-    }
-  };
-
-  const handleTouchEnd = () => {
-    if (translateY > 300) {
-      setTranslateY(window.innerHeight);
-      setTimeout(() => {
-        onHideComment();
-      }, 300);
-    } else {
-      setTranslateY(0);
-    }
-    setTouchStartY(null);
-  };
 
   useEffect(() => {
     if (editCommentDone) cancelEdit();
@@ -113,12 +79,10 @@ const CommentList = () => {
     <CommentListWrapper
       key={commentVisiblePostId}
       $isCommentListVisible={isCommentListVisible}
-      style={{ bottom: `${-translateY}px` }}
       {...slideInFromBottom()}
     >
-      <CommentListHeader onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
+      <CommentListHeader>
         <CaretDownOutlined onClick={onHideComment} />
-        <div />
       </CommentListHeader>
 
       {loadCommentsLoading ? (
@@ -133,44 +97,28 @@ const CommentList = () => {
                 <div key={comment.id} ref={el => (commentRefs.current[comment.id] = el)}>
                   {comment.isDeleted ? (
                     <DeleteCommentText>삭제된 댓글입니다.</DeleteCommentText>
-                  ) : editingComment.id === comment.id && editingComment.type === 'comment' ? (
-                    <EditCommentForm
-                      reply={false}
-                      comment={comment}
-                      replyId={null}
-                      cancelEdit={cancelEdit}
-                      showImagePreview={showImagePreview}
-                    />
                   ) : (
                     <CommentListItem
                       comment={comment}
                       setReplyId={setReplyId}
                       setReplyUser={setReplyUser}
-                      showImagePreview={showImagePreview}
                       onEditClick={() => handleEditClick(comment.id, 'comment')}
+                      isEditing={editingComment.id === comment.id && editingComment.type === 'comment'}
+                      cancelEdit={cancelEdit}
                     />
                   )}
 
                   {comment.Replies.map((reply: IReplyComment) => (
                     <div key={reply.id} ref={el => (commentRefs.current[reply.id] = el)}>
-                      {editingComment.id === reply.id && editingComment.type === 'reply' ? (
-                        <EditCommentForm
-                          reply={true}
-                          comment={reply}
-                          replyId={comment.id}
-                          cancelEdit={cancelEdit}
-                          showImagePreview={showImagePreview}
-                        />
-                      ) : (
-                        <ReplyComment
-                          comment={reply}
-                          replyId={comment.id}
-                          setReplyId={setReplyId}
-                          setReplyUser={setReplyUser}
-                          showImagePreview={showImagePreview}
-                          onEditClick={() => handleEditClick(reply.id, 'reply')}
-                        />
-                      )}
+                      <ReplyComment
+                        comment={reply}
+                        replyId={comment.id}
+                        setReplyId={setReplyId}
+                        setReplyUser={setReplyUser}
+                        onEditClick={() => handleEditClick(reply.id, 'reply')}
+                        isEditing={editingComment.id === reply.id && editingComment.type === 'reply'}
+                        cancelEdit={cancelEdit}
+                      />
                     </div>
                   ))}
                 </div>
@@ -184,16 +132,9 @@ const CommentList = () => {
             </NoCommentsContainer>
           )}
 
-          <CommentForm
-            showImagePreview={showImagePreview}
-            replyId={replyId}
-            replyUser={replyUser}
-            setReplyId={setReplyId}
-          />
+          <CommentForm replyId={replyId} replyUser={replyUser} setReplyId={setReplyId} />
         </>
       )}
-
-      <ImagePreview imagePreview={imagePreview} hideImagePreview={hideImagePreview} />
     </CommentListWrapper>
   );
 };

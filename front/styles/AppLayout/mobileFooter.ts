@@ -13,6 +13,7 @@ export const MobileFooterWrapper = styled.footer`
     width: 100%;
     height: 60px;
     ${({ theme }) => theme.flexSet('space-around')}
+    border-top: 1px solid ${({ theme }) => theme.colors.darkBg};
     background-color: #fff;
     z-index: 10;
 

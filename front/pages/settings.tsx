@@ -4,12 +4,14 @@ import { CameraOutlined, DeleteOutlined, LoadingOutlined } from '@ant-design/ico
 import { END } from 'redux-saga';
 import axios from 'axios';
 
-import PageHead from 'components/PageHead';
 import AppLayout from 'components/AppLayout';
 import SettingForm from 'components/Settings/SettingForm';
-import wrapper from 'store/configureStore';
+import { PageHead, SeoProps } from 'components/PageHead';
 import useFileUpload from 'utils/useFileUpload';
 import useToastStatus from 'utils/useToast';
+import { imgURL } from 'config';
+
+import wrapper from 'store/configureStore';
 import { RootState } from 'store/reducers';
 import {
   executeUserEdit,
@@ -17,10 +19,11 @@ import {
   userRemoveUploadedImage,
   userUploadImageRequest
 } from 'store/actions/userAction';
+
 import { slideInFromBottom } from 'styles/Common/animation';
 import { MobileImageBtn, MobileRemoveImageBtn, SettingProfile, SettingWrapper } from 'styles/Settings';
 
-const Settings = () => {
+const Settings = ({ seo }: { seo: SeoProps }) => {
   const dispatch = useDispatch();
   const { me, userImagePath, userUploadImageLoading } = useSelector((state: RootState) => state.user);
   const { fileInputRef, onFileChange } = useFileUpload(userUploadImageRequest, { showWarning: false });
@@ -32,18 +35,13 @@ const Settings = () => {
 
   return (
     <>
-      <PageHead
-        title={`Gallery Grid | ${me?.nickname || '사용자'}'s Settings`}
-        description={`${me?.nickname || '사용자'}님의 프로필을 수정하고 정보를 업데이트하세요. Gallery Grid에서 나만의 프로필을 완성해보세요.`}
-        imageUrl={me?.ProfileImage?.src}
-        url="https://gallerygrd.com/settings"
-      />
+      <PageHead title={seo.title} description={seo.description} imageUrl={seo.imageUrl} url={seo.url} />
 
       <AppLayout>
         <SettingWrapper>
           <SettingProfile {...slideInFromBottom()} $loading={userUploadImageLoading}>
             <label htmlFor="setting-image">
-              <img src={userImagePath.length > 0 ? `${userImagePath}` : '/user.jpg'} alt="유저 프로필 이미지" />
+              <img src={userImagePath.length > 0 ? imgURL(userImagePath) : '/user.jpg'} alt="유저 프로필 이미지" />
             </label>
 
             <div>
@@ -73,28 +71,29 @@ const Settings = () => {
 
 export const getServerSideProps = wrapper.getServerSideProps(async context => {
   const cookie = context.req ? context.req.headers.cookie : '';
-  axios.defaults.headers.Cookie = '';
-
-  if (context.req && cookie) axios.defaults.headers.Cookie = cookie;
+  axios.defaults.headers.Cookie = cookie || '';
 
   context.store.dispatch(loadMyInfoRequest());
-
   context.store.dispatch(END);
-  await context.store.sagaTask?.toPromise();
 
+  await context.store.sagaTask?.toPromise();
   context.store.dispatch(executeUserEdit());
 
   const state = context.store.getState();
   const { me } = state.user;
 
-  if (!me) {
-    return {
-      redirect: {
-        destination: '/',
-        permanent: false
-      }
-    };
-  }
+  const seo = {
+    title: `Gallery Grid | ${me?.nickname || '사용자'}'s Settings`,
+    description: `${me?.nickname || '사용자'}님의 프로필을 수정하고 정보를 업데이트하세요. Gallery Grid에서 나만의 프로필을 완성해보세요.`,
+    imageUrl: me?.ProfileImage?.src || 'https://gallerygrd.com/favicon.ico',
+    url: 'https://gallerygrd.com/settings'
+  };
+
+  return {
+    props: {
+      seo
+    }
+  };
 });
 
 export default Settings;

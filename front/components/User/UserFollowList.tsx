@@ -4,6 +4,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 
+import useScroll from 'utils/useScroll';
+import useOverlays from 'utils/useOverlays';
+import { formatFollowerCount } from 'utils/formatFollowerCount';
+import { imgURL } from 'config';
 import { RootState } from 'store/reducers';
 import { FollowUser } from 'store/types/userType';
 import {
@@ -12,12 +16,8 @@ import {
   loadUserFollowInfoRequest,
   unFollowUserRequest
 } from 'store/actions/userAction';
-import { formatFollowerCount } from 'utils/formatFollowerCount';
-import ImagePreview from 'components/Modal/ImagePreviewModal';
-import useImagePreview from 'utils/useImagePreview';
-import useScroll from 'utils/useScroll';
 
-import { slideInFromBottom } from 'styles/Common/animation';
+import { slideInList } from 'styles/Common/animation';
 import {
   NoSearchTextContainer,
   UserFollowListItem,
@@ -40,13 +40,15 @@ const UserFollowList = ({
   followLoadingId,
   setFollowLoadingId
 }: UserFollowProps) => {
-  const dispatch = useDispatch();
   const router = useRouter();
+  const dispatch = useDispatch();
+  const { openOverlay } = useOverlays();
   const { id: userId } = router.query;
   const inputRef = useRef<HTMLInputElement>(null);
   const userContainerRef = useRef<HTMLDivElement>(null);
-  const { imagePreview, showImagePreview, hideImagePreview } = useImagePreview();
-  const { me, userFollowInfo, loadUserFollowInfoLoading } = useSelector((state: RootState) => state.user);
+  const { me, userFollowInfo, loadUserFollowInfoLoading, loadUserFollowInfoDone } = useSelector(
+    (state: RootState) => state.user
+  );
 
   const [keyword, setKeyword] = useState('');
   const [resetTrigger, setResetTrigger] = useState(false);
@@ -89,6 +91,10 @@ const UserFollowList = ({
     [userFollowInfo]
   );
 
+  const openImagePreview = useCallback((image: string) => {
+    openOverlay('preview', image);
+  }, []);
+
   useEffect(() => {
     if (typeof userId === 'string') {
       dispatch(loadUserFollowInfoRequest(followType, parseInt(userId, 10)));
@@ -128,7 +134,7 @@ const UserFollowList = ({
         <UserSearchLoading $isGridDisabled={false}>
           <LoadingOutlined />
         </UserSearchLoading>
-      ) : userFollowInfo.length === 0 ? (
+      ) : loadUserFollowInfoDone && userFollowInfo.length === 0 ? (
         <NoSearchTextContainer $isGridDisabled={false}>
           {keyword ? (
             <p>검색 결과가 없습니다.</p>
@@ -139,17 +145,18 @@ const UserFollowList = ({
           )}
         </NoSearchTextContainer>
       ) : (
-        <UserFollowListItemWrapper {...slideInFromBottom(0.3)}>
+        <UserFollowListItemWrapper>
           {userFollowInfo.map((user: FollowUser) => (
             <UserFollowListItem
               key={user.id}
               $isFollowing={me.Followings.some((following: { id: number }) => following.id === user?.id)}
+              {...slideInList}
             >
               <div>
                 <img
-                  src={user?.ProfileImage ? `${user.ProfileImage.src}` : '/user.jpg'}
+                  src={user?.ProfileImage ? imgURL(user.ProfileImage.src) : '/user.jpg'}
                   alt="유저 프로필 이미지"
-                  onClick={() => showImagePreview(user?.ProfileImage ? `${user.ProfileImage.src}` : '/user.jpg')}
+                  onClick={() => openImagePreview(user?.ProfileImage ? `${user.ProfileImage.src}` : '/user.jpg')}
                 />
                 <div>
                   <Link href={`/user/${user.id}`}>{user.nickname}</Link>
@@ -159,7 +166,7 @@ const UserFollowList = ({
                     {user.Followers.map(follower => (
                       <img
                         key={follower.id}
-                        src={follower?.ProfileImage ? `${follower.ProfileImage}` : '/user.jpg'}
+                        src={follower?.ProfileImage ? imgURL(follower.ProfileImage) : '/user.jpg'}
                         alt={`팔로워 ${follower.nickname}의 프로필 이미지`}
                         onClick={() => onMoveUserProfile(follower.id)}
                       />
@@ -182,8 +189,6 @@ const UserFollowList = ({
           ))}
         </UserFollowListItemWrapper>
       )}
-
-      <ImagePreview imagePreview={imagePreview} hideImagePreview={hideImagePreview} />
     </UserFollowListWrapper>
   );
 };

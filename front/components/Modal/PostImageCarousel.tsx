@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Swiper as SwiperClass, EffectCoverflow, Pagination, Navigation } from 'swiper';
 import 'swiper/css';
@@ -7,7 +7,9 @@ import 'swiper/css/effect-coverflow';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 
+import { imgURL } from 'config';
 import { Image } from 'store/types/postType';
+import { RootState } from 'store/reducers';
 import { hidePostCarousel } from 'store/actions/postAction';
 import { slideInModal } from 'styles/Common/animation';
 import {
@@ -17,13 +19,10 @@ import {
   ImageCarouselWrapper
 } from 'styles/Timeline/imageCarousel';
 
-type CarouselProps = {
-  images: Image[];
-};
-
-const PostImageCarousel = ({ images }: CarouselProps) => {
+const PostImageCarousel = () => {
   const dispatch = useDispatch();
   const [activeIndex, setActiveIndex] = useState(0);
+  const { postCarousel } = useSelector((state: RootState) => state.post);
 
   const hideCarousel = useCallback(() => {
     dispatch(hidePostCarousel());
@@ -33,7 +32,7 @@ const PostImageCarousel = ({ images }: CarouselProps) => {
     (swiper: SwiperClass) => {
       setActiveIndex(swiper.realIndex);
     },
-    [images]
+    [postCarousel]
   );
 
   return (
@@ -43,7 +42,7 @@ const PostImageCarousel = ({ images }: CarouselProps) => {
       </CarouselOutsideArea>
 
       <ImageCarouselWrapper {...slideInModal}>
-        <BackgroundImageContainer $background={`${images[activeIndex].src}`} />
+        <BackgroundImageContainer $background={`${postCarousel[activeIndex].src}`} />
 
         <Swiper
           effect="coverflow"
@@ -65,9 +64,9 @@ const PostImageCarousel = ({ images }: CarouselProps) => {
           onSlideChange={handleSlideChange}
           className="mySwiper"
         >
-          {images.map((image: Image, i: number) => (
+          {postCarousel.map((image: Image, i: number) => (
             <SwiperSlide key={i}>
-              <img src={`${image.src}`} alt={`게시글의 ${i}번째 이미지`} />
+              <img src={imgURL(image.src)} alt={`게시글의 ${i}번째 이미지`} />
             </SwiperSlide>
           ))}
         </Swiper>

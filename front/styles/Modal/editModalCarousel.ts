@@ -1,11 +1,11 @@
-import { motion } from 'framer-motion';
 import styled from 'styled-components';
-import { ReverseHoverStyle } from 'styles/Common/hover';
+import { motion } from 'framer-motion';
 
 import media from 'styles/media';
+import { ReverseHoverStyle } from 'styles/Common/hover';
 
 export const EditModalCarouselWrapper = styled.div`
-  width: 55%;
+  width: 65%;
   height: 100%;
   background-color: ${({ theme }) => theme.colors.lightBg};
   border-radius: 5px 0 0 5px;
@@ -20,7 +20,7 @@ export const EditModalCarouselWrapper = styled.div`
 
   ${media.mobile} {
     width: 100%;
-    height: 65%;
+    height: 30%;
     border-radius: 15px 15px 0 0;
   }
 `;
@@ -34,6 +34,10 @@ export const EditModalSelectedImage = styled(motion.div)`
   & > img {
     width: 100%;
     height: 100%;
+  }
+
+  ${media.mobile} {
+    display: none;
   }
 `;
 
@@ -81,22 +85,12 @@ export const EditModalSwiperImages = styled.div`
     height: 100%;
   }
 
-  .swiper-slide span {
-    position: absolute;
-    top: 2%;
-    right: 2%;
-    font-size: 0.9rem;
-    opacity: 40%;
-    cursor: pointer;
-    ${ReverseHoverStyle('&')}
-  }
-
   ${media.tablet} {
     height: 27%;
   }
 
   ${media.mobile} {
-    height: 30%;
+    flex: 1;
 
     .swiper-button-prev,
     .swiper-button-next {
@@ -115,6 +109,34 @@ export const EditModalSwiperImages = styled.div`
 export const EditModalSwiperImageItem = styled.img<{ selected: boolean }>`
   border: ${props => (props.selected ? '2px solid #6BA2E6' : 'none')};
   cursor: pointer;
+`;
+
+export const EditModalOptionBtn = styled.div`
+  position: absolute;
+  top: 3%;
+  right: 3%;
+
+  & > span {
+    opacity: 40%;
+    cursor: pointer;
+    ${ReverseHoverStyle('&')}
+  }
+
+  & > span:first-child,
+  span:nth-child(2) {
+    margin-right: 0.4em;
+  }
+
+  ${media.tablet} {
+    & > span {
+      font-size: 0.9rem;
+    }
+
+    & > span:first-child,
+    span:nth-child(2) {
+      margin-right: 0.3em;
+    }
+  }
 `;
 
 export const EditModalUploadBtn = styled.div`
@@ -146,18 +168,18 @@ export const EditModalUploadBtn = styled.div`
   }
 
   ${media.tablet} {
-    height: 3.5%;
+    height: 5%;
   }
 
   ${media.mobile} {
-    height: 5%;
+    height: 14%;
 
     & > div {
       padding: 0.5em;
-      font-size: 0.65rem;
+      font-size: 0.7rem;
 
       & > span {
-        font-size: 0.8rem;
+        font-size: 0.9rem;
         margin-right: 0.4em;
       }
     }

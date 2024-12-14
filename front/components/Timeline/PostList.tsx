@@ -15,24 +15,17 @@ import {
 import { toast } from 'react-toastify';
 import Link from 'next/link';
 
-import PostImageCarousel from './PostImageCarousel';
-import DeleteModal from 'components/Modal/DeleteModal';
-import PostModal from 'components/Modal/PostModal';
-import ImagePreview from 'components/Modal/ImagePreviewModal';
-
 import useScroll from 'utils/useScroll';
 import formatDate from 'utils/useListTimes';
+import useOverlays from 'utils/useOverlays';
 import useClipboard from 'utils/useClipboard';
-import useImagePreview from 'utils/useImagePreview';
 
+import { imgURL } from 'config';
 import { RootState } from 'store/reducers';
 import { Image, Post, PostLike } from 'store/types/postType';
 import {
   hideCommentList,
   showCommentList,
-  showPostCarousel,
-  showDeleteModal,
-  showPostModal,
   executePostEdit,
   likePostRequest,
   unLikePostRequest,
@@ -55,32 +48,33 @@ import {
   CategoryItem,
   PostContainer,
   PostFollowBtn,
-  NoFollowingPostsContainer
+  NoFollowingPostsContainer,
+  TimelineLoadingContainer
 } from 'styles/Timeline/postList';
 
 const PostList = () => {
   const dispatch = useDispatch();
   const firstPostRef = useRef<HTMLDivElement>(null);
   const postContainerRef = useRef<HTMLDivElement>(null);
-  const { me, followUserLoading, unFollowUserLoading } = useSelector((state: RootState) => state.user);
+  const { me, followUserDone, unFollowUserDone } = useSelector((state: RootState) => state.user);
   const {
     timelinePosts,
     postImagePaths,
-    isCarouselVisible,
-    isDeleteModalVisible,
     addPostDone,
-    isPostModalVisible,
     commentVisiblePostId,
     isCategoryChanged,
     isCommentListVisible,
-    loadFollowingPostsDone
+    loadFollowingPostsDone,
+    loadNewPostsLoading,
+    loadBestPostsLoading,
+    loadFollowingPostsLoading
   } = useSelector((state: RootState) => state.post);
 
+  const { openOverlay } = useOverlays();
   const { copyToClipboard } = useClipboard();
   const [category, setCategory] = useState<'best' | 'new' | 'follow'>('best');
-  const [modalImages, setModalImages] = useState<Image[]>([]);
+  const [followPostId, setFollowPostId] = useState<number | null>(null);
   const [isTooltipVisible, setIsTooltipVisible] = useState<number | null>(null);
-  const { imagePreview, showImagePreview, hideImagePreview } = useImagePreview();
   useScroll({ type: `timeline-${category}`, ref: postContainerRef });
 
   const onClickCategory = useCallback((category: 'best' | 'new' | 'follow') => {
@@ -89,19 +83,22 @@ const PostList = () => {
   }, []);
 
   const showCarousel = useCallback((images: Image[]) => {
-    setModalImages(images);
-    dispatch(showPostCarousel());
+    openOverlay('carousel', images);
   }, []);
 
   const openDeleteModal = useCallback((postId: number) => {
-    dispatch(showDeleteModal({ type: '게시글', id: postId }));
+    openOverlay('delete', { type: '게시글', id: postId });
     setIsTooltipVisible(null);
   }, []);
 
   const openEditModal = useCallback((post: Post) => {
     setIsTooltipVisible(null);
-    dispatch(showPostModal(post));
+    openOverlay('post', post);
     dispatch(executePostEdit());
+  }, []);
+
+  const openImagePreview = useCallback((image: string) => {
+    openOverlay('preview', image);
   }, []);
 
   const handleTooltip = useCallback(
@@ -135,7 +132,8 @@ const PostList = () => {
   );
 
   const onToggleFollow = useCallback(
-    (userId: number) => {
+    (postId: number, userId: number) => {
+      setFollowPostId(postId);
       const isFollowing = me.Followings.some((following: { id: number }) => following.id === userId);
 
       if (isFollowing) {
@@ -154,7 +152,13 @@ const PostList = () => {
   };
 
   useEffect(() => {
-    if (firstPostRef.current) {
+    if (followUserDone || unFollowUserDone) {
+      setFollowPostId(null);
+    }
+  }, [followUserDone, unFollowUserDone]);
+
+  useEffect(() => {
+    if (window.innerWidth > 992 && firstPostRef.current) {
       firstPostRef.current.scrollIntoView({
         behavior: 'smooth',
         block: 'start'
@@ -195,7 +199,11 @@ const PostList = () => {
         </CategoryItem>
       </PostCategory>
 
-      {timelinePosts.length === 0 && category === 'follow' && loadFollowingPostsDone ? (
+      {loadNewPostsLoading || loadBestPostsLoading || loadFollowingPostsLoading ? (
+        <TimelineLoadingContainer>
+          <LoadingOutlined />
+        </TimelineLoadingContainer>
+      ) : timelinePosts.length === 0 && category === 'follow' && loadFollowingPostsDone ? (
         <NoFollowingPostsContainer>
           <CloseSquareTwoTone twoToneColor="#6BA2E6" />
           <h1>No posts yet.</h1>
@@ -207,10 +215,10 @@ const PostList = () => {
             <PostHeader>
               <div>
                 <img
-                  src={post.User.ProfileImage ? `${post.User.ProfileImage.src}` : '/user.jpg'}
+                  src={post.User.ProfileImage ? imgURL(post.User.ProfileImage.src) : '/user.jpg'}
                   alt="유저 프로필 이미지"
                   onClick={() =>
-                    showImagePreview(post.User.ProfileImage ? `${post.User.ProfileImage.src}` : '/user.jpg')
+                    openImagePreview(post.User.ProfileImage ? `${post.User.ProfileImage.src}` : '/user.jpg')
                   }
                 />
                 <div>
@@ -225,10 +233,10 @@ const PostList = () => {
                 {me.id !== post.UserId && (
                   <PostFollowBtn
                     type="button"
-                    onClick={() => onToggleFollow(post.UserId)}
+                    onClick={() => onToggleFollow(post.id, post.UserId)}
                     $isFollowing={me.Followings.some((following: { id: number }) => following.id === post.UserId)}
                   >
-                    {followUserLoading || unFollowUserLoading ? (
+                    {followPostId === post.id ? (
                       <LoadingOutlined />
                     ) : me.Followings.some((following: { id: number }) => following.id === post.UserId) ? (
                       'Unfollow'
@@ -272,7 +280,7 @@ const PostList = () => {
             <PostContents>
               <div>
                 <img
-                  src={`${post.Images[0].src}`}
+                  src={imgURL(post.Images[0].src)}
                   alt="게시글의 첫번째 이미지"
                   onClick={() => showCarousel(post.Images)}
                 />
@@ -284,7 +292,8 @@ const PostList = () => {
                 <ArrowsAltOutlined onClick={() => showCarousel(post.Images)} />
               </div>
               <div>
-                <p>{post.content}</p>
+                <p>{post.content.replace(/\\n/g, '\n').replace(/␣/g, ' ')}</p>
+
                 <PostOptions
                   $liked={post.Likers.some(liker => liker.id === me?.id)}
                   $commentVisiblePostId={commentVisiblePostId === post.id}
@@ -311,11 +320,6 @@ const PostList = () => {
           </PostWrapper>
         ))
       )}
-
-      {isCarouselVisible && <PostImageCarousel images={modalImages} />}
-      {isPostModalVisible && <PostModal />}
-      {isDeleteModalVisible && <DeleteModal />}
-      <ImagePreview imagePreview={imagePreview} hideImagePreview={hideImagePreview} />
     </PostContainer>
   );
 };

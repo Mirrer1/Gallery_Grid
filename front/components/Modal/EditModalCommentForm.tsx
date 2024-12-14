@@ -2,11 +2,11 @@ import React, { useCallback, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { DeleteOutlined, LoadingOutlined, PaperClipOutlined } from '@ant-design/icons';
 import { toast } from 'react-toastify';
-import Link from 'next/link';
 
 import useInput from 'utils/useInput';
-import formatDate from 'utils/useListTimes';
+import useOverlays from 'utils/useOverlays';
 import useFileUpload from 'utils/useFileUpload';
+import { imgURL } from 'config';
 import { RootState } from 'store/reducers';
 import { Comment, IReplyComment } from 'store/types/postType';
 import {
@@ -15,12 +15,12 @@ import {
   editModalCommentUploadImageRequest,
   executeModalCommentEdit
 } from 'store/actions/postAction';
+
 import { slideInTooltip, slideInUploadImage } from 'styles/Common/animation';
 import {
   EditModalCancelBtn,
   EditModalCommentBtn,
   EditModalCommentFormSection,
-  EditModalCommentHeader,
   EditModalCommentImage,
   EditModalCommentImageWrapper,
   EditModalCommentWrapper
@@ -31,11 +31,11 @@ type EditCommentFormProps = {
   comment: Comment | IReplyComment;
   replyId: number | null;
   cancelEdit: () => void;
-  showImagePreview: (src: string) => void;
 };
 
-const EditModalCommentForm = ({ reply, comment, replyId, cancelEdit, showImagePreview }: EditCommentFormProps) => {
+const EditModalCommentForm = ({ reply, comment, replyId, cancelEdit }: EditCommentFormProps) => {
   const dispatch = useDispatch();
+  const { openOverlay } = useOverlays();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [text, onChangeText, setText] = useInput<string>('');
   const { fileInputRef, onFileChange } = useFileUpload(editModalCommentUploadImageRequest, { showWarning: false });
@@ -75,6 +75,10 @@ const EditModalCommentForm = ({ reply, comment, replyId, cancelEdit, showImagePr
     [text, editModalCommentImagePath, replyId]
   );
 
+  const openImagePreview = useCallback((image: string) => {
+    openOverlay('preview', image);
+  }, []);
+
   useEffect(() => {
     if (text.length === 500) toast.warning('댓글은 500자 이하로 작성해주세요.');
   }, [text]);
@@ -93,31 +97,14 @@ const EditModalCommentForm = ({ reply, comment, replyId, cancelEdit, showImagePr
   }, []);
 
   return (
-    <EditModalCommentWrapper $reply={reply}>
-      <EditModalCommentHeader>
-        <img
-          src={comment.User.ProfileImage ? `${comment.User.ProfileImage.src}` : '/user.jpg'}
-          alt={`${comment.User.nickname}의 프로필 이미지`}
-          onClick={() => showImagePreview(comment.User.ProfileImage ? `${comment.User.ProfileImage.src}` : '/user.jpg')}
-        />
-
-        <div>
-          <div>
-            <Link href={`/user/${comment.UserId}`}>{comment.User.nickname}</Link>
-            {comment.Post?.UserId === comment.UserId && <p>작성자</p>}
-          </div>
-
-          <p>{formatDate(comment.createdAt)}</p>
-        </div>
-      </EditModalCommentHeader>
-
-      <EditModalCommentFormSection {...slideInTooltip} encType="multipart/form-data" onSubmit={onSubmitForm}>
+    <EditModalCommentWrapper {...slideInTooltip}>
+      <EditModalCommentFormSection encType="multipart/form-data" onSubmit={onSubmitForm}>
         <textarea
           ref={textareaRef}
           rows={6}
           maxLength={500}
           placeholder="댓글을 작성해주세요."
-          value={text}
+          value={text.replace(/\\n/g, '\n').replace(/␣/g, ' ')}
           onChange={onChangeText}
         />
 
@@ -125,9 +112,9 @@ const EditModalCommentForm = ({ reply, comment, replyId, cancelEdit, showImagePr
           <EditModalCommentImageWrapper>
             <EditModalCommentImage key={editModalCommentImagePath} {...slideInUploadImage}>
               <img
-                src={`${editModalCommentImagePath}`}
+                src={imgURL(editModalCommentImagePath)}
                 alt="입력한 댓글의 첨부 이미지"
-                onClick={() => showImagePreview(`${editModalCommentImagePath}`)}
+                onClick={() => openImagePreview(`${editModalCommentImagePath}`)}
               />
               <DeleteOutlined onClick={handleRemoveImage} />
             </EditModalCommentImage>

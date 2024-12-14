@@ -1,4 +1,4 @@
-import { all, call, debounce, delay, fork, put, takeLatest } from 'redux-saga/effects';
+import { all, call, debounce, fork, put, takeLatest } from 'redux-saga/effects';
 import axios, { AxiosResponse } from 'axios';
 
 import {
@@ -301,7 +301,6 @@ function uploadImagesAPI(data: FormData) {
 
 function* uploadUserImage(action: userUploadImageRequestAction) {
   try {
-    yield delay(500);
     const result: AxiosResponse<string[]> = yield call(uploadImagesAPI, action.data);
 
     yield put({

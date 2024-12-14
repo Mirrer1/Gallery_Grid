@@ -218,7 +218,6 @@ export const AccountInput = styled(motion.div)<{ $largemargin: string }>`
     & > input:focus ~ label,
     & > input:valid ~ label {
       font-size: 0.8rem;
-      bottom: 26px;
     }
   }
 `;

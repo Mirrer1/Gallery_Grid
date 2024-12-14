@@ -6,12 +6,13 @@ import EmojiPicker from 'emoji-picker-react';
 import Router from 'next/router';
 import Link from 'next/link';
 
-import ImagePreview from './ImagePreviewModal';
 import useInput from 'utils/useInput';
 import formatDate from 'utils/useListTimes';
+import useOverlays from 'utils/useOverlays';
 import useEmojiPicker from 'utils/useEmojiPicker';
-import useImagePreview from 'utils/useImagePreview';
 import { useLocation } from 'utils/useLocation';
+
+import { imgURL } from 'config';
 import { RootState } from 'store/reducers';
 import { cancelPostEdit, editPostRequest, hidePostModal } from 'store/actions/postAction';
 import {
@@ -24,15 +25,19 @@ import {
 
 const EditModalContent = () => {
   const dispatch = useDispatch();
+  const { openOverlay } = useOverlays();
   const { singlePost, editPostImagePaths, editPostLoading } = useSelector((state: RootState) => state.post);
   const [content, onChangeContent, setContent] = useInput<string>('');
   const { location, getLocation, setLocation, loading } = useLocation();
-  const { imagePreview, showImagePreview, hideImagePreview } = useImagePreview();
   const { showEmoji, showEmojiPicker, closeEmojiPicker, onEmojiClick } = useEmojiPicker(setContent);
 
   const onClickCancel = useCallback(() => {
     if (Router.pathname === '/timeline') dispatch(hidePostModal());
     else dispatch(cancelPostEdit());
+  }, []);
+
+  const openImagePreview = useCallback((image: string) => {
+    openOverlay('preview', image);
   }, []);
 
   const setInitialLocation = useCallback(() => {
@@ -80,10 +85,10 @@ const EditModalContent = () => {
       <EditModalContentHeader>
         <div>
           <img
-            src={singlePost.User.ProfileImage ? `${singlePost.User.ProfileImage.src}` : '/user.jpg'}
+            src={singlePost.User.ProfileImage ? imgURL(singlePost.User.ProfileImage.src) : '/user.jpg'}
             alt="유저 프로필 이미지"
             onClick={() =>
-              showImagePreview(singlePost.User.ProfileImage ? `${singlePost.User.ProfileImage.src}` : '/user.jpg')
+              openImagePreview(singlePost.User.ProfileImage ? `${singlePost.User.ProfileImage.src}` : '/user.jpg')
             }
           />
 
@@ -101,7 +106,7 @@ const EditModalContent = () => {
         <textarea
           maxLength={2000}
           placeholder="당신의 작품에 대한 이야기를 들려주세요."
-          value={content}
+          value={content.replace(/\\n/g, '\n').replace(/␣/g, ' ')}
           onChange={onChangeContent}
         />
 
@@ -144,8 +149,6 @@ const EditModalContent = () => {
           </div>
         </EditModalEmojiPicker>
       )}
-
-      <ImagePreview imagePreview={imagePreview} hideImagePreview={hideImagePreview} />
     </EditModalContentWrapper>
   );
 };
