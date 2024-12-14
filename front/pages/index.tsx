@@ -14,7 +14,7 @@ import { loadBestPostsRequest } from 'store/actions/postAction';
 import { ContactIcon, HeaderWrapper, MenuButton } from 'styles/Landing/header';
 
 const Landing = ({ seo }: { seo: SeoProps }) => {
-  const { me } = useSelector((state: RootState) => state.user);
+  const { loginDone } = useSelector((state: RootState) => state.user);
   const [selectMenu, setSelectMenu] = useState<'home' | 'login' | 'signup' | 'contact' | 'recovery'>('home');
   useToastStatus();
 
@@ -27,8 +27,8 @@ const Landing = ({ seo }: { seo: SeoProps }) => {
   }, []);
 
   useEffect(() => {
-    if (me) Router.push('/timeline');
-  }, [me]);
+    if (loginDone) Router.push('/timeline');
+  }, [loginDone]);
 
   return (
     <>
