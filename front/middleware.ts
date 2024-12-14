@@ -1,25 +1,16 @@
 import { NextResponse, type NextRequest } from 'next/server';
+import botDetector from 'utils/botDetector';
 
 const publicPages = ['/', '/post/:path*'];
-
-const isBot = (userAgent: string | undefined) => {
-  if (!userAgent) return false;
-  return (
-    userAgent.includes('facebookexternalhit') ||
-    userAgent.includes('Twitterbot') ||
-    userAgent.includes('Slackbot') ||
-    userAgent.includes('WhatsApp') ||
-    userAgent.includes('kakaotalk-scrap')
-  );
-};
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const token = request.cookies.get('connect.sid')?.value;
   const userAgent = request.headers.get('user-agent') || undefined;
 
+  const isBot = botDetector(userAgent);
   const isPublicPage = publicPages.some(route => pathname.match(new RegExp(`^${route}$`)));
-  if (isPublicPage || isBot(userAgent)) {
+  if (isPublicPage || isBot) {
     return NextResponse.next();
   }
 

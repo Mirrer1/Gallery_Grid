@@ -8,6 +8,7 @@ import AlertList from 'components/Activity/AlertList';
 import { PageHead, SeoProps } from 'components/PageHead';
 
 import wrapper from 'store/configureStore';
+import botDetector from 'utils/botDetector';
 import useToastStatus from 'utils/useToast';
 import { formatFollowerCount } from 'utils/formatFollowerCount';
 import { RootState } from 'store/reducers';
@@ -69,6 +70,23 @@ const Activity = ({ seo }: { seo: SeoProps }) => {
 };
 
 export const getServerSideProps = wrapper.getServerSideProps(async context => {
+  const isBot = botDetector(context.req.headers['user-agent']);
+
+  if (isBot) {
+    const seo = {
+      title: 'Gallery Grid | Activity',
+      description: 'Gallery Grid에서 좋아요, 댓글, 팔로잉 등과 관련된 알림을 확인하세요.',
+      imageUrl: 'https://gallerygrd.com/favicon.ico',
+      url: 'https://gallerygrd.com/activity'
+    };
+
+    return {
+      props: {
+        seo
+      }
+    };
+  }
+
   const cookie = context.req ? context.req.headers.cookie : '';
   axios.defaults.headers.Cookie = cookie || '';
 

@@ -19,6 +19,7 @@ import BigPostPreview from 'components/Gallery/BigPostPreview';
 import { PageHead, SeoProps } from 'components/PageHead';
 
 import wrapper from 'store/configureStore';
+import botDetector from 'utils/botDetector';
 import useOverlays from 'utils/useOverlays';
 import useToastStatus from 'utils/useToast';
 import { loadMyInfoRequest } from 'store/actions/userAction';
@@ -211,6 +212,23 @@ const Gallery = ({ seo }: { seo: SeoProps }) => {
 };
 
 export const getServerSideProps = wrapper.getServerSideProps(async context => {
+  const isBot = botDetector(context.req.headers['user-agent']);
+
+  if (isBot) {
+    const seo = {
+      title: 'Gallery Grid | Gallery',
+      description: 'Gallery Grid에서 좋아요하거나 댓글을 단 게시글을 확인하세요.',
+      imageUrl: 'https://gallerygrd.com/favicon.ico',
+      url: 'https://gallerygrd.com/gallery'
+    };
+
+    return {
+      props: {
+        seo
+      }
+    };
+  }
+
   const cookie = context.req ? context.req.headers.cookie : '';
   axios.defaults.headers.Cookie = cookie || '';
 

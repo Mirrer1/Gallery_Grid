@@ -11,6 +11,7 @@ import UserFollowList from 'components/User/UserFollowList';
 import { PageHead, SeoProps } from 'components/PageHead';
 
 import wrapper from 'store/configureStore';
+import botDetector from 'utils/botDetector';
 import useToastStatus from 'utils/useToast';
 import { RootState } from 'store/reducers';
 import { loadUserPostsRequest } from 'store/actions/postAction';
@@ -74,6 +75,24 @@ const user = ({ seo }: { seo: SeoProps }) => {
 };
 
 export const getServerSideProps = wrapper.getServerSideProps(async context => {
+  const isBot = botDetector(context.req.headers['user-agent']);
+
+  if (isBot) {
+    const userId = Number(Array.isArray(context.params?.id) ? context.params.id[0] : context.params?.id);
+    const seo = {
+      title: 'Gallery Grid | User Profile',
+      description: '사용자 프로필을 Gallery Grid에서 확인하세요.',
+      imageUrl: 'https://gallerygrd.com/favicon.ico',
+      url: `https://gallerygrd.com/user/${userId}`
+    };
+
+    return {
+      props: {
+        seo
+      }
+    };
+  }
+
   const cookie = context.req ? context.req.headers.cookie : '';
   axios.defaults.headers.Cookie = cookie || '';
 
