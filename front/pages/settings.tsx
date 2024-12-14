@@ -7,6 +7,7 @@ import axios from 'axios';
 import AppLayout from 'components/AppLayout';
 import SettingForm from 'components/Settings/SettingForm';
 import { PageHead, SeoProps } from 'components/PageHead';
+import botDetector from 'utils/botDetector';
 import useFileUpload from 'utils/useFileUpload';
 import useToastStatus from 'utils/useToast';
 import { imgURL } from 'config';
@@ -70,6 +71,23 @@ const Settings = ({ seo }: { seo: SeoProps }) => {
 };
 
 export const getServerSideProps = wrapper.getServerSideProps(async context => {
+  const isBot = botDetector(context.req.headers['user-agent']);
+
+  if (isBot) {
+    const seo = {
+      title: 'Gallery Grid | Settings',
+      description: 'Gallery Grid에서 프로필을 수정하고 나만의 정보를 업데이트하세요.',
+      imageUrl: 'https://gallerygrd.com/favicon.ico',
+      url: 'https://gallerygrd.com/settings'
+    };
+
+    return {
+      props: {
+        seo
+      }
+    };
+  }
+
   const cookie = context.req ? context.req.headers.cookie : '';
   axios.defaults.headers.Cookie = cookie || '';
 

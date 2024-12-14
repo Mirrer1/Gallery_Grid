@@ -13,6 +13,7 @@ import CommentList from 'components/Timeline/CommentList';
 import { PageHead, SeoProps } from 'components/PageHead';
 
 import wrapper from 'store/configureStore';
+import botDetector from 'utils/botDetector';
 import useToastStatus from 'utils/useToast';
 import { RootState } from 'store/reducers';
 import { loadBestPostsRequest } from 'store/actions/postAction';
@@ -63,6 +64,23 @@ const Timeline = ({ seo }: { seo: SeoProps }) => {
 };
 
 export const getServerSideProps = wrapper.getServerSideProps(async context => {
+  const isBot = botDetector(context.req.headers['user-agent']);
+
+  if (isBot) {
+    const seo = {
+      title: 'Gallery Grid | Timeline',
+      description: 'Gallery Grid 타임라인에서 인기 게시글, 최신 게시글을 확인하세요.',
+      imageUrl: 'https://gallerygrd.com/favicon.ico',
+      url: 'https://gallerygrd.com/timeline'
+    };
+
+    return {
+      props: {
+        seo
+      }
+    };
+  }
+
   const cookie = context.req ? context.req.headers.cookie : '';
   axios.defaults.headers.Cookie = cookie || '';
 
