@@ -36,10 +36,13 @@ const EditModalCarousel = () => {
   const dispatch = useDispatch();
   const swiperRef = useRef<any>(null);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const { fileInputRef, onFileChange } = useFileUpload(editPostUploadImagesRequest, { maxFiles: 5, showWarning: true });
-  const { editPostImagePaths, editPostUploadImagesLoading, editPostUploadImagesDone, isPostModalVisible } = useSelector(
+  const { editPostImagePaths, editPostUploadImagesDone, isPostModalVisible } = useSelector(
     (state: RootState) => state.post
   );
+  const { fileInputRef, onFileChange, isUploading } = useFileUpload(editPostUploadImagesRequest, {
+    maxFiles: 5,
+    showWarning: true
+  });
 
   const handleImageClick = useCallback(
     (image: string, index: number) => {
@@ -159,7 +162,7 @@ const EditModalCarousel = () => {
       </EditModalSwiperImages>
 
       <EditModalUploadBtn>
-        {editPostUploadImagesLoading ? (
+        {isUploading ? (
           <div>
             <LoadingOutlined />
           </div>

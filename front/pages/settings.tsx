@@ -26,8 +26,8 @@ import { MobileImageBtn, MobileRemoveImageBtn, SettingProfile, SettingWrapper } 
 
 const Settings = ({ seo }: { seo: SeoProps }) => {
   const dispatch = useDispatch();
-  const { me, userImagePath, userUploadImageLoading } = useSelector((state: RootState) => state.user);
-  const { fileInputRef, onFileChange } = useFileUpload(userUploadImageRequest, { showWarning: false });
+  const { me, userImagePath } = useSelector((state: RootState) => state.user);
+  const { fileInputRef, onFileChange, isUploading } = useFileUpload(userUploadImageRequest, { showWarning: false });
   useToastStatus();
 
   const handleRemoveImage = useCallback(() => {
@@ -40,7 +40,7 @@ const Settings = ({ seo }: { seo: SeoProps }) => {
 
       <AppLayout>
         <SettingWrapper>
-          <SettingProfile {...slideInFromBottom()} $loading={userUploadImageLoading}>
+          <SettingProfile {...slideInFromBottom()} $loading={isUploading}>
             <label htmlFor="setting-image">
               <img src={userImagePath.length > 0 ? imgURL(userImagePath) : '/user.jpg'} alt="유저 프로필 이미지" />
             </label>
@@ -50,13 +50,13 @@ const Settings = ({ seo }: { seo: SeoProps }) => {
               {me?.desc ? <p>{me.desc}</p> : <p>더 많은 사람들이 당신을 알 수 있도록, 소개글을 작성해보세요.</p>}
 
               <MobileImageBtn htmlFor="setting-image">
-                {userUploadImageLoading ? <LoadingOutlined /> : <>사진 변경</>}
+                {isUploading ? <LoadingOutlined /> : <>사진 변경</>}
               </MobileImageBtn>
               <MobileRemoveImageBtn onClick={handleRemoveImage}>사진 삭제</MobileRemoveImageBtn>
             </div>
 
             <div>
-              <label htmlFor="setting-image">{userUploadImageLoading ? <LoadingOutlined /> : <CameraOutlined />}</label>
+              <label htmlFor="setting-image">{isUploading ? <LoadingOutlined /> : <CameraOutlined />}</label>
               <DeleteOutlined onClick={handleRemoveImage} />
             </div>
 

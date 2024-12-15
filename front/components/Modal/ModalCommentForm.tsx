@@ -42,17 +42,15 @@ type ModalCommentFormProps = {
 const ModalCommentForm = ({ replyId, replyUser, setReplyId }: ModalCommentFormProps) => {
   const dispatch = useDispatch();
   const { openOverlay } = useOverlays();
-  const { fileInputRef, onFileChange } = useFileUpload(modalCommentUploadImageRequest, { showWarning: false });
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [comment, onChangeComment, setComment] = useInput('');
   const { showEmoji, showEmojiPicker, closeEmojiPicker, onEmojiClick } = useEmojiPicker(setComment);
-  const {
-    modalCommentImagePath,
-    modalCommentUploadImageLoading,
-    singlePost,
-    addModalCommentLoading,
-    addModalCommentDone
-  } = useSelector((state: RootState) => state.post);
+  const { fileInputRef, onFileChange, isUploading } = useFileUpload(modalCommentUploadImageRequest, {
+    showWarning: false
+  });
+  const { modalCommentImagePath, singlePost, addModalCommentLoading, addModalCommentDone } = useSelector(
+    (state: RootState) => state.post
+  );
 
   const openImagePreview = useCallback((image: string) => {
     openOverlay('preview', image);
@@ -160,7 +158,7 @@ const ModalCommentForm = ({ replyId, replyUser, setReplyId }: ModalCommentFormPr
 
       <ModalCommentFormItem encType="multipart/form-data" $active={comment.length === 0} onSubmit={onSubmitForm}>
         <div>
-          {modalCommentUploadImageLoading ? <LoadingOutlined /> : <PaperClipOutlined onClick={onClickImageUpload} />}
+          {isUploading ? <LoadingOutlined /> : <PaperClipOutlined onClick={onClickImageUpload} />}
           <input type="file" name="image" ref={fileInputRef} onChange={e => onFileChange(e, modalCommentImagePath)} />
 
           <SmileOutlined onClick={showEmojiPicker} />

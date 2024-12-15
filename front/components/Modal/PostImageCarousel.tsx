@@ -42,7 +42,7 @@ const PostImageCarousel = () => {
       </CarouselOutsideArea>
 
       <ImageCarouselWrapper {...slideInModal}>
-        <BackgroundImageContainer $background={`${postCarousel[activeIndex].src}`} />
+        <BackgroundImageContainer $background={`${imgURL(postCarousel[activeIndex].src)}`} />
 
         <Swiper
           effect="coverflow"

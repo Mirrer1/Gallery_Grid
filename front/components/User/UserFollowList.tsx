@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 
-import useScroll from 'utils/useScroll';
+// import useScroll from 'utils/useScroll';
 import useOverlays from 'utils/useOverlays';
 import { formatFollowerCount } from 'utils/formatFollowerCount';
 import { imgURL } from 'config';
@@ -52,7 +52,7 @@ const UserFollowList = ({
 
   const [keyword, setKeyword] = useState('');
   const [resetTrigger, setResetTrigger] = useState(false);
-  useScroll({ type: 'user-follow', ref: userContainerRef, userId: Number(userId), followType });
+  // useScroll({ type: 'user-follow', ref: userContainerRef, userId: Number(userId), followType });
 
   const onChangeKeyword = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {

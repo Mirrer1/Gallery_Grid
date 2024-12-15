@@ -583,7 +583,7 @@ router.get('/follow', isLoggedIn, async (req, res, next) => {
         [Sequelize.literal('followerCount'), 'DESC'],
         ['id', 'ASC']
       ],
-      limit: 20,
+      // limit: 20,
       where: {}
     };
 

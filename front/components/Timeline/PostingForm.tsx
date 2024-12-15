@@ -19,10 +19,11 @@ const PostingForm = () => {
   const [content, onChangeContent, setContent] = useInput<string>('');
   const { location, getLocation, setLocation, loading } = useLocation();
   const { showEmoji, showEmojiPicker, closeEmojiPicker, onEmojiClick } = useEmojiPicker(setContent);
-  const { fileInputRef, onFileChange } = useFileUpload(postUploadImagesRequest, { maxFiles: 5, showWarning: true });
-  const { postImagePaths, postUploadImagesLoading, addPostLoading, addPostDone } = useSelector(
-    (state: RootState) => state.post
-  );
+  const { postImagePaths, addPostLoading, addPostDone } = useSelector((state: RootState) => state.post);
+  const { fileInputRef, onFileChange, isUploading } = useFileUpload(postUploadImagesRequest, {
+    maxFiles: 5,
+    showWarning: true
+  });
 
   const setInitialLocation = useCallback(() => {
     setLocation(null);
@@ -83,7 +84,7 @@ const PostingForm = () => {
 
       <div>
         <div>
-          {postUploadImagesLoading ? <LoadingOutlined /> : <PaperClipOutlined onClick={onClickImageUpload} />}
+          {isUploading ? <LoadingOutlined /> : <PaperClipOutlined onClick={onClickImageUpload} />}
           <input type="file" name="image" multiple ref={fileInputRef} onChange={e => onFileChange(e, postImagePaths)} />
 
           <SmileOutlined onClick={showEmojiPicker} />

@@ -38,10 +38,12 @@ const EditCommentForm = ({ reply, comment, replyId, cancelEdit }: EditCommentFor
   const { openOverlay } = useOverlays();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [text, onChangeText, setText] = useInput<string>('');
-  const { fileInputRef, onFileChange } = useFileUpload(editCommentUploadImageRequest, { showWarning: false });
-  const { editCommentUploadImageLoading, commentVisiblePostId, editCommentImagePath, editCommentLoading } = useSelector(
+  const { commentVisiblePostId, editCommentImagePath, editCommentLoading } = useSelector(
     (state: RootState) => state.post
   );
+  const { fileInputRef, onFileChange, isUploading } = useFileUpload(editCommentUploadImageRequest, {
+    showWarning: false
+  });
 
   const onClickImageUpload = useCallback(() => {
     if (fileInputRef.current) fileInputRef.current.click();
@@ -123,7 +125,7 @@ const EditCommentForm = ({ reply, comment, replyId, cancelEdit }: EditCommentFor
 
         <div>
           <div>
-            {editCommentUploadImageLoading ? <LoadingOutlined /> : <PaperClipOutlined onClick={onClickImageUpload} />}
+            {isUploading ? <LoadingOutlined /> : <PaperClipOutlined onClick={onClickImageUpload} />}
             <input
               type="file"
               name="image"

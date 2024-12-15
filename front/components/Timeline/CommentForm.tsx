@@ -41,15 +41,10 @@ const CommentForm = ({ replyId, replyUser, setReplyId }: CommentFormProps) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [comment, onChangeComment, setComment] = useInput('');
   const { showEmoji, showEmojiPicker, closeEmojiPicker, onEmojiClick } = useEmojiPicker(setComment);
-  const { fileInputRef, onFileChange } = useFileUpload(commentUploadImageRequest, { showWarning: false });
-  const {
-    commentImagePath,
-    commentUploadImageLoading,
-    commentVisiblePostId,
-    addCommentLoading,
-    isPostModalVisible,
-    addCommentDone
-  } = useSelector((state: RootState) => state.post);
+  const { fileInputRef, onFileChange, isUploading } = useFileUpload(commentUploadImageRequest, { showWarning: false });
+  const { commentImagePath, commentVisiblePostId, addCommentLoading, isPostModalVisible, addCommentDone } = useSelector(
+    (state: RootState) => state.post
+  );
 
   const onClickImageUpload = useCallback(() => {
     if (fileInputRef.current) fileInputRef.current.click();
@@ -158,7 +153,7 @@ const CommentForm = ({ replyId, replyUser, setReplyId }: CommentFormProps) => {
 
       <CommentFormInput encType="multipart/form-data" $active={comment.length === 0} onSubmit={onSubmitForm}>
         <div>
-          {commentUploadImageLoading ? <LoadingOutlined /> : <PaperClipOutlined onClick={onClickImageUpload} />}
+          {isUploading ? <LoadingOutlined /> : <PaperClipOutlined onClick={onClickImageUpload} />}
           <input type="file" name="image" ref={fileInputRef} onChange={e => onFileChange(e, commentImagePath)} />
 
           <SmileOutlined onClick={showEmojiPicker} />
