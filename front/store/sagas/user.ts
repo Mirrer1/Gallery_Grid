@@ -220,7 +220,13 @@ function* login(action: loginRequestAction) {
 }
 
 function loginGoogleAPI() {
-  return `https://accounts.google.com/o/oauth2/v2/auth?client_id=${process.env.NEXT_PUBLIC_GOOGLE_ID}&redirect_uri=${process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI}&response_type=code&scope=profile email`;
+  const isProduction = process.env.NODE_ENV === 'production';
+
+  const GOOGLE_REDIRECT_URI = isProduction
+    ? 'https://api.gallerygrd.com/user/google/callback'
+    : 'http://localhost:3065/user/google/callback';
+
+  return `https://accounts.google.com/o/oauth2/v2/auth?client_id=${process.env.NEXT_PUBLIC_GOOGLE_ID}&redirect_uri=${GOOGLE_REDIRECT_URI}&response_type=code&scope=profile email`;
 }
 
 function* loginGoogle() {
