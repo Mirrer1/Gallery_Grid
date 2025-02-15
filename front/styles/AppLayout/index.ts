@@ -9,10 +9,11 @@ export const LayoutWrapper = styled.div`
   width: 100%;
   height: 100%;
   flex-grow: 1;
-  padding: 2.5% 12%;
+  padding: 2.5% 15%;
 
   & > aside {
     ${({ theme }) => theme.flexColumnSet('space-between', 'start')};
+    max-width: 268px;
     width: 20%;
     height: 100%;
     background-color: white;
@@ -33,6 +34,7 @@ export const LayoutWrapper = styled.div`
   }
 
   & > main {
+    max-width: 1075px;
     width: 80%;
     height: 100%;
     background-color: ${({ theme }) => theme.colors.bg};
