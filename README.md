@@ -51,11 +51,15 @@
 
 - **`회원가입`** 없이 **`구글 계정`** 을 통해 빠르게 서비스 이용 가능.
 
+![Image](https://github.com/user-attachments/assets/8771ffba-8378-48be-8a8d-36accd704cf9)
+
 ### Activity Alerts
 
 - **`좋아요`**, **`댓글`**, **`팔로잉`** 등의 활동 소식을 **`실시간 알림`** 으로 전달.
 
 - 알림을 통해 사용자 간 더 빠르고 활발한 **`소통`** 가능.
+
+![Image](https://github.com/user-attachments/assets/9c64ef14-a6ce-409b-97e3-1d592d1366eb)
 
 ### Personalized Gallery
 
@@ -63,11 +67,15 @@
 
 - **`개인 갤러리`** 를 통해 관심 있는 게시글을 쉽게 **`관리`** 가능.
 
+![Image](https://github.com/user-attachments/assets/177402ea-c352-41a6-a4d3-5dc24e57cf91)
+
 ### User Profile & Settings
 
 - 작성한 **`게시글`** 과 **`팔로워/팔로잉`** 정보를 한눈에 확인 가능.
 
 - **`닉네임`**, **`소개글`**, **`추천 여부`** 등 개인 설정을 자유롭게 변경 가능.
+
+![Image](https://github.com/user-attachments/assets/251da6e9-4c5e-4b82-a027-fe0090231c05)
 
 <br />
 
