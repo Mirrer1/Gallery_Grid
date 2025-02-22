@@ -59,7 +59,7 @@
 
 - 알림을 통해 사용자 간 더 빠르고 활발한 **`소통`** 가능.
 
-![Image](https://github.com/user-attachments/assets/9c64ef14-a6ce-409b-97e3-1d592d1366eb)
+![Image](https://github.com/user-attachments/assets/f1397f43-8a50-46a5-9ef9-0232e81f5c67)
 
 ### Personalized Gallery
 
