@@ -5,7 +5,7 @@
 - 해당 서비스는 채팅 및 경매 서비스 플랫폼으로 확장 개발을 진행하고 있습니다. 이 과정으로 인해 현재 해당 서비스의 배포는 일시적으로 중단된 상태입니다.
 
 <div>
-   <img width="1917" height="918" alt="Image" src="https://github.com/user-attachments/assets/f529fcd0-d781-42c8-96e0-c766ef1f2a50" />
+   <img width="1915" height="917" alt="Image" src="https://github.com/user-attachments/assets/355af6da-df5f-4538-8246-3f524f6a19c1" />
 </div>
 
 <br />
