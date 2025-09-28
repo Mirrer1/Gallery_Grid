@@ -1,6 +1,7 @@
 # Project Title
 
 - [**Gallery-Grid**](https://gallerygrd.com/)
+- 해당 서비스는 채팅 및 경매 서비스 플랫폼으로 확장 개발을 진행하고 있습니다. 이 과정으로 인해 현재 해당 서비스의 배포는 일시적으로 중단된 상태입니다.
 
 <br />
 
@@ -11,7 +12,6 @@
 
 - 그림에 열정을 가진 모든 이들이 함께 모여 자신의 **창작물**을 펼치고 **성장**할 수 있도록 돕는 **SNS 서비스**입니다.
 
-<br />
 
 ## Used Skills
 
@@ -34,14 +34,6 @@
    <img src="https://img.shields.io/badge/MYSQL-bcbcbc?style=flat-square&logo=MySQL&logoColor=white"/>
 </div>
 
-<div style={{display: 'flex'}}>
-   <img src="https://img.shields.io/badge/AWS-bcbcbc?style=flat-square&logo=Amazon AWS&logoColor=white"/>
-   <img src="https://img.shields.io/badge/PM2-bcbcbc?style=flat-square&logo=Amazon PM2&logoColor=white"/>
-      <img src="https://img.shields.io/badge/NGINX-bcbcbc?style=flat-square&logo=Amazon NGINX&logoColor=white"/>
-   <img src="https://img.shields.io/badge/LAMBDA-bcbcbc?style=flat-square&logo=AWS Lambda&logoColor=white"/>
-</div>
-
-<br />
 
 ## Representative Feature
 
@@ -51,11 +43,19 @@
 
 - **`회원가입`** 없이 **`구글 계정`** 을 통해 빠르게 서비스 이용 가능.
 
+<div>
+<img width="1916" height="917" alt="Image" src="https://github.com/user-attachments/assets/6caaf0e0-0f8a-4b6c-aa95-4fe352c24ef5" />
+</div>
+
 ### Activity Alerts
 
 - **`좋아요`**, **`댓글`**, **`팔로잉`** 등의 활동 소식을 **`실시간 알림`** 으로 전달.
 
 - 알림을 통해 사용자 간 더 빠르고 활발한 **`소통`** 가능.
+
+<div>
+<img width="1919" height="918" alt="Image" src="https://github.com/user-attachments/assets/0f4800c6-d329-445d-b58c-55736c547f15" />
+</div>
 
 ### Personalized Gallery
 
@@ -63,11 +63,19 @@
 
 - **`개인 갤러리`** 를 통해 관심 있는 게시글을 쉽게 **`관리`** 가능.
 
+<div>
+<img width="1917" height="918" alt="Image" src="https://github.com/user-attachments/assets/99b1b417-76d2-4374-b7c0-d1a85bd589f0" />
+</div>
+
 ### User Profile & Settings
 
 - 작성한 **`게시글`** 과 **`팔로워/팔로잉`** 정보를 한눈에 확인 가능.
 
 - **`닉네임`**, **`소개글`**, **`추천 여부`** 등 개인 설정을 자유롭게 변경 가능.
+
+<div>
+<img width="1914" height="916" alt="Image" src="https://github.com/user-attachments/assets/2864c8cb-8301-4795-80d2-268b8b8eaeb6" />
+</div>
 
 <br />
 
